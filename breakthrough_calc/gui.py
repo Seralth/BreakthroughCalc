@@ -710,6 +710,7 @@ class MainWindow(QMainWindow):
         self.array_apply.setVisible(True)
         abode, bonus, spd = r
         txt = ""
+        stale = False
         if bonus is not None:
             txt = f"Implied total aura bonus: {bonus * 100:.1f}%  (Abode = 130 × {1 + bonus:.3f})"
         if spd is not None:
@@ -718,7 +719,9 @@ class MainWindow(QMainWindow):
             if entered > 0:
                 diff = (entered / spd - 1) * 100
                 if abs(diff) > 0.5:
+                    stale = True
                     txt += f"  — entered speed {entered:.2f} is {diff:+.1f}% off; one of the readings is stale"
+        self.array_out.setStyleSheet("color: #d64545;" if stale else "color: #888;")
         self.array_out.setText(txt)
         self.array_apply.setEnabled(spd is not None)
 
