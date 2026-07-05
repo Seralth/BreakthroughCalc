@@ -21,3 +21,14 @@ python3 -m venv .venv
 ```bash
 ./build-appimage.sh
 ```
+
+## Windows
+
+The Windows executable is built automatically by GitHub Actions
+(`.github/workflows/build-windows.yml`) on a Windows runner. Download it from:
+
+- **Releases** — attached to each tagged release (`v*`), or
+- **Actions** — the `BreakthroughCalculator-windows` artifact on any `master` build.
+
+Settings are stored next to the `.exe` when that folder is writable, otherwise in
+`%APPDATA%\BreakthroughCalc\settings.json`.
