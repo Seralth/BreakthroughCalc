@@ -155,6 +155,14 @@ class MainWindow(QMainWindow):
             "break through toward them (estimated; assumes #1 stays put; live value is server-computed hourly). "
             "Leave blank to hold Strive constant.")
         f.addRow("Server #1's Stage (Strive)", self.top_stage)
+        self.mature_server = QCheckBox("Mature server (world level 30+)")
+        self.mature_server.setChecked(True)
+        self.mature_server.setToolTip(
+            "Server age changes how Strive is computed. Mature servers (world level 30+, "
+            "the common case) use finer level-gap tiers plus a realm-gap bonus (cap ~120%); "
+            "young servers use the plain realm-gap table (cap 70%). Only used when "
+            "Server #1's Stage is set.")
+        f.addRow("", self.mature_server)
         lv.addWidget(cult)
 
         pills = QGroupBox("Cultivation Pills")
@@ -510,7 +518,7 @@ class MainWindow(QMainWindow):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.vase_charge, self.mirror, self.mirror_skin,
                   self.mirror_charge, self.pearl, self.pearl_skin, self.pearl_charge,
-                  self.fruit_high):
+                  self.mature_server, self.fruit_high):
             w.toggled.connect(self.recalc)
         self._install_wheel_guard()
         self._install_tooltips()
@@ -584,6 +592,7 @@ class MainWindow(QMainWindow):
             pearl=self.pearl.isChecked(), pearl_star=self.pearl_star.currentText(),
             pearl_skin=self.pearl_skin.isChecked(),
             pearl_xp_per_10=self.pearl_xp10.value(),
+            mature_server=self.mature_server.isChecked(),
             vase_charge=self.vase_charge.isChecked(),
             mirror_charge=self.mirror_charge.isChecked(),
             pearl_charge=self.pearl_charge.isChecked(),
@@ -609,7 +618,7 @@ class MainWindow(QMainWindow):
             "mirror": self.mirror, "mirror_star": self.mirror_star,
             "mirror_skin": self.mirror_skin,
             "pearl": self.pearl, "pearl_star": self.pearl_star,
-            "pearl_skin": self.pearl_skin,
+            "pearl_skin": self.pearl_skin, "mature_server": self.mature_server,
             "pearl_xp10": self.pearl_xp10,
             "vase_charge": self.vase_charge, "mirror_charge": self.mirror_charge,
             "pearl_charge": self.pearl_charge,
