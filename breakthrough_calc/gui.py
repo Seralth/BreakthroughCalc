@@ -9,8 +9,8 @@ import sys
 from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QLabel, QMainWindow,
-    QPushButton, QScrollArea, QSpinBox, QVBoxLayout, QWidget,
+    QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
+    QMainWindow, QPushButton, QScrollArea, QSpinBox, QVBoxLayout, QWidget,
 )
 
 
@@ -29,7 +29,24 @@ from .engine import Engine, Inputs, fmt_days
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
 
+# Display-only canonical Stage names; internal data keys (and settings) stay unchanged.
+STAGE_LABELS = {"Nascent": "Nascent Soul"}
+STAGE_KEYS = {v: k for k, v in STAGE_LABELS.items()}
+
+
+def stage_disp(key: str) -> str:
+    return STAGE_LABELS.get(key, key)
+
+
+def stage_key(disp: str) -> str:
+    return STAGE_KEYS.get(disp, disp)
+
+
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
+
+# Energy Array: base energy is a known constant only for these Stages (wiki).
+BASE_ENERGY = 130.0
+BASE_ENERGY_STAGES = {"Connection", "Foundation", "Virtuoso", "Nascent", "Incarnation"}
 
 
 def settings_path() -> str:
@@ -79,7 +96,10 @@ class MainWindow(QMainWindow):
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
         central = QWidget()
-        outer = QHBoxLayout(central)
+        root = QVBoxLayout(central)
+        root.addLayout(self._build_toolbar())
+        outer = QHBoxLayout()
+        root.addLayout(outer)
 
         # left column: inputs (scrollable)
         left = QWidget()
@@ -87,7 +107,7 @@ class MainWindow(QMainWindow):
 
         cult = QGroupBox("Cultivation Base")
         f = QFormLayout(cult)
-        self.stage = QComboBox(); self.stage.addItems(self.engine.stages())
+        self.stage = QComboBox(); self.stage.addItems([stage_disp(s) for s in self.engine.stages()])
         self.phase = QComboBox()
         self.grade = QComboBox()
         self.completion = QDoubleSpinBox(); self.completion.setRange(0, 100); self.completion.setSuffix(" %")
@@ -107,6 +127,21 @@ class MainWindow(QMainWindow):
         f.addRow("Aura Gem", self.gem)
         f.addRow("Target Stage", self.target)
         lv.addWidget(cult)
+
+        # Optional Energy Array helper: compute expected cultivation speed from
+        # Array level (aura bonus) + absorption. Base energy is a known constant
+        # (130) only for Connection..Incarnation, so this greys out elsewhere.
+        ea = QGroupBox("Energy Array helper (optional)")
+        eaf = QFormLayout(ea)
+        self.array_level = QSpinBox(); self.array_level.setRange(0, 51)
+        self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
+        self.array_apply = QPushButton("Apply to Cultivation Speed")
+        self.array_apply.clicked.connect(self._apply_array_speed)
+        self.array_level.setToolTip("Energy Array level (0-51). Aura bonus scales 0→50% linearly.")
+        eaf.addRow("Energy Array level", self.array_level)
+        eaf.addRow("", self.array_out)
+        eaf.addRow("", self.array_apply)
+        lv.addWidget(ea)
 
         pills = QGroupBox("Cultivation Pills")
         f = QFormLayout(pills)
@@ -169,38 +204,53 @@ class MainWindow(QMainWindow):
         scroll.setMinimumWidth(430)
         outer.addWidget(scroll, 1)
 
-        # right column: results
-        right = QGroupBox("Results")
-        rf = QFormLayout(right)
-        def out() -> QLabel:
+        # right column: live results + a pinnable "A" snapshot for A/B compare
+        self.RESULT_ROWS = [
+            ("Half-step breakthrough in", "o_phase"),
+            ("Stage breakthrough in", "o_stage"),
+            ("Target Stage reached in", "o_target"),
+            ("Abode Aura (implied)", "o_abode"),
+            ("Cultivation XP / day", "o_basexp"),
+            ("Effective XP / day", "o_effxp"),
+            ("Pill XP / day", "o_pillxp"),
+            ("Speed-up (pills / gem)", "o_speedup"),
+            ("Mythic pills / day", "o_mythic"),
+            ("Pearl XP / day", "o_pearl"),
+            ("XP from fruits", "o_fruit"),
+            ("Fruit time saved", "o_fruit_days"),
+        ]
+
+        def mklabel() -> QLabel:
             lbl = QLabel("—"); lbl.setTextInteractionFlags(Qt.TextSelectableByMouse)
             lbl.setStyleSheet("font-weight: bold;")
             return lbl
-        self.o_phase = out(); self.o_stage = out(); self.o_target = out()
-        self.o_abode = out(); self.o_basexp = out(); self.o_effxp = out()
-        self.o_pillxp = out(); self.o_speedup = out()
-        self.o_mythic = out(); self.o_pearl = out(); self.o_fruit = out(); self.o_fruit_days = out()
+
+        right = QGroupBox("Results (current)")
+        rf = QFormLayout(right)
+        for text, attr in self.RESULT_ROWS:
+            lbl = mklabel(); setattr(self, attr, lbl); rf.addRow(text, lbl)
         self.o_error = QLabel(""); self.o_error.setStyleSheet("color: #c04040;"); self.o_error.setWordWrap(True)
-        rf.addRow("Half-step breakthrough in", self.o_phase)
-        rf.addRow("Stage breakthrough in", self.o_stage)
-        rf.addRow("Target Stage reached in", self.o_target)
-        rf.addRow("Abode Aura (implied)", self.o_abode)
-        rf.addRow("Cultivation XP / day", self.o_basexp)
-        rf.addRow("Effective XP / day", self.o_effxp)
-        rf.addRow("Pill XP / day", self.o_pillxp)
-        rf.addRow("Speed-up (pills / gem)", self.o_speedup)
-        rf.addRow("Mythic pills / day", self.o_mythic)
-        rf.addRow("Pearl XP / day", self.o_pearl)
-        rf.addRow("XP from fruits", self.o_fruit)
-        rf.addRow("Fruit time saved", self.o_fruit_days)
         rf.addRow(self.o_error)
-        self.copy_btn = QPushButton("Copy results")
-        self.copy_btn.clicked.connect(self._copy_results)
-        rf.addRow(self.copy_btn)
+        btns = QHBoxLayout()
+        self.copy_btn = QPushButton("Copy results"); self.copy_btn.clicked.connect(self._copy_results)
+        self.pin_btn = QPushButton("Pin as A"); self.pin_btn.clicked.connect(self._pin_results)
+        btns.addWidget(self.copy_btn); btns.addWidget(self.pin_btn)
+        rf.addRow(btns)
         outer.addWidget(right, 1)
 
+        self.pin_box = QGroupBox("Pinned A")
+        pf = QFormLayout(self.pin_box)
+        self.pin_labels = {}
+        for text, attr in self.RESULT_ROWS:
+            lbl = mklabel(); lbl.setStyleSheet("font-weight: bold; color: #4a7;"); self.pin_labels[attr] = lbl
+            pf.addRow(text, lbl)
+        self.unpin_btn = QPushButton("Clear A"); self.unpin_btn.clicked.connect(self._unpin_results)
+        pf.addRow(self.unpin_btn)
+        self.pin_box.setVisible(False)
+        outer.addWidget(self.pin_box, 1)
+
         self.setCentralWidget(central)
-        self.resize(940, 640)
+        self.resize(1180, 680)
 
     # ---- signal wiring ---------------------------------------------------
     def _wire(self):
@@ -213,7 +263,7 @@ class MainWindow(QMainWindow):
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10, self.fruit_count):
             w.valueChanged.connect(self.recalc)
-        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush):
+        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.array_level):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.mirror, self.mirror_skin, self.pearl, self.fruit_high):
             w.toggled.connect(self.recalc)
@@ -243,7 +293,7 @@ class MainWindow(QMainWindow):
             w.setToolTip(t)
 
     def _on_stage_changed(self):
-        stage = self.stage.currentText()
+        stage = stage_key(self.stage.currentText())
         self.phase.blockSignals(True)
         self.phase.clear()
         self.phase.addItems([PHASE_LABELS.get(p, p) for p in self.engine.phases_for(stage)])
@@ -255,14 +305,14 @@ class MainWindow(QMainWindow):
         self.target.blockSignals(True)
         self.target.clear()
         self.target.addItem("")
-        self.target.addItems(future)
+        self.target.addItems([stage_disp(s) for s in future])
         i = self.target.findText(prev)
         self.target.setCurrentIndex(i if i >= 0 else 0)
         self.target.blockSignals(False)
         self._on_phase_changed()
 
     def _on_phase_changed(self):
-        stage, phase = self.stage.currentText(), PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText())
+        stage, phase = stage_key(self.stage.currentText()), PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText())
         self.grade.blockSignals(True)
         self.grade.clear()
         self.grade.addItems(self.engine.grades_for(stage, phase))
@@ -272,10 +322,10 @@ class MainWindow(QMainWindow):
     # ---- calc ------------------------------------------------------------
     def _inputs(self) -> Inputs:
         return Inputs(
-            stage=self.stage.currentText(), phase=PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
+            stage=stage_key(self.stage.currentText()), phase=PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
-            aura_gem=self.gem.currentText(), target_stage=self.target.currentText(),
+            aura_gem=self.gem.currentText(), target_stage=stage_key(self.target.currentText()),
             pill_rank=self.pill_rank.currentText(), pill_effect=self.pill_plus.value() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
             purple_per_day=self.purple_day.value(), blue_per_day=self.blue_day.value(),
@@ -312,10 +362,10 @@ class MainWindow(QMainWindow):
             "fruit_rank": self.fruit_rank, "fruit_high": self.fruit_high,
             "fruit_count": self.fruit_count, "lvl_culti": self.lvl_culti,
             "lvl_quality": self.lvl_quality, "lvl_gush": self.lvl_gush,
-            "extractor": self.extractor,
+            "extractor": self.extractor, "array_level": self.array_level,
         }
 
-    def _save_settings(self):
+    def _collect_state(self) -> dict:
         vals = {}
         for key, w in self._widget_map().items():
             if isinstance(w, QComboBox):
@@ -324,18 +374,10 @@ class MainWindow(QMainWindow):
                 vals[key] = w.isChecked()
             else:
                 vals[key] = w.value()
-        try:
-            with open(self._settings_file, "w") as f:
-                json.dump(vals, f, indent=1)
-        except OSError:
-            pass
+        return vals
 
-    def _load_settings(self):
-        try:
-            with open(self._settings_file) as f:
-                vals = json.load(f)
-        except (OSError, ValueError):
-            return
+    def _apply_state(self, vals: dict):
+        prev, self._loading = self._loading, True
         wm = self._widget_map()
         # stage first so the phase/grade combos repopulate, then everything else
         for key in ["stage", "phase", "grade"] + [k for k in vals if k not in ("stage", "phase", "grade")]:
@@ -344,6 +386,8 @@ class MainWindow(QMainWindow):
                 continue
             if key == "phase":
                 v = PHASE_LABELS.get(str(v), v)
+            if key in ("stage", "target"):
+                v = stage_disp(str(v))
             if isinstance(w, QComboBox):
                 i = w.findText(str(v))
                 if i >= 0:
@@ -352,6 +396,152 @@ class MainWindow(QMainWindow):
                 w.setChecked(bool(v))
             else:
                 w.setValue(v)
+        self._loading = prev
+
+    # ---- profile store (JSON: {version, current, profiles: {name: state}}) ----
+    def _read_store(self) -> dict:
+        try:
+            with open(self._settings_file) as f:
+                obj = json.load(f)
+        except (OSError, ValueError):
+            obj = None
+        if isinstance(obj, dict) and "profiles" in obj:
+            return obj
+        # migrate a flat v1 settings dict into a single "Default" profile
+        flat = obj if isinstance(obj, dict) else {}
+        return {"version": 2, "current": "Default", "profiles": {"Default": flat}}
+
+    def _write_store(self, obj: dict):
+        try:
+            with open(self._settings_file, "w") as f:
+                json.dump(obj, f, indent=1)
+        except OSError:
+            pass
+
+    def _save_settings(self):
+        obj = self._read_store()
+        cur = obj.get("current", "Default")
+        obj.setdefault("profiles", {})[cur] = self._collect_state()
+        obj["current"] = cur
+        self._write_store(obj)
+
+    def _load_settings(self):
+        obj = self._read_store()
+        profs = obj.get("profiles", {})
+        cur = obj.get("current", "Default")
+        if cur not in profs and profs:
+            cur = next(iter(profs))
+        self._apply_state(profs.get(cur, {}))
+        self._refresh_profile_combo(cur)
+
+    def _refresh_profile_combo(self, current: str):
+        self.profile_combo.blockSignals(True)
+        self.profile_combo.clear()
+        for name in self._read_store().get("profiles", {}):
+            self.profile_combo.addItem(name)
+        i = self.profile_combo.findText(current)
+        if i >= 0:
+            self.profile_combo.setCurrentIndex(i)
+        self.profile_combo.blockSignals(False)
+
+    def _switch_profile(self, name: str):
+        if self._loading or not name:
+            return
+        obj = self._read_store()
+        obj["current"] = name
+        self._write_store(obj)
+        self._apply_state(obj.get("profiles", {}).get(name, {}))
+        self.recalc()
+
+    def _new_profile(self):
+        name, ok = QInputDialog.getText(self, "New / Save As", "Profile name:")
+        name = (name or "").strip()
+        if not ok or not name:
+            return
+        obj = self._read_store()
+        obj.setdefault("profiles", {})[name] = self._collect_state()
+        obj["current"] = name
+        self._write_store(obj)
+        self._refresh_profile_combo(name)
+
+    def _delete_profile(self):
+        obj = self._read_store()
+        profs = obj.get("profiles", {})
+        if len(profs) <= 1:
+            return  # always keep at least one profile
+        profs.pop(obj.get("current"), None)
+        newcur = next(iter(profs))
+        obj["current"] = newcur
+        self._write_store(obj)
+        self._apply_state(profs.get(newcur, {}))
+        self._refresh_profile_combo(newcur)
+        self.recalc()
+
+    def _reset_profile(self):
+        prev, self._loading = self._loading, True
+        for w in self._widget_map().values():
+            if isinstance(w, QComboBox):
+                w.setCurrentIndex(0)
+            elif isinstance(w, QCheckBox):
+                w.setChecked(False)
+            else:
+                w.setValue(0)
+        self._loading = prev
+        self.recalc()
+
+    def _build_toolbar(self) -> QHBoxLayout:
+        bar = QHBoxLayout()
+        bar.addWidget(QLabel("Profile:"))
+        self.profile_combo = QComboBox()
+        self.profile_combo.setMinimumWidth(140)
+        self.profile_combo.currentTextChanged.connect(self._switch_profile)
+        bar.addWidget(self.profile_combo)
+        for text, slot in (("New / Save As…", self._new_profile),
+                           ("Delete", self._delete_profile),
+                           ("Reset", self._reset_profile)):
+            b = QPushButton(text); b.clicked.connect(slot); bar.addWidget(b)
+        bar.addStretch(1)
+        return bar
+
+    # ---- A/B compare -----------------------------------------------------
+    def _pin_results(self):
+        for _, attr in self.RESULT_ROWS:
+            self.pin_labels[attr].setText(getattr(self, attr).text())
+        self.pin_box.setTitle(
+            f"Pinned A — {self.stage.currentText()} {self.phase.currentText()} {self.grade.currentText()}")
+        self.pin_box.setVisible(True)
+
+    def _unpin_results(self):
+        self.pin_box.setVisible(False)
+
+    # ---- Energy Array helper --------------------------------------------
+    def _array_expected(self):
+        """(abode_aura, aura_bonus, expected_speed) or None if base energy unknown."""
+        if stage_key(self.stage.currentText()) not in BASE_ENERGY_STAGES:
+            return None
+        bonus = self.array_level.value() / 51.0 * 0.5   # 0→50% over 0..51 levels
+        abode = BASE_ENERGY * (1 + bonus)
+        absorb = self.absorb.value() / 100.0
+        spd = abode * absorb if absorb > 0 else None
+        return abode, bonus, spd
+
+    def _update_array_out(self):
+        r = self._array_expected()
+        if r is None:
+            self.array_out.setText("Base energy is only a known constant for Connection–Incarnation.")
+            self.array_apply.setEnabled(False)
+            return
+        abode, bonus, spd = r
+        txt = f"Aura bonus +{bonus * 100:.0f}% → Abode Aura {abode:.1f}"
+        if spd is not None:
+            txt += f"\nExpected speed: {spd:.2f} / Cosmoapsis"
+        self.array_out.setText(txt)
+        self.array_apply.setEnabled(spd is not None)
+
+    def _apply_array_speed(self):
+        r = self._array_expected()
+        if r and r[2] is not None:
+            self.speed.setValue(r[2])
 
     def closeEvent(self, event):
         self._save_settings()
@@ -360,7 +550,7 @@ class MainWindow(QMainWindow):
     def _update_absorb_base(self):
         """Show the selected Grade's base Absorption Ratio, and warn on under-entry."""
         idx = self.engine.row_index(
-            self.stage.currentText(),
+            stage_key(self.stage.currentText()),
             PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
             self.grade.currentText(),
         )
@@ -382,12 +572,11 @@ class MainWindow(QMainWindow):
             self._save_settings()
         self.copy_btn.setText("Copy results")
         self._update_absorb_base()
+        self._update_array_out()
         self._last = res = self.engine.calculate(self._inputs())
         if not res.valid:
-            for o in (self.o_phase, self.o_stage, self.o_target, self.o_abode,
-                      self.o_basexp, self.o_effxp, self.o_pillxp, self.o_speedup,
-                      self.o_mythic, self.o_pearl, self.o_fruit, self.o_fruit_days):
-                o.setText("—")
+            for _, attr in self.RESULT_ROWS:
+                getattr(self, attr).setText("—")
             self.o_error.setText(res.error)
             return
         self.o_error.setText(res.error)
