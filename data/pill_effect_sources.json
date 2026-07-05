@@ -1,42 +1,10 @@
 [
- {
-  "name": "Yang Spirit Jade (curio)",
-  "percent": 2.6,
-  "note": "Epic curio. 1.0% at +0 scaling to 2.6% fully upgraded (9 steps); prefilled at max \u2014 lower it to match your upgrade level."
- },
- {
-  "name": "Dongxuan's Pot (curio)",
-  "percent": 2.0,
-  "note": "Epic curio, flat 2% (does not scale with upgrades)."
- },
- {
-  "name": "White Astra friendship (lv 21)",
-  "percent": 1.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Crane Boy friendship (lv 21)",
-  "percent": 2.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Jinzha friendship (lv 79)",
-  "percent": 2.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Jiang Ziya friendship (lv 116)",
-  "percent": 3.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Taotie friendship (lv 117)",
-  "percent": 3.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Leizhenzi friendship (lv 129)",
-  "percent": 3.0,
-  "note": "Celebrity friendship rank bonus, permanent once reached."
- }
+ {"name": "Golden Core (R4 technique)", "percent": 5.0,
+  "note": "R4 technique book completion bonus, +5% Cultivation Pill Effect."},
+ {"name": "Ninefall (R5 technique)", "percent": 2.0,
+  "note": "R5 technique book completion bonus, +2% Cultivation Pill Effect."},
+ {"name": "Yang Spirit Jade (curio)", "percent": 2.6,
+  "note": "Epic curio. 1.0% at +0 scaling to 2.6% fully upgraded (9 steps); prefilled at max - lower it to match your upgrade level."},
+ {"name": "Dongxuan's Pot (curio)", "percent": 2.0,
+  "note": "Epic curio, flat 2% (does not scale with upgrades)."}
 ]
