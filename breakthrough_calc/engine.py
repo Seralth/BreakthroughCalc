@@ -289,7 +289,8 @@ class Engine:
         res.mythic_pills_per_day = pills["mythic_per_day"]
         res.pearl_xp_per_day = pills["pearl_xp_day"]
         res.fruit_xp = fruit_xp
-        res.fruit_days_saved = fruit_secs / 86400.0 / (1 + gem)
+        # Matches Donk's sheet (myrfruits B45/B46): fruit XP / current speed, no gem/pill divisor.
+        res.fruit_days_saved = fruit_secs / 86400.0
         return res
 
 
