@@ -485,34 +485,53 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Widget _artifact(String name, bool on, String star, bool skin, bool charge,
       ValueChanged<bool> onOn, ValueChanged<String> onStar, ValueChanged<bool> onSkin,
       ValueChanged<bool> onCharge) {
+    // Labeled option so Skin vs Charge are never ambiguous (no hover tooltips
+    // on touch). Options only show when the artifact is enabled.
+    Widget labeledCheck(String label, bool value, ValueChanged<bool> cb) =>
+        InkWell(
+          onTap: () { cb(!value); _recalc(); },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Checkbox(
+                value: value,
+                visualDensity: VisualDensity.compact,
+                onChanged: (v) { cb(v ?? false); _recalc(); },
+              ),
+              Text(label),
+            ]),
+          ),
+        );
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(children: [
-        Expanded(
-          flex: 4,
-          child: Row(children: [
-            Checkbox(value: on, onChanged: (v) { onOn(v ?? false); _recalc(); }),
-            Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
-          ]),
-        ),
-        SizedBox(
-          width: 62,
-          child: DropdownButtonFormField<String>(
-            value: star,
-            isExpanded: true,
-            decoration: const InputDecoration(labelText: '★'),
-            items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
-            onChanged: on ? (v) { onStar(v!); _recalc(); } : null,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(
+            child: Row(children: [
+              Checkbox(value: on, onChanged: (v) { onOn(v ?? false); _recalc(); }),
+              Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
+            ]),
           ),
-        ),
-        Tooltip(
-          message: 'Skin',
-          child: Checkbox(value: skin, onChanged: on ? (v) { onSkin(v ?? false); _recalc(); } : null),
-        ),
-        Tooltip(
-          message: 'Daily charge',
-          child: Checkbox(value: charge, onChanged: on ? (v) { onCharge(v ?? false); _recalc(); } : null),
-        ),
+          SizedBox(
+            width: 78,
+            child: DropdownButtonFormField<String>(
+              value: star,
+              isExpanded: true,
+              decoration: const InputDecoration(labelText: 'Star'),
+              items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
+              onChanged: on ? (v) { onStar(v!); _recalc(); } : null,
+            ),
+          ),
+        ]),
+        if (on)
+          Padding(
+            padding: const EdgeInsets.only(left: 24, bottom: 4),
+            child: Row(children: [
+              labeledCheck('Skin', skin, onSkin),
+              labeledCheck('Daily charge', charge, onCharge),
+            ]),
+          ),
       ]),
     );
   }

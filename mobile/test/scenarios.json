@@ -10,5 +10,6 @@
  {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.36, "target_stage": "Perfection", "top_stage": "Nirvana"},
  {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.36, "target_stage": "Perfection", "top_stage": "Nirvana", "mature_server": false},
  {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "aura_gem": "Legendary", "pill_rank": "4R", "pill_limit": 10, "gold_per_day": 2, "purple_per_day": 4, "blue_per_day": 4, "pill_effect": 0.154, "dailies_done": true},
- {"stage": "Virtuoso", "phase": "MIDDLE", "grade": "G2", "culti_speed": 40, "absorption_ratio": 0.15}
+ {"stage": "Virtuoso", "phase": "MIDDLE", "grade": "G2", "culti_speed": 40, "absorption_ratio": 0.15},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G8", "grade_completion": 0.99, "culti_speed": 58.84, "absorption_ratio": 0.275, "pill_rank": "4R", "pill_limit": 10, "gold_per_day": 2, "purple_per_day": 4, "blue_per_day": 4, "vase": true, "vase_star": "3*", "vase_skin": true, "dailies_done": true}
 ]
