@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
         # your total aura bonus (Energy Array + curios) and absorption. Base
         # energy is a known constant (130) only for Connection..Incarnation.
         # Abode Aura = 130 × (1 + total aura bonus); speed = Abode × Absorption.
-        ea = QGroupBox("Aura bonus helper (optional)")
+        ea = QGroupBox("Energy Array (optional)")
         eaf = QFormLayout(ea)
         self.array_bonus = QDoubleSpinBox(); self.array_bonus.setRange(0, 500)
         self.array_bonus.setDecimals(1); self.array_bonus.setSuffix(" %")
