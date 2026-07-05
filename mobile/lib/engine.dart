@@ -461,10 +461,18 @@ class Engine {
       return math.max(1e-12, abode * _num(row['low']) * (1 + s));
     }
 
-    double days(double xpSeconds) =>
-        xpSeconds / 86400.0 / (1 + gem) / (1 + pillRatio);
+    // If today's dailies are already spent, the first real day runs at base
+    // speed (pills deferred, gem still applies), daily rate resuming after — a
+    // piecewise model so a stronger daily setup never increases a short estimate.
+    final baseDay = 86400.0 * (1 + gem);
+    double days(double xpSeconds) {
+      final full = (1 + gem) * (1 + pillRatio);
+      if (!inp.dailiesDone) return xpSeconds / 86400.0 / full;
+      if (xpSeconds <= baseDay) return xpSeconds / 86400.0 / (1 + gem);
+      return 1.0 + (xpSeconds - baseDay) / 86400.0 / full;
+    }
 
-    final startCredit = fruitXp - (inp.dailiesDone ? dailyXp : 0.0);
+    final startCredit = fruitXp;
 
     double rawSeconds(int upto) {
       var credit = startCredit;
