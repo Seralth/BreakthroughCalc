@@ -10,7 +10,7 @@ from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QScrollArea, QSpinBox, QVBoxLayout,
+    QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QVBoxLayout,
     QWidget,
 )
 
@@ -25,7 +25,7 @@ class _WheelGuard(QObject):
             return True
         return super().eventFilter(obj, event)
 
-from .engine import Engine, Inputs, fmt_days
+from .engine import Engine, Inputs, fmt_days, load_pill_sources
 
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
@@ -179,6 +179,23 @@ class MainWindow(QMainWindow):
         add_pe.setToolTip("Add a pill-effect source (a technique book, a curio, …). Their percentages sum.")
         add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
         pe_bottom = QHBoxLayout(); pe_bottom.addWidget(self.pe_total, 1); pe_bottom.addWidget(add_pe)
+        self.pe_catalog = load_pill_sources()
+        if self.pe_catalog:
+            cat_btn = QPushButton("＋ From catalog")
+            cat_btn.setToolTip("Known pill-effect sources from the game data. Check to add "
+                               "(prefilled, editable), uncheck to remove.")
+            cat_menu = QMenu(cat_btn)
+            cat_menu.setToolTipsVisible(True)
+            for src in self.pe_catalog:
+                act = cat_menu.addAction(f'{src["name"]}  {src["percent"]:g}%')
+                act.setCheckable(True)
+                act.setToolTip(src.get("note", ""))
+                act.setData(src)
+            cat_menu.aboutToShow.connect(self._sync_catalog_menu)
+            cat_menu.triggered.connect(self._toggle_catalog_source)
+            cat_btn.setMenu(cat_menu)
+            self._cat_menu = cat_menu
+            pe_bottom.addWidget(cat_btn)
         pe_v.addLayout(pe_bottom)
         f.addRow("Cultivation pill effect", pe_wrap)
 
@@ -204,16 +221,49 @@ class MainWindow(QMainWindow):
         arts = QGroupBox("Creation Artifacts")
         g = QGridLayout(arts)
         g.addWidget(QLabel("<b>Artifact</b>"), 0, 0); g.addWidget(QLabel("<b>Star</b>"), 0, 2); g.addWidget(QLabel("<b>Skin</b>"), 0, 3)
+        g.addWidget(QLabel("<b>Charge</b>"), 0, 4)
         self.vase = QCheckBox("Starsea Vase"); self.vase_star = QComboBox(); self.vase_star.addItems(STARS); self.vase_skin = QCheckBox()
         self.vase_skin.setToolTip("Transmog skin: refined pills give +8% Cultivation EXP")
         self.mirror = QCheckBox("Dual-Star Mirror"); self.mirror_star = QComboBox(); self.mirror_star.addItems(STARS); self.mirror_skin = QCheckBox()
         self.mirror_skin.setToolTip("Transmog skin: Duplication consumes 10% less Energy")
         self.pearl = QCheckBox("Timereversal Pearl"); self.pearl_star = QComboBox(); self.pearl_star.addItems(STARS)
+        self.pearl_skin = QCheckBox()
+        self.pearl_skin.setToolTip("Transmog skin: Timereversal Pearl Energy Cost -10%")
         self.pearl_xp10 = QDoubleSpinBox(); self.pearl_xp10.setRange(0, 1e12)
+        charge_tip = "Daily Energy Charge: 30 Fateum/Destium adds 100 Energy to this artifact, once per day. Check if you use it every day."
+        self.vase_charge = QCheckBox(); self.mirror_charge = QCheckBox(); self.pearl_charge = QCheckBox()
+        for w in (self.vase_charge, self.mirror_charge, self.pearl_charge):
+            w.setChecked(True)
+            w.setToolTip(charge_tip)
         g.addWidget(self.vase, 1, 0); g.addWidget(self.vase_star, 1, 2); g.addWidget(self.vase_skin, 1, 3)
+        g.addWidget(self.vase_charge, 1, 4)
         g.addWidget(self.mirror, 2, 0); g.addWidget(self.mirror_star, 2, 2); g.addWidget(self.mirror_skin, 2, 3)
-        g.addWidget(self.pearl, 3, 0); g.addWidget(self.pearl_star, 3, 2)
-        g.addWidget(QLabel("EXP per 10 energy"), 4, 0); g.addWidget(self.pearl_xp10, 4, 2, 1, 2)
+        g.addWidget(self.mirror_charge, 2, 4)
+        g.addWidget(self.pearl, 3, 0); g.addWidget(self.pearl_star, 3, 2); g.addWidget(self.pearl_skin, 3, 3)
+        g.addWidget(self.pearl_charge, 3, 4)
+        self.vase_input_label = QLabel("Vase input pill")
+        self.vase_input = QComboBox()
+        self.vase_input.addItems(["Blue/White", "Purple (Epic)", "Gold (Legendary)"])
+        self.vase_input.setToolTip(
+            "Which pill quality you refine into red pills. Refines are discounted by input "
+            "quality (Epic -5%, Legendary -20% Energy), so feeding gold pills yields extra "
+            "red pills over time. Base cost also depends on pill rank (75-100 energy).")
+        g.addWidget(self.vase_input_label, 4, 0); g.addWidget(self.vase_input, 4, 2, 1, 2)
+        self.pearl_xp10_label = QLabel("EXP per 10 energy")
+        g.addWidget(self.pearl_xp10_label, 5, 0); g.addWidget(self.pearl_xp10, 5, 2, 1, 2)
+        # Grey out each artifact's controls while it is unchecked, so it is
+        # obvious the inputs only count once the artifact is enabled.
+        def _link(box, *widgets):
+            def apply(on):
+                for w in widgets:
+                    w.setEnabled(on)
+            box.toggled.connect(apply)
+            apply(box.isChecked())
+        _link(self.vase, self.vase_star, self.vase_skin, self.vase_charge,
+              self.vase_input, self.vase_input_label)
+        _link(self.mirror, self.mirror_star, self.mirror_skin, self.mirror_charge)
+        _link(self.pearl, self.pearl_star, self.pearl_skin, self.pearl_charge,
+              self.pearl_xp10, self.pearl_xp10_label)
         lv.addWidget(arts)
 
         fruit = QGroupBox("Myrimon Fruit")
@@ -299,7 +349,7 @@ class MainWindow(QMainWindow):
         self.stage.currentTextChanged.connect(self._on_stage_changed)
         self.phase.currentTextChanged.connect(self._on_phase_changed)
         for w in (self.grade, self.gem, self.target, self.top_stage, self.pill_rank, self.vase_star,
-                  self.mirror_star, self.pearl_star, self.fruit_rank, self.extractor):
+                  self.vase_input, self.mirror_star, self.pearl_star, self.fruit_rank, self.extractor):
             w.currentTextChanged.connect(self.recalc)
         for w in (self.completion, self.speed, self.absorb, self.pill_limit,
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
@@ -307,7 +357,9 @@ class MainWindow(QMainWindow):
             w.valueChanged.connect(self.recalc)
         for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.array_bonus):
             w.valueChanged.connect(self.recalc)
-        for w in (self.vase, self.vase_skin, self.mirror, self.mirror_skin, self.pearl, self.fruit_high):
+        for w in (self.vase, self.vase_skin, self.vase_charge, self.mirror, self.mirror_skin,
+                  self.mirror_charge, self.pearl, self.pearl_skin, self.pearl_charge,
+                  self.fruit_high):
             w.toggled.connect(self.recalc)
         self._install_wheel_guard()
         self._install_tooltips()
@@ -375,10 +427,15 @@ class MainWindow(QMainWindow):
             mark_gold=self.mark_gold.value(),
             vase=self.vase.isChecked(), vase_star=self.vase_star.currentText(),
             vase_skin=self.vase_skin.isChecked(),
+            vase_input=self.vase_input.currentText().split("/")[0].split(" ")[0],
             mirror=self.mirror.isChecked(), mirror_star=self.mirror_star.currentText(),
             mirror_skin=self.mirror_skin.isChecked(),
             pearl=self.pearl.isChecked(), pearl_star=self.pearl_star.currentText(),
+            pearl_skin=self.pearl_skin.isChecked(),
             pearl_xp_per_10=self.pearl_xp10.value(),
+            vase_charge=self.vase_charge.isChecked(),
+            mirror_charge=self.mirror_charge.isChecked(),
+            pearl_charge=self.pearl_charge.isChecked(),
             fruit_rank=self.fruit_rank.currentText(), fruit_count=self.fruit_count.value(),
             fruit_highest_rank=self.fruit_high.isChecked(),
             lvl_culti=self.lvl_culti.value(), lvl_quality=self.lvl_quality.value(),
@@ -397,10 +454,14 @@ class MainWindow(QMainWindow):
             "mark_blue": self.mark_blue, "mark_purple": self.mark_purple,
             "mark_gold": self.mark_gold,
             "vase": self.vase, "vase_star": self.vase_star, "vase_skin": self.vase_skin,
+            "vase_input": self.vase_input,
             "mirror": self.mirror, "mirror_star": self.mirror_star,
             "mirror_skin": self.mirror_skin,
             "pearl": self.pearl, "pearl_star": self.pearl_star,
+            "pearl_skin": self.pearl_skin,
             "pearl_xp10": self.pearl_xp10,
+            "vase_charge": self.vase_charge, "mirror_charge": self.mirror_charge,
+            "pearl_charge": self.pearl_charge,
             "fruit_rank": self.fruit_rank, "fruit_high": self.fruit_high,
             "fruit_count": self.fruit_count, "lvl_culti": self.lvl_culti,
             "lvl_quality": self.lvl_quality, "lvl_gush": self.lvl_gush,
@@ -596,6 +657,25 @@ class MainWindow(QMainWindow):
         if not self.pe_rows:            # keep at least one row
             self._add_pe_row()
         self.recalc()
+
+    def _sync_catalog_menu(self):
+        labels = {le.text() for le, _, _ in self.pe_rows}
+        for act in self._cat_menu.actions():
+            act.setChecked(act.data()["name"] in labels)
+
+    def _toggle_catalog_source(self, act):
+        src = act.data()
+        existing = [e for e in self.pe_rows if e[0].text() == src["name"]]
+        if existing:
+            for e in existing:
+                self._remove_pe_row(e)
+        else:
+            # drop a leftover blank placeholder row
+            blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
+            self._add_pe_row(src["name"], float(src["percent"]))
+            for e in blanks:
+                self._remove_pe_row(e)
+            self.recalc()
 
     def _pill_effect_total(self) -> float:
         return sum(sp.value() for _, sp, _ in self.pe_rows)
