@@ -140,12 +140,13 @@ class MainWindow(QMainWindow):
         f.addRow("Server #1's Stage (Strive)", self.top_stage)
         lv.addWidget(cult)
 
-        # Optional Energy Array helper: compute expected cultivation speed
+        # Optional Cultivation Bonus helper (named after the in-game screen
+        # where Abode Aura is shown): compute expected cultivation speed
         # directly from the in-game Abode Aura reading and absorption
         # (speed = Abode Aura × Absorption). The implied total aura bonus is
         # shown when base energy is a known constant (130, Connection..
         # Incarnation): Abode Aura = 130 × (1 + total bonus).
-        ea = QGroupBox("Energy Array (optional)")
+        ea = QGroupBox("Cultivation Bonus (optional)")
         eaf = QFormLayout(ea)
         self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
         self.abode_aura.setDecimals(2)
@@ -626,7 +627,7 @@ class MainWindow(QMainWindow):
     def _unpin_results(self):
         self.pin_box.setVisible(False)
 
-    # ---- Energy Array helper --------------------------------------------
+    # ---- Cultivation Bonus helper ----------------------------------------
     def _array_expected(self):
         """(abode_aura, implied_bonus_or_None, expected_speed) or None if no aura entered."""
         abode = self.abode_aura.value()
