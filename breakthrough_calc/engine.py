@@ -27,11 +27,18 @@ from dataclasses import dataclass, field
 
 TICK_SECONDS = 8.0
 
-# Strive tier shape by major-realm gap to server #1 (recovered from the client
-# config, Regime A). Used only for the *shape* of the drop-off; the magnitude is
-# anchored to the player's real current Strive. Server-computed in reality, so
-# this is an estimate keyed on major-realm gap (the dominant driver).
+# Strive tier tables recovered from the client config (cfg_us_calc).
+# Young servers (world level < 30) use a major-realm-gap table; mature servers
+# (world level >= 30, the common case) use a minor-LEVEL-gap table plus an
+# additive major-realm bonus — 70% + 50% = the ~120% cap seen on aged servers.
+# Only the SHAPE is used; magnitude is anchored to the player's real Strive
+# (the live value is server-computed hourly and unknowable client-side).
 _STRIVE_SHAPE = {1: 0.15, 2: 0.20, 3: 0.30, 4: 0.40, 5: 0.50, 6: 0.60, 7: 0.70}
+
+# (min level gap, tier) — new_sub_lv_exp_accelerate_array, world level >= 30
+_STRIVE_SUB_SHAPE = ((60, 0.70), (50, 0.30), (40, 0.20))
+# major-realm-gap additive bonus — extra_rank_accelerate_array
+_STRIVE_EXTRA_RANK = {1: 0.30, 2: 0.50}
 
 
 def _strive_shape(gap: int) -> float:
@@ -40,6 +47,18 @@ def _strive_shape(gap: int) -> float:
     if gap >= 7:
         return 0.70
     return _STRIVE_SHAPE[gap]
+
+
+def _strive_shape_mature(level_gap: int, major_gap: int) -> float:
+    """Mature-server (world >= 30) Strive tier: minor-level-gap tier plus the
+    additive major-realm bonus. level_gap counts grades (levels) to #1."""
+    sub = next((p for g, p in _STRIVE_SUB_SHAPE if level_gap >= g), 0.0)
+    extra = 0.0
+    if major_gap >= 2:
+        extra = _STRIVE_EXTRA_RANK[2]
+    elif major_gap == 1:
+        extra = _STRIVE_EXTRA_RANK[1]
+    return sub + extra
 
 import sys
 
@@ -76,6 +95,7 @@ class Inputs:
     aura_gem: str = "None"
     target_stage: str = ""          # for "time until future stage"
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
+    mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
 
     # Pills
     pill_rank: str = "1R"
@@ -315,11 +335,23 @@ class Engine:
         if inp.top_stage in stage_order and inp.stage in stage_order:
             top_i = stage_order.index(inp.top_stage)
             cur_gap = top_i - stage_order.index(inp.stage)
-            if cur_gap > 0 and _strive_shape(cur_gap) > 0:
-                scale = strive / _strive_shape(cur_gap)
-                stage_idx = {s: i for i, s in enumerate(stage_order)}
+            # #1's exact grade is unknown; approximate them at the start of
+            # their Stage for the level-gap count (mature-server regime).
+            top_row = self.stage_start_index(inp.top_stage)
+            stage_idx = {s: i for i, s in enumerate(stage_order)}
+            row_idx = {id(r): i for i, r in enumerate(self.rows)}
+
+            def shape_at(row_i: int, row_stage: str) -> float:
+                major = top_i - stage_idx.get(row_stage, top_i)
+                if inp.mature_server:
+                    return _strive_shape_mature(top_row - row_i, major)
+                return _strive_shape(major)
+
+            cur_shape = shape_at(idx, inp.stage)
+            if cur_gap > 0 and cur_shape > 0:
+                scale = strive / cur_shape
                 def strive_of(row):
-                    return scale * _strive_shape(top_i - stage_idx.get(row["stage"], top_i))
+                    return scale * shape_at(row_idx[id(row)], row["stage"])
 
         def speed(row) -> float:
             s = strive_of(row) if strive_of else strive

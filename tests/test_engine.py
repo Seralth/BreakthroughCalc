@@ -189,6 +189,23 @@ class PearlModel(unittest.TestCase):
         self.assertGreater(with_c, without)
 
 
+class StriveShapes(unittest.TestCase):
+    """Tier tables recovered from cfg_us_calc (issue #6)."""
+
+    def test_mature_regime(self):
+        from breakthrough_calc.engine import _strive_shape_mature as m
+        self.assertEqual(m(65, 3), 0.70 + 0.50)   # the ~120% aged-server cap
+        self.assertEqual(m(55, 1), 0.30 + 0.30)
+        self.assertEqual(m(45, 0), 0.20)          # same realm as #1, still striving
+        self.assertEqual(m(10, 0), 0.0)           # nearly caught up
+
+    def test_young_regime_unchanged(self):
+        from breakthrough_calc.engine import _strive_shape as s
+        self.assertEqual(s(1), 0.15)
+        self.assertEqual(s(9), 0.70)
+        self.assertEqual(s(0), 0.0)
+
+
 class StriveDropoff(unittest.TestCase):
     def test_anchored_at_current_grade(self):
         # With a top-stage set, the CURRENT grade's speed must be unchanged
