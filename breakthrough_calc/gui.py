@@ -224,6 +224,13 @@ class MainWindow(QMainWindow):
         f.addRow("Gush level", self.lvl_gush)
         f.addRow("Aura Extractor quality", self.extractor)
         lv.addWidget(fruit)
+
+        note = QLabel(
+            "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
+            "your server's #1, so long-range timers for high-strive players run optimistic. "
+            "Short-range projections, and low/zero-strive players, are accurate.")
+        note.setWordWrap(True); note.setStyleSheet("color: #888; font-size: 11px;")
+        lv.addWidget(note)
         lv.addStretch(1)
 
         scroll = QScrollArea(); scroll.setWidgetResizable(True); scroll.setWidget(left)
