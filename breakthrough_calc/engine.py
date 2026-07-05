@@ -237,10 +237,15 @@ class Engine:
         cur = self.rows[idx]
         abode = inp.culti_speed / inp.absorption_ratio
         # Strive is a MULTIPLIER on each stage's base absorption (game formula:
-        # Absorption = Base x (1 + Strive)). Derive the player's current Strive
-        # from their entered absorption and hold it constant across the
-        # projection. At the current grade this reduces exactly to
-        # abode x entered_absorption, matching the displayed speed.
+        # Absorption = Base x (1 + Strive)), held constant across the projection.
+        # NOTE: because abode = culti_speed/absorption and (1+strive) =
+        # absorption/low_cur, strive/absorption CANCEL out of speed(row) below:
+        # speed(row) = culti_speed * low_row / low_cur. So the entered absorption
+        # (and thus strive) does NOT affect the projected TIME at all — time is
+        # driven purely by culti_speed and the base-band progression. strive is
+        # retained only to expose the implied value for display. This is also
+        # why the "no strive on overcapped XP" restriction and the Nascent-Soul
+        # unlock are immaterial to the time math: strive never scales it.
         strive = inp.absorption_ratio / cur["low"] - 1 if cur["low"] > 0 else 0.0
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 

@@ -14,7 +14,7 @@
    "pill_rank": "4R",
    "pill_limit": 21.0,
    "gold_day": 0.0,
-   "purple_day": 20.0,
+   "purple_day": 21.0,
    "blue_day": 0.0,
    "mark_blue": 0.0,
    "mark_purple": 0.0,
@@ -40,10 +40,6 @@
     [
      "",
      15.4
-    ],
-    [
-     "",
-     0.0
     ]
    ]
   }
