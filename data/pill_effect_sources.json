@@ -42,7 +42,21 @@
  {
   "name": "Yang Spirit Jade (curio)",
   "percent": 1.0,
-  "note": "Epic curio. Starts at 1.0%; +0.2% per upgrade plus larger star-up jumps (e.g. 2-star to 3-star +0.4%), reaching 5.8% at max level and stars. Other upgradeable curios follow the same scaling pattern. Enter your current value from the curio's tooltip."
+  "note": "Epic curio. Upgrade track: 8 levels (blue/purple/yellow/red stardust, 2 each), +0.2% per level from 1.0%. Stars 1-5 add on top, reaching 5.8% at max. Pick your star and upgrade level from the curio's screen.",
+  "prompt": {
+   "kind": "star_upgrade",
+   "base": 1.0,
+   "per_upgrade": 0.2,
+   "max_upgrade": 8,
+   "stars": 5,
+   "star_add": [
+    0.0,
+    0.4,
+    0.8,
+    1.6,
+    3.2
+   ]
+  }
  },
  {
   "name": "Dongxuan's Pot (curio)",

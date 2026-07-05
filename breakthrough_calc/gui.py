@@ -9,7 +9,8 @@ import sys
 from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
+    QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
+    QInputDialog, QLabel,
     QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QTabWidget,
     QVBoxLayout,
     QWidget,
@@ -836,12 +837,50 @@ class MainWindow(QMainWindow):
             for e in existing:
                 self._remove_pe_row(e)
         else:
+            value = float(src["percent"])
+            if src.get("prompt", {}).get("kind") == "star_upgrade":
+                picked = self._ask_star_upgrade(src)
+                if picked is None:        # user cancelled
+                    return
+                value = picked
             # drop a leftover blank placeholder row
             blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
-            self._add_pe_row(src["name"], float(src["percent"]))
+            self._add_pe_row(src["name"], value)
             for e in blanks:
                 self._remove_pe_row(e)
             self.recalc()
+
+    def _ask_star_upgrade(self, src) -> float | None:
+        """Small dialog matching the in-game curio upgrade screen: pick star and
+        upgrade level, return the computed pill-effect %."""
+        p = src["prompt"]
+
+        def value_for(star, upgrade):
+            return p["base"] + p["per_upgrade"] * upgrade + p["star_add"][star - 1]
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle(src["name"])
+        lay = QFormLayout(dlg)
+        star = QComboBox(); star.addItems([f"{i}★" for i in range(1, p["stars"] + 1)])
+        upg = QComboBox(); upg.addItems([str(i) for i in range(p["max_upgrade"] + 1)])
+        out = QLabel()
+        out.setStyleSheet("color: #888;")
+
+        def refresh():
+            out.setText(f"Cultivation Pill Effect: {value_for(star.currentIndex() + 1, upg.currentIndex()):.1f}%")
+        star.currentIndexChanged.connect(refresh)
+        upg.currentIndexChanged.connect(refresh)
+        refresh()
+        lay.addRow("Star", star)
+        lay.addRow("Upgrade level", upg)
+        lay.addRow("", out)
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dlg.accept)
+        buttons.rejected.connect(dlg.reject)
+        lay.addRow(buttons)
+        if dlg.exec() != QDialog.Accepted:
+            return None
+        return round(value_for(star.currentIndex() + 1, upg.currentIndex()), 1)
 
     def _pill_effect_total(self) -> float:
         return sum(sp.value() for _, sp, _ in self.pe_rows)
