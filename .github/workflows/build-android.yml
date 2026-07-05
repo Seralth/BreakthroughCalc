@@ -45,3 +45,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: mobile/BreakthroughCalculator.apk
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          body: ${{ contains(github.ref_name, '-') && 'Android app — BETA. Sideload BreakthroughCalculator.apk (enable "install from unknown sources"). Desktop builds are unchanged from the latest stable release.' || '' }}
