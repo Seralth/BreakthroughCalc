@@ -131,6 +131,13 @@ class MainWindow(QMainWindow):
         f.addRow("", self.absorb_base)
         f.addRow("Aura Gem", self.gem)
         f.addRow("Target Stage", self.target)
+        self.top_stage = QComboBox(); self.top_stage.addItem("")
+        self.top_stage.addItems([stage_disp(s) for s in self.engine.stages()])
+        self.top_stage.setToolTip(
+            "Optional: your server's #1 cultivator's Stage. Models your Strive stepping DOWN as you "
+            "break through toward them (estimated; assumes #1 stays put; live value is server-computed hourly). "
+            "Leave blank to hold Strive constant.")
+        f.addRow("Server #1's Stage (Strive)", self.top_stage)
         lv.addWidget(cult)
 
         # Optional aura-bonus helper: compute expected cultivation speed from
@@ -229,8 +236,8 @@ class MainWindow(QMainWindow):
 
         note = QLabel(
             "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
-            "your server's #1, so long-range timers for high-strive players run optimistic. "
-            "Short-range projections, and low/zero-strive players, are accurate.")
+            "your server's #1. Set \"Server #1's Stage\" above to model that drop-off (estimated); "
+            "leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way.")
         note.setWordWrap(True); note.setStyleSheet("color: #888; font-size: 11px;")
         lv.addWidget(note)
         lv.addStretch(1)
@@ -291,7 +298,7 @@ class MainWindow(QMainWindow):
     def _wire(self):
         self.stage.currentTextChanged.connect(self._on_stage_changed)
         self.phase.currentTextChanged.connect(self._on_phase_changed)
-        for w in (self.grade, self.gem, self.target, self.pill_rank, self.vase_star,
+        for w in (self.grade, self.gem, self.target, self.top_stage, self.pill_rank, self.vase_star,
                   self.mirror_star, self.pearl_star, self.fruit_rank, self.extractor):
             w.currentTextChanged.connect(self.recalc)
         for w in (self.completion, self.speed, self.absorb, self.pill_limit,
@@ -360,6 +367,7 @@ class MainWindow(QMainWindow):
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
             aura_gem=self.gem.currentText(), target_stage=stage_key(self.target.currentText()),
+            top_stage=stage_key(self.top_stage.currentText()),
             pill_rank=self.pill_rank.currentText(), pill_effect=self._pill_effect_total() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
             purple_per_day=self.purple_day.value(), blue_per_day=self.blue_day.value(),
@@ -382,7 +390,7 @@ class MainWindow(QMainWindow):
         return {
             "stage": self.stage, "phase": self.phase, "grade": self.grade,
             "completion": self.completion, "speed": self.speed, "absorb": self.absorb,
-            "gem": self.gem, "target": self.target,
+            "gem": self.gem, "target": self.target, "top_stage": self.top_stage,
             "pill_rank": self.pill_rank,
             "pill_limit": self.pill_limit, "gold_day": self.gold_day,
             "purple_day": self.purple_day, "blue_day": self.blue_day,
@@ -426,7 +434,7 @@ class MainWindow(QMainWindow):
                 continue
             if key == "phase":
                 v = PHASE_LABELS.get(str(v), v)
-            if key in ("stage", "target"):
+            if key in ("stage", "target", "top_stage"):
                 v = stage_disp(str(v))
             if isinstance(w, QComboBox):
                 i = w.findText(str(v))
