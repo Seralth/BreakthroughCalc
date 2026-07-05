@@ -38,15 +38,5 @@
   "name": "Leizhenzi friendship (lv 129)",
   "percent": 3.0,
   "note": "Celebrity friendship rank bonus, permanent once reached."
- },
- {
-  "name": "Technique book (inner skill)",
-  "percent": 0.0,
-  "note": "Some technique books carry a Cultivation Pill Effect affix (e.g. the Ninefall books, 2%); values vary per book/level \u2014 read the % from the book's tooltip and enter it."
- },
- {
-  "name": "Dao Ancestor treasure",
-  "percent": 0.0,
-  "note": "Daozu treasures can roll Epic/Legendary pill EXP affixes; values vary \u2014 read from the treasure tooltip. NOTE: quality-specific bonuses belong in the Star Marks fields instead if they only affect one pill color."
  }
 ]
