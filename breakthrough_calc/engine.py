@@ -93,6 +93,7 @@ class Results:
     target_days: float = 0.0       # time until start of target stage
     target_valid: bool = False
     abode_aura: float = 0.0
+    strive: float = 0.0                 # implied Strive Bonus (multiplier, e.g. 0.30 = +30%)
     base_xp_per_day: float = 0.0        # culti_speed at the current grade, per day
     effective_xp_per_day: float = 0.0   # base with gem + pill speed-ups applied
     pill_xp_per_day: float = 0.0
@@ -234,8 +235,13 @@ class Engine:
             return res
 
         cur = self.rows[idx]
-        bonus = inp.absorption_ratio - cur["low"]
         abode = inp.culti_speed / inp.absorption_ratio
+        # Strive is a MULTIPLIER on each stage's base absorption (game formula:
+        # Absorption = Base x (1 + Strive)). Derive the player's current Strive
+        # from their entered absorption and hold it constant across the
+        # projection. At the current grade this reduces exactly to
+        # abode x entered_absorption, matching the displayed speed.
+        strive = inp.absorption_ratio / cur["low"] - 1 if cur["low"] > 0 else 0.0
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 
         pills = self._pill_math(inp)
@@ -243,7 +249,7 @@ class Engine:
         fruit_xp = self._fruit_xp(inp)
 
         def speed(row) -> float:
-            return max(1e-12, abode * (row["low"] + bonus))
+            return max(1e-12, abode * row["low"] * (1 + strive))
 
         def days(xp_seconds: float) -> float:
             return xp_seconds / 86400.0 / (1 + gem) / (1 + pill_ratio)
@@ -287,6 +293,7 @@ class Engine:
 
         res.valid = True
         res.abode_aura = abode
+        res.strive = strive
         res.base_xp_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS)
         res.effective_xp_per_day = res.base_xp_per_day * (1 + gem) * (1 + pill_ratio)
         res.pill_xp_per_day = pills["xp_per_day"]

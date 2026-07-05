@@ -17,8 +17,11 @@ Notes on the underlying model are in `breakthrough_calc/engine.py`.
 The balance tables (Stage XP curve, absorption ratios, pill/fruit/artifact
 values) are ported from the community-maintained spreadsheet and cross-checked
 against the wiki — the game computes cultivation server-side, so those numbers
-are not readable from the client. The Aura Gem is modeled as a flat speed-up by
-rarity, which is a deliberate simplification of the game's aura-storage mechanic.
+are not readable from the client. A few mechanics have been corrected to match
+in-game behaviour where it differs from the sheet: the daily pill limit is a
+shared attempt pool, and Strive projects absorption multiplicatively
+(Absorption = Base × (1 + Strive)). The Aura Gem is modeled as a flat speed-up
+by rarity, a deliberate simplification of the game's aura-storage mechanic.
 
 ## Run from source
 

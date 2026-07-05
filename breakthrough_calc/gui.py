@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
         f.addRow("Pill rank", self.pill_rank)
 
-        # Cultivation pill effect = sum of contributions (technique books, relics,
+        # Cultivation pill effect = sum of contributions (technique books, curios,
         # etc.). Record each source once so swapping gear means editing one row.
         pe_wrap = QWidget(); pe_v = QVBoxLayout(pe_wrap); pe_v.setContentsMargins(0, 0, 0, 0)
         self.pe_rows = []
@@ -165,7 +165,7 @@ class MainWindow(QMainWindow):
         pe_v.addLayout(self.pe_rows_layout)
         self.pe_total = QLabel("Total: 0.00 %"); self.pe_total.setStyleSheet("color: #888;")
         add_pe = QPushButton("＋ Add source")
-        add_pe.setToolTip("Add a pill-effect source (a technique book, a relic, …). Their percentages sum.")
+        add_pe.setToolTip("Add a pill-effect source (a technique book, a curio, …). Their percentages sum.")
         add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
         pe_bottom = QHBoxLayout(); pe_bottom.addWidget(self.pe_total, 1); pe_bottom.addWidget(add_pe)
         pe_v.addLayout(pe_bottom)
@@ -553,10 +553,10 @@ class MainWindow(QMainWindow):
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
 
-    # ---- pill-effect sources (technique books, relics, …) ----------------
+    # ---- pill-effect sources (technique books, curios, …) ----------------
     def _add_pe_row(self, label: str = "", value: float = 0.0):
         row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
-        le = QLineEdit(label); le.setPlaceholderText("source (e.g. technique book, relic)")
+        le = QLineEdit(label); le.setPlaceholderText("source (e.g. technique book, curio)")
         sp = QDoubleSpinBox(); sp.setRange(0, 500); sp.setDecimals(2); sp.setSuffix(" %"); sp.setValue(value)
         rm = QPushButton("✕"); rm.setFixedWidth(28)
         h.addWidget(le, 1); h.addWidget(sp); h.addWidget(rm)
@@ -634,12 +634,16 @@ class MainWindow(QMainWindow):
             return
         base = self.engine.rows[idx]["low"] * 100
         entered = self.absorb.value()
-        msg = f"Stage's base Absorption Ratio: {base:g}%"
+        strive = (entered / base - 1) * 100 if base > 0 else 0.0
+        if abs(strive) < 1e-6:
+            strive = 0.0
+        msg = f"Base Absorption: {base:g}%  ·  Strive: {strive:.0f}%"
+        warn = False
         if entered and entered < base - 1e-9:
-            msg += "  ⚠ below base — bonus can't be negative"
-            self.absorb_base.setStyleSheet("color: #c07030;")
-        else:
-            self.absorb_base.setStyleSheet("color: #888;")
+            msg += "  ⚠ below base — Strive can't be negative"; warn = True
+        elif strive > 120 + 1e-9:
+            msg += "  ⚠ Strive over the 120% cap"; warn = True
+        self.absorb_base.setStyleSheet("color: #c07030;" if warn else "color: #888;")
         self.absorb_base.setText(msg)
 
     def recalc(self, *_):
