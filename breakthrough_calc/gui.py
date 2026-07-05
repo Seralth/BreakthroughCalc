@@ -632,4 +632,6 @@ def main():
         app.setWindowIcon(QIcon(icon))
     win = MainWindow()
     win.show()
+    win.raise_()
+    win.activateWindow()
     sys.exit(app.exec())
