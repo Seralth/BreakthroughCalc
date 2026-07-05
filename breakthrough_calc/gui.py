@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+import os
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox,
@@ -14,14 +17,32 @@ from .engine import Engine, Inputs, fmt_days
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 
 
+def settings_path() -> str:
+    """Prefer a JSON next to the AppImage (portable/self-contained); fall back
+    to ~/.config if that directory isn't writable."""
+    appimage = os.environ.get("APPIMAGE")
+    if appimage:
+        candidate = os.path.join(os.path.dirname(appimage),
+                                 os.path.basename(appimage) + ".settings.json")
+        if os.access(os.path.dirname(appimage), os.W_OK):
+            return candidate
+    base = os.path.join(os.path.expanduser("~"), ".config", "breakthrough-calc")
+    os.makedirs(base, exist_ok=True)
+    return os.path.join(base, "settings.json")
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Donk's Breakthrough Calculator")
         self.engine = Engine()
+        self._settings_file = settings_path()
+        self._loading = True
         self._build_ui()
         self._wire()
         self._on_stage_changed()
+        self._load_settings()
+        self._loading = False
         self.recalc()
 
     # ---- UI construction -------------------------------------------------
@@ -194,7 +215,71 @@ class MainWindow(QMainWindow):
             lvl_gush=self.lvl_gush.value(), extractor_rarity=self.extractor.currentText(),
         )
 
+    # ---- persistence -----------------------------------------------------
+    def _widget_map(self) -> dict:
+        return {
+            "stage": self.stage, "phase": self.phase, "grade": self.grade,
+            "completion": self.completion, "speed": self.speed, "absorb": self.absorb,
+            "gem": self.gem, "target": self.target,
+            "pill_rank": self.pill_rank, "pill_plus": self.pill_plus,
+            "pill_limit": self.pill_limit, "gold_day": self.gold_day,
+            "purple_day": self.purple_day, "blue_day": self.blue_day,
+            "mark_blue": self.mark_blue, "mark_purple": self.mark_purple,
+            "mark_gold": self.mark_gold,
+            "vase": self.vase, "vase_star": self.vase_star, "vase_skin": self.vase_skin,
+            "mirror": self.mirror, "mirror_star": self.mirror_star,
+            "mirror_skin": self.mirror_skin,
+            "pearl": self.pearl, "pearl_star": self.pearl_star,
+            "pearl_xp10": self.pearl_xp10,
+            "fruit_rank": self.fruit_rank, "fruit_high": self.fruit_high,
+            "fruit_count": self.fruit_count, "lvl_culti": self.lvl_culti,
+            "lvl_quality": self.lvl_quality, "lvl_gush": self.lvl_gush,
+            "extractor": self.extractor,
+        }
+
+    def _save_settings(self):
+        vals = {}
+        for key, w in self._widget_map().items():
+            if isinstance(w, QComboBox):
+                vals[key] = w.currentText()
+            elif isinstance(w, QCheckBox):
+                vals[key] = w.isChecked()
+            else:
+                vals[key] = w.value()
+        try:
+            with open(self._settings_file, "w") as f:
+                json.dump(vals, f, indent=1)
+        except OSError:
+            pass
+
+    def _load_settings(self):
+        try:
+            with open(self._settings_file) as f:
+                vals = json.load(f)
+        except (OSError, ValueError):
+            return
+        wm = self._widget_map()
+        # stage first so the phase/grade combos repopulate, then everything else
+        for key in ["stage", "phase", "grade"] + [k for k in vals if k not in ("stage", "phase", "grade")]:
+            w, v = wm.get(key), vals.get(key)
+            if w is None or v is None:
+                continue
+            if isinstance(w, QComboBox):
+                i = w.findText(str(v))
+                if i >= 0:
+                    w.setCurrentIndex(i)
+            elif isinstance(w, QCheckBox):
+                w.setChecked(bool(v))
+            else:
+                w.setValue(v)
+
+    def closeEvent(self, event):
+        self._save_settings()
+        super().closeEvent(event)
+
     def recalc(self, *_):
+        if not self._loading:
+            self._save_settings()
         res = self.engine.calculate(self._inputs())
         if not res.valid:
             for o in (self.o_phase, self.o_stage, self.o_target, self.o_abode,
