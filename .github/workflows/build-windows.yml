@@ -1,0 +1,44 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [master]
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install PySide6 pyinstaller
+
+      - name: Build one-file Windows executable
+        run: >
+          pyinstaller --onefile --windowed
+          --name "Breakthrough Calculator"
+          --icon packaging/breakthrough-calc.ico
+          --add-data "data/breakthrough.json;data"
+          --add-data "packaging/breakthrough-calc.png;."
+          main.py
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BreakthroughCalculator-windows
+          path: "dist/Breakthrough Calculator.exe"
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "dist/Breakthrough Calculator.exe"
