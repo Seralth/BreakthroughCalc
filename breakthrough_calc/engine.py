@@ -96,6 +96,7 @@ class Inputs:
     target_stage: str = ""          # for "time until future stage"
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
     mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
+    dailies_done: bool = False      # today's daily pills already used; defer them to next reset
 
     # Pills
     pill_rank: str = "1R"
@@ -360,10 +361,18 @@ class Engine:
         def days(xp_seconds: float) -> float:
             return xp_seconds / 86400.0 / (1 + gem) / (1 + pill_ratio)
 
+        # If today's daily pills are already spent, they shouldn't contribute
+        # again during the rest of today. The pill rate is modeled continuously,
+        # so remove exactly one day's pill XP as a one-time deficit — this
+        # defers the pill boost by a day (equivalent to today running at base
+        # speed with pills resuming at the next reset). Negative credit adds to
+        # the XP that must be cultivated.
+        start_credit = fruit_xp - (pills["xp_per_day"] if inp.dailies_done else 0.0)
+
         # seconds of cultivation from "now" through the end of row j (inclusive),
-        # with fruit XP credited against the earliest remaining XP.
+        # with the starting credit applied against the earliest remaining XP.
         def raw_seconds(upto: int) -> float:
-            credit = fruit_xp
+            credit = start_credit
             total = 0.0
             remaining_cur = cur["grade_xp"] * (1 - inp.grade_completion)
             for j in range(idx, upto + 1):
