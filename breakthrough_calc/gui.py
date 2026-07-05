@@ -140,21 +140,23 @@ class MainWindow(QMainWindow):
         f.addRow("Server #1's Stage (Strive)", self.top_stage)
         lv.addWidget(cult)
 
-        # Optional aura-bonus helper: compute expected cultivation speed from
-        # your total aura bonus (Energy Array + curios) and absorption. Base
-        # energy is a known constant (130) only for Connection..Incarnation.
-        # Abode Aura = 130 × (1 + total aura bonus); speed = Abode × Absorption.
+        # Optional Energy Array helper: compute expected cultivation speed
+        # directly from the in-game Abode Aura reading and absorption
+        # (speed = Abode Aura × Absorption). The implied total aura bonus is
+        # shown when base energy is a known constant (130, Connection..
+        # Incarnation): Abode Aura = 130 × (1 + total bonus).
         ea = QGroupBox("Energy Array (optional)")
         eaf = QFormLayout(ea)
-        self.array_bonus = QDoubleSpinBox(); self.array_bonus.setRange(0, 500)
-        self.array_bonus.setDecimals(1); self.array_bonus.setSuffix(" %")
-        self.array_bonus.setToolTip(
-            "Your TOTAL aura bonus (Energy Array + curios), as shown by Abode Aura in-game. "
-            "Abode Aura = 130 × (1 + this).")
+        self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
+        self.abode_aura.setDecimals(2)
+        self.abode_aura.setToolTip(
+            "Your Abode Aura exactly as shown in-game. Expected speed = Abode Aura × "
+            "Absorption Ratio. Entering the shown value avoids summing aura bonuses "
+            "(Energy Array + curios + …) by hand.")
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         self.array_apply = QPushButton("Apply to Cultivation Speed")
         self.array_apply.clicked.connect(self._apply_array_speed)
-        eaf.addRow("Total aura bonus", self.array_bonus)
+        eaf.addRow("Abode Aura (in-game)", self.abode_aura)
         eaf.addRow("", self.array_out)
         eaf.addRow("", self.array_apply)
         lv.addWidget(ea)
@@ -355,7 +357,7 @@ class MainWindow(QMainWindow):
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10, self.fruit_count):
             w.valueChanged.connect(self.recalc)
-        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.array_bonus):
+        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.abode_aura):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.vase_charge, self.mirror, self.mirror_skin,
                   self.mirror_charge, self.pearl, self.pearl_skin, self.pearl_charge,
@@ -465,7 +467,7 @@ class MainWindow(QMainWindow):
             "fruit_rank": self.fruit_rank, "fruit_high": self.fruit_high,
             "fruit_count": self.fruit_count, "lvl_culti": self.lvl_culti,
             "lvl_quality": self.lvl_quality, "lvl_gush": self.lvl_gush,
-            "extractor": self.extractor, "array_bonus": self.array_bonus,
+            "extractor": self.extractor, "abode_aura": self.abode_aura,
         }
 
     def _collect_state(self) -> dict:
@@ -626,11 +628,13 @@ class MainWindow(QMainWindow):
 
     # ---- Energy Array helper --------------------------------------------
     def _array_expected(self):
-        """(abode_aura, aura_bonus, expected_speed) or None if base energy unknown."""
-        if stage_key(self.stage.currentText()) not in BASE_ENERGY_STAGES:
+        """(abode_aura, implied_bonus_or_None, expected_speed) or None if no aura entered."""
+        abode = self.abode_aura.value()
+        if abode <= 0:
             return None
-        bonus = self.array_bonus.value() / 100.0
-        abode = BASE_ENERGY * (1 + bonus)
+        bonus = None
+        if stage_key(self.stage.currentText()) in BASE_ENERGY_STAGES:
+            bonus = abode / BASE_ENERGY - 1
         absorb = self.absorb.value() / 100.0
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
@@ -704,13 +708,20 @@ class MainWindow(QMainWindow):
     def _update_array_out(self):
         r = self._array_expected()
         if r is None:
-            self.array_out.setText("Base energy is only a known constant for Connection–Incarnation.")
+            self.array_out.setText("Enter your in-game Abode Aura.")
             self.array_apply.setEnabled(False)
             return
         abode, bonus, spd = r
-        txt = f"Abode Aura = 130 × (1 + {bonus * 100:.0f}%) = {abode:.1f}"
+        txt = ""
+        if bonus is not None:
+            txt = f"Implied total aura bonus: {bonus * 100:.1f}%  (Abode = 130 × {1 + bonus:.3f})"
         if spd is not None:
-            txt += f"\nExpected speed: {spd:.2f} / Cosmoapsis"
+            entered = self.speed.value()
+            txt += ("\n" if txt else "") + f"Expected speed: {spd:.2f} / Cosmoapsis"
+            if entered > 0:
+                diff = (entered / spd - 1) * 100
+                if abs(diff) > 0.5:
+                    txt += f"  — entered speed {entered:.2f} is {diff:+.1f}% off; one of the readings is stale"
         self.array_out.setText(txt)
         self.array_apply.setEnabled(spd is not None)
 
