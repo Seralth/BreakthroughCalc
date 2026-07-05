@@ -361,6 +361,38 @@ class MainWindow(QMainWindow):
             return h
 
         html = "<h2>Cultivation reference</h2>"
+        html += (
+            "<h3>How cultivation works</h3>"
+            "<p>Your character gains cultivation EXP automatically, one tick every "
+            "<b>8 seconds</b> (a \"Cosmoapsis\"). The EXP per tick is your <b>Cultivation "
+            "Speed</b>, and everything about progression speed hangs off this one number:</p>"
+            "<p style='margin-left:16px'><b>Cultivation Speed = Abode Aura × Absorption Ratio</b></p>"
+            "<p><b>Abode Aura</b> is your abode's output: a base energy (130 for Connection "
+            "through Incarnation) multiplied by your total aura bonus — the sum of your "
+            "Energy Array level, aura curios, sect level bonus, and similar. <b>Absorption "
+            "Ratio</b> is how much of that aura you absorb: each Stage/Grade has a base "
+            "band that rises as you progress, plus bonuses from gear and Strive. All three "
+            "numbers are shown together on the in-game <b>Cultivation Bonus</b> screen, "
+            "which is where the calculator's inputs come from.</p>"
+            "<p>Progression is Stage → Half-step (Early/Middle/Late) → Grade. Each grade "
+            "requires a fixed amount of EXP; the calculator sums the remaining EXP through "
+            "your target and divides by your projected speed at each future grade.</p>"
+            "<h3>Strive (the catch-up mechanic)</h3>"
+            "<p>From Nascent Soul onward, <b>Strive</b> multiplies your absorption: "
+            "Absorption = stage base × (1 + Strive). It's a catch-up bonus that GROWS the "
+            "further you are behind your server's #1 cultivator and fades to zero as you "
+            "close the gap — so long-term projections made at a high Strive are optimistic. "
+            "Set \"Server #1's Stage\" in the calculator to model the drop-off. "
+            "Counter-intuitively, Strive does not change your projected time at your "
+            "current position — it cancels out of the math — it only matters for how speed "
+            "evolves as you climb.</p>"
+            "<h3>Daily pills</h3>"
+            "<p>Cultivation pills are the main controllable EXP income. All colors share "
+            "ONE daily attempt pool (the \"Daily pill attempts\" input) — using a blue "
+            "costs the same attempt a gold would, so always consume your highest color "
+            "first. Red (Mythic) pills refined by the Starsea Vase are exempt from the "
+            "limit. A pill's tooltip shows its total EXP with your bonus in parentheses; "
+            "the calculator works with base values (total − bonus).</p>")
         html += table(
             "Cultivation Pill base EXP (per rank)",
             ["Rank", "Rare (Blue)", "Epic (Purple)", "Legendary (Gold)", "Mythic (Red)"],
@@ -376,6 +408,23 @@ class MainWindow(QMainWindow):
             "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
             "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
             "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
+        html += (
+            "<h3>Creation Artifacts</h3>"
+            "<p>Three artifacts convert a shared resource — <b>Artifact Energy</b> (each "
+            "artifact has its own pool) — into extra cultivation EXP:</p>"
+            "<ul><li><b>Starsea Vase</b>: refines any cultivation pill into a Mythic (red) "
+            "pill worth far more EXP. Reds don't count against the daily attempt pool, so "
+            "the Vase is effectively free extra pills every day — keep it fed.</li>"
+            "<li><b>Dual-Star Mirror</b>: duplicates owned items, including your red pills "
+            "(only reds whose EXP bonus matches your Vase's unlocked tiers). Its copies "
+            "stack on top of Vase production.</li>"
+            "<li><b>Timereversal Pearl</b>: converts energy into auxiliary-path EXP. Its "
+            "per-use EXP scales with your own cultivation speed bonuses, so re-read its "
+            "tooltip after aura upgrades.</li></ul>"
+            "<p>Energy regenerates over time and stops at the cap, so idle energy above "
+            "cap is wasted — spend before it fills. The paid daily charge (30 "
+            "Fateum/Destium for +100) is usually the cheapest EXP a payer can buy; the "
+            "calculator has a per-artifact checkbox for whether you use it.</p>")
         html += table(
             "Creation Artifact energy",
             ["Property", "Value"],
@@ -386,10 +435,21 @@ class MainWindow(QMainWindow):
              ["Mirror 5★", "15% chance of an extra copy per Duplication"],
              ["Pearl use cost", "10 energy; star/skin discounts add (skin −10%)"],
              ["Pearl EXP bonus", "+20% from 1★ (does not grow at higher stars)"]])
+        html += (
+            "<h3>Aura Gems</h3>"
+            "<p>An equipped Aura Gem stores aura while you're away and releases it, acting "
+            "as a flat percentage speed-up on cultivation. The calculator (following "
+            "Donk's sheet) models it as a constant parallel bonus by rarity:</p>")
         html += table(
             "Aura Gem speed bonus",
             ["Rarity", "Bonus"],
             [[k, f"+{v * 100:.0f}%"] for k, v in d["gem_bonus"].items() if k != "None"])
+        html += (
+            "<h3>Myrimon Fruits</h3>"
+            "<p>Fruits processed through the Aura Extractor grant a one-time EXP payout "
+            "(the calculator credits it against the earliest remaining EXP). Payout scales "
+            "with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher "
+            "quality rolls multiply the base substantially, so extractor upgrades compound.</p>")
         html += table(
             "Cultivation Pill Effect sources",
             ["Source", "Bonus"],
@@ -406,7 +466,21 @@ class MainWindow(QMainWindow):
                  "<li>Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul "
                  "and fades as you approach your server's #1</li>"
                  "<li>Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin "
-                 "for reds])</li></ul>")
+                 "for reds])</li></ul>"
+                 "<h3>Tips for using the calculator</h3>"
+                 "<ul><li>Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus "
+                 "screen and press Apply — that guarantees a current speed. A red warning "
+                 "means one of your readings is stale.</li>"
+                 "<li>Re-read your numbers after any upgrade that touches aura (Energy Array, "
+                 "curios, sect level) — bonuses creep constantly and quietly.</li>"
+                 "<li>Percentages in this game stack additively almost everywhere (pill "
+                 "effect sources, artifact star + skin bonuses, energy discounts). When in "
+                 "doubt, add percentage points; don't multiply.</li>"
+                 "<li>Save a profile per character/scenario from the toolbar; each profile "
+                 "keeps its own inputs.</li>"
+                 "<li>Projections assume instant first-try breakthroughs and today's daily "
+                 "routine held constant — treat long-range estimates (with high Strive "
+                 "especially) as optimistic bounds.</li></ul>")
 
         lbl = QLabel(html)
         lbl.setWordWrap(True)
