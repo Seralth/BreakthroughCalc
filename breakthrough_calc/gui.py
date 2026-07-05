@@ -77,13 +77,13 @@ class MainWindow(QMainWindow):
         pills = QGroupBox("Pills")
         f = QFormLayout(pills)
         self.pill_rank = QComboBox(); self.pill_rank.addItems(list(self.engine.data["pill_xp"].keys()))
-        self.pill_plus = QDoubleSpinBox(); self.pill_plus.setRange(0, 1e12)
+        self.pill_plus = QDoubleSpinBox(); self.pill_plus.setRange(0, 1000); self.pill_plus.setDecimals(2); self.pill_plus.setSuffix(" %")
         self.pill_limit = QDoubleSpinBox(); self.pill_limit.setRange(0, 1e6)
         self.gold_day = QDoubleSpinBox(); self.gold_day.setRange(0, 1e6)
         self.purple_day = QDoubleSpinBox(); self.purple_day.setRange(0, 1e6)
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
         f.addRow("Pill rank", self.pill_rank)
-        f.addRow("Pill + bonus XP", self.pill_plus)
+        f.addRow("Cultivation pill effect", self.pill_plus)
         f.addRow("Pill limit / day", self.pill_limit)
         f.addRow("Gold used / day", self.gold_day)
         f.addRow("Purple used / day", self.purple_day)
@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
             aura_gem=self.gem.currentText(), target_stage=self.target.currentText(),
-            pill_rank=self.pill_rank.currentText(), pill_plus_xp=self.pill_plus.value(),
+            pill_rank=self.pill_rank.currentText(), pill_effect=self.pill_plus.value() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
             purple_per_day=self.purple_day.value(), blue_per_day=self.blue_day.value(),
             mark_blue=self.mark_blue.value(), mark_purple=self.mark_purple.value(),
@@ -221,7 +221,7 @@ class MainWindow(QMainWindow):
             "stage": self.stage, "phase": self.phase, "grade": self.grade,
             "completion": self.completion, "speed": self.speed, "absorb": self.absorb,
             "gem": self.gem, "target": self.target,
-            "pill_rank": self.pill_rank, "pill_plus": self.pill_plus,
+            "pill_rank": self.pill_rank, "pill_effect_pct": self.pill_plus,
             "pill_limit": self.pill_limit, "gold_day": self.gold_day,
             "purple_day": self.purple_day, "blue_day": self.blue_day,
             "mark_blue": self.mark_blue, "mark_purple": self.mark_purple,
