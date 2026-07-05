@@ -6,3 +6,4 @@ packaging/AppDir/
 __pycache__/
 *.spec
 apk_analysis/
+Il2CppDumper/
