@@ -709,20 +709,20 @@ class MainWindow(QMainWindow):
         self.array_out.setVisible(True)
         self.array_apply.setVisible(True)
         abode, bonus, spd = r
-        txt = ""
-        stale = False
+        # Rich text so only the stale-speed warning is highlighted red.
+        parts = []
         if bonus is not None:
-            txt = f"Implied total aura bonus: {bonus * 100:.1f}%  (Abode = 130 × {1 + bonus:.3f})"
+            parts.append(f"Implied total aura bonus: {bonus * 100:.1f}%  (Abode = 130 × {1 + bonus:.3f})")
         if spd is not None:
+            line = f"Expected speed: {spd:.2f} / Cosmoapsis"
             entered = self.speed.value()
-            txt += ("\n" if txt else "") + f"Expected speed: {spd:.2f} / Cosmoapsis"
             if entered > 0:
                 diff = (entered / spd - 1) * 100
                 if abs(diff) > 0.5:
-                    stale = True
-                    txt += f"  — entered speed {entered:.2f} is {diff:+.1f}% off; one of the readings is stale"
-        self.array_out.setStyleSheet("color: #d64545;" if stale else "color: #888;")
-        self.array_out.setText(txt)
+                    line += (f"<span style='color:#d64545'>  — entered speed {entered:.2f} is "
+                             f"{diff:+.1f}% off; one of the readings is stale</span>")
+            parts.append(line)
+        self.array_out.setText("<br>".join(parts))
         self.array_apply.setEnabled(spd is not None)
 
     def _apply_array_speed(self):
