@@ -1,6 +1,17 @@
-# generated / synced artifacts
+# Synced/generated data (source of truth is ../data)
 assets/data/
 test/expected.json
+
+# Flutter/Dart build artifacts
 .dart_tool/
 build/
-.flutter-plugins*
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+*.iml
+.idea/
+android/.gradle/
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/

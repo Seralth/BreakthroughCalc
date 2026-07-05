@@ -2,39 +2,110 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'engine.dart';
+import 'reference.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final raw = await rootBundle.loadString('assets/data/breakthrough.json');
   final engine = Engine(jsonDecode(raw) as Map<String, dynamic>);
-  runApp(BreakthroughApp(engine));
+  List<dynamic> catalog = [];
+  try {
+    catalog = jsonDecode(
+        await rootBundle.loadString('assets/data/pill_effect_sources.json')) as List;
+  } catch (_) {}
+  final prefs = await SharedPreferences.getInstance();
+  runApp(BreakthroughApp(engine, catalog, prefs));
 }
 
-class BreakthroughApp extends StatelessWidget {
+// ---- themes ----------------------------------------------------------------
+const _themes = ['Seralth', 'Dark', 'Light', 'System'];
+
+ThemeData _themeData(String name, Brightness platform) {
+  Brightness b;
+  Color seed;
+  switch (name) {
+    case 'Light':
+      b = Brightness.light;
+      seed = const Color(0xFF2A72C8);
+      break;
+    case 'Dark':
+      b = Brightness.dark;
+      seed = const Color(0xFF2A82DA);
+      break;
+    case 'System':
+      b = platform;
+      seed = const Color(0xFF2A82DA);
+      break;
+    default: // Seralth
+      b = Brightness.dark;
+      seed = const Color(0xFF3D6FB5);
+  }
+  final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: b);
+  return ThemeData(
+    colorScheme: name == 'Seralth'
+        ? scheme.copyWith(surface: const Color(0xFF1E2530))
+        : scheme,
+    scaffoldBackgroundColor: name == 'Seralth' ? const Color(0xFF1A1F28) : null,
+    useMaterial3: true,
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(),
+      isDense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+    ),
+  );
+}
+
+class BreakthroughApp extends StatefulWidget {
   final Engine engine;
-  const BreakthroughApp(this.engine, {super.key});
+  final List<dynamic> catalog;
+  final SharedPreferences prefs;
+  const BreakthroughApp(this.engine, this.catalog, this.prefs, {super.key});
+
+  @override
+  State<BreakthroughApp> createState() => _BreakthroughAppState();
+}
+
+class _BreakthroughAppState extends State<BreakthroughApp> {
+  late String theme = widget.prefs.getString('theme') ?? 'Seralth';
+
+  void setTheme(String t) {
+    setState(() => theme = t);
+    widget.prefs.setString('theme', t);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final platform = MediaQuery.platformBrightnessOf(context);
     return MaterialApp(
       title: 'Breakthrough Calculator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3D6FB5),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
+      debugShowCheckedModeBanner: false,
+      theme: _themeData(theme, platform),
+      home: CalculatorPage(
+        engine: widget.engine,
+        catalog: widget.catalog,
+        theme: theme,
+        onTheme: setTheme,
       ),
-      home: CalculatorPage(engine),
     );
   }
 }
 
+// ---- main page -------------------------------------------------------------
 class CalculatorPage extends StatefulWidget {
   final Engine engine;
-  const CalculatorPage(this.engine, {super.key});
+  final List<dynamic> catalog;
+  final String theme;
+  final ValueChanged<String> onTheme;
+  const CalculatorPage({
+    super.key,
+    required this.engine,
+    required this.catalog,
+    required this.theme,
+    required this.onTheme,
+  });
 
   @override
   State<CalculatorPage> createState() => _CalculatorPageState();
@@ -43,115 +114,447 @@ class CalculatorPage extends StatefulWidget {
 class _CalculatorPageState extends State<CalculatorPage> {
   final inp = Inputs();
   late Results res;
+  final _peSources = <List<dynamic>>[]; // [name, percent]
+
+  Engine get engine => widget.engine;
 
   @override
   void initState() {
     super.initState();
-    final stages = widget.engine.stages();
+    final stages = engine.stages();
     inp.stage = stages.contains('Nascent') ? 'Nascent' : stages.first;
-    inp.phase = widget.engine.phasesFor(inp.stage).first;
-    inp.grade = widget.engine.gradesFor(inp.stage, inp.phase).first;
+    inp.phase = engine.phasesFor(inp.stage).first;
+    inp.grade = engine.gradesFor(inp.stage, inp.phase).first;
     inp.cultiSpeed = 58.84;
     inp.absorptionRatio = 0.275;
+    inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
     _recalc();
   }
 
-  void _recalc() => setState(() => res = widget.engine.calculate(inp));
+  void _recalc() {
+    inp.pillEffect = _peSources.fold(0.0, (a, s) => a + (s[1] as num)) / 100.0;
+    setState(() => res = engine.calculate(inp));
+  }
+
+  static const _stars = ['0*', '1*', '2*', '3*', '4*', '5*'];
 
   @override
   Widget build(BuildContext context) {
-    final engine = widget.engine;
-    final stages = engine.stages();
-    final phases = engine.phasesFor(inp.stage);
-    final grades = engine.gradesFor(inp.stage, inp.phase);
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Breakthrough Calculator'),
+          bottom: const TabBar(tabs: [Tab(text: 'Calculator'), Tab(text: 'Reference')]),
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.palette_outlined),
+              tooltip: 'Theme',
+              initialValue: widget.theme,
+              onSelected: widget.onTheme,
+              itemBuilder: (_) =>
+                  [for (final t in _themes) PopupMenuItem(value: t, child: Text(t))],
+            ),
+          ],
+        ),
+        body: TabBarView(children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog)]),
+      ),
+    );
+  }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Breakthrough Calculator')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+  Widget _calcTab() {
+    final gems = (engine.data['gem_bonus'] as Map).keys.cast<String>().toList();
+    final ranks = (engine.data['pill_xp'] as Map).keys.cast<String>().toList();
+    final fruitRanks = (engine.data['fruit_xp'] as Map).keys.cast<String>().toList();
+    final rarities = (engine.data['rarity_names'] as List).cast<String>();
+    final stages = engine.stages();
+
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        _resultsCard(),
+        _group('Cultivation Base', [
           _dropdown('Stage', inp.stage, stages, (v) {
             inp.stage = v!;
             inp.phase = engine.phasesFor(v).first;
             inp.grade = engine.gradesFor(v, inp.phase).first;
             _recalc();
           }),
-          _dropdown('Half-step', inp.phase, phases, (v) {
+          _dropdown('Half-step', inp.phase, engine.phasesFor(inp.stage), (v) {
             inp.phase = v!;
             inp.grade = engine.gradesFor(inp.stage, v).first;
             _recalc();
           }),
-          _dropdown('Grade', inp.grade, grades, (v) {
+          _dropdown('Grade', inp.grade, engine.gradesFor(inp.stage, inp.phase), (v) {
             inp.grade = v!;
             _recalc();
           }),
-          _number('Abode Aura', inp.absorptionRatio == 0 ? 0 : inp.cultiSpeed / inp.absorptionRatio,
-              (v) { if (inp.absorptionRatio > 0) { inp.cultiSpeed = v * inp.absorptionRatio; } _recalc(); }),
-          _number('Absorption Ratio (%)', inp.absorptionRatio * 100,
-              (v) { inp.absorptionRatio = v / 100; _recalc(); }),
-          _number('Cultivation Speed', inp.cultiSpeed, (v) { inp.cultiSpeed = v; _recalc(); }),
-          const Divider(height: 32),
-          if (!res.valid)
-            Text(res.error, style: const TextStyle(color: Colors.redAccent))
-          else ...[
-            _result('Half-step breakthrough in', fmtDays(res.phaseDays), res.phaseBand),
-            _result('Stage breakthrough in', fmtDays(res.stageDays), res.stageBand),
-            _resultPlain('Cultivation XP / day', res.baseXpPerDay.toStringAsFixed(0)),
-            _resultPlain('Effective XP / day', res.effectiveXpPerDay.toStringAsFixed(0)),
-            _resultPlain('Implied Abode Aura', res.abodeAura.toStringAsFixed(1)),
-          ],
-        ],
+          _num('Grade progress (%)', inp.gradeCompletion * 100, (v) {
+            inp.gradeCompletion = v / 100;
+            _recalc();
+          }),
+          _num('Abode Aura', inp.absorptionRatio > 0 ? inp.cultiSpeed / inp.absorptionRatio : 0,
+              (v) {
+            if (inp.absorptionRatio > 0) inp.cultiSpeed = v * inp.absorptionRatio;
+            _recalc();
+          }),
+          _num('Absorption Ratio (%)', inp.absorptionRatio * 100, (v) {
+            inp.absorptionRatio = v / 100;
+            _recalc();
+          }),
+          _num('Cultivation Speed', inp.cultiSpeed, (v) {
+            inp.cultiSpeed = v;
+            _recalc();
+          }),
+          _dropdown('Aura Gem', inp.auraGem, gems, (v) {
+            inp.auraGem = v!;
+            _recalc();
+          }),
+          _dropdown('Target Stage', inp.targetStage.isEmpty ? '(none)' : inp.targetStage,
+              ['(none)', ...stages], (v) {
+            inp.targetStage = v == '(none)' ? '' : v!;
+            _recalc();
+          }),
+          _dropdown('Server #1 Stage (Strive)', inp.topStage.isEmpty ? '(none)' : inp.topStage,
+              ['(none)', ...stages], (v) {
+            inp.topStage = v == '(none)' ? '' : v!;
+            _recalc();
+          }),
+          _check('Mature server (world 30+)', inp.matureServer, (v) {
+            inp.matureServer = v;
+            _recalc();
+          }),
+          _check("Already used today's pills/respira", inp.dailiesDone, (v) {
+            inp.dailiesDone = v;
+            _recalc();
+          }),
+        ]),
+        _group('Cultivation Pills', [
+          _dropdown('Pill rank', inp.pillRank, ranks, (v) {
+            inp.pillRank = v!;
+            _recalc();
+          }),
+          _peSourcesEditor(),
+          _num('Daily pill attempts', inp.pillLimit, (v) {
+            inp.pillLimit = v;
+            _recalc();
+          }),
+          _num('Legendary (Gold) / day', inp.goldPerDay, (v) {
+            inp.goldPerDay = v;
+            _recalc();
+          }),
+          _num('Epic (Purple) / day', inp.purplePerDay, (v) {
+            inp.purplePerDay = v;
+            _recalc();
+          }),
+          _num('Rare (Blue) / day', inp.bluePerDay, (v) {
+            inp.bluePerDay = v;
+            _recalc();
+          }),
+          _num('Star Mark: Blue (+ratio)', inp.markBlue, (v) {
+            inp.markBlue = v;
+            _recalc();
+          }),
+          _num('Star Mark: Purple (+ratio)', inp.markPurple, (v) {
+            inp.markPurple = v;
+            _recalc();
+          }),
+          _num('Star Mark: Gold (+ratio)', inp.markGold, (v) {
+            inp.markGold = v;
+            _recalc();
+          }),
+        ]),
+        _group('Creation Artifacts', [
+          _artifact('Starsea Vase', inp.vase, inp.vaseStar, inp.vaseSkin, inp.vaseCharge,
+              (v) => inp.vase = v, (v) => inp.vaseStar = v, (v) => inp.vaseSkin = v,
+              (v) => inp.vaseCharge = v),
+          _dropdown('Vase input pill', inp.vaseInput, ['Blue', 'Purple', 'Gold'], (v) {
+            inp.vaseInput = v!;
+            _recalc();
+          }),
+          _artifact('Dual-Star Mirror', inp.mirror, inp.mirrorStar, inp.mirrorSkin,
+              inp.mirrorCharge, (v) => inp.mirror = v, (v) => inp.mirrorStar = v,
+              (v) => inp.mirrorSkin = v, (v) => inp.mirrorCharge = v),
+          _artifact('Timereversal Pearl', inp.pearl, inp.pearlStar, inp.pearlSkin,
+              inp.pearlCharge, (v) => inp.pearl = v, (v) => inp.pearlStar = v,
+              (v) => inp.pearlSkin = v, (v) => inp.pearlCharge = v),
+          _num('Pearl EXP per 10 energy', inp.pearlXpPer10, (v) {
+            inp.pearlXpPer10 = v;
+            _recalc();
+          }),
+        ]),
+        _group('Respira', [
+          _num('Attempts / day', inp.respiraPerDay, (v) {
+            inp.respiraPerDay = v;
+            _recalc();
+          }),
+          _num('Extra attempts today', inp.respiraEvent, (v) {
+            inp.respiraEvent = v;
+            _recalc();
+          }),
+          _num('Base EXP / attempt', inp.respiraExp, (v) {
+            inp.respiraExp = v;
+            _recalc();
+          }),
+          const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Text(
+              "Do a few Respira: most give the same small EXP (the base — enter that); "
+              "some give 2×/5×/10× (crits — ignore, handled automatically).",
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ),
+        ]),
+        _group('Myrimon Fruit', [
+          _dropdown('Fruit rank', inp.fruitRank, fruitRanks, (v) {
+            inp.fruitRank = v!;
+            _recalc();
+          }),
+          _check('Highest rank (+50%)', inp.fruitHighestRank, (v) {
+            inp.fruitHighestRank = v;
+            _recalc();
+          }),
+          _num('No. of fruits', inp.fruitCount, (v) {
+            inp.fruitCount = v;
+            _recalc();
+          }),
+          _numInt('Culti level', inp.lvlCulti, (v) {
+            inp.lvlCulti = v;
+            _recalc();
+          }),
+          _numInt('Quality level', inp.lvlQuality, (v) {
+            inp.lvlQuality = v;
+            _recalc();
+          }),
+          _numInt('Gush level', inp.lvlGush, (v) {
+            inp.lvlGush = v;
+            _recalc();
+          }),
+          _dropdown('Extractor quality', inp.extractorRarity, rarities, (v) {
+            inp.extractorRarity = v!;
+            _recalc();
+          }),
+        ]),
+      ],
+    );
+  }
+
+  // ---- results ----
+  Widget _resultsCard() {
+    final t = Theme.of(context);
+    Widget row(String label, String value, [List<double>? band]) {
+      final showBand = band != null && band.length == 2 && (band[1] - band[0]).abs() > 1e-9;
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(flex: 5, child: Text(label)),
+          Expanded(
+            flex: 7,
+            child: RichText(
+              textAlign: TextAlign.right,
+              text: TextSpan(style: t.textTheme.bodyMedium, children: [
+                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.bold)),
+                if (showBand)
+                  TextSpan(
+                    text: '  (best ${fmtDays(band[0])} / worst ${fmtDays(band[1])})',
+                    style: TextStyle(color: t.hintColor, fontWeight: FontWeight.normal),
+                  ),
+              ]),
+            ),
+          ),
+        ]),
+      );
+    }
+
+    return Card(
+      color: t.colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: !res.valid
+            ? Text(res.error, style: TextStyle(color: t.colorScheme.error))
+            : Column(children: [
+                row('Half-step breakthrough in', fmtDays(res.phaseDays), res.phaseBand),
+                row('Stage breakthrough in', fmtDays(res.stageDays), res.stageBand),
+                if (res.targetValid)
+                  row('Target reached in', fmtDays(res.targetDays), res.targetBand),
+                const Divider(),
+                row('Cultivation XP / day', res.baseXpPerDay.toStringAsFixed(0)),
+                row('Effective XP / day', res.effectiveXpPerDay.toStringAsFixed(0)),
+                row('Pill XP / day', res.pillXpPerDay.toStringAsFixed(0)),
+                row('Mythic pills / day', res.mythicPillsPerDay.toStringAsFixed(2)),
+                row('Pearl XP / day', res.pearlXpPerDay.toStringAsFixed(0)),
+                row('Respira XP / day', res.respiraXpPerDay.toStringAsFixed(0)),
+                row('XP from fruits', res.fruitXp.toStringAsFixed(0)),
+              ]),
       ),
     );
   }
 
-  Widget _dropdown(String label, String value, List<String> items,
-      ValueChanged<String?> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: DropdownButtonFormField<String>(
-        initialValue: value,
-        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
-        items: [for (final s in items) DropdownMenuItem(value: s, child: Text(s))],
-        onChanged: onChanged,
-      ),
-    );
-  }
+  // ---- widget helpers ----
+  Widget _group(String title, List<Widget> children) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+            ),
+            ...children,
+          ]),
+        ),
+      );
 
-  Widget _number(String label, double value, ValueChanged<double> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: TextFormField(
-        initialValue: value == 0 ? '' : value.toString(),
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
-        onChanged: (t) => onChanged(double.tryParse(t) ?? 0),
-      ),
-    );
-  }
+  Widget _dropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: DropdownButtonFormField<String>(
+          value: items.contains(value) ? value : items.first,
+          isExpanded: true,
+          decoration: InputDecoration(labelText: label),
+          items: [for (final s in items) DropdownMenuItem(value: s, child: Text(s))],
+          onChanged: onChanged,
+        ),
+      );
 
-  Widget _result(String label, String value, List<double> band) {
-    final showBand = band.length == 2 && (band[1] - band[0]).abs() > 1e-9;
+  Widget _num(String label, double value, ValueChanged<double> onChanged) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: TextFormField(
+          initialValue: _fmtNum(value),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(labelText: label),
+          onChanged: (t) => onChanged(double.tryParse(t) ?? 0),
+        ),
+      );
+
+  Widget _numInt(String label, int value, ValueChanged<int> onChanged) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: TextFormField(
+          initialValue: value == 0 ? '' : '$value',
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(labelText: label),
+          onChanged: (t) => onChanged(int.tryParse(t) ?? 0),
+        ),
+      );
+
+  Widget _check(String label, bool value, ValueChanged<bool> onChanged) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+          dense: true,
+          title: Text(label),
+          value: value,
+          onChanged: (v) => onChanged(v ?? false),
+        ),
+      );
+
+  Widget _artifact(String name, bool on, String star, bool skin, bool charge,
+      ValueChanged<bool> onOn, ValueChanged<String> onStar, ValueChanged<bool> onSkin,
+      ValueChanged<bool> onCharge) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(label),
+      child: Row(children: [
         Expanded(
-          child: Text(
-            showBand ? '$value  (best ${fmtDays(band[0])} / worst ${fmtDays(band[1])})' : value,
-            textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          flex: 4,
+          child: Row(children: [
+            Checkbox(value: on, onChanged: (v) { onOn(v ?? false); _recalc(); }),
+            Expanded(child: Text(name, overflow: TextOverflow.ellipsis)),
+          ]),
+        ),
+        SizedBox(
+          width: 62,
+          child: DropdownButtonFormField<String>(
+            value: star,
+            isExpanded: true,
+            decoration: const InputDecoration(labelText: '★'),
+            items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
+            onChanged: on ? (v) { onStar(v!); _recalc(); } : null,
           ),
+        ),
+        Tooltip(
+          message: 'Skin',
+          child: Checkbox(value: skin, onChanged: on ? (v) { onSkin(v ?? false); _recalc(); } : null),
+        ),
+        Tooltip(
+          message: 'Daily charge',
+          child: Checkbox(value: charge, onChanged: on ? (v) { onCharge(v ?? false); _recalc(); } : null),
         ),
       ]),
     );
   }
 
-  Widget _resultPlain(String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(label),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        ]),
-      );
+  // ---- pill-effect sources ----
+  Widget _peSourcesEditor() {
+    final total = _peSources.fold(0.0, (a, s) => a + (s[1] as num));
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      for (var i = 0; i < _peSources.length; i++)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3),
+          child: Row(children: [
+            Expanded(
+              child: TextFormField(
+                initialValue: _peSources[i][0] as String,
+                decoration: const InputDecoration(labelText: 'Pill-effect source'),
+                onChanged: (t) => _peSources[i][0] = t,
+              ),
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 80,
+              child: TextFormField(
+                initialValue: _fmtNum((_peSources[i][1] as num).toDouble()),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: '%'),
+                onChanged: (t) { _peSources[i][1] = double.tryParse(t) ?? 0; _recalc(); },
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () { setState(() => _peSources.removeAt(i)); _recalc(); },
+            ),
+          ]),
+        ),
+      Row(children: [
+        Expanded(child: Text('Pill effect total: ${total.toStringAsFixed(2)}%',
+            style: TextStyle(color: Theme.of(context).hintColor))),
+        TextButton.icon(
+          icon: const Icon(Icons.add),
+          label: const Text('Add'),
+          onPressed: () { setState(() => _peSources.add(['', 0.0])); },
+        ),
+        TextButton.icon(
+          icon: const Icon(Icons.list),
+          label: const Text('Catalog'),
+          onPressed: _pickCatalog,
+        ),
+      ]),
+    ]);
+  }
+
+  void _pickCatalog() async {
+    final choice = await showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      builder: (_) => ListView(
+        children: [
+          for (final s in widget.catalog.cast<Map<String, dynamic>>())
+            ListTile(
+              title: Text(s['name'] as String),
+              trailing: Text('${s['percent']}%'),
+              subtitle: s['note'] != null ? Text(s['note'] as String, style: const TextStyle(fontSize: 11)) : null,
+              onTap: () => Navigator.pop(context, s),
+            ),
+        ],
+      ),
+    );
+    if (choice != null) {
+      setState(() => _peSources.add([choice['name'], (choice['percent'] as num).toDouble()]));
+      _recalc();
+    }
+  }
+
+  static String _fmtNum(double v) {
+    if (v == 0) return '';
+    if (v == v.roundToDouble()) return v.toInt().toString();
+    return v.toString();
+  }
 }

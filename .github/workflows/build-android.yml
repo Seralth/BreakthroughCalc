@@ -1,0 +1,47 @@
+name: Build Android
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.1"
+          channel: stable
+      - name: Sync data tables into assets
+        run: ./sync_data.sh
+      - name: Verify engine parity with the Python engine
+        run: |
+          python3 test/gen_expected.py
+          dart run test/parity.dart
+      - name: Build release APK
+        run: |
+          flutter pub get
+          flutter build apk --release
+      - name: Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk BreakthroughCalculator.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BreakthroughCalculator-apk
+          path: mobile/BreakthroughCalculator.apk
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mobile/BreakthroughCalculator.apk
