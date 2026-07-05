@@ -176,9 +176,15 @@ class Engine:
             star_n = int(inp.pearl_star[0]) if inp.pearl_star[:1].isdigit() else 0
             pearl_xp_day = math.floor((uses * inp.pearl_xp_per_10 * (1.2 if star_n >= 1 else 1.0)) / 10) * 10
 
-        used_gold = min(inp.gold_per_day, inp.pill_limit)
-        used_purple = min(inp.purple_per_day, inp.pill_limit)
-        used_blue = min(inp.blue_per_day, inp.pill_limit)
+        # In-game the daily pill limit is a SHARED attempt pool across all
+        # cultivation pills (vase red/mythic pills are exempt). Allocate the
+        # shared limit highest-XP-first: gold > purple > blue. For a valid
+        # distribution (gold+purple+blue <= limit) this equals per-color caps;
+        # it only bites when the entered counts exceed the shared limit.
+        rem = inp.pill_limit
+        used_gold = min(inp.gold_per_day, rem); rem -= used_gold
+        used_purple = min(inp.purple_per_day, rem); rem -= used_purple
+        used_blue = min(inp.blue_per_day, rem); rem -= used_blue
 
         total_xp_day = (mythic_per_day * mythic_xp + used_gold * gold_xp
                         + used_purple * purple_xp + used_blue * blue_xp + pearl_xp_day)
