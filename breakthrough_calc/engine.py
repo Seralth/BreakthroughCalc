@@ -93,6 +93,8 @@ class Results:
     target_days: float = 0.0       # time until start of target stage
     target_valid: bool = False
     abode_aura: float = 0.0
+    base_xp_per_day: float = 0.0        # culti_speed at the current grade, per day
+    effective_xp_per_day: float = 0.0   # base with gem + pill speed-ups applied
     pill_xp_per_day: float = 0.0
     pill_speedup: float = 0.0      # ratio (E17)
     gem_speedup: float = 0.0
@@ -266,7 +268,7 @@ class Engine:
         res.phase_days = days(raw_seconds(pend))
         res.stage_days = days(raw_seconds(send))
 
-        if inp.target_stage:
+        if inp.target_stage and inp.target_stage != inp.stage:
             tstart = self.stage_start_index(inp.target_stage)
             if tstart > idx:
                 res.target_days = days(raw_seconds(tstart - 1))
@@ -279,6 +281,8 @@ class Engine:
 
         res.valid = True
         res.abode_aura = abode
+        res.base_xp_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS)
+        res.effective_xp_per_day = res.base_xp_per_day * (1 + gem) * (1 + pill_ratio)
         res.pill_xp_per_day = pills["xp_per_day"]
         res.pill_speedup = pill_ratio
         res.gem_speedup = gem
@@ -293,4 +297,7 @@ def fmt_days(d: float) -> str:
     if d < 0:
         d = 0
     total_min = int(d * 24 * 60)
-    return f"{total_min // 1440}D {total_min % 1440 // 60}H {total_min % 60}M"
+    out = f"{total_min // 1440}D {total_min % 1440 // 60}H {total_min % 60}M"
+    if d > 365:
+        out += f"  (~{d / 365.25:.1f} yr)"
+    return out
