@@ -10,7 +10,8 @@ from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
-    QMainWindow, QPushButton, QScrollArea, QSpinBox, QVBoxLayout, QWidget,
+    QLineEdit, QMainWindow, QPushButton, QScrollArea, QSpinBox, QVBoxLayout,
+    QWidget,
 )
 
 
@@ -150,13 +151,26 @@ class MainWindow(QMainWindow):
         pills = QGroupBox("Cultivation Pills")
         f = QFormLayout(pills)
         self.pill_rank = QComboBox(); self.pill_rank.addItems(list(self.engine.data["pill_xp"].keys()))
-        self.pill_plus = QDoubleSpinBox(); self.pill_plus.setRange(0, 1000); self.pill_plus.setDecimals(2); self.pill_plus.setSuffix(" %")
         self.pill_limit = QDoubleSpinBox(); self.pill_limit.setRange(0, 1e6)
         self.gold_day = QDoubleSpinBox(); self.gold_day.setRange(0, 1e6)
         self.purple_day = QDoubleSpinBox(); self.purple_day.setRange(0, 1e6)
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
         f.addRow("Pill rank", self.pill_rank)
-        f.addRow("Cultivation pill effect", self.pill_plus)
+
+        # Cultivation pill effect = sum of contributions (technique books, relics,
+        # etc.). Record each source once so swapping gear means editing one row.
+        pe_wrap = QWidget(); pe_v = QVBoxLayout(pe_wrap); pe_v.setContentsMargins(0, 0, 0, 0)
+        self.pe_rows = []
+        self.pe_rows_layout = QVBoxLayout(); self.pe_rows_layout.setContentsMargins(0, 0, 0, 0)
+        pe_v.addLayout(self.pe_rows_layout)
+        self.pe_total = QLabel("Total: 0.00 %"); self.pe_total.setStyleSheet("color: #888;")
+        add_pe = QPushButton("＋ Add source")
+        add_pe.setToolTip("Add a pill-effect source (a technique book, a relic, …). Their percentages sum.")
+        add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
+        pe_bottom = QHBoxLayout(); pe_bottom.addWidget(self.pe_total, 1); pe_bottom.addWidget(add_pe)
+        pe_v.addLayout(pe_bottom)
+        f.addRow("Cultivation pill effect", pe_wrap)
+
         self.pill_limit.setToolTip("Shared daily attempt limit for all cultivation pills (vase red pills are exempt).")
         f.addRow("Daily pill attempts (shared)", self.pill_limit)
         f.addRow("Legendary (Gold) used / day", self.gold_day)
@@ -267,7 +281,7 @@ class MainWindow(QMainWindow):
         for w in (self.grade, self.gem, self.target, self.pill_rank, self.vase_star,
                   self.mirror_star, self.pearl_star, self.fruit_rank, self.extractor):
             w.currentTextChanged.connect(self.recalc)
-        for w in (self.completion, self.speed, self.absorb, self.pill_plus, self.pill_limit,
+        for w in (self.completion, self.speed, self.absorb, self.pill_limit,
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10, self.fruit_count):
             w.valueChanged.connect(self.recalc)
@@ -292,7 +306,6 @@ class MainWindow(QMainWindow):
             self.completion: "How far into the current Grade you are, as a percent.",
             self.gem: "Aura Gem rarity. Modeled as a flat cultivation speed-up (Donk's approximation of the storage mechanic).",
             self.target: "Optional: a future Stage to time your arrival at.",
-            self.pill_plus: "The in-game 'Cultivation Pill Effect +x%' stat.",
             self.pill_limit: "Daily pill-use limit that caps Gold/Purple/Blue usage.",
             self.pearl_xp10: "Timereversal Pearl: EXP granted per 10 energy.",
             self.fruit_count: "Number of Myrimon Fruits processed through the Aura Extractor.",
@@ -334,7 +347,7 @@ class MainWindow(QMainWindow):
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
             aura_gem=self.gem.currentText(), target_stage=stage_key(self.target.currentText()),
-            pill_rank=self.pill_rank.currentText(), pill_effect=self.pill_plus.value() / 100.0,
+            pill_rank=self.pill_rank.currentText(), pill_effect=self._pill_effect_total() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
             purple_per_day=self.purple_day.value(), blue_per_day=self.blue_day.value(),
             mark_blue=self.mark_blue.value(), mark_purple=self.mark_purple.value(),
@@ -357,7 +370,7 @@ class MainWindow(QMainWindow):
             "stage": self.stage, "phase": self.phase, "grade": self.grade,
             "completion": self.completion, "speed": self.speed, "absorb": self.absorb,
             "gem": self.gem, "target": self.target,
-            "pill_rank": self.pill_rank, "pill_effect_pct": self.pill_plus,
+            "pill_rank": self.pill_rank,
             "pill_limit": self.pill_limit, "gold_day": self.gold_day,
             "purple_day": self.purple_day, "blue_day": self.blue_day,
             "mark_blue": self.mark_blue, "mark_purple": self.mark_purple,
@@ -382,10 +395,16 @@ class MainWindow(QMainWindow):
                 vals[key] = w.isChecked()
             else:
                 vals[key] = w.value()
+        vals["pill_sources"] = [[le.text(), sp.value()] for le, sp, _ in self.pe_rows]
         return vals
 
     def _apply_state(self, vals: dict):
         prev, self._loading = self._loading, True
+        # pill-effect sources (migrate old single "pill_effect_pct" to one row)
+        srcs = vals.get("pill_sources")
+        if srcs is None and "pill_effect_pct" in vals:
+            srcs = [["", vals["pill_effect_pct"]]]
+        self._set_pill_sources(srcs if srcs is not None else [])
         wm = self._widget_map()
         # stage first so the phase/grade combos repopulate, then everything else
         for key in ["stage", "phase", "grade"] + [k for k in vals if k not in ("stage", "phase", "grade")]:
@@ -494,6 +513,7 @@ class MainWindow(QMainWindow):
                 w.setChecked(False)
             else:
                 w.setValue(0)
+        self._set_pill_sources([])
         self._loading = prev
         self.recalc()
 
@@ -533,7 +553,43 @@ class MainWindow(QMainWindow):
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
 
+    # ---- pill-effect sources (technique books, relics, …) ----------------
+    def _add_pe_row(self, label: str = "", value: float = 0.0):
+        row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
+        le = QLineEdit(label); le.setPlaceholderText("source (e.g. technique book, relic)")
+        sp = QDoubleSpinBox(); sp.setRange(0, 500); sp.setDecimals(2); sp.setSuffix(" %"); sp.setValue(value)
+        rm = QPushButton("✕"); rm.setFixedWidth(28)
+        h.addWidget(le, 1); h.addWidget(sp); h.addWidget(rm)
+        self.pe_rows_layout.addWidget(row)
+        entry = (le, sp, row)
+        self.pe_rows.append(entry)
+        le.textChanged.connect(self.recalc)
+        sp.valueChanged.connect(self.recalc)
+        rm.clicked.connect(lambda: self._remove_pe_row(entry))
+        return entry
+
+    def _remove_pe_row(self, entry):
+        if entry in self.pe_rows:
+            self.pe_rows.remove(entry)
+        entry[2].setParent(None)
+        if not self.pe_rows:            # keep at least one row
+            self._add_pe_row()
+        self.recalc()
+
+    def _pill_effect_total(self) -> float:
+        return sum(sp.value() for _, sp, _ in self.pe_rows)
+
+    def _set_pill_sources(self, sources):
+        for _, _, row in list(self.pe_rows):
+            row.setParent(None)
+        self.pe_rows.clear()
+        for lbl, val in sources:
+            self._add_pe_row(str(lbl), float(val))
+        if not self.pe_rows:
+            self._add_pe_row()
+
     def _update_pill_attempts(self):
+        self.pe_total.setText(f"Total: {self._pill_effect_total():.2f} %")
         used = self.gold_day.value() + self.purple_day.value() + self.blue_day.value()
         limit = self.pill_limit.value()
         msg = f"Attempts used: {used:g} / {limit:g} (shared; vase red pills exempt)"
