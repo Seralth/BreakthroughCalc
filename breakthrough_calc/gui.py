@@ -193,7 +193,8 @@ class MainWindow(QMainWindow):
             cat_menu = QMenu(cat_btn)
             cat_menu.setToolTipsVisible(True)
             for src in self.pe_catalog:
-                act = cat_menu.addAction(f'{src["name"]}  {src["percent"]:g}%')
+                pct = f'{src["percent"]:g}%' if src.get("percent") else "varies"
+                act = cat_menu.addAction(f'{src["name"]}  ({pct})')
                 act.setCheckable(True)
                 act.setToolTip(src.get("note", ""))
                 act.setData(src)
@@ -469,9 +470,11 @@ class MainWindow(QMainWindow):
             ["Source", "Bonus"],
             [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
              for s in (self.pe_catalog or [])],
-            "All sources stack additively. Quality-specific bonuses (Star Marks, Daozu "
-            "treasures, Lotus Throne) apply only to pills of that color — enter those in "
-            "the Star Marks fields.")
+            "All sources stack additively. Some technique books (e.g. the Ninefall books) "
+            "and Dao Ancestor treasures also grant pill effect — read the % from their "
+            "tooltips and add them as custom sources. Quality-specific bonuses (Star "
+            "Marks, Daozu treasures, Lotus Throne) apply only to pills of that color — "
+            "enter those in the Star Marks fields.")
         html += ("<h3>Core formulas</h3><ul>"
                  "<li>Cultivation Speed = Abode Aura × Absorption Ratio</li>"
                  "<li>Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for "
