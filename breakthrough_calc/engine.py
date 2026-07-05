@@ -34,6 +34,9 @@ _RESPIRA_CRIT_VAR = sum(p * m * m for m, p in _RESPIRA_CRIT) - _RESPIRA_CRIT_MEA
 # z for a ~90% central interval (P5..P95), the "best/worst" band.
 _BAND_Z = 1.645
 
+# Fruit pity: every Nth fruit is a guaranteed gush (deterministic, no variance).
+GUSH_GUARANTEE_EVERY = 6
+
 # Strive tier tables recovered from the client config (cfg_us_calc).
 # Young servers (world level < 30) use a major-realm-gap table; mature servers
 # (world level >= 30, the common case) use a minor-LEVEL-gap table plus an
@@ -303,10 +306,10 @@ class Engine:
 
         gc = l_gush["gush_chance"]
         gxm = l_culti["gush_xp"]                    # sheet looks GushXP up by culti level
-        # The fruit "crit" is the gush: each fruit's XP is multiplied by gxm with
-        # probability gc, else 1. Mean gush factor and its variance:
+        # The fruit "crit" is the gush: a gushed fruit's XP is x gxm instead of x1.
+        # Mean gush factor (gush rate gc is the calibrated total, guarantees
+        # included) — the mean is left exactly as Donk's sheet.
         e_gush = (1 - gc) + gc * gxm
-        var_gush = gc * (1 - gc) * (gxm - 1) ** 2
 
         culti_mult = 1 + l_culti["culti_xp"]
         ext = self.data["extractor_chance"].get(inp.extractor_rarity, [1, 0, 0, 0, 0, 0])
@@ -320,9 +323,14 @@ class Engine:
 
         n = inp.fruit_count
         mean = base * n * e_gush * e_q
-        # Per fruit XP = base * Gush * e_q; Var = base^2 * e_q^2 * Var(gush).
-        var_one = (base * e_q) ** 2 * var_gush
-        return mean, n * var_one
+        # Variance: every 6th fruit is a GUARANTEED gush (pity) and carries no
+        # randomness, so only the other (n - n//6) fruits contribute Bernoulli
+        # gush variance — this narrows the band by ~5/6. The mean is unchanged
+        # (still the calibrated n*gc gush rate).
+        g = int(n) // GUSH_GUARANTEE_EVERY
+        var_gush_count = (n - g) * gc * (1 - gc)
+        var_total = (base * e_q) ** 2 * (gxm - 1) ** 2 * var_gush_count
+        return mean, var_total
 
     # ---- main calc -------------------------------------------------------
     def calculate(self, inp: Inputs) -> Results:

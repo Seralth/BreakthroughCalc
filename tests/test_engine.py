@@ -268,6 +268,14 @@ class RespiraAndBands(unittest.TestCase):
             fruit_rank="R3", fruit_count=50, lvl_culti=10, lvl_quality=10, lvl_gush=10))
         self.assertGreater(var, 0)
 
+    def test_gush_guarantee_reduces_variance(self):
+        # Every 6th fruit is a guaranteed gush, so 6 fruits carry only 5 fruits'
+        # worth of gush variance (guaranteed one is deterministic).
+        kw = dict(fruit_rank="R3", lvl_culti=10, lvl_quality=10, lvl_gush=10)
+        _, v6 = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
+        _, v1 = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
+        self.assertAlmostEqual(v6, 5 * v1, places=6)
+
 
 class Formatting(unittest.TestCase):
     def test_fmt_days(self):
