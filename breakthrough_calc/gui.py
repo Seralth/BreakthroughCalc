@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -21,15 +22,31 @@ STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 
 
 def settings_path() -> str:
-    """Prefer a JSON next to the AppImage (portable/self-contained); fall back
-    to ~/.config if that directory isn't writable."""
+    """Prefer a JSON next to the executable (portable/self-contained); fall back
+    to a per-OS user config location if that directory isn't writable.
+
+    - Linux AppImage: next to the .AppImage (via the APPIMAGE env var).
+    - Windows onefile .exe: next to the .exe, else %APPDATA%\\BreakthroughCalc.
+    - Otherwise: next to a frozen executable, else ~/.config/breakthrough-calc.
+    """
+    # Portable location next to the executable.
+    exe_dir = None
     appimage = os.environ.get("APPIMAGE")
     if appimage:
-        candidate = os.path.join(os.path.dirname(appimage),
-                                 os.path.basename(appimage) + ".settings.json")
-        if os.access(os.path.dirname(appimage), os.W_OK):
-            return candidate
-    base = os.path.join(os.path.expanduser("~"), ".config", "breakthrough-calc")
+        exe_dir = os.path.dirname(appimage)
+        name = os.path.basename(appimage) + ".settings.json"
+    elif getattr(sys, "frozen", False):
+        exe_dir = os.path.dirname(os.path.abspath(sys.executable))
+        name = "settings.json"
+    if exe_dir and os.access(exe_dir, os.W_OK):
+        return os.path.join(exe_dir, name)
+
+    # Per-OS user config fallback.
+    if sys.platform == "win32":
+        base = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")),
+                            "BreakthroughCalc")
+    else:
+        base = os.path.join(os.path.expanduser("~"), ".config", "breakthrough-calc")
     os.makedirs(base, exist_ok=True)
     return os.path.join(base, "settings.json")
 
