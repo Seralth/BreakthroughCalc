@@ -115,8 +115,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final inp = Inputs();
   late Results res;
   final _peSources = <List<dynamic>>[]; // [name, percent]
+  double _abode = 0; // Abode Aura, the primary input; speed = abode * absorption
+  final _speedCtrl = TextEditingController();
+  final _abodeCtrl = TextEditingController();
+  final _absorbCtrl = TextEditingController();
 
   Engine get engine => widget.engine;
+
+  @override
+  void dispose() {
+    _speedCtrl.dispose();
+    _abodeCtrl.dispose();
+    _absorbCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -127,6 +139,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     inp.grade = engine.gradesFor(inp.stage, inp.phase).first;
     inp.cultiSpeed = 58.84;
     inp.absorptionRatio = 0.275;
+    _abode = inp.cultiSpeed / inp.absorptionRatio;
+    _speedCtrl.text = _fmtNum(inp.cultiSpeed);
+    _abodeCtrl.text = _fmtNum(_abode);
+    _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
     inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
     _recalc();
   }
@@ -193,17 +209,24 @@ class _CalculatorPageState extends State<CalculatorPage> {
             inp.gradeCompletion = v / 100;
             _recalc();
           }),
-          _num('Abode Aura', inp.absorptionRatio > 0 ? inp.cultiSpeed / inp.absorptionRatio : 0,
-              (v) {
-            if (inp.absorptionRatio > 0) inp.cultiSpeed = v * inp.absorptionRatio;
+          _numCtrl('Abode Aura', _abodeCtrl, (v) {
+            _abode = v;
+            inp.cultiSpeed = _abode * inp.absorptionRatio;
+            _speedCtrl.text = _fmtNum(inp.cultiSpeed);
             _recalc();
           }),
-          _num('Absorption Ratio (%)', inp.absorptionRatio * 100, (v) {
+          _numCtrl('Absorption Ratio (%)', _absorbCtrl, (v) {
             inp.absorptionRatio = v / 100;
+            inp.cultiSpeed = _abode * inp.absorptionRatio;
+            _speedCtrl.text = _fmtNum(inp.cultiSpeed);
             _recalc();
           }),
-          _num('Cultivation Speed', inp.cultiSpeed, (v) {
+          _numCtrl('Cultivation Speed', _speedCtrl, (v) {
             inp.cultiSpeed = v;
+            if (inp.absorptionRatio > 0) {
+              _abode = inp.cultiSpeed / inp.absorptionRatio;
+              _abodeCtrl.text = _fmtNum(_abode);
+            }
             _recalc();
           }),
           _dropdown('Aura Gem', inp.auraGem, gems, (v) {
@@ -416,6 +439,17 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ),
       );
 
+  Widget _numCtrl(String label, TextEditingController ctrl, ValueChanged<double> onChanged) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: TextField(
+          controller: ctrl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(labelText: label),
+          onChanged: (t) => onChanged(double.tryParse(t) ?? 0),
+        ),
+      );
+
   Widget _num(String label, double value, ValueChanged<double> onChanged) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: TextFormField(
@@ -554,7 +588,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   static String _fmtNum(double v) {
     if (v == 0) return '';
-    if (v == v.roundToDouble()) return v.toInt().toString();
-    return v.toString();
+    final r = double.parse(v.toStringAsFixed(4)); // strip float noise
+    if (r == r.roundToDouble()) return r.toInt().toString();
+    return r.toString();
   }
 }
