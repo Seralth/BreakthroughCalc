@@ -219,11 +219,11 @@ class MainWindow(QMainWindow):
         self.pill_attempts = QLabel("")
         self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
         f.addRow("", self.pill_attempts)
-        self.dailies_done = QCheckBox("Already used today's pills")
+        self.dailies_done = QCheckBox("Already used today's pills/respira")
         self.dailies_done.setToolTip(
-            "Check if you've already taken today's daily pills. The projection then "
-            "defers the pill boost to the next daily reset (today runs at base speed). "
-            "Mainly affects short estimates.")
+            "Check if you've already taken today's daily pills and Respira. The "
+            "projection then defers that boost to the next daily reset (today runs "
+            "at base speed). Mainly affects short estimates.")
         f.addRow("", self.dailies_done)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
@@ -284,6 +284,25 @@ class MainWindow(QMainWindow):
               self.pearl_xp10, self.pearl_xp10_label)
         lv.addWidget(arts)
 
+        respira = QGroupBox("Respira")
+        rf = QFormLayout(respira)
+        self.respira_per_day = QDoubleSpinBox(); self.respira_per_day.setRange(0, 1e5)
+        self.respira_per_day.setToolTip(
+            "Your daily Respira attempt limit as shown in-game (base + permanent "
+            "bonus attempts). Leave out temporary event attempts.")
+        self.respira_event = QDoubleSpinBox(); self.respira_event.setRange(0, 1e5)
+        self.respira_event.setToolTip(
+            "One-off extra Respira attempts available today only (event/item). "
+            "Credited once, not as a daily rate.")
+        self.respira_exp = QDoubleSpinBox(); self.respira_exp.setRange(0, 1e12)
+        self.respira_exp.setToolTip(
+            "Base (non-crit) Cultivation EXP from one Respira attempt, from its "
+            "tooltip. Crits (×2/×5/×10, averaging ×1.8) are applied automatically.")
+        rf.addRow("Attempts / day", self.respira_per_day)
+        rf.addRow("Extra attempts today", self.respira_event)
+        rf.addRow("Base EXP / attempt", self.respira_exp)
+        lv.addWidget(respira)
+
         fruit = QGroupBox("Myrimon Fruit")
         f = QFormLayout(fruit)
         self.fruit_rank = QComboBox(); self.fruit_rank.addItems(list(self.engine.data["fruit_xp"].keys()))
@@ -326,6 +345,7 @@ class MainWindow(QMainWindow):
             ("Speed-up (pills / gem)", "o_speedup"),
             ("Mythic pills / day", "o_mythic"),
             ("Pearl XP / day", "o_pearl"),
+            ("Respira XP / day", "o_respira"),
             ("XP from fruits", "o_fruit"),
             ("Fruit time saved", "o_fruit_days"),
         ]
@@ -470,6 +490,20 @@ class MainWindow(QMainWindow):
             ["Rarity", "Bonus"],
             [[k, f"+{v * 100:.0f}%"] for k, v in d["gem_bonus"].items() if k != "None"])
         html += (
+            "<h3>Respira</h3>"
+            "<p>Respira (the daily cultivation exercise) grants a burst of Cultivation "
+            "EXP from a limited number of daily attempts, resetting on Stage/half-step "
+            "breakthrough. Each attempt rolls a crit multiplier — <b>×1 / ×2 / ×5 / ×10</b> "
+            "at 60% / 30% / 8% / 2% — averaging <b>×1.8</b> (from the client config). Enter "
+            "your daily attempt limit and the base (non-crit) EXP per attempt; the ×1.8 "
+            "average is applied for you, so daily Respira EXP ≈ attempts × base × 1.8. "
+            "Temporary event attempts go in the separate one-off field.</p>"
+            "<h3>Crit variance (best / worst)</h3>"
+            "<p>Respira crits and fruit gushes are random, so the breakthrough estimate "
+            "carries a range. The app shows a <b>best / worst</b> band (a ~90% likely "
+            "interval, not literal extremes). Because these are sums of many independent "
+            "rolls, luck averages out: the band is widest on short estimates and tightens "
+            "as the horizon grows — the opposite of runaway long-term drift.</p>"
             "<h3>Myrimon Fruits</h3>"
             "<p>Fruits processed through the Aura Extractor grant a one-time EXP payout "
             "(the calculator credits it against the earliest remaining EXP). Payout scales "
@@ -532,7 +566,8 @@ class MainWindow(QMainWindow):
             w.currentTextChanged.connect(self.recalc)
         for w in (self.completion, self.speed, self.absorb, self.pill_limit,
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
-                  self.mark_purple, self.mark_gold, self.pearl_xp10, self.fruit_count):
+                  self.mark_purple, self.mark_gold, self.pearl_xp10,
+                  self.respira_per_day, self.respira_event, self.respira_exp, self.fruit_count):
             w.valueChanged.connect(self.recalc)
         for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.abode_aura):
             w.valueChanged.connect(self.recalc)
@@ -614,6 +649,9 @@ class MainWindow(QMainWindow):
             pearl_xp_per_10=self.pearl_xp10.value(),
             mature_server=self.mature_server.isChecked(),
             dailies_done=self.dailies_done.isChecked(),
+            respira_per_day=self.respira_per_day.value(),
+            respira_event=self.respira_event.value(),
+            respira_exp=self.respira_exp.value(),
             vase_charge=self.vase_charge.isChecked(),
             mirror_charge=self.mirror_charge.isChecked(),
             pearl_charge=self.pearl_charge.isChecked(),
@@ -641,6 +679,8 @@ class MainWindow(QMainWindow):
             "pearl": self.pearl, "pearl_star": self.pearl_star,
             "pearl_skin": self.pearl_skin, "mature_server": self.mature_server,
             "dailies_done": self.dailies_done,
+            "respira_per_day": self.respira_per_day, "respira_event": self.respira_event,
+            "respira_exp": self.respira_exp,
             "pearl_xp10": self.pearl_xp10,
             "vase_charge": self.vase_charge, "mirror_charge": self.mirror_charge,
             "pearl_charge": self.pearl_charge,
@@ -1005,6 +1045,14 @@ class MainWindow(QMainWindow):
         self.absorb_base.setStyleSheet(f"color: {self._acc['warn'] if warn else self._acc['muted']};")
         self.absorb_base.setText(msg)
 
+    def _fmt_band(self, d: float, band: tuple) -> str:
+        lo, hi = band
+        point = fmt_days(d)
+        if hi - lo < 1e-9 or d <= 0 or fmt_days(lo) == fmt_days(hi):
+            return point
+        return (f"{point}  <span style='color:{self._acc['muted']}'>"
+                f"(best {fmt_days(lo)} / worst {fmt_days(hi)})</span>")
+
     def recalc(self, *_):
         if not self._loading:
             self._save_settings()
@@ -1019,9 +1067,10 @@ class MainWindow(QMainWindow):
             self.o_error.setText(res.error)
             return
         self.o_error.setText(res.error)
-        self.o_phase.setText(fmt_days(res.phase_days))
-        self.o_stage.setText(fmt_days(res.stage_days))
-        self.o_target.setText(fmt_days(res.target_days) if res.target_valid else "—")
+        self.o_phase.setText(self._fmt_band(res.phase_days, res.phase_band))
+        self.o_stage.setText(self._fmt_band(res.stage_days, res.stage_band))
+        self.o_target.setText(self._fmt_band(res.target_days, res.target_band)
+                              if res.target_valid else "—")
         self.o_abode.setText(f"{res.abode_aura:,.1f}")
         self.o_basexp.setText(f"{res.base_xp_per_day:,.0f}")
         self.o_effxp.setText(f"{res.effective_xp_per_day:,.0f}")
@@ -1029,21 +1078,25 @@ class MainWindow(QMainWindow):
         self.o_speedup.setText(f"+{res.pill_speedup * 100:.1f}% / +{res.gem_speedup * 100:.0f}%")
         self.o_mythic.setText(f"{res.mythic_pills_per_day:.2f}")
         self.o_pearl.setText(f"{res.pearl_xp_per_day:,.0f}")
+        self.o_respira.setText(f"{res.respira_xp_per_day:,.0f}")
         self.o_fruit.setText(f"{res.fruit_xp:,.0f}")
         self.o_fruit_days.setText(fmt_days(res.fruit_days_saved))
 
     def _copy_results(self):
+        import re
+        plain = lambda s: re.sub(r"<[^>]+>", "", s)
         rows = [
             ("Stage", self.stage.currentText()), ("Half-step", self.phase.currentText()),
             ("Grade", self.grade.currentText()),
-            ("Half-step breakthrough in", self.o_phase.text()),
-            ("Stage breakthrough in", self.o_stage.text()),
-            ("Target Stage reached in", self.o_target.text()),
+            ("Half-step breakthrough in", plain(self.o_phase.text())),
+            ("Stage breakthrough in", plain(self.o_stage.text())),
+            ("Target Stage reached in", plain(self.o_target.text())),
             ("Abode Aura (implied)", self.o_abode.text()),
             ("Cultivation XP / day", self.o_basexp.text()),
             ("Effective XP / day", self.o_effxp.text()),
             ("Pill XP / day", self.o_pillxp.text()),
             ("Mythic pills / day", self.o_mythic.text()),
+            ("Respira XP / day", self.o_respira.text()),
             ("XP from fruits", self.o_fruit.text()),
             ("Fruit time saved", self.o_fruit_days.text()),
         ]

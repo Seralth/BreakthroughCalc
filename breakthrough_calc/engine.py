@@ -27,6 +27,13 @@ from dataclasses import dataclass, field
 
 TICK_SECONDS = 8.0
 
+# Respira crit roll (cfg_us_calc yunqi_crit): multiplier x weight/1000.
+_RESPIRA_CRIT = ((1, 0.60), (2, 0.30), (5, 0.08), (10, 0.02))
+_RESPIRA_CRIT_MEAN = sum(m * p for m, p in _RESPIRA_CRIT)          # 1.8
+_RESPIRA_CRIT_VAR = sum(p * m * m for m, p in _RESPIRA_CRIT) - _RESPIRA_CRIT_MEAN ** 2  # 2.56
+# z for a ~90% central interval (P5..P95), the "best/worst" band.
+_BAND_Z = 1.645
+
 # Strive tier tables recovered from the client config (cfg_us_calc).
 # Young servers (world level < 30) use a major-realm-gap table; mature servers
 # (world level >= 30, the common case) use a minor-LEVEL-gap table plus an
@@ -96,7 +103,13 @@ class Inputs:
     target_stage: str = ""          # for "time until future stage"
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
     mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
-    dailies_done: bool = False      # today's daily pills already used; defer them to next reset
+    dailies_done: bool = False      # today's daily pills/respira already used; defer to next reset
+
+    # Respira (daily cultivation exercise). Each attempt grants base EXP times a
+    # crit roll: x1/x2/x5/x10 at 60/30/8/2% (mean 1.8, from client config).
+    respira_per_day: float = 0.0    # daily attempt limit (base + permanent bonuses)
+    respira_event: float = 0.0      # one-off extra attempts today (event/item)
+    respira_exp: float = 0.0        # base (non-crit) EXP per attempt, from tooltip
 
     # Pills
     pill_rank: str = "1R"
@@ -153,8 +166,13 @@ class Results:
     gem_speedup: float = 0.0
     mythic_pills_per_day: float = 0.0
     pearl_xp_per_day: float = 0.0
+    respira_xp_per_day: float = 0.0
     fruit_xp: float = 0.0
     fruit_days_saved: float = 0.0
+    # 90% (P5..P95) time bands from fruit/respira crit variance: (low, high).
+    phase_band: tuple = (0.0, 0.0)
+    stage_band: tuple = (0.0, 0.0)
+    target_band: tuple = (0.0, 0.0)
     breakdown: dict = field(default_factory=dict)
 
 
@@ -269,9 +287,12 @@ class Engine:
         }
 
     # ---- fruits ----------------------------------------------------------
-    def _fruit_xp(self, inp: Inputs) -> float:
+    def _fruit_stats(self, inp: Inputs) -> tuple[float, float]:
+        """(mean XP, variance) for a fruit batch. Each fruit independently rolls
+        a gush (the crit) and a quality tier, so the batch total is a sum of
+        i.i.d. per-fruit XP — mean and variance both scale with the count."""
         if inp.fruit_count <= 0:
-            return 0.0
+            return 0.0, 0.0
         base = self.data["fruit_xp"].get(inp.fruit_rank, 0)
         if inp.fruit_highest_rank:
             base *= 1.5
@@ -280,21 +301,28 @@ class Engine:
         l_culti = lv[str(max(0, min(30, inp.lvl_culti)))]
         l_qual = lv[str(max(0, min(30, inp.lvl_quality)))]
 
-        gush_chance = l_gush["gush_chance"]
-        gushed = inp.fruit_count * gush_chance
-        normal = inp.fruit_count - gushed
-        gush_xp_mult = l_culti["gush_xp"]          # sheet looks GushXP up by culti level
-        est_xp = base * normal + base * gushed * gush_xp_mult
+        gc = l_gush["gush_chance"]
+        gxm = l_culti["gush_xp"]                    # sheet looks GushXP up by culti level
+        # The fruit "crit" is the gush: each fruit's XP is multiplied by gxm with
+        # probability gc, else 1. Mean gush factor and its variance:
+        e_gush = (1 - gc) + gc * gxm
+        var_gush = gc * (1 - gc) * (gxm - 1) ** 2
 
         culti_mult = 1 + l_culti["culti_xp"]
         ext = self.data["extractor_chance"].get(inp.extractor_rarity, [1, 0, 0, 0, 0, 0])
-        total = 0.0
         thresholds = [1, 6, 11, 16, 21, 26]
+        # Expected quality factor (treated as deterministic — the data models it
+        # as an aggregate, not a single-tier draw, so only gush drives variance).
+        e_q = 0.0
         for i, qmult in enumerate(self.data["quality_mult"]):
-            prob = min(1.0, l_qual["quality"][i] + ext[i])
-            tier_bonus = 0.2 if inp.lvl_culti >= thresholds[i] else 0.0
-            total += est_xp * (culti_mult + tier_bonus) * prob * qmult
-        return total
+            p = min(1.0, l_qual["quality"][i] + ext[i])
+            e_q += p * (culti_mult + (0.2 if inp.lvl_culti >= thresholds[i] else 0.0)) * qmult
+
+        n = inp.fruit_count
+        mean = base * n * e_gush * e_q
+        # Per fruit XP = base * Gush * e_q; Var = base^2 * e_q^2 * Var(gush).
+        var_one = (base * e_q) ** 2 * var_gush
+        return mean, n * var_one
 
     # ---- main calc -------------------------------------------------------
     def calculate(self, inp: Inputs) -> Results:
@@ -323,8 +351,21 @@ class Engine:
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 
         pills = self._pill_math(inp)
-        pill_ratio = (pills["xp_per_day"] / inp.culti_speed) * TICK_SECONDS / 86400.0
-        fruit_xp = self._fruit_xp(inp)
+        # Respira: mean daily XP = attempts x base x 1.8 (crit mean). Event
+        # attempts are a one-off, credited up front like fruit.
+        respira_daily = inp.respira_per_day * inp.respira_exp * _RESPIRA_CRIT_MEAN
+        respira_event_xp = inp.respira_event * inp.respira_exp * _RESPIRA_CRIT_MEAN
+        daily_xp = pills["xp_per_day"] + respira_daily
+        pill_ratio = (daily_xp / inp.culti_speed) * TICK_SECONDS / 86400.0
+        fruit_mean, fruit_var = self._fruit_stats(inp)
+        fruit_xp = fruit_mean + respira_event_xp
+
+        # Crit variance for the best/worst band. Fruit + event attempts are
+        # up-front lumps; daily respira accumulates over the projection horizon.
+        # var per attempt = base^2 * crit_var; independent, so counts add.
+        exp2 = inp.respira_exp * inp.respira_exp * _RESPIRA_CRIT_VAR
+        var_upfront = fruit_var + inp.respira_event * exp2
+        var_daily = inp.respira_per_day * exp2      # per day of projection
 
         # Optional Strive drop-off: if server #1's Stage is given and you're
         # behind them, Strive steps DOWN as you climb major realms toward #1
@@ -361,13 +402,12 @@ class Engine:
         def days(xp_seconds: float) -> float:
             return xp_seconds / 86400.0 / (1 + gem) / (1 + pill_ratio)
 
-        # If today's daily pills are already spent, they shouldn't contribute
-        # again during the rest of today. The pill rate is modeled continuously,
-        # so remove exactly one day's pill XP as a one-time deficit — this
-        # defers the pill boost by a day (equivalent to today running at base
-        # speed with pills resuming at the next reset). Negative credit adds to
-        # the XP that must be cultivated.
-        start_credit = fruit_xp - (pills["xp_per_day"] if inp.dailies_done else 0.0)
+        # If today's daily pills/respira are already spent, they shouldn't
+        # contribute again during the rest of today. The daily rate is modeled
+        # continuously, so remove exactly one day's daily XP as a one-time
+        # deficit — this defers the boost by a day (today runs at base speed
+        # with dailies resuming next reset). Negative credit adds required XP.
+        start_credit = fruit_xp - (daily_xp if inp.dailies_done else 0.0)
 
         # seconds of cultivation from "now" through the end of row j (inclusive),
         # with the starting credit applied against the earliest remaining XP.
@@ -392,13 +432,28 @@ class Engine:
         while send + 1 < len(self.rows) and self.rows[send + 1]["stage"] == inp.stage:
             send += 1
 
+        eff_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS) * (1 + gem) * (1 + pill_ratio)
+
+        def band(t_days: float) -> tuple:
+            # Cumulative-XP SD at the point estimate, mapped to a time spread by
+            # the effective daily rate. Up-front lump variance + daily respira
+            # variance accrued over the horizon. z*SD gives the P5..P95 edges.
+            if eff_per_day <= 0 or (var_upfront <= 0 and var_daily <= 0):
+                return (t_days, t_days)
+            var_xp = var_upfront + var_daily * max(0.0, t_days)
+            sd_days = (var_xp ** 0.5) / eff_per_day
+            return (max(0.0, t_days - _BAND_Z * sd_days), t_days + _BAND_Z * sd_days)
+
         res.phase_days = days(raw_seconds(pend))
         res.stage_days = days(raw_seconds(send))
+        res.phase_band = band(res.phase_days)
+        res.stage_band = band(res.stage_days)
 
         if inp.target_stage and inp.target_stage != inp.stage:
             tstart = self.stage_start_index(inp.target_stage)
             if tstart > idx:
                 res.target_days = days(raw_seconds(tstart - 1))
+                res.target_band = band(res.target_days)
                 res.target_valid = True
             elif tstart >= 0:
                 res.error = "Target stage precedes current stage."
@@ -416,6 +471,7 @@ class Engine:
         res.gem_speedup = gem
         res.mythic_pills_per_day = pills["mythic_per_day"]
         res.pearl_xp_per_day = pills["pearl_xp_day"]
+        res.respira_xp_per_day = respira_daily
         res.fruit_xp = fruit_xp
         # Matches Donk's sheet (myrfruits B45/B46): fruit XP / current speed, no gem/pill divisor.
         res.fruit_days_saved = fruit_secs / 86400.0
