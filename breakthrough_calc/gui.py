@@ -124,11 +124,29 @@ class MainWindow(QMainWindow):
         f.addRow("Half-step", self.phase)
         f.addRow("Grade", self.grade)
         f.addRow("Grade progress", self.completion)
+        # Speed, Absorption, and Abode Aura are all read off the same in-game
+        # Cultivation Bonus screen, so they live together in this group. Abode
+        # Aura is optional and cross-checks the entered speed (speed = Aura ×
+        # Absorption); the implied total aura bonus is shown when base energy
+        # is a known constant (130, Connection..Incarnation).
         f.addRow("Cultivation Speed (XP / Cosmoapsis)", self.speed)
         f.addRow("Absorption Ratio", self.absorb)
         self.absorb_base = QLabel("")
         self.absorb_base.setStyleSheet("color: #888;")
         f.addRow("", self.absorb_base)
+        self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
+        self.abode_aura.setDecimals(2)
+        self.abode_aura.setToolTip(
+            "Optional: your Abode Aura exactly as shown on the Cultivation Bonus screen "
+            "(same place as Speed and Absorption). Expected speed = Abode Aura × "
+            "Absorption Ratio — a cross-check that your Speed reading is current.")
+        f.addRow("Abode Aura (optional)", self.abode_aura)
+        self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
+        self.array_out.setStyleSheet("color: #888;")
+        f.addRow("", self.array_out)
+        self.array_apply = QPushButton("Apply to Cultivation Speed")
+        self.array_apply.clicked.connect(self._apply_array_speed)
+        f.addRow("", self.array_apply)
         f.addRow("Aura Gem", self.gem)
         f.addRow("Target Stage", self.target)
         self.top_stage = QComboBox(); self.top_stage.addItem("")
@@ -139,28 +157,6 @@ class MainWindow(QMainWindow):
             "Leave blank to hold Strive constant.")
         f.addRow("Server #1's Stage (Strive)", self.top_stage)
         lv.addWidget(cult)
-
-        # Optional Cultivation Bonus helper (named after the in-game screen
-        # where Abode Aura is shown): compute expected cultivation speed
-        # directly from the in-game Abode Aura reading and absorption
-        # (speed = Abode Aura × Absorption). The implied total aura bonus is
-        # shown when base energy is a known constant (130, Connection..
-        # Incarnation): Abode Aura = 130 × (1 + total bonus).
-        ea = QGroupBox("Cultivation Bonus (optional)")
-        eaf = QFormLayout(ea)
-        self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
-        self.abode_aura.setDecimals(2)
-        self.abode_aura.setToolTip(
-            "Your Abode Aura exactly as shown in-game. Expected speed = Abode Aura × "
-            "Absorption Ratio. Entering the shown value avoids summing aura bonuses "
-            "(Energy Array + curios + sect level + …) by hand.")
-        self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
-        self.array_apply = QPushButton("Apply to Cultivation Speed")
-        self.array_apply.clicked.connect(self._apply_array_speed)
-        eaf.addRow("Abode Aura (in-game)", self.abode_aura)
-        eaf.addRow("", self.array_out)
-        eaf.addRow("", self.array_apply)
-        lv.addWidget(ea)
 
         pills = QGroupBox("Cultivation Pills")
         f = QFormLayout(pills)
@@ -709,9 +705,11 @@ class MainWindow(QMainWindow):
     def _update_array_out(self):
         r = self._array_expected()
         if r is None:
-            self.array_out.setText("Enter your in-game Abode Aura.")
-            self.array_apply.setEnabled(False)
+            self.array_out.setVisible(False)
+            self.array_apply.setVisible(False)
             return
+        self.array_out.setVisible(True)
+        self.array_apply.setVisible(True)
         abode, bonus, spd = r
         txt = ""
         if bonus is not None:
