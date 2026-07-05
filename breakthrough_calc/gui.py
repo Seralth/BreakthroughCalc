@@ -219,6 +219,12 @@ class MainWindow(QMainWindow):
         self.pill_attempts = QLabel("")
         self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
         f.addRow("", self.pill_attempts)
+        self.dailies_done = QCheckBox("Already used today's pills")
+        self.dailies_done.setToolTip(
+            "Check if you've already taken today's daily pills. The projection then "
+            "defers the pill boost to the next daily reset (today runs at base speed). "
+            "Mainly affects short estimates.")
+        f.addRow("", self.dailies_done)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
         for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
@@ -532,7 +538,7 @@ class MainWindow(QMainWindow):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.vase_charge, self.mirror, self.mirror_skin,
                   self.mirror_charge, self.pearl, self.pearl_skin, self.pearl_charge,
-                  self.mature_server, self.fruit_high):
+                  self.mature_server, self.dailies_done, self.fruit_high):
             w.toggled.connect(self.recalc)
         self._install_wheel_guard()
         self._install_tooltips()
@@ -607,6 +613,7 @@ class MainWindow(QMainWindow):
             pearl_skin=self.pearl_skin.isChecked(),
             pearl_xp_per_10=self.pearl_xp10.value(),
             mature_server=self.mature_server.isChecked(),
+            dailies_done=self.dailies_done.isChecked(),
             vase_charge=self.vase_charge.isChecked(),
             mirror_charge=self.mirror_charge.isChecked(),
             pearl_charge=self.pearl_charge.isChecked(),
@@ -633,6 +640,7 @@ class MainWindow(QMainWindow):
             "mirror_skin": self.mirror_skin,
             "pearl": self.pearl, "pearl_star": self.pearl_star,
             "pearl_skin": self.pearl_skin, "mature_server": self.mature_server,
+            "dailies_done": self.dailies_done,
             "pearl_xp10": self.pearl_xp10,
             "vase_charge": self.vase_charge, "mirror_charge": self.mirror_charge,
             "pearl_charge": self.pearl_charge,

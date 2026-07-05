@@ -221,6 +221,29 @@ class StriveDropoff(unittest.TestCase):
         self.assertGreaterEqual(drop.target_days, plain.target_days)
 
 
+class DailiesDone(unittest.TestCase):
+    def setUp(self):
+        self.e = Engine()
+
+    def test_defers_one_day_of_pills(self):
+        # Checking "already used today's pills" should push the estimate later
+        # by exactly one day's pill XP worth of time (deficit / effective rate).
+        kw = dict(pill_rank="4R", pill_limit=10, gold_per_day=2,
+                  purple_per_day=4, blue_per_day=4)
+        base = self.e.calculate(base_inputs(**kw))
+        done = self.e.calculate(base_inputs(dailies_done=True, **kw))
+        pill_xp = self.e._pill_math(base_inputs(**kw))["xp_per_day"]
+        eff_rate = base.effective_xp_per_day
+        self.assertAlmostEqual(done.stage_days - base.stage_days,
+                               pill_xp / eff_rate, places=6)
+        self.assertGreater(done.stage_days, base.stage_days)
+
+    def test_no_effect_without_pills(self):
+        base = self.e.calculate(base_inputs())
+        done = self.e.calculate(base_inputs(dailies_done=True))
+        self.assertAlmostEqual(base.stage_days, done.stage_days, places=9)
+
+
 class Formatting(unittest.TestCase):
     def test_fmt_days(self):
         self.assertEqual(fmt_days(1.5), "1D 12H 0M")
