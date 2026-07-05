@@ -6,16 +6,27 @@ import json
 import os
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
-    QApplication, QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox,
-    QGridLayout, QHBoxLayout, QLabel, QMainWindow, QScrollArea, QSpinBox,
-    QVBoxLayout, QWidget,
+    QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
+    QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QLabel, QMainWindow,
+    QPushButton, QScrollArea, QSpinBox, QVBoxLayout, QWidget,
 )
+
+
+class _WheelGuard(QObject):
+    """Swallow wheel events on unfocused spin/combo widgets so scrolling the
+    form doesn't silently change values (Qt steps them even without focus)."""
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Wheel and not obj.hasFocus():
+            event.ignore()
+            return True
+        return super().eventFilter(obj, event)
 
 from .engine import Engine, Inputs, fmt_days
 
-PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Mid", "LATE": "Late"}
+PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
 
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
@@ -84,14 +95,17 @@ class MainWindow(QMainWindow):
         self.absorb = QDoubleSpinBox(); self.absorb.setRange(0, 10000); self.absorb.setDecimals(3); self.absorb.setSuffix(" %")
         self.gem = QComboBox(); self.gem.addItems(list(self.engine.data["gem_bonus"].keys()))
         self.target = QComboBox(); self.target.addItem(""); self.target.addItems(self.engine.stages())
-        f.addRow("Realm", self.stage)
+        f.addRow("Stage", self.stage)
         f.addRow("Half-step", self.phase)
-        f.addRow("Layer", self.grade)
-        f.addRow("Layer progress", self.completion)
-        f.addRow("Cultivation speed (XP / Cosmoapsis)", self.speed)
-        f.addRow("Absorption ratio", self.absorb)
-        f.addRow("Aura gem", self.gem)
-        f.addRow("Target realm", self.target)
+        f.addRow("Grade", self.grade)
+        f.addRow("Grade progress", self.completion)
+        f.addRow("Cultivation Speed (XP / Cosmoapsis)", self.speed)
+        f.addRow("Absorption Ratio", self.absorb)
+        self.absorb_base = QLabel("")
+        self.absorb_base.setStyleSheet("color: #888;")
+        f.addRow("", self.absorb_base)
+        f.addRow("Aura Gem", self.gem)
+        f.addRow("Target Stage", self.target)
         lv.addWidget(cult)
 
         pills = QGroupBox("Cultivation Pills")
@@ -105,23 +119,26 @@ class MainWindow(QMainWindow):
         f.addRow("Pill rank", self.pill_rank)
         f.addRow("Cultivation pill effect", self.pill_plus)
         f.addRow("Pill limit / day", self.pill_limit)
-        f.addRow("Gold used / day", self.gold_day)
-        f.addRow("Purple used / day", self.purple_day)
-        f.addRow("Blue used / day", self.blue_day)
+        f.addRow("Legendary (Gold) used / day", self.gold_day)
+        f.addRow("Epic (Purple) used / day", self.purple_day)
+        f.addRow("Rare (Blue) used / day", self.blue_day)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
-        for w, name in ((self.mark_blue, "Blue"), (self.mark_purple, "Purple"), (self.mark_gold, "Gold")):
+        for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
             w.setRange(0, 10); w.setSingleStep(0.01); w.setDecimals(2)
+            w.setToolTip("Star Mark bonus as a ratio: 0.10 = +10% pill XP")
             marks.addWidget(QLabel(name)); marks.addWidget(w)
-        f.addRow("Star marks (+XP ratio)", marks)
+        f.addRow("Star Marks (+XP ratio)", marks)
         lv.addWidget(pills)
 
         arts = QGroupBox("Creation Artifacts")
         g = QGridLayout(arts)
         g.addWidget(QLabel("<b>Artifact</b>"), 0, 0); g.addWidget(QLabel("<b>Star</b>"), 0, 2); g.addWidget(QLabel("<b>Skin</b>"), 0, 3)
-        self.vase = QCheckBox("Vase"); self.vase_star = QComboBox(); self.vase_star.addItems(STARS); self.vase_skin = QCheckBox()
-        self.mirror = QCheckBox("Mirror"); self.mirror_star = QComboBox(); self.mirror_star.addItems(STARS); self.mirror_skin = QCheckBox()
-        self.pearl = QCheckBox("Pearl"); self.pearl_star = QComboBox(); self.pearl_star.addItems(STARS)
+        self.vase = QCheckBox("Starsea Vase"); self.vase_star = QComboBox(); self.vase_star.addItems(STARS); self.vase_skin = QCheckBox()
+        self.vase_skin.setToolTip("Transmog skin: refined pills give +8% Cultivation EXP")
+        self.mirror = QCheckBox("Dual-Star Mirror"); self.mirror_star = QComboBox(); self.mirror_star.addItems(STARS); self.mirror_skin = QCheckBox()
+        self.mirror_skin.setToolTip("Transmog skin: Duplication consumes 10% less Energy")
+        self.pearl = QCheckBox("Timereversal Pearl"); self.pearl_star = QComboBox(); self.pearl_star.addItems(STARS)
         self.pearl_xp10 = QDoubleSpinBox(); self.pearl_xp10.setRange(0, 1e12)
         g.addWidget(self.vase, 1, 0); g.addWidget(self.vase_star, 1, 2); g.addWidget(self.vase_skin, 1, 3)
         g.addWidget(self.mirror, 2, 0); g.addWidget(self.mirror_star, 2, 2); g.addWidget(self.mirror_skin, 2, 3)
@@ -129,7 +146,7 @@ class MainWindow(QMainWindow):
         g.addWidget(QLabel("EXP per 10 energy"), 4, 0); g.addWidget(self.pearl_xp10, 4, 2, 1, 2)
         lv.addWidget(arts)
 
-        fruit = QGroupBox("Spirit Fruits")
+        fruit = QGroupBox("Myrimon Fruit")
         f = QFormLayout(fruit)
         self.fruit_rank = QComboBox(); self.fruit_rank.addItems(list(self.engine.data["fruit_xp"].keys()))
         self.fruit_high = QCheckBox("Highest rank (+50%)")
@@ -140,11 +157,11 @@ class MainWindow(QMainWindow):
         self.extractor = QComboBox(); self.extractor.addItems(self.engine.data["rarity_names"])
         f.addRow("Fruit rank", self.fruit_rank)
         f.addRow("", self.fruit_high)
-        f.addRow("Number of fruits", self.fruit_count)
+        f.addRow("No. of Myrimon Fruits", self.fruit_count)
         f.addRow("Culti level", self.lvl_culti)
         f.addRow("Quality level", self.lvl_quality)
         f.addRow("Gush level", self.lvl_gush)
-        f.addRow("Extractor rarity", self.extractor)
+        f.addRow("Aura Extractor quality", self.extractor)
         lv.addWidget(fruit)
         lv.addStretch(1)
 
@@ -160,13 +177,16 @@ class MainWindow(QMainWindow):
             lbl.setStyleSheet("font-weight: bold;")
             return lbl
         self.o_phase = out(); self.o_stage = out(); self.o_target = out()
-        self.o_abode = out(); self.o_pillxp = out(); self.o_speedup = out()
+        self.o_abode = out(); self.o_basexp = out(); self.o_effxp = out()
+        self.o_pillxp = out(); self.o_speedup = out()
         self.o_mythic = out(); self.o_pearl = out(); self.o_fruit = out(); self.o_fruit_days = out()
         self.o_error = QLabel(""); self.o_error.setStyleSheet("color: #c04040;"); self.o_error.setWordWrap(True)
         rf.addRow("Half-step breakthrough in", self.o_phase)
-        rf.addRow("Realm breakthrough in", self.o_stage)
-        rf.addRow("Target realm reached in", self.o_target)
-        rf.addRow("Abode aura (implied)", self.o_abode)
+        rf.addRow("Stage breakthrough in", self.o_stage)
+        rf.addRow("Target Stage reached in", self.o_target)
+        rf.addRow("Abode Aura (implied)", self.o_abode)
+        rf.addRow("Cultivation XP / day", self.o_basexp)
+        rf.addRow("Effective XP / day", self.o_effxp)
         rf.addRow("Pill XP / day", self.o_pillxp)
         rf.addRow("Speed-up (pills / gem)", self.o_speedup)
         rf.addRow("Mythic pills / day", self.o_mythic)
@@ -174,6 +194,9 @@ class MainWindow(QMainWindow):
         rf.addRow("XP from fruits", self.o_fruit)
         rf.addRow("Fruit time saved", self.o_fruit_days)
         rf.addRow(self.o_error)
+        self.copy_btn = QPushButton("Copy results")
+        self.copy_btn.clicked.connect(self._copy_results)
+        rf.addRow(self.copy_btn)
         outer.addWidget(right, 1)
 
         self.setCentralWidget(central)
@@ -194,6 +217,30 @@ class MainWindow(QMainWindow):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.mirror, self.mirror_skin, self.pearl, self.fruit_high):
             w.toggled.connect(self.recalc)
+        self._install_wheel_guard()
+        self._install_tooltips()
+
+    def _install_wheel_guard(self):
+        self._wheel_guard = _WheelGuard(self)
+        for cls in (QAbstractSpinBox, QComboBox):
+            for w in self.findChildren(cls):
+                w.setFocusPolicy(Qt.StrongFocus)
+                w.installEventFilter(self._wheel_guard)
+
+    def _install_tooltips(self):
+        tips = {
+            self.speed: "The in-game Cultivation Speed: XP gained per 8-second Cosmoapsis tick.",
+            self.absorb: "Your Absorption Ratio as a percent (e.g. 27.5). Shown below is the Stage's base for the selected Grade.",
+            self.completion: "How far into the current Grade you are, as a percent.",
+            self.gem: "Aura Gem rarity. Modeled as a flat cultivation speed-up (Donk's approximation of the storage mechanic).",
+            self.target: "Optional: a future Stage to time your arrival at.",
+            self.pill_plus: "The in-game 'Cultivation Pill Effect +x%' stat.",
+            self.pill_limit: "Daily pill-use limit that caps Gold/Purple/Blue usage.",
+            self.pearl_xp10: "Timereversal Pearl: EXP granted per 10 energy.",
+            self.fruit_count: "Number of Myrimon Fruits processed through the Aura Extractor.",
+        }
+        for w, t in tips.items():
+            w.setToolTip(t)
 
     def _on_stage_changed(self):
         stage = self.stage.currentText()
@@ -201,6 +248,17 @@ class MainWindow(QMainWindow):
         self.phase.clear()
         self.phase.addItems([PHASE_LABELS.get(p, p) for p in self.engine.phases_for(stage)])
         self.phase.blockSignals(False)
+        # Target dropdown: only Stages strictly after the current one.
+        stages = self.engine.stages()
+        future = stages[stages.index(stage) + 1:] if stage in stages else []
+        prev = self.target.currentText()
+        self.target.blockSignals(True)
+        self.target.clear()
+        self.target.addItem("")
+        self.target.addItems(future)
+        i = self.target.findText(prev)
+        self.target.setCurrentIndex(i if i >= 0 else 0)
+        self.target.blockSignals(False)
         self._on_phase_changed()
 
     def _on_phase_changed(self):
@@ -299,14 +357,36 @@ class MainWindow(QMainWindow):
         self._save_settings()
         super().closeEvent(event)
 
+    def _update_absorb_base(self):
+        """Show the selected Grade's base Absorption Ratio, and warn on under-entry."""
+        idx = self.engine.row_index(
+            self.stage.currentText(),
+            PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
+            self.grade.currentText(),
+        )
+        if idx < 0:
+            self.absorb_base.setText("")
+            return
+        base = self.engine.rows[idx]["low"] * 100
+        entered = self.absorb.value()
+        msg = f"Stage's base Absorption Ratio: {base:g}%"
+        if entered and entered < base - 1e-9:
+            msg += "  ⚠ below base — bonus can't be negative"
+            self.absorb_base.setStyleSheet("color: #c07030;")
+        else:
+            self.absorb_base.setStyleSheet("color: #888;")
+        self.absorb_base.setText(msg)
+
     def recalc(self, *_):
         if not self._loading:
             self._save_settings()
-        res = self.engine.calculate(self._inputs())
+        self.copy_btn.setText("Copy results")
+        self._update_absorb_base()
+        self._last = res = self.engine.calculate(self._inputs())
         if not res.valid:
             for o in (self.o_phase, self.o_stage, self.o_target, self.o_abode,
-                      self.o_pillxp, self.o_speedup, self.o_mythic, self.o_pearl,
-                      self.o_fruit, self.o_fruit_days):
+                      self.o_basexp, self.o_effxp, self.o_pillxp, self.o_speedup,
+                      self.o_mythic, self.o_pearl, self.o_fruit, self.o_fruit_days):
                 o.setText("—")
             self.o_error.setText(res.error)
             return
@@ -315,12 +395,33 @@ class MainWindow(QMainWindow):
         self.o_stage.setText(fmt_days(res.stage_days))
         self.o_target.setText(fmt_days(res.target_days) if res.target_valid else "—")
         self.o_abode.setText(f"{res.abode_aura:,.1f}")
+        self.o_basexp.setText(f"{res.base_xp_per_day:,.0f}")
+        self.o_effxp.setText(f"{res.effective_xp_per_day:,.0f}")
         self.o_pillxp.setText(f"{res.pill_xp_per_day:,.0f}")
         self.o_speedup.setText(f"+{res.pill_speedup * 100:.1f}% / +{res.gem_speedup * 100:.0f}%")
         self.o_mythic.setText(f"{res.mythic_pills_per_day:.2f}")
         self.o_pearl.setText(f"{res.pearl_xp_per_day:,.0f}")
         self.o_fruit.setText(f"{res.fruit_xp:,.0f}")
         self.o_fruit_days.setText(fmt_days(res.fruit_days_saved))
+
+    def _copy_results(self):
+        rows = [
+            ("Stage", self.stage.currentText()), ("Half-step", self.phase.currentText()),
+            ("Grade", self.grade.currentText()),
+            ("Half-step breakthrough in", self.o_phase.text()),
+            ("Stage breakthrough in", self.o_stage.text()),
+            ("Target Stage reached in", self.o_target.text()),
+            ("Abode Aura (implied)", self.o_abode.text()),
+            ("Cultivation XP / day", self.o_basexp.text()),
+            ("Effective XP / day", self.o_effxp.text()),
+            ("Pill XP / day", self.o_pillxp.text()),
+            ("Mythic pills / day", self.o_mythic.text()),
+            ("XP from fruits", self.o_fruit.text()),
+            ("Fruit time saved", self.o_fruit_days.text()),
+        ]
+        text = "\n".join(f"{k}: {v}" for k, v in rows)
+        QApplication.clipboard().setText(text)
+        self.copy_btn.setText("Copied ✓")
 
 
 def _icon_path() -> str:
