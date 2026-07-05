@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+[ -d .venv ] || { python3 -m venv .venv; .venv/bin/pip install PySide6 pyinstaller; }
+.venv/bin/pyinstaller --noconfirm --clean --name breakthrough-calc --windowed \
+  --add-data data/breakthrough.json:data main.py
+rm -rf packaging/AppDir
+mkdir -p packaging/AppDir/usr/bin
+cp -r dist/breakthrough-calc/* packaging/AppDir/usr/bin/
+cp packaging/breakthrough-calc.png packaging/AppDir/
+printf '%s\n' '#!/bin/sh' 'HERE="$(dirname "$(readlink -f "$0")")"' \
+  'exec "$HERE/usr/bin/breakthrough-calc" "$@"' > packaging/AppDir/AppRun
+chmod +x packaging/AppDir/AppRun
+printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Breakthrough Calculator' \
+  "Comment=Donk's Breakthrough calc V4.1 as a standalone app" 'Exec=breakthrough-calc' \
+  'Icon=breakthrough-calc' 'Categories=Utility;Calculator;' > packaging/AppDir/breakthrough-calc.desktop
+ARCH=x86_64 packaging/appimagetool packaging/AppDir BreakthroughCalculator-x86_64.AppImage
