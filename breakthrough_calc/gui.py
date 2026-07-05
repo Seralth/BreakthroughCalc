@@ -49,6 +49,10 @@ STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 BASE_ENERGY = 130.0
 BASE_ENERGY_STAGES = {"Connection", "Foundation", "Virtuoso", "Nascent", "Incarnation"}
 
+# Strive (the catch-up absorption multiplier) unlocks at Nascent Soul.
+STRIVE_STAGES = {"Nascent", "Incarnation", "Voidbreak", "Wholeness", "Perfection",
+                 "Nirvana", "Celestial", "Eternal", "Supreme"}
+
 
 def settings_path() -> str:
     """Prefer a JSON next to the executable (portable/self-contained); fall back
@@ -634,15 +638,20 @@ class MainWindow(QMainWindow):
             return
         base = self.engine.rows[idx]["low"] * 100
         entered = self.absorb.value()
-        strive = (entered / base - 1) * 100 if base > 0 else 0.0
-        if abs(strive) < 1e-6:
-            strive = 0.0
-        msg = f"Base Absorption: {base:g}%  ·  Strive: {strive:.0f}%"
         warn = False
-        if entered and entered < base - 1e-9:
-            msg += "  ⚠ below base — Strive can't be negative"; warn = True
-        elif strive > 120 + 1e-9:
-            msg += "  ⚠ Strive over the 120% cap"; warn = True
+        if stage_key(self.stage.currentText()) in STRIVE_STAGES:
+            strive = (entered / base - 1) * 100 if base > 0 else 0.0
+            if abs(strive) < 1e-6:
+                strive = 0.0
+            msg = f"Base Absorption: {base:g}%  ·  Strive: {strive:.0f}%"
+            if entered and entered < base - 1e-9:
+                msg += "  ⚠ below base — Strive can't be negative"; warn = True
+            elif strive > 120 + 1e-9:
+                msg += "  ⚠ Strive over the 120% cap"; warn = True
+        else:
+            msg = f"Base Absorption: {base:g}%  (Strive unlocks at Nascent Soul)"
+            if entered and entered < base - 1e-9:
+                msg += "  ⚠ below base"; warn = True
         self.absorb_base.setStyleSheet("color: #c07030;" if warn else "color: #888;")
         self.absorb_base.setText(msg)
 
