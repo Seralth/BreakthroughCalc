@@ -54,7 +54,7 @@ class Inputs:
 
     # Pills
     pill_rank: str = "1R"
-    pill_plus_xp: float = 0.0       # extra XP from the pill's +level
+    pill_effect: float = 0.0        # "Cultivation pill effect" as a fraction (0.05 = +5%)
     pill_limit: float = 0.0         # daily pill limit
     gold_per_day: float = 0.0
     purple_per_day: float = 0.0
@@ -141,7 +141,7 @@ class Engine:
     # ---- pills ---------------------------------------------------------
     def _pill_math(self, inp: Inputs) -> dict:
         gold, purple, blue, mythic = self.data["pill_xp"].get(inp.pill_rank, [0, 0, 0, 0])
-        plus_ratio = inp.pill_plus_xp / gold if gold else 0.0
+        plus_ratio = inp.pill_effect
         star = self.data["star"]
         vase_adder = star.get(inp.vase_star, [1, 200, 0])[2] if inp.vase else 0.0
         mirror_adder = star.get(inp.mirror_star, [1, 200, 0])[2] if inp.mirror else 0.0
