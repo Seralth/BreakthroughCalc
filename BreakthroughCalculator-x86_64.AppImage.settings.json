@@ -12,10 +12,9 @@
    "gem": "Legendary",
    "target": "Wholeness",
    "pill_rank": "4R",
-   "pill_effect_pct": 15.4,
    "pill_limit": 21.0,
    "gold_day": 0.0,
-   "purple_day": 21.0,
+   "purple_day": 20.0,
    "blue_day": 0.0,
    "mark_blue": 0.0,
    "mark_purple": 0.0,
@@ -36,7 +35,17 @@
    "lvl_quality": 11,
    "lvl_gush": 0,
    "extractor": "Rare",
-   "array_level": 46
+   "array_bonus": 0.0,
+   "pill_sources": [
+    [
+     "",
+     15.4
+    ],
+    [
+     "",
+     0.0
+    ]
+   ]
   }
  }
 }
