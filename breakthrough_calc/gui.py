@@ -401,13 +401,6 @@ class MainWindow(QMainWindow):
             "Base values before bonuses; confirmed against in-game tooltips (tooltip shows "
             "total with the bonus in parentheses: base = total − bonus). All pill-effect "
             "bonuses add as percentage points and multiply the base once.")
-        html += table(
-            "Starsea Vase — refine energy cost (per pill rank)",
-            ["Rank", "Standard Energy"],
-            [[rk, d["vase_energy_cost"].get(rk, 100)] for rk in d["pill_xp"]],
-            "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
-            "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
-            "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
         html += (
             "<h3>Creation Artifacts</h3>"
             "<p>Three artifacts convert a shared resource — <b>Artifact Energy</b> (each "
@@ -435,6 +428,13 @@ class MainWindow(QMainWindow):
              ["Mirror 5★", "15% chance of an extra copy per Duplication"],
              ["Pearl use cost", "10 energy; star/skin discounts add (skin −10%)"],
              ["Pearl EXP bonus", "+20% from 1★ (does not grow at higher stars)"]])
+        html += table(
+            "Starsea Vase — refine energy cost (per pill rank)",
+            ["Rank", "Standard Energy"],
+            [[rk, d["vase_energy_cost"].get(rk, 100)] for rk in d["pill_xp"]],
+            "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
+            "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
+            "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
         html += (
             "<h3>Aura Gems</h3>"
             "<p>An equipped Aura Gem stores aura while you're away and releases it, acting "
