@@ -55,6 +55,16 @@ def load_data(path: str | None = None) -> dict:
         return json.load(f)
 
 
+def load_pill_sources() -> list:
+    """Catalog of known Cultivation Pill Effect sources (recovered from game
+    data) for the GUI picker. Missing file just means no catalog."""
+    try:
+        with open(os.path.join(_BASE, "data", "pill_effect_sources.json")) as f:
+            return json.load(f)
+    except OSError:
+        return []
+
+
 @dataclass
 class Inputs:
     stage: str = "Novice"
@@ -82,12 +92,18 @@ class Inputs:
     vase: bool = False
     vase_star: str = "0*"
     vase_skin: bool = False
+    vase_input: str = "Blue"        # pill quality fed to the Vase: Blue / Purple / Gold
     mirror: bool = False
     mirror_star: str = "0*"
     mirror_skin: bool = False
     pearl: bool = False
     pearl_star: str = "0*"
+    pearl_skin: bool = False
     pearl_xp_per_10: float = 0.0    # "EXP for 10 Energy" input
+    # Daily 100-energy charge (30 Fateum/Destium, once per day, per artifact)
+    vase_charge: bool = True
+    mirror_charge: bool = True
+    pearl_charge: bool = True
 
     # Fruit magic
     fruit_rank: str = "R3"
@@ -161,34 +177,55 @@ class Engine:
         gold, purple, blue, mythic = self.data["pill_xp"].get(inp.pill_rank, [0, 0, 0, 0])
         plus_ratio = inp.pill_effect
         star = self.data["star"]
+        disc = self.data["artifact_energy_discount"]
+        # Mirror copies inherit the copied pill's own EXP bonus (copyable mythic
+        # pills are gated to match the Vase's unlocked bonus tiers), so only the
+        # Vase's star bonus and skin apply to mythic pill XP.
         vase_adder = star.get(inp.vase_star, [1, 200, 0])[2] if inp.vase else 0.0
-        mirror_adder = star.get(inp.mirror_star, [1, 200, 0])[2] if inp.mirror else 0.0
 
         gold_xp = (1 + plus_ratio + inp.mark_gold) * gold
         purple_xp = (1 + plus_ratio + inp.mark_purple) * purple
         blue_xp = (1 + plus_ratio + inp.mark_blue) * blue
-        mythic_xp = (1 + plus_ratio + vase_adder + mirror_adder + (0.08 if inp.vase_skin else 0)) * mythic
+        mythic_xp = (1 + plus_ratio + vase_adder + (0.08 if inp.vase_skin else 0)) * mythic
 
-        # Vase mythic pills/day: energy/day divided by pill cost (85 at 5*, else 100)
+        # Each artifact regenerates its own energy: 1 per 15 min scaled by the
+        # star recovery multiplier, plus (optionally) that artifact's paid
+        # daily charge of 100 energy (30 Fateum/Destium, once per day).
+        def energy_day(star_key: str, charged: bool) -> float:
+            rec = star.get(star_key, [1, 200, 0])[0]
+            return (1440 / 15) * rec + (100 if charged else 0)
+
+        # Vase mythic pills/day. Base refine cost depends on the pill's rank
+        # (in-game readings: 75/82/90/97 for 1R-4R, 100 from 5R on). The
+        # input-quality discount (Epic -5%, Legendary -20%) is baseline Vase
+        # behavior, and the 5* effect is a 15% chance to consume NO energy,
+        # so expected cost is a further x0.85.
         vase_pills = 0.0
         if inp.vase:
-            rec = star.get(inp.vase_star, [1, 200, 0])[0]
-            energy_day = (1440 / 15) * rec + 100
-            vase_pills = energy_day / (85 if inp.vase_star == "5*" else 100)
+            base_cost = self.data.get("vase_energy_cost", {}).get(inp.pill_rank, 100)
+            quality_disc = {"Gold": 0.20, "Purple": 0.05}.get(inp.vase_input, 0.0)
+            cost = base_cost * (1 - quality_disc) * (0.85 if inp.vase_star == "5*" else 1.0)
+            vase_pills = energy_day(inp.vase_star, inp.vase_charge) / cost
         mirror_pills = 0.0
         if inp.vase and inp.mirror:
-            rec = star.get(inp.mirror_star, [1, 200, 0])[0]
-            energy_day = (1440 / 15) * rec + 100
-            cost = star.get(inp.mirror_star, [1, 200, 0])[1] * (0.9 if inp.mirror_skin else 1.0)
-            mirror_pills = energy_day / max(1e-9, cost) + vase_pills
+            # Star and skin energy discounts stack ADDITIVELY (the game applies
+            # one (1 - (star% + skin%)/100) factor to the 200 base cost).
+            d = disc.get(inp.mirror_star, 0) + (10 if inp.mirror_skin else 0)
+            cost = 200 * (1 - d / 100)
+            copies = energy_day(inp.mirror_star, inp.mirror_charge) / max(1e-9, cost)
+            if inp.mirror_star == "5*":
+                copies *= 1.15  # 5*: 15% chance of an extra copy per Duplication
+            mirror_pills = copies + vase_pills
         mythic_per_day = mirror_pills if (inp.vase and inp.mirror) else vase_pills
 
-        # Pearl: uses/day * XP per use (XP for 10 energy input, +20% at 1*+)
+        # Pearl: uses/day * XP per use ("EXP for 10 Energy" tooltip input).
+        # Star bonus is flat +20% from 1* (it does not grow at higher stars);
+        # star/skin discounts reduce the 10-energy cost per use additively.
         pearl_xp_day = 0.0
         if inp.pearl:
-            rec = star.get(inp.pearl_star, [1, 200, 0])[0]
-            energy_day = rec * 4 * 24 + 100
-            uses = math.floor(energy_day / 10)  # FLOOR(energy, 10) / cost-per-use(10)
+            d = disc.get(inp.pearl_star, 0) + (10 if inp.pearl_skin else 0)
+            per_use = max(1, math.floor(10 * (1 - d / 100)))
+            uses = math.floor(energy_day(inp.pearl_star, inp.pearl_charge) / per_use)
             star_n = int(inp.pearl_star[0]) if inp.pearl_star[:1].isdigit() else 0
             pearl_xp_day = math.floor((uses * inp.pearl_xp_per_10 * (1.2 if star_n >= 1 else 1.0)) / 10) * 10
 
