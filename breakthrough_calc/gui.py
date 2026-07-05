@@ -27,6 +27,7 @@ class _WheelGuard(QObject):
             return True
         return super().eventFilter(obj, event)
 
+from . import theme
 from .engine import Engine, Inputs, fmt_days, load_pill_sources
 
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
@@ -93,6 +94,9 @@ class MainWindow(QMainWindow):
         self.engine = Engine()
         self._settings_file = settings_path()
         self._loading = True
+        self._theme = self._read_store().get("theme", "Seralth")
+        self._acc = theme.accents(self._theme)
+        self._muted_labels = []
         self._build_ui()
         self._wire()
         self._on_stage_changed()
@@ -138,10 +142,10 @@ class MainWindow(QMainWindow):
         f.addRow("Abode Aura", self.abode_aura)
         f.addRow("Absorption Ratio", self.absorb)
         self.absorb_base = QLabel("")
-        self.absorb_base.setStyleSheet("color: #888;")
+        self.absorb_base.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.absorb_base)
         f.addRow("", self.absorb_base)
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
-        self.array_out.setStyleSheet("color: #888;")
+        self.array_out.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.array_out)
         f.addRow("", self.array_out)
         self.array_apply = QPushButton("Apply to Cultivation Speed")
         self.array_apply.clicked.connect(self._apply_array_speed)
@@ -181,7 +185,7 @@ class MainWindow(QMainWindow):
         self.pe_rows = []
         self.pe_rows_layout = QVBoxLayout(); self.pe_rows_layout.setContentsMargins(0, 0, 0, 0)
         pe_v.addLayout(self.pe_rows_layout)
-        self.pe_total = QLabel("Total: 0.00 %"); self.pe_total.setStyleSheet("color: #888;")
+        self.pe_total = QLabel("Total: 0.00 %"); self.pe_total.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pe_total)
         add_pe = QPushButton("＋ Add source")
         add_pe.setToolTip("Add a pill-effect source (a technique book, a curio, …). Their percentages sum.")
         add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
@@ -213,7 +217,7 @@ class MainWindow(QMainWindow):
         f.addRow("Epic (Purple) used / day", self.purple_day)
         f.addRow("Rare (Blue) used / day", self.blue_day)
         self.pill_attempts = QLabel("")
-        self.pill_attempts.setStyleSheet("color: #888;")
+        self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
         f.addRow("", self.pill_attempts)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
@@ -296,7 +300,7 @@ class MainWindow(QMainWindow):
             "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
             "your server's #1. Set \"Server #1's Stage\" above to model that drop-off (estimated); "
             "leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way.")
-        note.setWordWrap(True); note.setStyleSheet("color: #888; font-size: 11px;")
+        note.setWordWrap(True); note.setStyleSheet(f"color: {self._acc['muted']}; font-size: 11px;"); self._muted_labels.append(note)
         lv.addWidget(note)
         lv.addStretch(1)
 
@@ -322,14 +326,14 @@ class MainWindow(QMainWindow):
 
         def mklabel() -> QLabel:
             lbl = QLabel("—"); lbl.setTextInteractionFlags(Qt.TextSelectableByMouse)
-            lbl.setStyleSheet("font-weight: bold;")
+            fnt = lbl.font(); fnt.setBold(True); lbl.setFont(fnt)
             return lbl
 
         right = QGroupBox("Results (current)")
         rf = QFormLayout(right)
         for text, attr in self.RESULT_ROWS:
             lbl = mklabel(); setattr(self, attr, lbl); rf.addRow(text, lbl)
-        self.o_error = QLabel(""); self.o_error.setStyleSheet("color: #c04040;"); self.o_error.setWordWrap(True)
+        self.o_error = QLabel(""); self.o_error.setStyleSheet(f"color: {self._acc['bad']};"); self.o_error.setWordWrap(True)
         rf.addRow(self.o_error)
         btns = QHBoxLayout()
         self.copy_btn = QPushButton("Copy results"); self.copy_btn.clicked.connect(self._copy_results)
@@ -342,7 +346,7 @@ class MainWindow(QMainWindow):
         pf = QFormLayout(self.pin_box)
         self.pin_labels = {}
         for text, attr in self.RESULT_ROWS:
-            lbl = mklabel(); lbl.setStyleSheet("font-weight: bold; color: #4a7;"); self.pin_labels[attr] = lbl
+            lbl = mklabel(); lbl.setStyleSheet(f"font-weight: bold; color: {self._acc['good']};"); self.pin_labels[attr] = lbl
             pf.addRow(text, lbl)
         self.unpin_btn = QPushButton("Clear A"); self.unpin_btn.clicked.connect(self._unpin_results)
         pf.addRow(self.unpin_btn)
@@ -351,8 +355,13 @@ class MainWindow(QMainWindow):
 
         tabs = QTabWidget()
         tabs.addTab(central, "Calculator")
+        self._tabs = tabs
         tabs.addTab(self._build_info_tab(), "Reference")
         self.setCentralWidget(tabs)
+
+    def _rebuild_info_tab(self):
+        self._tabs.removeTab(1)
+        self._tabs.insertTab(1, self._build_info_tab(), "Reference")
         self.resize(1180, 680)
 
     def _build_info_tab(self) -> QWidget:
@@ -367,7 +376,7 @@ class MainWindow(QMainWindow):
                 h += "<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>"
             h += "</table>"
             if note:
-                h += f"<p style='color:#888'>{note}</p>"
+                h += f"<p style='color:{self._acc['muted']}'>{note}</p>"
             return h
 
         html = "<h2>Cultivation reference</h2>"
@@ -460,7 +469,7 @@ class MainWindow(QMainWindow):
             "(the calculator credits it against the earliest remaining EXP). Payout scales "
             "with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher "
             "quality rolls multiply the base substantially, so extractor upgrades compound.</p>"
-            "<p><b style='color:#d64545'>Advisory</b> — tiering the extractor up requires "
+            "<p><b style='color:" + self._acc['bad'] + "'>Advisory</b> — tiering the extractor up requires "
             "consuming a number of fruits, so <b>spend only the minimum needed for each "
             "tier-up and stockpile everything else until the extractor is maxed</b>. Every "
             "fruit eaten early forfeits the better quality/EXP multipliers it would have "
@@ -776,7 +785,26 @@ class MainWindow(QMainWindow):
                            ("Reset", self._reset_profile)):
             b = QPushButton(text); b.clicked.connect(slot); bar.addWidget(b)
         bar.addStretch(1)
+        bar.addWidget(QLabel("Theme:"))
+        self.theme_combo = QComboBox()
+        self.theme_combo.addItems(theme.THEMES)
+        self.theme_combo.setCurrentText(self._theme)
+        self.theme_combo.currentTextChanged.connect(self._on_theme_changed)
+        bar.addWidget(self.theme_combo)
         return bar
+
+    def _on_theme_changed(self, name: str):
+        self._theme = name
+        self._acc = theme.accents(name)
+        theme.apply(QApplication.instance(), name)
+        for lbl in self._muted_labels:
+            lbl.setStyleSheet(f"color: {self._acc['muted']};")
+        for lbl in self.pin_labels.values():
+            lbl.setStyleSheet(f"font-weight: bold; color: {self._acc['good']};")
+        self.o_error.setStyleSheet(f"color: {self._acc['bad']};")
+        self._rebuild_info_tab()
+        self.recalc()
+        obj = self._read_store(); obj["theme"] = name; self._write_store(obj)
 
     # ---- A/B compare -----------------------------------------------------
     def _pin_results(self):
@@ -864,7 +892,7 @@ class MainWindow(QMainWindow):
         star = QComboBox(); star.addItems([f"{i}★" for i in range(1, p["stars"] + 1)])
         upg = QComboBox(); upg.addItems([str(i) for i in range(p["max_upgrade"] + 1)])
         out = QLabel()
-        out.setStyleSheet("color: #888;")
+        out.setStyleSheet(f"color: {self._acc['muted']};")
 
         def refresh():
             out.setText(f"Cultivation Pill Effect: {value_for(star.currentIndex() + 1, upg.currentIndex()):.1f}%")
@@ -901,9 +929,9 @@ class MainWindow(QMainWindow):
         msg = f"Attempts used: {used:g} / {limit:g} (shared; vase red pills exempt)"
         if used > limit + 1e-9:
             msg += "  ⚠ over limit — extra pills won't count"
-            self.pill_attempts.setStyleSheet("color: #c07030;")
+            self.pill_attempts.setStyleSheet(f"color: {self._acc['warn']};")
         else:
-            self.pill_attempts.setStyleSheet("color: #888;")
+            self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
         self.pill_attempts.setText(msg)
 
     def _update_array_out(self):
@@ -925,7 +953,7 @@ class MainWindow(QMainWindow):
             if entered > 0:
                 diff = (entered / spd - 1) * 100
                 if abs(diff) > 0.5:
-                    line += (f"<span style='color:#d64545'>  — entered speed {entered:.2f} is "
+                    line += (f"<span style='color:{self._acc['bad']}'>  — entered speed {entered:.2f} is "
                              f"{diff:+.1f}% off; one of the readings is stale</span>")
             parts.append(line)
         self.array_out.setText("<br>".join(parts))
@@ -966,7 +994,7 @@ class MainWindow(QMainWindow):
             msg = f"Base Absorption: {base:g}%  (Strive unlocks at Nascent Soul)"
             if entered and entered < base - 1e-9:
                 msg += "  ⚠ below base"; warn = True
-        self.absorb_base.setStyleSheet("color: #c07030;" if warn else "color: #888;")
+        self.absorb_base.setStyleSheet(f"color: {self._acc['warn'] if warn else self._acc['muted']};")
         self.absorb_base.setText(msg)
 
     def recalc(self, *_):
@@ -1034,6 +1062,7 @@ def main():
     if icon:
         app.setWindowIcon(QIcon(icon))
     win = MainWindow()
+    theme.apply(app, win._theme)
     win.show()
     win.raise_()
     win.activateWindow()
