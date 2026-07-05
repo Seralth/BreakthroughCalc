@@ -296,14 +296,18 @@ class MainWindow(QMainWindow):
             "Credited once, not as a daily rate.")
         self.respira_exp = QDoubleSpinBox(); self.respira_exp.setRange(0, 1e12)
         self.respira_exp.setToolTip(
-            "The Cultivation EXP a single NON-CRIT Respira grants. Do a few Respira "
-            "and watch the EXP: most attempts show the same small number (that's the "
-            "base) while occasional attempts are 2x/5x/10x bigger (crits). Enter the "
-            "small, most-common value. The app applies the average crit (x1.8) itself, "
-            "so do NOT enter a critted number.")
+            "The base (non-crit) Cultivation EXP from one Respira attempt — see the "
+            "note below the field.")
         rf.addRow("Attempts / day", self.respira_per_day)
         rf.addRow("Extra attempts today", self.respira_event)
         rf.addRow("Base EXP / attempt", self.respira_exp)
+        respira_hint = QLabel(
+            "Do a few Respira: most give the same small EXP (the base — enter that); "
+            "some give 2×/5×/10× (crits — ignore, handled automatically).")
+        respira_hint.setWordWrap(True)
+        respira_hint.setStyleSheet(f"color: {self._acc['muted']};")
+        self._muted_labels.append(respira_hint)
+        rf.addRow("", respira_hint)
         lv.addWidget(respira)
 
         fruit = QGroupBox("Myrimon Fruit")
