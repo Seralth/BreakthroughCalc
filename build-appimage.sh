@@ -12,6 +12,6 @@ printf '%s\n' '#!/bin/sh' 'HERE="$(dirname "$(readlink -f "$0")")"' \
   'exec "$HERE/usr/bin/breakthrough-calc" "$@"' > packaging/AppDir/AppRun
 chmod +x packaging/AppDir/AppRun
 printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Breakthrough Calculator' \
-  "Comment=Donk's Breakthrough calc V4.1 as a standalone app" 'Exec=breakthrough-calc' \
+  "Comment=Cultivation breakthrough timer calculator" 'Exec=breakthrough-calc' \
   'Icon=breakthrough-calc' 'Categories=Utility;Calculator;' > packaging/AppDir/breakthrough-calc.desktop
 ARCH=x86_64 packaging/appimagetool packaging/AppDir BreakthroughCalculator-x86_64.AppImage

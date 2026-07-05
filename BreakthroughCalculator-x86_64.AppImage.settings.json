@@ -8,7 +8,7 @@
  "gem": "Legendary",
  "target": "Incarnation",
  "pill_rank": "4R",
- "pill_plus": 15.4,
+ "pill_effect_pct": 15.4,
  "pill_limit": 21.0,
  "gold_day": 0.0,
  "purple_day": 21.0,

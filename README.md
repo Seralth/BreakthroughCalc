@@ -1,13 +1,12 @@
 # Breakthrough Calculator
 
-Desktop version of Donk's Breakthrough calc V4.1 spreadsheet. Qt app, ships as a
-Linux AppImage. Enter your stage/speed/pills/artifacts/fruits and it gives you
-breakthrough timers without needing Google Sheets.
-
-The math was pulled out of the sheet and rewritten in Python (the xlsx export
-was half-broken anyway). Notes on the model are in `breakthrough_calc/engine.py`.
+Breakthrough timer calculator for cultivators. Qt app, ships as a Linux
+AppImage. Enter your realm, cultivation speed, pills, artifacts and spirit
+fruits and it tells you how long until your next phase, realm breakthrough,
+or any target realm.
 
 Settings save to a JSON next to the AppImage, so it's fully portable.
+Notes on the underlying model are in `breakthrough_calc/engine.py`.
 
 ## Run from source
 
@@ -22,5 +21,3 @@ python3 -m venv .venv
 ```bash
 ./build-appimage.sh
 ```
-
-Credits: original calculator by Donk, data compiled with help from WuMing [E83].
