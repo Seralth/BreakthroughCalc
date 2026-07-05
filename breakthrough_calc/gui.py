@@ -10,7 +10,8 @@ from PySide6.QtCore import QEvent, QObject, Qt
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGroupBox, QGridLayout, QHBoxLayout, QInputDialog, QLabel,
-    QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QVBoxLayout,
+    QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QTabWidget,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -338,8 +339,81 @@ class MainWindow(QMainWindow):
         self.pin_box.setVisible(False)
         outer.addWidget(self.pin_box, 1)
 
-        self.setCentralWidget(central)
+        tabs = QTabWidget()
+        tabs.addTab(central, "Calculator")
+        tabs.addTab(self._build_info_tab(), "Reference")
+        self.setCentralWidget(tabs)
         self.resize(1180, 680)
+
+    def _build_info_tab(self) -> QWidget:
+        """Read-only reference tables, rendered from the same data the engine
+        uses so they can't drift from the calculations."""
+        d = self.engine.data
+
+        def table(title, headers, rows, note=""):
+            h = f"<h3>{title}</h3><table cellpadding='4' cellspacing='0' border='1' style='border-collapse:collapse'>"
+            h += "<tr>" + "".join(f"<th>{c}</th>" for c in headers) + "</tr>"
+            for r in rows:
+                h += "<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>"
+            h += "</table>"
+            if note:
+                h += f"<p style='color:#888'>{note}</p>"
+            return h
+
+        html = "<h2>Cultivation reference</h2>"
+        html += table(
+            "Cultivation Pill base EXP (per rank)",
+            ["Rank", "Rare (Blue)", "Epic (Purple)", "Legendary (Gold)", "Mythic (Red)"],
+            [[rk, f"{b:,}", f"{p:,}", f"{g:,}", f"{m:,}"]
+             for rk, (g, p, b, m) in d["pill_xp"].items()],
+            "Base values before bonuses; confirmed against in-game tooltips (tooltip shows "
+            "total with the bonus in parentheses: base = total − bonus). All pill-effect "
+            "bonuses add as percentage points and multiply the base once.")
+        html += table(
+            "Starsea Vase — refine energy cost (per pill rank)",
+            ["Rank", "Standard Energy"],
+            [[rk, d["vase_energy_cost"].get(rk, 100)] for rk in d["pill_xp"]],
+            "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
+            "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
+            "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
+        html += table(
+            "Creation Artifact energy",
+            ["Property", "Value"],
+            [["Regeneration", "1 energy / 15 min at 0★ (faster per star)"],
+             ["Cap", "200 at 0★ (rises with stars); regen stops at cap"],
+             ["Daily charge", "+100 energy for 30 Fateum/Destium, once per day per artifact"],
+             ["Mirror copy cost", "200 base; −5% (1★), −10% (3★), −10% skin — discounts add together"],
+             ["Mirror 5★", "15% chance of an extra copy per Duplication"],
+             ["Pearl use cost", "10 energy; star/skin discounts add (skin −10%)"],
+             ["Pearl EXP bonus", "+20% from 1★ (does not grow at higher stars)"]])
+        html += table(
+            "Aura Gem speed bonus",
+            ["Rarity", "Bonus"],
+            [[k, f"+{v * 100:.0f}%"] for k, v in d["gem_bonus"].items() if k != "None"])
+        html += table(
+            "Cultivation Pill Effect sources",
+            ["Source", "Bonus"],
+            [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
+             for s in (self.pe_catalog or [])],
+            "All sources stack additively. Quality-specific bonuses (Star Marks, Daozu "
+            "treasures, Lotus Throne) apply only to pills of that color — enter those in "
+            "the Star Marks fields.")
+        html += ("<h3>Core formulas</h3><ul>"
+                 "<li>Cultivation Speed = Abode Aura × Absorption Ratio</li>"
+                 "<li>Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for "
+                 "Connection through Incarnation</li>"
+                 "<li>Cultivation ticks every 8 seconds (one Cosmoapsis)</li>"
+                 "<li>Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul "
+                 "and fades as you approach your server's #1</li>"
+                 "<li>Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin "
+                 "for reds])</li></ul>")
+
+        lbl = QLabel(html)
+        lbl.setWordWrap(True)
+        lbl.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        lbl.setAlignment(Qt.AlignTop)
+        sc = QScrollArea(); sc.setWidgetResizable(True); sc.setWidget(lbl)
+        return sc
 
     # ---- signal wiring ---------------------------------------------------
     def _wire(self):
