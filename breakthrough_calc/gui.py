@@ -296,8 +296,11 @@ class MainWindow(QMainWindow):
             "Credited once, not as a daily rate.")
         self.respira_exp = QDoubleSpinBox(); self.respira_exp.setRange(0, 1e12)
         self.respira_exp.setToolTip(
-            "Base (non-crit) Cultivation EXP from one Respira attempt, from its "
-            "tooltip. Crits (×2/×5/×10, averaging ×1.8) are applied automatically.")
+            "The Cultivation EXP a single NON-CRIT Respira grants. Do a few Respira "
+            "and watch the EXP: most attempts show the same small number (that's the "
+            "base) while occasional attempts are 2x/5x/10x bigger (crits). Enter the "
+            "small, most-common value. The app applies the average crit (x1.8) itself, "
+            "so do NOT enter a critted number.")
         rf.addRow("Attempts / day", self.respira_per_day)
         rf.addRow("Extra attempts today", self.respira_event)
         rf.addRow("Base EXP / attempt", self.respira_exp)
@@ -498,6 +501,12 @@ class MainWindow(QMainWindow):
             "your daily attempt limit and the base (non-crit) EXP per attempt; the ×1.8 "
             "average is applied for you, so daily Respira EXP ≈ attempts × base × 1.8. "
             "Temporary event attempts go in the separate one-off field.</p>"
+            "<p><b>How to read the base EXP per attempt:</b> perform several Respira and "
+            "watch the Cultivation EXP each one grants. Most attempts give the same "
+            "smaller number — that is the <b>base</b> (non-crit) value to enter. Now and "
+            "then an attempt gives 2×, 5×, or 10× that (a crit) — ignore those; the app "
+            "already accounts for crits via the ×1.8 average. So enter the smallest / "
+            "most common EXP you see, not a big crit result.</p>"
             "<h3>Crit variance (best / worst)</h3>"
             "<p>Respira crits and fruit gushes are random, so the breakthrough estimate "
             "carries a range. The app shows a <b>best / worst</b> band (a ~90% likely "
