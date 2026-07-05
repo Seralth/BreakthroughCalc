@@ -449,7 +449,13 @@ class MainWindow(QMainWindow):
             "<p>Fruits processed through the Aura Extractor grant a one-time EXP payout "
             "(the calculator credits it against the earliest remaining EXP). Payout scales "
             "with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher "
-            "quality rolls multiply the base substantially, so extractor upgrades compound.</p>")
+            "quality rolls multiply the base substantially, so extractor upgrades compound.</p>"
+            "<p><b style='color:#d64545'>Advisory:</b> tiering the extractor up requires "
+            "consuming a number of fruits, so <b>spend only the minimum needed for each "
+            "tier-up and stockpile everything else until the extractor is maxed</b>. Every "
+            "fruit eaten early forfeits the better quality/EXP multipliers it would have "
+            "received at higher extractor tiers — the same hoard is worth substantially "
+            "more processed at max rarity.</p>")
         html += table(
             "Cultivation Pill Effect sources",
             ["Source", "Bonus"],
