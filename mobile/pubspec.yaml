@@ -1,0 +1,22 @@
+name: breakthrough_calc
+description: Breakthrough Calculator — Android/mobile port (Flutter).
+publish_to: none
+version: 2.5.1+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.2.0
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/data/breakthrough.json
+    - assets/data/pill_effect_sources.json
