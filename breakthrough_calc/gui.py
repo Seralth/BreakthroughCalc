@@ -128,17 +128,21 @@ class MainWindow(QMainWindow):
         f.addRow("Target Stage", self.target)
         lv.addWidget(cult)
 
-        # Optional Energy Array helper: compute expected cultivation speed from
-        # Array level (aura bonus) + absorption. Base energy is a known constant
-        # (130) only for Connection..Incarnation, so this greys out elsewhere.
-        ea = QGroupBox("Energy Array helper (optional)")
+        # Optional aura-bonus helper: compute expected cultivation speed from
+        # your total aura bonus (Energy Array + curios) and absorption. Base
+        # energy is a known constant (130) only for Connection..Incarnation.
+        # Abode Aura = 130 × (1 + total aura bonus); speed = Abode × Absorption.
+        ea = QGroupBox("Aura bonus helper (optional)")
         eaf = QFormLayout(ea)
-        self.array_level = QSpinBox(); self.array_level.setRange(0, 51)
+        self.array_bonus = QDoubleSpinBox(); self.array_bonus.setRange(0, 500)
+        self.array_bonus.setDecimals(1); self.array_bonus.setSuffix(" %")
+        self.array_bonus.setToolTip(
+            "Your TOTAL aura bonus (Energy Array + curios), as shown by Abode Aura in-game. "
+            "Abode Aura = 130 × (1 + this).")
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         self.array_apply = QPushButton("Apply to Cultivation Speed")
         self.array_apply.clicked.connect(self._apply_array_speed)
-        self.array_level.setToolTip("Energy Array level (0-51). Aura bonus scales 0→50% linearly.")
-        eaf.addRow("Energy Array level", self.array_level)
+        eaf.addRow("Total aura bonus", self.array_bonus)
         eaf.addRow("", self.array_out)
         eaf.addRow("", self.array_apply)
         lv.addWidget(ea)
@@ -153,10 +157,14 @@ class MainWindow(QMainWindow):
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
         f.addRow("Pill rank", self.pill_rank)
         f.addRow("Cultivation pill effect", self.pill_plus)
-        f.addRow("Pill limit / day", self.pill_limit)
+        self.pill_limit.setToolTip("Shared daily attempt limit for all cultivation pills (vase red pills are exempt).")
+        f.addRow("Daily pill attempts (shared)", self.pill_limit)
         f.addRow("Legendary (Gold) used / day", self.gold_day)
         f.addRow("Epic (Purple) used / day", self.purple_day)
         f.addRow("Rare (Blue) used / day", self.blue_day)
+        self.pill_attempts = QLabel("")
+        self.pill_attempts.setStyleSheet("color: #888;")
+        f.addRow("", self.pill_attempts)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
         for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
@@ -263,7 +271,7 @@ class MainWindow(QMainWindow):
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10, self.fruit_count):
             w.valueChanged.connect(self.recalc)
-        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.array_level):
+        for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.array_bonus):
             w.valueChanged.connect(self.recalc)
         for w in (self.vase, self.vase_skin, self.mirror, self.mirror_skin, self.pearl, self.fruit_high):
             w.toggled.connect(self.recalc)
@@ -362,7 +370,7 @@ class MainWindow(QMainWindow):
             "fruit_rank": self.fruit_rank, "fruit_high": self.fruit_high,
             "fruit_count": self.fruit_count, "lvl_culti": self.lvl_culti,
             "lvl_quality": self.lvl_quality, "lvl_gush": self.lvl_gush,
-            "extractor": self.extractor, "array_level": self.array_level,
+            "extractor": self.extractor, "array_bonus": self.array_bonus,
         }
 
     def _collect_state(self) -> dict:
@@ -519,11 +527,22 @@ class MainWindow(QMainWindow):
         """(abode_aura, aura_bonus, expected_speed) or None if base energy unknown."""
         if stage_key(self.stage.currentText()) not in BASE_ENERGY_STAGES:
             return None
-        bonus = self.array_level.value() / 51.0 * 0.5   # 0→50% over 0..51 levels
+        bonus = self.array_bonus.value() / 100.0
         abode = BASE_ENERGY * (1 + bonus)
         absorb = self.absorb.value() / 100.0
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
+
+    def _update_pill_attempts(self):
+        used = self.gold_day.value() + self.purple_day.value() + self.blue_day.value()
+        limit = self.pill_limit.value()
+        msg = f"Attempts used: {used:g} / {limit:g} (shared; vase red pills exempt)"
+        if used > limit + 1e-9:
+            msg += "  ⚠ over limit — extra pills won't count"
+            self.pill_attempts.setStyleSheet("color: #c07030;")
+        else:
+            self.pill_attempts.setStyleSheet("color: #888;")
+        self.pill_attempts.setText(msg)
 
     def _update_array_out(self):
         r = self._array_expected()
@@ -532,7 +551,7 @@ class MainWindow(QMainWindow):
             self.array_apply.setEnabled(False)
             return
         abode, bonus, spd = r
-        txt = f"Aura bonus +{bonus * 100:.0f}% → Abode Aura {abode:.1f}"
+        txt = f"Abode Aura = 130 × (1 + {bonus * 100:.0f}%) = {abode:.1f}"
         if spd is not None:
             txt += f"\nExpected speed: {spd:.2f} / Cosmoapsis"
         self.array_out.setText(txt)
@@ -573,6 +592,7 @@ class MainWindow(QMainWindow):
         self.copy_btn.setText("Copy results")
         self._update_absorb_base()
         self._update_array_out()
+        self._update_pill_attempts()
         self._last = res = self.engine.calculate(self._inputs())
         if not res.valid:
             for _, attr in self.RESULT_ROWS:
