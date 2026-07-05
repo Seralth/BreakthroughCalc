@@ -42,7 +42,7 @@
  {
   "name": "Yang Spirit Jade (curio)",
   "percent": 1.0,
-  "note": "Epic curio, name confirmed in-game. Starts at 1.0% and grows +0.2% per upgrade, with larger jumps on star-ups (e.g. 2-star to 3-star grants +0.4%). In-game max-stats preview shows 5.8% (believed fully leveled AND starred) - enter your current value from the curio's tooltip."
+  "note": "Epic curio. Starts at 1.0%; +0.2% per upgrade plus larger star-up jumps (e.g. 2-star to 3-star +0.4%), reaching 5.8% at max level and stars. Other upgradeable curios follow the same scaling pattern. Enter your current value from the curio's tooltip."
  },
  {
   "name": "Dongxuan's Pot (curio)",
