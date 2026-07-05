@@ -470,9 +470,10 @@ class MainWindow(QMainWindow):
             ["Source", "Bonus"],
             [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
              for s in (self.pe_catalog or [])],
-            "All sources stack additively. Some technique books (e.g. the Ninefall books) "
-            "and Dao Ancestor treasures also grant pill effect — read the % from their "
-            "tooltips and add them as custom sources. Quality-specific bonuses (Star "
+            "All sources stack additively. In-game these appear as technique completion "
+            "bonuses (labeled by rank, e.g. R4 Golden Core +5%) and curio effects. Other "
+            "technique ranks and Dao Ancestor treasures grant it too — read the % from "
+            "the tooltip and add it as a custom source. Quality-specific bonuses (Star "
             "Marks, Daozu treasures, Lotus Throne) apply only to pills of that color — "
             "enter those in the Star Marks fields.")
         html += ("<h3>Core formulas</h3><ul>"
