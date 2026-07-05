@@ -14,6 +14,9 @@ from PySide6.QtWidgets import (
 
 from .engine import Engine, Inputs, fmt_days
 
+PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Mid", "LATE": "Late"}
+PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
+
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 
 
@@ -65,11 +68,11 @@ class MainWindow(QMainWindow):
         self.gem = QComboBox(); self.gem.addItems(list(self.engine.data["gem_bonus"].keys()))
         self.target = QComboBox(); self.target.addItem(""); self.target.addItems(self.engine.stages())
         f.addRow("Realm", self.stage)
-        f.addRow("Phase", self.phase)
+        f.addRow("Half-step", self.phase)
         f.addRow("Layer", self.grade)
         f.addRow("Layer progress", self.completion)
-        f.addRow("Cultivation speed (XP / 8s)", self.speed)
-        f.addRow("Qi absorption ratio", self.absorb)
+        f.addRow("Cultivation speed (XP / Cosmoapsis)", self.speed)
+        f.addRow("Absorption ratio", self.absorb)
         f.addRow("Aura gem", self.gem)
         f.addRow("Target realm", self.target)
         lv.addWidget(cult)
@@ -143,7 +146,7 @@ class MainWindow(QMainWindow):
         self.o_abode = out(); self.o_pillxp = out(); self.o_speedup = out()
         self.o_mythic = out(); self.o_pearl = out(); self.o_fruit = out(); self.o_fruit_days = out()
         self.o_error = QLabel(""); self.o_error.setStyleSheet("color: #c04040;"); self.o_error.setWordWrap(True)
-        rf.addRow("Phase breakthrough in", self.o_phase)
+        rf.addRow("Half-step breakthrough in", self.o_phase)
         rf.addRow("Realm breakthrough in", self.o_stage)
         rf.addRow("Target realm reached in", self.o_target)
         rf.addRow("Abode aura (implied)", self.o_abode)
@@ -179,12 +182,12 @@ class MainWindow(QMainWindow):
         stage = self.stage.currentText()
         self.phase.blockSignals(True)
         self.phase.clear()
-        self.phase.addItems(self.engine.phases_for(stage))
+        self.phase.addItems([PHASE_LABELS.get(p, p) for p in self.engine.phases_for(stage)])
         self.phase.blockSignals(False)
         self._on_phase_changed()
 
     def _on_phase_changed(self):
-        stage, phase = self.stage.currentText(), self.phase.currentText()
+        stage, phase = self.stage.currentText(), PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText())
         self.grade.blockSignals(True)
         self.grade.clear()
         self.grade.addItems(self.engine.grades_for(stage, phase))
@@ -194,7 +197,7 @@ class MainWindow(QMainWindow):
     # ---- calc ------------------------------------------------------------
     def _inputs(self) -> Inputs:
         return Inputs(
-            stage=self.stage.currentText(), phase=self.phase.currentText(),
+            stage=self.stage.currentText(), phase=PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
             aura_gem=self.gem.currentText(), target_stage=self.target.currentText(),
@@ -264,6 +267,8 @@ class MainWindow(QMainWindow):
             w, v = wm.get(key), vals.get(key)
             if w is None or v is None:
                 continue
+            if key == "phase":
+                v = PHASE_LABELS.get(str(v), v)
             if isinstance(w, QComboBox):
                 i = w.findText(str(v))
                 if i >= 0:

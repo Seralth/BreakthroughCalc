@@ -5,3 +5,4 @@ packaging/AppDir/
 *.AppImage
 __pycache__/
 *.spec
+apk_analysis/

@@ -3,8 +3,8 @@
 A clean reimplementation of "Donk's Breakthrough calc V4.1" (Google Sheets).
 The spreadsheet model, verified against its own "speed checker" cell:
 
-- Cultivation ticks every 8 seconds; "cultivation speed" (user input) is the
-  XP gained per tick at the CURRENT grade.
+- Cultivation ticks every 8 seconds (one "Cosmoapsis"); "cultivation speed"
+  (user input) is the XP gained per Cosmoapsis at the CURRENT grade.
 - Each (stage, phase, grade) row has an aura ratio band [low, high].
   The player's "absorption ratio" input equals low(current) + bonus, where
   bonus (from gear etc.) stays constant as they progress.
