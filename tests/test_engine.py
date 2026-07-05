@@ -244,6 +244,31 @@ class DailiesDone(unittest.TestCase):
         self.assertAlmostEqual(base.stage_days, done.stage_days, places=9)
 
 
+class RespiraAndBands(unittest.TestCase):
+    def setUp(self):
+        self.e = Engine()
+
+    def test_respira_mean(self):
+        r = self.e.calculate(base_inputs(respira_per_day=20, respira_exp=5000))
+        self.assertAlmostEqual(r.respira_xp_per_day, 20 * 5000 * 1.8)  # crit mean 1.8
+
+    def test_band_collapses_without_crit_sources(self):
+        r = self.e.calculate(base_inputs(pill_rank="4R", pill_limit=10, gold_per_day=2))
+        self.assertEqual(r.stage_band, (r.stage_days, r.stage_days))
+
+    def test_band_brackets_estimate(self):
+        r = self.e.calculate(base_inputs(respira_per_day=20, respira_exp=5000))
+        lo, hi = r.stage_band
+        self.assertLess(lo, r.stage_days)
+        self.assertGreater(hi, r.stage_days)
+        self.assertAlmostEqual(r.stage_days - lo, hi - r.stage_days, places=6)  # symmetric
+
+    def test_fruit_variance_positive(self):
+        _, var = self.e._fruit_stats(base_inputs(
+            fruit_rank="R3", fruit_count=50, lvl_culti=10, lvl_quality=10, lvl_gush=10))
+        self.assertGreater(var, 0)
+
+
 class Formatting(unittest.TestCase):
     def test_fmt_days(self):
         self.assertEqual(fmt_days(1.5), "1D 12H 0M")
