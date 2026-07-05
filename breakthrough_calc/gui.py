@@ -124,29 +124,27 @@ class MainWindow(QMainWindow):
         f.addRow("Half-step", self.phase)
         f.addRow("Grade", self.grade)
         f.addRow("Grade progress", self.completion)
-        # Speed, Absorption, and Abode Aura are all read off the same in-game
-        # Cultivation Bonus screen, so they live together in this group. Abode
-        # Aura is optional and cross-checks the entered speed (speed = Aura ×
-        # Absorption); the implied total aura bonus is shown when base energy
-        # is a known constant (130, Connection..Incarnation).
-        f.addRow("Cultivation Speed (XP / Cosmoapsis)", self.speed)
+        # Abode Aura, Absorption Ratio, and Cultivation Speed all come off the
+        # same in-game Cultivation Bonus screen. Enter Aura + Absorption and
+        # the Apply button appears to fill in Speed (= Aura × Absorption);
+        # Speed stays directly editable for anyone who prefers typing it.
+        self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
+        self.abode_aura.setDecimals(2)
+        self.abode_aura.setToolTip(
+            "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
+            "Ratio entered, Cultivation Speed = Abode Aura × Absorption Ratio.")
+        f.addRow("Abode Aura", self.abode_aura)
         f.addRow("Absorption Ratio", self.absorb)
         self.absorb_base = QLabel("")
         self.absorb_base.setStyleSheet("color: #888;")
         f.addRow("", self.absorb_base)
-        self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
-        self.abode_aura.setDecimals(2)
-        self.abode_aura.setToolTip(
-            "Optional: your Abode Aura exactly as shown on the Cultivation Bonus screen "
-            "(same place as Speed and Absorption). Expected speed = Abode Aura × "
-            "Absorption Ratio — a cross-check that your Speed reading is current.")
-        f.addRow("Abode Aura (optional)", self.abode_aura)
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         self.array_out.setStyleSheet("color: #888;")
         f.addRow("", self.array_out)
         self.array_apply = QPushButton("Apply to Cultivation Speed")
         self.array_apply.clicked.connect(self._apply_array_speed)
         f.addRow("", self.array_apply)
+        f.addRow("Cultivation Speed (XP / Cosmoapsis)", self.speed)
         f.addRow("Aura Gem", self.gem)
         f.addRow("Target Stage", self.target)
         self.top_stage = QComboBox(); self.top_stage.addItem("")
