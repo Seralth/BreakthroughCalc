@@ -66,6 +66,25 @@ class PillTable(unittest.TestCase):
         self.assertAlmostEqual(120000 * (1 + 0.154 + 0.10), 150480)
 
 
+class StageXpCurve(unittest.TestCase):
+    """Grade XP totals confirmed from in-game progress bars (issue #3)."""
+
+    def setUp(self):
+        self.rows = {(r["stage"], r["phase"], r["grade"]): r["grade_xp"]
+                     for r in Engine().rows}
+
+    def test_confirmed_grade_totals(self):
+        self.assertEqual(self.rows[("Nascent", "LATE", "G5")], 1472337.0)
+        self.assertEqual(self.rows[("Nascent", "LATE", "G6")], 1671600.0)
+        self.assertEqual(self.rows[("Virtuoso", "MIDDLE", "G2")], 77190.0)
+
+    def test_cumulative_consistency(self):
+        cum = 0.0
+        for r in Engine().rows:
+            cum += r["grade_xp"]
+            self.assertEqual(r["cum_xp"], cum, r["grade"])
+
+
 class PillMath(unittest.TestCase):
     def setUp(self):
         self.e = Engine()
