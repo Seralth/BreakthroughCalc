@@ -243,6 +243,18 @@ class DailiesDone(unittest.TestCase):
         done = self.e.calculate(base_inputs(dailies_done=True))
         self.assertAlmostEqual(base.stage_days, done.stage_days, places=9)
 
+    def test_beneficial_upgrade_never_slower_with_dailies_done(self):
+        # Regression: with "already used today's pills", enabling the Vase skin
+        # (more pill XP) must never INCREASE the estimate, even for a short
+        # near-breakthrough horizon (previously the deficit model perversely did).
+        for comp in (0.5, 0.99, 0.999):
+            kw = dict(grade="G8", grade_completion=comp, pill_rank="4R", pill_limit=10,
+                      gold_per_day=2, purple_per_day=4, blue_per_day=4,
+                      vase=True, vase_star="3*", dailies_done=True)
+            off = self.e.calculate(base_inputs(**kw, vase_skin=False))
+            on = self.e.calculate(base_inputs(**kw, vase_skin=True))
+            self.assertLessEqual(on.stage_days, off.stage_days + 1e-9, f"comp={comp}")
+
 
 class RespiraAndBands(unittest.TestCase):
     def setUp(self):

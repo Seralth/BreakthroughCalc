@@ -407,15 +407,22 @@ class Engine:
             s = strive_of(row) if strive_of else strive
             return max(1e-12, abode * row["low"] * (1 + s))
 
-        def days(xp_seconds: float) -> float:
-            return xp_seconds / 86400.0 / (1 + gem) / (1 + pill_ratio)
+        # `xp_seconds` is base cultivation-seconds (raw_seconds); gem and pills
+        # are applied here as speed-ups. If today's dailies are already spent,
+        # the FIRST real day runs at base speed (pills deferred, gem still
+        # applies) and the daily rate resumes after — a proper piecewise model
+        # so a stronger daily setup never perversely increases a short estimate.
+        _base_day = 86400.0 * (1 + gem)   # base-seconds covered in 1 real day, no pills
 
-        # If today's daily pills/respira are already spent, they shouldn't
-        # contribute again during the rest of today. The daily rate is modeled
-        # continuously, so remove exactly one day's daily XP as a one-time
-        # deficit — this defers the boost by a day (today runs at base speed
-        # with dailies resuming next reset). Negative credit adds required XP.
-        start_credit = fruit_xp - (daily_xp if inp.dailies_done else 0.0)
+        def days(xp_seconds: float) -> float:
+            full = (1 + gem) * (1 + pill_ratio)
+            if not inp.dailies_done:
+                return xp_seconds / 86400.0 / full
+            if xp_seconds <= _base_day:
+                return xp_seconds / 86400.0 / (1 + gem)
+            return 1.0 + (xp_seconds - _base_day) / 86400.0 / full
+
+        start_credit = fruit_xp
 
         # seconds of cultivation from "now" through the end of row j (inclusive),
         # with the starting credit applied against the earliest remaining XP.
