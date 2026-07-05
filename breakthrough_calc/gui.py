@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
         self.abode_aura.setToolTip(
             "Your Abode Aura exactly as shown in-game. Expected speed = Abode Aura × "
             "Absorption Ratio. Entering the shown value avoids summing aura bonuses "
-            "(Energy Array + curios + …) by hand.")
+            "(Energy Array + curios + sect level + …) by hand.")
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         self.array_apply = QPushButton("Apply to Cultivation Speed")
         self.array_apply.clicked.connect(self._apply_array_speed)
