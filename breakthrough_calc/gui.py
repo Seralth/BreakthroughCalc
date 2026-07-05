@@ -301,9 +301,23 @@ class MainWindow(QMainWindow):
         self.o_fruit_days.setText(fmt_days(res.fruit_days_saved))
 
 
+def _icon_path() -> str:
+    import sys
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    for p in (os.path.join(base, "breakthrough-calc.png"),
+              os.path.join(base, "packaging", "breakthrough-calc.png")):
+        if os.path.exists(p):
+            return p
+    return ""
+
+
 def main():
     import sys
+    from PySide6.QtGui import QIcon
     app = QApplication(sys.argv)
+    icon = _icon_path()
+    if icon:
+        app.setWindowIcon(QIcon(icon))
     win = MainWindow()
     win.show()
     sys.exit(app.exec())
