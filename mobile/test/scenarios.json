@@ -1,0 +1,14 @@
+[
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "target_stage": "Incarnation"},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "pill_rank": "4R", "pill_limit": 10, "gold_per_day": 2, "purple_per_day": 4, "blue_per_day": 4, "pill_effect": 0.154},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "pill_rank": "4R", "pill_effect": 0.154, "vase": true, "vase_star": "1*"},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "pill_rank": "5R", "vase": true, "vase_star": "5*", "vase_input": "Gold", "mirror": true, "mirror_star": "5*", "mirror_skin": true},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "pearl": true, "pearl_star": "1*", "pearl_skin": true, "pearl_xp_per_10": 1000},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "respira_per_day": 20, "respira_exp": 5000, "respira_event": 5},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "fruit_rank": "R3", "fruit_count": 6, "lvl_culti": 10, "lvl_quality": 10, "lvl_gush": 10},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.36, "target_stage": "Perfection", "top_stage": "Nirvana"},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.36, "target_stage": "Perfection", "top_stage": "Nirvana", "mature_server": false},
+ {"stage": "Nascent", "phase": "LATE", "grade": "G6", "grade_completion": 0.636, "culti_speed": 58.84, "absorption_ratio": 0.275, "aura_gem": "Legendary", "pill_rank": "4R", "pill_limit": 10, "gold_per_day": 2, "purple_per_day": 4, "blue_per_day": 4, "pill_effect": 0.154, "dailies_done": true},
+ {"stage": "Virtuoso", "phase": "MIDDLE", "grade": "G2", "culti_speed": 40, "absorption_ratio": 0.15}
+]

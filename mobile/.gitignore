@@ -1,0 +1,6 @@
+# generated / synced artifacts
+assets/data/
+test/expected.json
+.dart_tool/
+build/
+.flutter-plugins*
