@@ -27,6 +27,20 @@ from dataclasses import dataclass, field
 
 TICK_SECONDS = 8.0
 
+# Strive tier shape by major-realm gap to server #1 (recovered from the client
+# config, Regime A). Used only for the *shape* of the drop-off; the magnitude is
+# anchored to the player's real current Strive. Server-computed in reality, so
+# this is an estimate keyed on major-realm gap (the dominant driver).
+_STRIVE_SHAPE = {1: 0.15, 2: 0.20, 3: 0.30, 4: 0.40, 5: 0.50, 6: 0.60, 7: 0.70}
+
+
+def _strive_shape(gap: int) -> float:
+    if gap <= 0:
+        return 0.0
+    if gap >= 7:
+        return 0.70
+    return _STRIVE_SHAPE[gap]
+
 import sys
 
 if getattr(sys, "frozen", False):
@@ -51,6 +65,7 @@ class Inputs:
     absorption_ratio: float = 0.0   # e.g. 0.017 for 1.7%
     aura_gem: str = "None"
     target_stage: str = ""          # for "time until future stage"
+    top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
 
     # Pills
     pill_rank: str = "1R"
@@ -253,8 +268,25 @@ class Engine:
         pill_ratio = (pills["xp_per_day"] / inp.culti_speed) * TICK_SECONDS / 86400.0
         fruit_xp = self._fruit_xp(inp)
 
+        # Optional Strive drop-off: if server #1's Stage is given and you're
+        # behind them, Strive steps DOWN as you climb major realms toward #1
+        # (gap shrinks). Anchored to your real current Strive via _strive_shape,
+        # so at the current grade it's unchanged; it fades to 0 at #1's realm.
+        # Without this, Strive is held constant (and cancels out of the time).
+        stage_order = self.stages()
+        strive_of = None
+        if inp.top_stage in stage_order and inp.stage in stage_order:
+            top_i = stage_order.index(inp.top_stage)
+            cur_gap = top_i - stage_order.index(inp.stage)
+            if cur_gap > 0 and _strive_shape(cur_gap) > 0:
+                scale = strive / _strive_shape(cur_gap)
+                stage_idx = {s: i for i, s in enumerate(stage_order)}
+                def strive_of(row):
+                    return scale * _strive_shape(top_i - stage_idx.get(row["stage"], top_i))
+
         def speed(row) -> float:
-            return max(1e-12, abode * row["low"] * (1 + strive))
+            s = strive_of(row) if strive_of else strive
+            return max(1e-12, abode * row["low"] * (1 + s))
 
         def days(xp_seconds: float) -> float:
             return xp_seconds / 86400.0 / (1 + gem) / (1 + pill_ratio)
