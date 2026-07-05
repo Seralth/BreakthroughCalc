@@ -7,10 +7,10 @@
    "phase": "Late",
    "grade": "G5",
    "completion": 0.0,
-   "speed": 51.87,
+   "speed": 52.2,
    "absorb": 27.5,
    "gem": "Legendary",
-   "target": "Wholeness",
+   "target": "Voidbreak",
    "pill_rank": "4R",
    "pill_limit": 21.0,
    "gold_day": 0.0,
@@ -35,7 +35,7 @@
    "lvl_quality": 11,
    "lvl_gush": 0,
    "extractor": "Rare",
-   "array_bonus": 0.0,
+   "array_bonus": 46.0,
    "pill_sources": [
     [
      "",

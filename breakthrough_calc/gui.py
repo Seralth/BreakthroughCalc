@@ -187,7 +187,9 @@ class MainWindow(QMainWindow):
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
         for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
             w.setRange(0, 10); w.setSingleStep(0.01); w.setDecimals(2)
-            w.setToolTip("Star Mark bonus as a ratio: 0.10 = +10% pill XP")
+            w.setToolTip(
+                "Your in-game 'Cultivation Pill EXP Bonus' for this pill rarity (mainly from "
+                "Constellation Altar Star Marks). Entered as a ratio: 0.10 = +10%.")
             marks.addWidget(QLabel(name)); marks.addWidget(w)
         f.addRow("Star Marks (+XP ratio)", marks)
         lv.addWidget(pills)
