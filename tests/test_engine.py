@@ -417,6 +417,40 @@ class InputHardening(unittest.TestCase):
         self.assertAlmostEqual(a.stage_days, b.stage_days, places=9)
 
 
+class ResetTiming(unittest.TestCase):
+    def setUp(self):
+        self.e = Engine()
+
+    KW = dict(pill_rank="4R", pill_limit=10, gold_per_day=2, purple_per_day=4,
+              blue_per_day=4, pill_effect=0.154, respira_per_day=20,
+              respira_exp=5000, respira_event=5)
+
+    def test_zero_hours_to_reset_equals_dailies_not_done(self):
+        a = self.e.calculate(base_inputs(dailies_done=True, reset_in_hours=0.0, **self.KW))
+        b = self.e.calculate(base_inputs(dailies_done=False, **self.KW))
+        self.assertAlmostEqual(a.stage_days, b.stage_days, places=9)
+
+    def test_shorter_reset_never_slower(self):
+        prev = None
+        for h in (24.0, 12.0, 6.0, 0.0):
+            r = self.e.calculate(base_inputs(dailies_done=True, reset_in_hours=h, **self.KW))
+            if prev is not None:
+                self.assertLessEqual(r.stage_days, prev + 1e-9, msg=f"reset {h}h")
+            prev = r.stage_days
+
+    def test_event_respira_deferred_with_dailies_done(self):
+        # With dailies done, event attempts wait for the reset: on a horizon
+        # shorter than the reset window they must not help at all.
+        base = dict(stage="Nascent", phase="LATE", grade="G8",
+                    grade_completion=0.95, culti_speed=57.22,
+                    absorption_ratio=0.275, dailies_done=True,
+                    reset_in_hours=24.0)
+        with_event = self.e.calculate(Inputs(**base, respira_exp=5000, respira_event=50))
+        without = self.e.calculate(Inputs(**base, respira_exp=5000))
+        if with_event.phase_days < 1.0:   # finishes inside the reset window
+            self.assertAlmostEqual(with_event.phase_days, without.phase_days, places=9)
+
+
 class DataConsistency(unittest.TestCase):
     def test_star_cost_column_matches_energy_discount(self):
         # star[k][1] and artifact_energy_discount encode the same fact

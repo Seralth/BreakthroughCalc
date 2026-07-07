@@ -72,6 +72,7 @@ class Inputs {
   String topStage;
   bool matureServer;
   bool dailiesDone;
+  double resetInHours;
 
   double respiraPerDay;
   double respiraEvent;
@@ -122,6 +123,7 @@ class Inputs {
     this.topStage = '',
     this.matureServer = true,
     this.dailiesDone = false,
+    this.resetInHours = 24.0,
     this.respiraPerDay = 0.0,
     this.respiraEvent = 0.0,
     this.respiraExp = 0.0,
@@ -176,6 +178,7 @@ class Inputs {
       topStage: s('top_stage', ''),
       matureServer: b('mature_server', true),
       dailiesDone: b('dailies_done', false),
+      resetInHours: d('reset_in_hours', 24.0),
       respiraPerDay: d('respira_per_day', 0.0),
       respiraEvent: d('respira_event', 0.0),
       respiraExp: d('respira_exp', 0.0),
@@ -474,33 +477,43 @@ class Engine {
     }
 
     // Per-row wall-clock integration: gem multiplies cultivation speed only;
-    // pills/Respira are flat daily XP on top. With dailiesDone the first 24h
-    // run without the daily XP (mirrors engine.py — keep in lockstep).
+    // pills/Respira are flat daily XP on top. With dailiesDone the window
+    // until the daily reset runs without the daily XP, and event Respira is
+    // credited when the window ends (mirrors engine.py — keep in lockstep).
     final dailyRate = dailyXp / 86400.0;
-    final startCredit = fruitXp;
+    final resetWindow =
+        inp.dailiesDone ? inp.resetInHours.clamp(0.0, 24.0) * 3600.0 : 0.0;
+    final startCredit = resetWindow > 0.0 ? fruitMean : fruitXp;
+    final deferredCredit = resetWindow > 0.0 ? respiraEventXp : 0.0;
 
     double realSeconds(int upto) {
       var credit = startCredit;
-      var nopillLeft = inp.dailiesDone ? 86400.0 : 0.0;
+      var deferred = deferredCredit;
+      var windowLeft = resetWindow;
       var total = 0.0;
       final remainingCur =
           _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
       for (var j = idx; j <= upto; j++) {
         final xp = j == idx ? remainingCur : _num(rows[j]['grade_xp']);
-        final take = math.min(credit, xp);
+        var take = math.min(credit, xp);
         credit -= take;
         var left = xp - take;
         final baseRate = speed(rows[j]) * (1 + gem) / tickSeconds;
-        if (nopillLeft > 0.0 && left > 0.0) {
+        if (windowLeft > 0.0 && left > 0.0) {
           final secNp = left / baseRate;
-          if (secNp <= nopillLeft) {
-            nopillLeft -= secNp;
+          if (secNp <= windowLeft) {
+            windowLeft -= secNp;
             total += secNp;
             continue;
           }
-          left -= baseRate * nopillLeft;
-          total += nopillLeft;
-          nopillLeft = 0.0;
+          left -= baseRate * windowLeft;
+          total += windowLeft;
+          windowLeft = 0.0;
+          credit += deferred;
+          deferred = 0.0;
+          take = math.min(credit, left);
+          credit -= take;
+          left -= take;
         }
         total += left / (baseRate + dailyRate);
       }
@@ -523,25 +536,33 @@ class Engine {
     final effPerDay =
         inp.cultiSpeed * (86400.0 / tickSeconds) * (1 + gem) + dailyXp;
 
-    List<double> band(double tDays) {
-      if (effPerDay <= 0 || (varUpfront <= 0 && varDaily <= 0)) {
-        return [tDays, tDays];
+    double xpAhead(int upto) {
+      var total = _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
+      for (var j = idx + 1; j <= upto; j++) {
+        total += _num(rows[j]['grade_xp']);
       }
+      return math.max(0.0, total - startCredit - deferredCredit);
+    }
+
+    List<double> band(double tDays, int upto) {
+      if (varUpfront <= 0 && varDaily <= 0) return [tDays, tDays];
+      final rate = tDays > 0 ? xpAhead(upto) / tDays : effPerDay;
+      if (rate <= 0) return [tDays, tDays];
       final varXp = varUpfront + varDaily * math.max(0.0, tDays);
-      final sdDays = math.sqrt(varXp) / effPerDay;
+      final sdDays = math.sqrt(varXp) / rate;
       return [math.max(0.0, tDays - _bandZ * sdDays), tDays + _bandZ * sdDays];
     }
 
     res.phaseDays = days(realSeconds(pend));
     res.stageDays = days(realSeconds(send));
-    res.phaseBand = band(res.phaseDays);
-    res.stageBand = band(res.stageDays);
+    res.phaseBand = band(res.phaseDays, pend);
+    res.stageBand = band(res.stageDays, send);
 
     if (inp.targetStage.isNotEmpty && inp.targetStage != inp.stage) {
       final tstart = stageStartIndex(inp.targetStage);
       if (tstart > idx) {
         res.targetDays = days(realSeconds(tstart - 1));
-        res.targetBand = band(res.targetDays);
+        res.targetBand = band(res.targetDays, tstart - 1);
         res.targetValid = true;
       } else if (tstart >= 0) {
         res.error = 'Target stage precedes current stage.';
