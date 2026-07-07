@@ -70,24 +70,49 @@ class _WheelGuard(QObject):
         )
         QApplication.sendEvent(viewport, clone)
 
-from . import theme
+from . import theme, i18n
+from .i18n import tr, tr_duration
 from .engine import Engine, Inputs, fmt_days, load_pill_sources, load_respira_sources
 
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
 
-# Display-only canonical Stage names; internal data keys stay unchanged
-# (settings store the display names, via QComboBox.currentText()).
+# Display-only canonical Stage names; internal data keys stay unchanged.
+# Settings persist the INTERNAL keys; legacy files that stored display names
+# (in any language) are migrated via i18n.reverse + the reverse maps below.
 STAGE_LABELS = {"Nascent": "Nascent Soul"}
 STAGE_KEYS = {v: k for k, v in STAGE_LABELS.items()}
 
+# Vase input pill: internal key -> English display item.
+VASE_INPUT_LABELS = {"Blue": "Blue/White", "Purple": "Purple (Epic)",
+                     "Gold": "Gold (Legendary)"}
+VASE_INPUT_KEYS = {v: k for k, v in VASE_INPUT_LABELS.items()}
+
 
 def stage_disp(key: str) -> str:
-    return STAGE_LABELS.get(key, key)
+    return tr(STAGE_LABELS.get(key, key))
 
 
 def stage_key(disp: str) -> str:
-    return STAGE_KEYS.get(disp, disp)
+    """Displayed (localized) stage name, legacy English display name, or an
+    internal key -> internal key."""
+    return STAGE_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
+
+
+def phase_disp(key: str) -> str:
+    return tr(PHASE_LABELS.get(key, key))
+
+
+def phase_key(disp: str) -> str:
+    return PHASE_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
+
+
+def vase_input_disp(key: str) -> str:
+    return tr(VASE_INPUT_LABELS.get(key, key))
+
+
+def vase_input_key(disp: str) -> str:
+    return VASE_INPUT_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
 
 
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
@@ -134,15 +159,15 @@ def settings_path() -> str:
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Breakthrough Calculator")
         self.engine = Engine()
         self._settings_file = settings_path()
         self._loading = True
-        self._theme = self._read_store().get("theme", "Seralth")
+        store = self._read_store()
+        self._theme = store.get("theme", "Seralth")
         if self._theme not in theme.THEMES:  # unknown persisted name -> default
             self._theme = "Seralth"
+        i18n.set_lang(store.get("lang", "en"))
         self._acc = theme.accents(self._theme)
-        self._muted_labels = []
         self._build_ui()
         self._wire()
         self._on_stage_changed()
@@ -155,6 +180,8 @@ class MainWindow(QMainWindow):
 
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
+        self.setWindowTitle(tr("Breakthrough Calculator"))
+        self._muted_labels = []
         central = QWidget()
         root = QVBoxLayout(central)
         root.addLayout(self._build_toolbar())
@@ -165,7 +192,7 @@ class MainWindow(QMainWindow):
         left = QWidget()
         lv = QVBoxLayout(left)
 
-        cult = QGroupBox("Cultivation Base")
+        cult = QGroupBox(tr("Cultivation Base"))
         f = QFormLayout(cult)
         self.stage = QComboBox(); self.stage.addItems([stage_disp(s) for s in self.engine.stages()])
         self.phase = QComboBox()
@@ -173,60 +200,60 @@ class MainWindow(QMainWindow):
         self.completion = QDoubleSpinBox(); self.completion.setRange(0, 100); self.completion.setSuffix(" %")
         self.speed = QDoubleSpinBox(); self.speed.setRange(0, 1e12); self.speed.setDecimals(2)
         self.absorb = QDoubleSpinBox(); self.absorb.setRange(0, 10000); self.absorb.setDecimals(3); self.absorb.setSuffix(" %")
-        self.gem = QComboBox(); self.gem.addItems(list(self.engine.data["gem_bonus"].keys()))
+        self.gem = QComboBox(); self.gem.addItems([tr(k) for k in self.engine.data["gem_bonus"]])
         self.target = QComboBox(); self.target.addItem(""); self.target.addItems([stage_disp(s) for s in self.engine.stages()])
-        f.addRow("Stage", self.stage)
-        f.addRow("Half-step", self.phase)
-        f.addRow("Grade", self.grade)
-        f.addRow("Grade progress", self.completion)
+        f.addRow(tr("Stage"), self.stage)
+        f.addRow(tr("Half-step"), self.phase)
+        f.addRow(tr("Grade"), self.grade)
+        f.addRow(tr("Grade progress"), self.completion)
         # Abode Aura, Absorption Ratio, and Cultivation Speed all come off the
         # same in-game Cultivation Bonus screen. Enter Aura + Absorption and
         # the Apply button appears to fill in Speed (= Aura × Absorption);
         # Speed stays directly editable for anyone who prefers typing it.
         self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
         self.abode_aura.setDecimals(2)
-        self.abode_aura.setToolTip(
+        self.abode_aura.setToolTip(tr(
             "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
-            "Ratio entered, Cultivation Speed = Abode Aura × Absorption Ratio.")
-        f.addRow("Abode Aura", self.abode_aura)
-        f.addRow("Absorption Ratio", self.absorb)
+            "Ratio entered, Cultivation Speed = Abode Aura × Absorption Ratio."))
+        f.addRow(tr("Abode Aura"), self.abode_aura)
+        f.addRow(tr("Absorption Ratio"), self.absorb)
         self.absorb_base = QLabel("")
         self.absorb_base.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.absorb_base)
         f.addRow("", self.absorb_base)
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         self.array_out.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.array_out)
         f.addRow("", self.array_out)
-        self.array_apply = QPushButton("Apply to Cultivation Speed")
+        self.array_apply = QPushButton(tr("Apply to Cultivation Speed"))
         self.array_apply.clicked.connect(self._apply_array_speed)
         f.addRow("", self.array_apply)
-        f.addRow("Cultivation Speed (XP / Cosmoapsis)", self.speed)
-        f.addRow("Aura Gem", self.gem)
-        f.addRow("Target Stage", self.target)
+        f.addRow(tr("Cultivation Speed (XP / Cosmoapsis)"), self.speed)
+        f.addRow(tr("Aura Gem"), self.gem)
+        f.addRow(tr("Target Stage"), self.target)
         self.top_stage = QComboBox(); self.top_stage.addItem("")
         self.top_stage.addItems([stage_disp(s) for s in self.engine.stages()])
-        self.top_stage.setToolTip(
+        self.top_stage.setToolTip(tr(
             "Optional: your server's #1 cultivator's Stage. Models your Strive stepping DOWN as you "
             "break through toward them (estimated; assumes #1 stays put; live value is server-computed hourly). "
-            "Leave blank to hold Strive constant.")
-        f.addRow("Server #1's Stage (Strive)", self.top_stage)
-        self.mature_server = QCheckBox("Mature server (world level 30+)")
+            "Leave blank to hold Strive constant."))
+        f.addRow(tr("Server #1's Stage (Strive)"), self.top_stage)
+        self.mature_server = QCheckBox(tr("Mature server (world level 30+)"))
         self.mature_server.setChecked(True)
-        self.mature_server.setToolTip(
+        self.mature_server.setToolTip(tr(
             "Server age changes how Strive is computed. Mature servers (world level 30+, "
             "the common case) use finer level-gap tiers plus a realm-gap bonus (cap ~120%); "
             "young servers use the plain realm-gap table (cap 70%). Only used when "
-            "Server #1's Stage is set.")
+            "Server #1's Stage is set."))
         f.addRow("", self.mature_server)
         lv.addWidget(cult)
 
-        pills = QGroupBox("Cultivation Pills")
+        pills = QGroupBox(tr("Cultivation Pills"))
         f = QFormLayout(pills)
         self.pill_rank = QComboBox(); self.pill_rank.addItems(list(self.engine.data["pill_xp"].keys()))
         self.pill_limit = QDoubleSpinBox(); self.pill_limit.setRange(0, 1e6)
         self.gold_day = QDoubleSpinBox(); self.gold_day.setRange(0, 1e6)
         self.purple_day = QDoubleSpinBox(); self.purple_day.setRange(0, 1e6)
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
-        f.addRow("Pill rank", self.pill_rank)
+        f.addRow(tr("Pill rank"), self.pill_rank)
 
         # Cultivation pill effect = sum of contributions (technique books, curios,
         # etc.). Record each source once so swapping gear means editing one row.
@@ -234,20 +261,20 @@ class MainWindow(QMainWindow):
         self.pe_rows = []
         self.pe_rows_layout = QVBoxLayout(); self.pe_rows_layout.setContentsMargins(0, 0, 0, 0)
         pe_v.addLayout(self.pe_rows_layout)
-        self.pe_total = QLabel("Total: 0.00 %"); self.pe_total.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pe_total)
-        add_pe = QPushButton("＋ Add source")
-        add_pe.setToolTip("Add a pill-effect source (a technique book, a curio, …). Their percentages sum.")
+        self.pe_total = QLabel(tr("Total: {} %").format("0.00")); self.pe_total.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pe_total)
+        add_pe = QPushButton(tr("＋ Add source"))
+        add_pe.setToolTip(tr("Add a pill-effect source (a technique book, a curio, …). Their percentages sum."))
         add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
         pe_bottom = QHBoxLayout(); pe_bottom.addWidget(self.pe_total, 1); pe_bottom.addWidget(add_pe)
         self.pe_catalog = load_pill_sources()
         if self.pe_catalog:
-            cat_btn = QPushButton("＋ From catalog")
-            cat_btn.setToolTip("Known pill-effect sources from the game data. Check to add "
-                               "(prefilled, editable), uncheck to remove.")
+            cat_btn = QPushButton(tr("＋ From catalog"))
+            cat_btn.setToolTip(tr("Known pill-effect sources from the game data. Check to add "
+                                  "(prefilled, editable), uncheck to remove."))
             cat_menu = QMenu(cat_btn)
             cat_menu.setToolTipsVisible(True)
             for src in self.pe_catalog:
-                pct = f'{src["percent"]:g}%' if src.get("percent") else "varies"
+                pct = f'{src["percent"]:g}%' if src.get("percent") else tr("varies")
                 act = cat_menu.addAction(f'{src["name"]}  ({pct})')
                 act.setCheckable(True)
                 act.setToolTip(src.get("note", ""))
@@ -258,56 +285,56 @@ class MainWindow(QMainWindow):
             self._cat_menu = cat_menu
             pe_bottom.addWidget(cat_btn)
         pe_v.addLayout(pe_bottom)
-        f.addRow("Cultivation pill effect", pe_wrap)
+        f.addRow(tr("Cultivation pill effect"), pe_wrap)
 
-        self.pill_limit.setToolTip("Shared daily attempt limit for all cultivation pills (vase red pills are exempt).")
-        f.addRow("Daily pill attempts (shared)", self.pill_limit)
-        f.addRow("Legendary (Gold) used / day", self.gold_day)
-        f.addRow("Epic (Purple) used / day", self.purple_day)
-        f.addRow("Rare (Blue) used / day", self.blue_day)
+        self.pill_limit.setToolTip(tr("Shared daily attempt limit for all cultivation pills (vase red pills are exempt)."))
+        f.addRow(tr("Daily pill attempts (shared)"), self.pill_limit)
+        f.addRow(tr("Legendary (Gold) used / day"), self.gold_day)
+        f.addRow(tr("Epic (Purple) used / day"), self.purple_day)
+        f.addRow(tr("Rare (Blue) used / day"), self.blue_day)
         self.pill_attempts = QLabel("")
         self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
         f.addRow("", self.pill_attempts)
-        self.dailies_done = QCheckBox("Already used today's pills/respira")
-        self.dailies_done.setToolTip(
+        self.dailies_done = QCheckBox(tr("Already used today's pills/respira"))
+        self.dailies_done.setToolTip(tr(
             "Check if you've already taken today's daily pills and Respira. The "
             "projection then defers that boost to the next daily reset (today runs "
-            "at base speed). Mainly affects short estimates.")
+            "at base speed). Mainly affects short estimates."))
         f.addRow("", self.dailies_done)
         self.reset_in = QDoubleSpinBox()
         self.reset_in.setRange(0, 24); self.reset_in.setValue(24); self.reset_in.setSingleStep(0.5)
-        self.reset_in.setToolTip(
+        self.reset_in.setToolTip(tr(
             "Hours until the game's daily reset. Only used when the box above is "
             "checked: the projection runs the window until the reset without the "
             "daily pill/Respira XP (and defers event Respira to the reset), then "
-            "resumes the normal daily routine.")
+            "resumes the normal daily routine."))
         self.reset_in.setEnabled(self.dailies_done.isChecked())
         self.dailies_done.toggled.connect(self.reset_in.setEnabled)
-        f.addRow("Reset in (h)", self.reset_in)
+        f.addRow(tr("Reset in (h)"), self.reset_in)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
         for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
             w.setRange(0, 10); w.setSingleStep(0.01); w.setDecimals(2)
-            w.setToolTip(
+            w.setToolTip(tr(
                 "Your in-game 'Cultivation Pill EXP Bonus' for this pill rarity (mainly from "
-                "Constellation Altar Star Marks). Entered as a ratio: 0.10 = +10%.")
-            marks.addWidget(QLabel(name)); marks.addWidget(w)
-        f.addRow("Star Marks (+XP ratio)", marks)
+                "Constellation Altar Star Marks). Entered as a ratio: 0.10 = +10%."))
+            marks.addWidget(QLabel(tr(name))); marks.addWidget(w)
+        f.addRow(tr("Star Marks (+XP ratio)"), marks)
         lv.addWidget(pills)
 
-        arts = QGroupBox("Creation Artifacts")
+        arts = QGroupBox(tr("Creation Artifacts"))
         g = QGridLayout(arts)
-        g.addWidget(QLabel("<b>Artifact</b>"), 0, 0); g.addWidget(QLabel("<b>Star</b>"), 0, 2); g.addWidget(QLabel("<b>Skin</b>"), 0, 3)
-        g.addWidget(QLabel("<b>Charge</b>"), 0, 4)
-        self.vase = QCheckBox("Starsea Vase"); self.vase_star = QComboBox(); self.vase_star.addItems(STARS); self.vase_skin = QCheckBox()
-        self.vase_skin.setToolTip("Transmog skin: refined pills give +8% Cultivation EXP")
-        self.mirror = QCheckBox("Dual-Star Mirror"); self.mirror_star = QComboBox(); self.mirror_star.addItems(STARS); self.mirror_skin = QCheckBox()
-        self.mirror_skin.setToolTip("Transmog skin: Duplication consumes 10% less Energy")
-        self.pearl = QCheckBox("Timereversal Pearl"); self.pearl_star = QComboBox(); self.pearl_star.addItems(STARS)
+        g.addWidget(QLabel(f"<b>{tr('Artifact')}</b>"), 0, 0); g.addWidget(QLabel(f"<b>{tr('Star')}</b>"), 0, 2); g.addWidget(QLabel(f"<b>{tr('Skin')}</b>"), 0, 3)
+        g.addWidget(QLabel(f"<b>{tr('Charge')}</b>"), 0, 4)
+        self.vase = QCheckBox(tr("Starsea Vase")); self.vase_star = QComboBox(); self.vase_star.addItems(STARS); self.vase_skin = QCheckBox()
+        self.vase_skin.setToolTip(tr("Transmog skin: refined pills give +8% Cultivation EXP"))
+        self.mirror = QCheckBox(tr("Dual-Star Mirror")); self.mirror_star = QComboBox(); self.mirror_star.addItems(STARS); self.mirror_skin = QCheckBox()
+        self.mirror_skin.setToolTip(tr("Transmog skin: Duplication consumes 10% less Energy"))
+        self.pearl = QCheckBox(tr("Timereversal Pearl")); self.pearl_star = QComboBox(); self.pearl_star.addItems(STARS)
         self.pearl_skin = QCheckBox()
-        self.pearl_skin.setToolTip("Transmog skin: Timereversal Pearl Energy Cost -10%")
+        self.pearl_skin.setToolTip(tr("Transmog skin: Timereversal Pearl Energy Cost -10%"))
         self.pearl_xp10 = QDoubleSpinBox(); self.pearl_xp10.setRange(0, 1e12)
-        charge_tip = "Daily Energy Charge: 30 Fateum/Destium adds 100 Energy to this artifact, once per day. Check if you use it every day."
+        charge_tip = tr("Daily Energy Charge: 30 Fateum/Destium adds 100 Energy to this artifact, once per day. Check if you use it every day.")
         self.vase_charge = QCheckBox(); self.mirror_charge = QCheckBox(); self.pearl_charge = QCheckBox()
         for w in (self.vase_charge, self.mirror_charge, self.pearl_charge):
             w.setChecked(True)
@@ -318,15 +345,15 @@ class MainWindow(QMainWindow):
         g.addWidget(self.mirror_charge, 2, 4)
         g.addWidget(self.pearl, 3, 0); g.addWidget(self.pearl_star, 3, 2); g.addWidget(self.pearl_skin, 3, 3)
         g.addWidget(self.pearl_charge, 3, 4)
-        self.vase_input_label = QLabel("Vase input pill")
+        self.vase_input_label = QLabel(tr("Vase input pill"))
         self.vase_input = QComboBox()
-        self.vase_input.addItems(["Blue/White", "Purple (Epic)", "Gold (Legendary)"])
-        self.vase_input.setToolTip(
+        self.vase_input.addItems([vase_input_disp(k) for k in VASE_INPUT_LABELS])
+        self.vase_input.setToolTip(tr(
             "Which pill quality you refine into red pills. Refines are discounted by input "
             "quality (Epic -5%, Legendary -20% Energy), so feeding gold pills yields extra "
-            "red pills over time. Base cost also depends on pill rank (75-100 energy).")
+            "red pills over time. Base cost also depends on pill rank (75-100 energy)."))
         g.addWidget(self.vase_input_label, 4, 0); g.addWidget(self.vase_input, 4, 2, 1, 2)
-        self.pearl_xp10_label = QLabel("EXP per 10 energy")
+        self.pearl_xp10_label = QLabel(tr("EXP per 10 energy"))
         g.addWidget(self.pearl_xp10_label, 5, 0); g.addWidget(self.pearl_xp10, 5, 2, 1, 2)
         # Grey out each artifact's controls while it is unchecked, so it is
         # obvious the inputs only count once the artifact is enabled.
@@ -343,31 +370,31 @@ class MainWindow(QMainWindow):
               self.pearl_xp10, self.pearl_xp10_label)
         lv.addWidget(arts)
 
-        respira = QGroupBox("Respira")
+        respira = QGroupBox(tr("Respira"))
         rf = QFormLayout(respira)
         self.respira_per_day = QDoubleSpinBox(); self.respira_per_day.setRange(0, 1e5)
-        self.respira_per_day.setToolTip(
+        self.respira_per_day.setToolTip(tr(
             "Your daily Respira attempt limit as shown in-game (base + permanent "
-            "bonus attempts). Leave out temporary event attempts.")
+            "bonus attempts). Leave out temporary event attempts."))
         self.respira_event = QDoubleSpinBox(); self.respira_event.setRange(0, 1e5)
-        self.respira_event.setToolTip(
+        self.respira_event.setToolTip(tr(
             "One-off extra Respira attempts available today only (event/item). "
-            "Credited once, not as a daily rate.")
+            "Credited once, not as a daily rate."))
         self.respira_exp = QDoubleSpinBox(); self.respira_exp.setRange(0, 1e12)
-        self.respira_exp.setToolTip(
+        self.respira_exp.setToolTip(tr(
             "The base (non-crit) Cultivation EXP from one Respira attempt — see the "
-            "note below the field.")
-        self._respira_checked = set()
+            "note below the field."))
+        self._respira_checked = getattr(self, "_respira_checked", set())
         self.respira_catalog = load_respira_sources()
         if self.respira_catalog:
             rp_wrap = QWidget(); rp_h = QHBoxLayout(rp_wrap); rp_h.setContentsMargins(0, 0, 0, 0)
             rp_h.addWidget(self.respira_per_day, 1)
-            rsp_btn = QPushButton("Sources…")
-            rsp_btn.setToolTip(
+            rsp_btn = QPushButton(tr("Sources…"))
+            rsp_btn.setToolTip(tr(
                 "Known Respira bonus sources. Checkable entries add/remove daily "
                 "attempts from the field. Greyed entries are informational only: "
                 "Respira EXP bonuses are already inside your in-game EXP tooltip, "
-                "and pill-attempt bonuses belong in the Daily pill attempts input.")
+                "and pill-attempt bonuses belong in the Daily pill attempts input."))
             rsp_menu = QMenu(rsp_btn)
             rsp_menu.setToolTipsVisible(True)
             for src in self.respira_catalog:
@@ -376,7 +403,7 @@ class MainWindow(QMainWindow):
                     act.setCheckable(True)
                     act.setData(src)
                 else:
-                    label = "info" if src.get("kind") == "exp_pct" else "pill limit"
+                    label = tr("info") if src.get("kind") == "exp_pct" else tr("pill limit")
                     act = rsp_menu.addAction(f'{src["name"]}  ({label})')
                     act.setEnabled(False)
                 act.setToolTip(src.get("note", ""))
@@ -385,42 +412,42 @@ class MainWindow(QMainWindow):
             rsp_btn.setMenu(rsp_menu)
             self._respira_menu = rsp_menu
             rp_h.addWidget(rsp_btn)
-            rf.addRow("Attempts / day", rp_wrap)
+            rf.addRow(tr("Attempts / day"), rp_wrap)
         else:
-            rf.addRow("Attempts / day", self.respira_per_day)
-        rf.addRow("Extra attempts today", self.respira_event)
-        rf.addRow("Base EXP / attempt", self.respira_exp)
-        respira_hint = QLabel(
+            rf.addRow(tr("Attempts / day"), self.respira_per_day)
+        rf.addRow(tr("Extra attempts today"), self.respira_event)
+        rf.addRow(tr("Base EXP / attempt"), self.respira_exp)
+        respira_hint = QLabel(tr(
             "Do a few Respira: most give the same small EXP (the base — enter that); "
-            "some give 2×/5×/10× (crits — ignore, handled automatically).")
+            "some give 2×/5×/10× (crits — ignore, handled automatically)."))
         respira_hint.setWordWrap(True)
         respira_hint.setStyleSheet(f"color: {self._acc['muted']};")
         self._muted_labels.append(respira_hint)
         rf.addRow("", respira_hint)
         lv.addWidget(respira)
 
-        fruit = QGroupBox("Myrimon Fruit")
+        fruit = QGroupBox(tr("Myrimon Fruit"))
         f = QFormLayout(fruit)
         self.fruit_rank = QComboBox(); self.fruit_rank.addItems(list(self.engine.data["fruit_xp"].keys()))
-        self.fruit_high = QCheckBox("Highest rank (+50%)")
+        self.fruit_high = QCheckBox(tr("Highest rank (+50%)"))
         self.fruit_count = QDoubleSpinBox(); self.fruit_count.setRange(0, 1e6)
         self.lvl_culti = QSpinBox(); self.lvl_quality = QSpinBox(); self.lvl_gush = QSpinBox()
         for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush):
             w.setRange(0, 30)
-        self.extractor = QComboBox(); self.extractor.addItems(self.engine.data["rarity_names"])
-        f.addRow("Fruit rank", self.fruit_rank)
+        self.extractor = QComboBox(); self.extractor.addItems([tr(r) for r in self.engine.data["rarity_names"]])
+        f.addRow(tr("Fruit rank"), self.fruit_rank)
         f.addRow("", self.fruit_high)
-        f.addRow("No. of Myrimon Fruits", self.fruit_count)
-        f.addRow("Culti level", self.lvl_culti)
-        f.addRow("Quality level", self.lvl_quality)
-        f.addRow("Gush level", self.lvl_gush)
-        f.addRow("Aura Extractor quality", self.extractor)
+        f.addRow(tr("No. of Myrimon Fruits"), self.fruit_count)
+        f.addRow(tr("Culti level"), self.lvl_culti)
+        f.addRow(tr("Quality level"), self.lvl_quality)
+        f.addRow(tr("Gush level"), self.lvl_gush)
+        f.addRow(tr("Aura Extractor quality"), self.extractor)
         lv.addWidget(fruit)
 
-        note = QLabel(
+        note = QLabel(tr(
             "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
             "your server's #1. Set \"Server #1's Stage\" above to model that drop-off (estimated); "
-            "leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way.")
+            "leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way."))
         note.setWordWrap(True); note.setStyleSheet(f"color: {self._acc['muted']}; font-size: 11px;"); self._muted_labels.append(note)
         lv.addWidget(note)
         lv.addStretch(1)
@@ -451,35 +478,35 @@ class MainWindow(QMainWindow):
             fnt = lbl.font(); fnt.setBold(True); lbl.setFont(fnt)
             return lbl
 
-        right = QGroupBox("Results (current)")
+        right = QGroupBox(tr("Results (current)"))
         rf = QFormLayout(right)
         for text, attr in self.RESULT_ROWS:
-            lbl = mklabel(); setattr(self, attr, lbl); rf.addRow(text, lbl)
+            lbl = mklabel(); setattr(self, attr, lbl); rf.addRow(tr(text), lbl)
         self.o_error = QLabel(""); self.o_error.setStyleSheet(f"color: {self._acc['bad']};"); self.o_error.setWordWrap(True)
         rf.addRow(self.o_error)
         btns = QHBoxLayout()
-        self.copy_btn = QPushButton("Copy results"); self.copy_btn.clicked.connect(self._copy_results)
-        self.pin_btn = QPushButton("Pin as A"); self.pin_btn.clicked.connect(self._pin_results)
+        self.copy_btn = QPushButton(tr("Copy results")); self.copy_btn.clicked.connect(self._copy_results)
+        self.pin_btn = QPushButton(tr("Pin as A")); self.pin_btn.clicked.connect(self._pin_results)
         btns.addWidget(self.copy_btn); btns.addWidget(self.pin_btn)
         rf.addRow(btns)
         outer.addWidget(right, 1)
 
-        self.pin_box = QGroupBox("Pinned A")
+        self.pin_box = QGroupBox(tr("Pinned A"))
         pf = QFormLayout(self.pin_box)
         self.pin_labels = {}
         for text, attr in self.RESULT_ROWS:
             lbl = mklabel(); lbl.setStyleSheet(f"font-weight: bold; color: {self._acc['good']};"); self.pin_labels[attr] = lbl
-            pf.addRow(text, lbl)
-        self.unpin_btn = QPushButton("Clear A"); self.unpin_btn.clicked.connect(self._unpin_results)
+            pf.addRow(tr(text), lbl)
+        self.unpin_btn = QPushButton(tr("Clear A")); self.unpin_btn.clicked.connect(self._unpin_results)
         pf.addRow(self.unpin_btn)
         self.pin_box.setVisible(False)
         outer.addWidget(self.pin_box, 1)
 
         tabs = QTabWidget()
-        tabs.addTab(central, "Calculator")
+        tabs.addTab(central, tr("Calculator"))
         self._tabs = tabs
-        tabs.addTab(self._build_info_tab(), "Reference")
-        tabs.addTab(self._build_guide_tab(), "Guide")
+        tabs.addTab(self._build_info_tab(), tr("Reference"))
+        tabs.addTab(self._build_guide_tab(), tr("Guide"))
         self.setCentralWidget(tabs)
 
     def _rebuild_info_tab(self):
@@ -489,8 +516,8 @@ class MainWindow(QMainWindow):
         gsub = self._guide_tabs.currentIndex() if getattr(self, "_guide_tabs", None) else 0
         self._tabs.removeTab(2)
         self._tabs.removeTab(1)
-        self._tabs.insertTab(1, self._build_info_tab(), "Reference")
-        self._tabs.insertTab(2, self._build_guide_tab(), "Guide")
+        self._tabs.insertTab(1, self._build_info_tab(), tr("Reference"))
+        self._tabs.insertTab(2, self._build_guide_tab(), tr("Guide"))
         self._ref_tabs.setCurrentIndex(sub)
         self._guide_tabs.setCurrentIndex(gsub)
         self.resize(1180, 680)
@@ -906,13 +933,13 @@ class MainWindow(QMainWindow):
             self.fruit_count: "Number of Myrimon Fruits processed through the Aura Extractor.",
         }
         for w, t in tips.items():
-            w.setToolTip(t)
+            w.setToolTip(tr(t))
 
     def _on_stage_changed(self):
         stage = stage_key(self.stage.currentText())
         self.phase.blockSignals(True)
         self.phase.clear()
-        self.phase.addItems([PHASE_LABELS.get(p, p) for p in self.engine.phases_for(stage)])
+        self.phase.addItems([phase_disp(p) for p in self.engine.phases_for(stage)])
         self.phase.blockSignals(False)
         # Target dropdown: only Stages strictly after the current one.
         stages = self.engine.stages()
@@ -928,7 +955,7 @@ class MainWindow(QMainWindow):
         self._on_phase_changed()
 
     def _on_phase_changed(self):
-        stage, phase = stage_key(self.stage.currentText()), PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText())
+        stage, phase = stage_key(self.stage.currentText()), phase_key(self.phase.currentText())
         self.grade.blockSignals(True)
         self.grade.clear()
         self.grade.addItems(self.engine.grades_for(stage, phase))
@@ -938,10 +965,10 @@ class MainWindow(QMainWindow):
     # ---- calc ------------------------------------------------------------
     def _inputs(self) -> Inputs:
         return Inputs(
-            stage=stage_key(self.stage.currentText()), phase=PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
+            stage=stage_key(self.stage.currentText()), phase=phase_key(self.phase.currentText()),
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
-            aura_gem=self.gem.currentText(), target_stage=stage_key(self.target.currentText()),
+            aura_gem=i18n.reverse(self.gem.currentText()), target_stage=stage_key(self.target.currentText()),
             top_stage=stage_key(self.top_stage.currentText()),
             pill_rank=self.pill_rank.currentText(), pill_effect=self._pill_effect_total() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
@@ -950,7 +977,7 @@ class MainWindow(QMainWindow):
             mark_gold=self.mark_gold.value(),
             vase=self.vase.isChecked(), vase_star=self.vase_star.currentText(),
             vase_skin=self.vase_skin.isChecked(),
-            vase_input=self.vase_input.currentText().split("/")[0].split(" ")[0],
+            vase_input=vase_input_key(self.vase_input.currentText()),
             mirror=self.mirror.isChecked(), mirror_star=self.mirror_star.currentText(),
             mirror_skin=self.mirror_skin.isChecked(),
             pearl=self.pearl.isChecked(), pearl_star=self.pearl_star.currentText(),
@@ -968,7 +995,7 @@ class MainWindow(QMainWindow):
             fruit_rank=self.fruit_rank.currentText(), fruit_count=self.fruit_count.value(),
             fruit_highest_rank=self.fruit_high.isChecked(),
             lvl_culti=self.lvl_culti.value(), lvl_quality=self.lvl_quality.value(),
-            lvl_gush=self.lvl_gush.value(), extractor_rarity=self.extractor.currentText(),
+            lvl_gush=self.lvl_gush.value(), extractor_rarity=i18n.reverse(self.extractor.currentText()),
         )
 
     # ---- persistence -----------------------------------------------------
@@ -1001,11 +1028,25 @@ class MainWindow(QMainWindow):
             "extractor": self.extractor, "abode_aura": self.abode_aura,
         }
 
+    # Combo values are persisted as INTERNAL keys (language-independent);
+    # these two maps convert display text <-> internal key per widget key.
+    _COMBO_TO_KEY = {
+        "stage": stage_key, "target": stage_key, "top_stage": stage_key,
+        "phase": phase_key, "gem": i18n.reverse, "extractor": i18n.reverse,
+        "vase_input": vase_input_key,
+    }
+    _KEY_TO_COMBO = {
+        "stage": stage_disp, "target": stage_disp, "top_stage": stage_disp,
+        "phase": phase_disp, "gem": tr, "extractor": tr,
+        "vase_input": vase_input_disp,
+    }
+
     def _collect_state(self) -> dict:
         vals = {}
         for key, w in self._widget_map().items():
             if isinstance(w, QComboBox):
-                vals[key] = w.currentText()
+                conv = self._COMBO_TO_KEY.get(key)
+                vals[key] = conv(w.currentText()) if conv else w.currentText()
             elif isinstance(w, QCheckBox):
                 vals[key] = w.isChecked()
             else:
@@ -1034,10 +1075,12 @@ class MainWindow(QMainWindow):
             w, v = wm.get(key), vals.get(key)
             if w is None or v is None:
                 continue
-            if key == "phase":
-                v = PHASE_LABELS.get(str(v), v)
-            if key in ("stage", "target", "top_stage"):
-                v = stage_disp(str(v))
+            disp = self._KEY_TO_COMBO.get(key)
+            if disp is not None and v is not None:
+                # accept internal keys (current format) and legacy display
+                # names saved in any language (convert to key, then display)
+                to_key = self._COMBO_TO_KEY[key]
+                v = disp(to_key(str(v)))
             try:
                 if isinstance(w, QComboBox):
                     i = w.findText(str(v))
@@ -1107,7 +1150,7 @@ class MainWindow(QMainWindow):
         self.recalc()
 
     def _new_profile(self):
-        name, ok = QInputDialog.getText(self, "New / Save As", "Profile name:")
+        name, ok = QInputDialog.getText(self, tr("New / Save As"), tr("Profile name:"))
         name = (name or "").strip()
         if not ok or not name:
             return
@@ -1136,14 +1179,14 @@ class MainWindow(QMainWindow):
 
     def _build_toolbar(self) -> QHBoxLayout:
         bar = QHBoxLayout()
-        bar.addWidget(QLabel("Profile:"))
+        bar.addWidget(QLabel(tr("Profile:")))
         self.profile_combo = QComboBox()
         self.profile_combo.setMinimumWidth(140)
         self.profile_combo.currentTextChanged.connect(self._switch_profile)
         bar.addWidget(self.profile_combo)
-        for text, slot in (("New / Save As…", self._new_profile),
-                           ("Delete", self._delete_profile),
-                           ("Reset", self._reset_profile)):
+        for text, slot in ((tr("New / Save As…"), self._new_profile),
+                           (tr("Delete"), self._delete_profile),
+                           (tr("Reset"), self._reset_profile)):
             b = QPushButton(text); b.clicked.connect(slot); bar.addWidget(b)
         bar.addStretch(1)
         # Update notice: hidden until a newer GitHub release is found.
@@ -1151,35 +1194,59 @@ class MainWindow(QMainWindow):
         self.update_label.setOpenExternalLinks(True)
         self.update_label.setVisible(False)
         bar.addWidget(self.update_label)
-        b = QPushButton("Check for updates")
+        b = QPushButton(tr("Check for updates"))
         b.setFlat(True)
-        b.setToolTip(f"Installed: v{__version__}. Checks the latest GitHub release.")
+        b.setToolTip(tr("Installed: v{}. Checks the latest GitHub release.").format(__version__))
         b.clicked.connect(lambda: self._check_updates(manual=True))
         bar.addWidget(b)
-        d = QPushButton("Donate ♥")
+        d = QPushButton(tr("Donate ♥"))
         d.setFlat(True)
-        d.setToolTip("Support development by gifting in-game vouchers.")
+        d.setToolTip(tr("Support development by gifting in-game vouchers."))
         d.clicked.connect(self._show_donate)
         bar.addWidget(d)
-        bar.addWidget(QLabel("Theme:"))
+        bar.addWidget(QLabel(tr("Theme:")))
         self.theme_combo = QComboBox()
         self.theme_combo.addItems(theme.THEMES)
         self.theme_combo.setCurrentText(self._theme)
         self.theme_combo.currentTextChanged.connect(self._on_theme_changed)
         bar.addWidget(self.theme_combo)
+        bar.addWidget(QLabel(tr("Language:")))
+        self.lang_combo = QComboBox()
+        self.lang_combo.addItems(list(i18n.LANGS.values()))
+        self.lang_combo.setCurrentText(i18n.LANGS[i18n.get_lang()])
+        self.lang_combo.currentTextChanged.connect(self._on_lang_changed)
+        bar.addWidget(self.lang_combo)
         return bar
+
+    def _on_lang_changed(self, disp: str):
+        code = next((k for k, v in i18n.LANGS.items() if v == disp), "en")
+        if code == i18n.get_lang():
+            return
+        # Pragmatic full rebuild (mirrors the theme approach): capture the
+        # inputs as internal keys, switch language, rebuild the UI, re-apply.
+        state = self._collect_state()
+        prev, self._loading = self._loading, True
+        i18n.set_lang(code)
+        obj = self._read_store(); obj["lang"] = code; self._write_store(obj)
+        self._build_ui()
+        self._wire()
+        self._on_stage_changed()
+        self._refresh_profile_combo(self._read_store().get("current", "Default"))
+        self._apply_state(state)
+        self._loading = prev
+        self.recalc()
 
     # ---- donate ------------------------------------------------------------
     def _show_donate(self):
         dlg = QDialog(self)
-        dlg.setWindowTitle("Support the calculator")
+        dlg.setWindowTitle(tr("Support the calculator"))
         v = QVBoxLayout(dlg)
-        intro = QLabel(
+        intro = QLabel(tr(
             "If the calculator saves you time, you can support development by "
-            f"gifting in-game vouchers:<ol>"
-            f"<li>Open <a href='{DONATE_URL}'>SEAGM — OverMortal vouchers</a></li>"
+            "gifting in-game vouchers:<ol>"
+            "<li>Open <a href='{}'>SEAGM — OverMortal vouchers</a></li>"
             "<li>Pick any voucher amount</li>"
-            "<li>Paste the RID below into the site's <b>RID</b> field</li></ol>")
+            "<li>Paste the RID below into the site's <b>RID</b> field</li></ol>").format(DONATE_URL))
         intro.setOpenExternalLinks(True)
         intro.setWordWrap(True)
         v.addWidget(intro)
@@ -1187,7 +1254,7 @@ class MainWindow(QMainWindow):
         rid = QLineEdit(DONATE_RID)
         rid.setReadOnly(True)
         row.addWidget(rid)
-        copy = QPushButton("Copy RID")
+        copy = QPushButton(tr("Copy RID"))
         copy.clicked.connect(
             lambda: QApplication.clipboard().setText(DONATE_RID))
         row.addWidget(copy)
@@ -1218,15 +1285,15 @@ class MainWindow(QMainWindow):
                 latest = None
         if latest is None:
             if manual:
-                self.update_label.setText("Update check failed")
+                self.update_label.setText(tr("Update check failed"))
                 self.update_label.setVisible(True)
             return
         if latest > _version_tuple(__version__):
             tag = ".".join(str(x) for x in latest)
-            self.update_label.setText(f'<a href="{url}">Update available: v{tag}</a>')
+            self.update_label.setText(f'<a href="{url}">{tr("Update available: v{}").format(tag)}</a>')
             self.update_label.setVisible(True)
         elif manual:
-            self.update_label.setText(f"Up to date (v{__version__})")
+            self.update_label.setText(tr("Up to date (v{})").format(__version__))
             self.update_label.setVisible(True)
 
     def _on_theme_changed(self, name: str):
@@ -1252,7 +1319,7 @@ class MainWindow(QMainWindow):
         for _, attr in self.RESULT_ROWS:
             self.pin_labels[attr].setText(getattr(self, attr).text())
         self.pin_box.setTitle(
-            f"Pinned A — {self.stage.currentText()} {self.phase.currentText()} {self.grade.currentText()}")
+            f"{tr('Pinned A')} — {self.stage.currentText()} {self.phase.currentText()} {self.grade.currentText()}")
         self.pin_box.setVisible(True)
 
     def _unpin_results(self):
@@ -1274,7 +1341,7 @@ class MainWindow(QMainWindow):
     # ---- pill-effect sources (technique books, curios, …) ----------------
     def _add_pe_row(self, label: str = "", value: float = 0.0):
         row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
-        le = QLineEdit(label); le.setPlaceholderText("source (e.g. technique book, curio)")
+        le = QLineEdit(label); le.setPlaceholderText(tr("source (e.g. technique book, curio)"))
         sp = QDoubleSpinBox(); sp.setRange(0, 500); sp.setDecimals(2); sp.setSuffix(" %"); sp.setValue(value)
         rm = QPushButton("✕"); rm.setFixedWidth(28)
         h.addWidget(le, 1); h.addWidget(sp); h.addWidget(rm)
@@ -1355,12 +1422,13 @@ class MainWindow(QMainWindow):
         out.setStyleSheet(f"color: {self._acc['muted']};")
 
         def refresh():
-            out.setText(f"Cultivation Pill Effect: {value_for(star.currentIndex() + 1, upg.currentIndex()):.1f}%")
+            out.setText(tr("Cultivation Pill Effect: {}%").format(
+                f"{value_for(star.currentIndex() + 1, upg.currentIndex()):.1f}"))
         star.currentIndexChanged.connect(refresh)
         upg.currentIndexChanged.connect(refresh)
         refresh()
-        lay.addRow("Star", star)
-        lay.addRow("Upgrade level", upg)
+        lay.addRow(tr("Star"), star)
+        lay.addRow(tr("Upgrade level"), upg)
         lay.addRow("", out)
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(dlg.accept)
@@ -1383,12 +1451,12 @@ class MainWindow(QMainWindow):
             self._add_pe_row()
 
     def _update_pill_attempts(self):
-        self.pe_total.setText(f"Total: {self._pill_effect_total():.2f} %")
+        self.pe_total.setText(tr("Total: {} %").format(f"{self._pill_effect_total():.2f}"))
         used = self.gold_day.value() + self.purple_day.value() + self.blue_day.value()
         limit = self.pill_limit.value()
-        msg = f"Attempts used: {used:g} / {limit:g} (shared; vase red pills exempt)"
+        msg = tr("Attempts used: {} / {} (shared; vase red pills exempt)").format(f"{used:g}", f"{limit:g}")
         if used > limit + 1e-9:
-            msg += "  ⚠ over limit — extra pills won't count"
+            msg += tr("  ⚠ over limit — extra pills won't count")
             self.pill_attempts.setStyleSheet(f"color: {self._acc['warn']};")
         else:
             self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};")
@@ -1406,15 +1474,18 @@ class MainWindow(QMainWindow):
         # Rich text so only the stale-speed warning is highlighted red.
         parts = []
         if bonus is not None:
-            parts.append(f"Implied total aura bonus: {bonus * 100:.1f}%  (Abode = 130 × {1 + bonus:.3f})")
+            parts.append(tr("Implied total aura bonus: {}%  (Abode = 130 × {})").format(
+                f"{bonus * 100:.1f}", f"{1 + bonus:.3f}"))
         if spd is not None:
-            line = f"Expected speed: {spd:.2f} / Cosmoapsis"
+            line = tr("Expected speed: {} / Cosmoapsis").format(f"{spd:.2f}")
             entered = self.speed.value()
             if entered > 0:
                 diff = (entered / spd - 1) * 100
                 if abs(diff) > 0.5:
-                    line += (f"<span style='color:{self._acc['bad']}'>  — entered speed {entered:.2f} is "
-                             f"{diff:+.1f}% off; one of the readings is stale</span>")
+                    line += (f"<span style='color:{self._acc['bad']}'>"
+                             + tr("  — entered speed {} is {}% off; one of the readings is stale").format(
+                                 f"{entered:.2f}", f"{diff:+.1f}")
+                             + "</span>")
             parts.append(line)
         self.array_out.setText("<br>".join(parts))
         self.array_apply.setEnabled(spd is not None)
@@ -1432,7 +1503,7 @@ class MainWindow(QMainWindow):
         """Show the selected Grade's base Absorption Ratio, and warn on under-entry."""
         idx = self.engine.row_index(
             stage_key(self.stage.currentText()),
-            PHASE_KEYS.get(self.phase.currentText(), self.phase.currentText()),
+            phase_key(self.phase.currentText()),
             self.grade.currentText(),
         )
         if idx < 0:
@@ -1445,37 +1516,39 @@ class MainWindow(QMainWindow):
             strive = (entered / base - 1) * 100 if base > 0 else 0.0
             if abs(strive) < 1e-6:
                 strive = 0.0
-            msg = f"Base Absorption: {base:g}%  ·  Strive: {strive:.0f}%"
+            msg = tr("Base Absorption: {}%  ·  Strive: {}%").format(f"{base:g}", f"{strive:.0f}")
             stages = self.engine.stages()
             cur = stage_key(self.stage.currentText())
             mortal = cur in stages and stages.index(cur) <= stages.index("Incarnation")
             if entered and entered < base - 1e-9:
-                msg += "  ⚠ below base — Strive can't be negative"; warn = True
+                msg += tr("  ⚠ below base — Strive can't be negative"); warn = True
             elif strive > 120 + 1e-9:
                 if mortal:
-                    msg += "  ⚠ Strive over the 120% cap"; warn = True
+                    msg += tr("  ⚠ Strive over the 120% cap"); warn = True
                 else:
-                    msg += ("  · Strive above 120% — normal in later realms (overcap); "
-                            "cap tables beyond the mortal world aren't modeled.")
+                    msg += tr("  · Strive above 120% — normal in later realms (overcap); "
+                              "cap tables beyond the mortal world aren't modeled.")
         else:
-            msg = f"Base Absorption: {base:g}%  (Strive unlocks at Nascent Soul)"
+            msg = tr("Base Absorption: {}%  (Strive unlocks at Nascent Soul)").format(f"{base:g}")
             if entered and entered < base - 1e-9:
-                msg += "  ⚠ below base"; warn = True
+                msg += tr("  ⚠ below base"); warn = True
         self.absorb_base.setStyleSheet(f"color: {self._acc['warn'] if warn else self._acc['muted']};")
         self.absorb_base.setText(msg)
 
     def _fmt_band(self, d: float, band: tuple) -> str:
         lo, hi = band
-        point = fmt_days(d)
+        point = tr_duration(fmt_days(d))
         if hi - lo < 1e-9 or d <= 0 or fmt_days(lo) == fmt_days(hi):
             return point
         return (f"{point}  <span style='color:{self._acc['muted']}'>"
-                f"(best {fmt_days(lo)} / worst {fmt_days(hi)})</span>")
+                + tr("(best {} / worst {})").format(
+                    tr_duration(fmt_days(lo)), tr_duration(fmt_days(hi)))
+                + "</span>")
 
     def recalc(self, *_):
         if not self._loading:
             self._save_settings()
-        self.copy_btn.setText("Copy results")
+        self.copy_btn.setText(tr("Copy results"))
         self._update_absorb_base()
         self._update_array_out()
         self._update_pill_attempts()
@@ -1483,9 +1556,9 @@ class MainWindow(QMainWindow):
         if not res.valid:
             for _, attr in self.RESULT_ROWS:
                 getattr(self, attr).setText("—")
-            self.o_error.setText(res.error)
+            self.o_error.setText(tr(res.error))
             return
-        self.o_error.setText(res.error)
+        self.o_error.setText(tr(res.error))
         self.o_phase.setText(self._fmt_band(res.phase_days, res.phase_band))
         self.o_stage.setText(self._fmt_band(res.stage_days, res.stage_band))
         self.o_target.setText(self._fmt_band(res.target_days, res.target_band)
@@ -1497,29 +1570,30 @@ class MainWindow(QMainWindow):
         flat_share = ((res.pill_xp_per_day + res.respira_xp_per_day)
                       / res.effective_xp_per_day * 100
                       if res.effective_xp_per_day else 0.0)
-        self.o_speedup.setText(f"{flat_share:.1f}% of daily XP / +{res.gem_speedup * 100:.0f}% speed")
-        self.o_speedup.setToolTip(
+        self.o_speedup.setText(tr("{}% of daily XP / +{}% speed").format(
+            f"{flat_share:.1f}", f"{res.gem_speedup * 100:.0f}"))
+        self.o_speedup.setToolTip(tr(
             "Share of your effective daily XP that comes from flat sources "
             "(pills + Respira), and the Aura Gem's speed bonus on cultivation. "
             "Flat XP does not scale with grade EXP, so a high share means slower "
-            "progress at higher grades than raw speed suggests.")
+            "progress at higher grades than raw speed suggests."))
         self.o_mythic.setText(f"{res.mythic_pills_per_day:.2f}")
         self.o_pearl.setText(f"{res.pearl_xp_per_day:,.0f}")
         self.o_respira.setText(f"{res.respira_xp_per_day:,.0f}")
         self.o_fruit.setText(f"{res.fruit_xp:,.0f}")
-        self.o_fruit_days.setText(fmt_days(res.fruit_days_saved))
+        self.o_fruit_days.setText(tr_duration(fmt_days(res.fruit_days_saved)))
 
     def _copy_results(self):
         import re
         plain = lambda s: re.sub(r"<[^>]+>", "", s)
         rows = [
-            ("Stage", self.stage.currentText()), ("Half-step", self.phase.currentText()),
-            ("Grade", self.grade.currentText()),
+            (tr("Stage"), self.stage.currentText()), (tr("Half-step"), self.phase.currentText()),
+            (tr("Grade"), self.grade.currentText()),
         ]
-        rows += [(text, plain(getattr(self, attr).text())) for text, attr in self.RESULT_ROWS]
+        rows += [(tr(text), plain(getattr(self, attr).text())) for text, attr in self.RESULT_ROWS]
         text = "\n".join(f"{k}: {v}" for k, v in rows)
         QApplication.clipboard().setText(text)
-        self.copy_btn.setText("Copied ✓")
+        self.copy_btn.setText(tr("Copied ✓"))
 
 
 def _icon_path() -> str:
