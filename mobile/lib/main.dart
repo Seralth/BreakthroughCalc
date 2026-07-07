@@ -1,11 +1,82 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'engine.dart';
 import 'reference.dart';
+
+/// App version. Release tagging must bump this alongside pubspec.yaml's
+/// `version:` field — the update checker compares it against the latest
+/// GitHub release tag.
+const appVersion = '2.7.1';
+
+// ---- update check -----------------------------------------------------------
+
+/// Parse a version string like "2.7", "v2.7.1" or "2.8.0-rc1" into exactly
+/// three numeric parts (missing parts padded with 0, prerelease/build
+/// suffixes ignored). Returns null if unparseable.
+List<int>? _parseVersion(String raw) {
+  var s = raw.trim();
+  if (s.startsWith('v') || s.startsWith('V')) s = s.substring(1);
+  // Cut prerelease/build suffixes ("-rc1", "+5").
+  final cut = s.indexOf(RegExp(r'[-+]'));
+  if (cut >= 0) s = s.substring(0, cut);
+  if (s.isEmpty) return null;
+  final parts = s.split('.');
+  if (parts.length > 3) return null;
+  final nums = <int>[];
+  for (final p in parts) {
+    final n = int.tryParse(p);
+    if (n == null || n < 0) return null;
+    nums.add(n);
+  }
+  while (nums.length < 3) {
+    nums.add(0);
+  }
+  return nums;
+}
+
+/// True if [remote] is a strictly newer version than [local].
+bool _isNewer(List<int> remote, List<int> local) {
+  for (var i = 0; i < 3; i++) {
+    if (remote[i] != local[i]) return remote[i] > local[i];
+  }
+  return false;
+}
+
+/// Latest GitHub release, or null on any failure (offline, timeout, bad
+/// JSON, ...). Never throws.
+Future<({String tag, String url})?> _fetchLatestRelease() async {
+  HttpClient? client;
+  try {
+    client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
+    final req = await client
+        .getUrl(Uri.parse(
+            'https://api.github.com/repos/Seralth/BreakthroughCalc/releases/latest'))
+        .timeout(const Duration(seconds: 5));
+    req.headers.set(HttpHeaders.userAgentHeader, 'BreakthroughCalc/$appVersion');
+    req.headers.set(HttpHeaders.acceptHeader, 'application/vnd.github+json');
+    final resp = await req.close().timeout(const Duration(seconds: 5));
+    if (resp.statusCode != 200) return null;
+    final body = await resp
+        .transform(utf8.decoder)
+        .join()
+        .timeout(const Duration(seconds: 5));
+    final json = jsonDecode(body);
+    if (json is! Map<String, dynamic>) return null;
+    final tag = json['tag_name'];
+    final url = json['html_url'];
+    if (tag is! String) return null;
+    return (tag: tag, url: url is String ? url : '');
+  } catch (_) {
+    return null;
+  } finally {
+    client?.close(force: true);
+  }
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +87,13 @@ Future<void> main() async {
     catalog = jsonDecode(
         await rootBundle.loadString('assets/data/pill_effect_sources.json')) as List;
   } catch (_) {}
+  List<dynamic> respiraCatalog = [];
+  try {
+    respiraCatalog = jsonDecode(
+        await rootBundle.loadString('assets/data/respira_sources.json')) as List;
+  } catch (_) {}
   final prefs = await SharedPreferences.getInstance();
-  runApp(BreakthroughApp(engine, catalog, prefs));
+  runApp(BreakthroughApp(engine, catalog, respiraCatalog, prefs));
 }
 
 // ---- themes ----------------------------------------------------------------
@@ -61,8 +137,10 @@ ThemeData _themeData(String name, Brightness platform) {
 class BreakthroughApp extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
+  final List<dynamic> respiraCatalog;
   final SharedPreferences prefs;
-  const BreakthroughApp(this.engine, this.catalog, this.prefs, {super.key});
+  const BreakthroughApp(this.engine, this.catalog, this.respiraCatalog, this.prefs,
+      {super.key});
 
   @override
   State<BreakthroughApp> createState() => _BreakthroughAppState();
@@ -86,6 +164,7 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
       home: CalculatorPage(
         engine: widget.engine,
         catalog: widget.catalog,
+        respiraCatalog: widget.respiraCatalog,
         prefs: widget.prefs,
         theme: theme,
         onTheme: setTheme,
@@ -98,6 +177,7 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
 class CalculatorPage extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
+  final List<dynamic> respiraCatalog;
   final SharedPreferences prefs;
   final String theme;
   final ValueChanged<String> onTheme;
@@ -105,6 +185,7 @@ class CalculatorPage extends StatefulWidget {
     super.key,
     required this.engine,
     required this.catalog,
+    required this.respiraCatalog,
     required this.prefs,
     required this.theme,
     required this.onTheme,
@@ -118,10 +199,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Inputs inp = Inputs();
   late Results res;
   final _peSources = <List<dynamic>>[]; // [name, percent]
+  final _respiraSources = <String>{}; // selected 'attempt' catalog entries
   double _abode = 0; // Abode Aura, the primary input; speed = abode * absorption
   final _speedCtrl = TextEditingController();
   final _abodeCtrl = TextEditingController();
   final _absorbCtrl = TextEditingController();
+  final _respiraCtrl = TextEditingController();
 
   Engine get engine => widget.engine;
 
@@ -130,6 +213,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     _speedCtrl.dispose();
     _abodeCtrl.dispose();
     _absorbCtrl.dispose();
+    _respiraCtrl.dispose();
     super.dispose();
   }
 
@@ -146,7 +230,136 @@ class _CalculatorPageState extends State<CalculatorPage> {
     _speedCtrl.text = _fmtNum(inp.cultiSpeed);
     _abodeCtrl.text = _fmtNum(_abode);
     _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
+    _respiraCtrl.text = _fmtNum(inp.respiraPerDay);
     _recalc();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
+  }
+
+  // ---- update check ----
+  /// Checks GitHub for a newer release. Silent on failure; on startup
+  /// ([manual] false) it only shows a banner for a not-yet-dismissed newer
+  /// version, while a manual check also reports "up to date" / failures.
+  Future<void> _checkForUpdates({bool manual = false}) async {
+    final rel = await _fetchLatestRelease();
+    if (!mounted) return;
+    final local = _parseVersion(appVersion);
+    final remote = rel == null ? null : _parseVersion(rel.tag);
+    if (rel == null || local == null || remote == null || !_isNewer(remote, local)) {
+      if (manual) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(rel == null
+              ? 'Update check failed — are you online?'
+              : 'Up to date (v$appVersion)'),
+        ));
+      }
+      return;
+    }
+    final version = remote.join('.');
+    if (!manual && widget.prefs.getString('dismissed_update') == version) return;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentMaterialBanner();
+    messenger.showMaterialBanner(MaterialBanner(
+      content: Text('Update available: v$version'),
+      leading: const Icon(Icons.system_update_alt),
+      actions: [
+        TextButton(
+          onPressed: () {
+            messenger.hideCurrentMaterialBanner();
+            _showReleaseDialog(version, rel.url);
+          },
+          child: const Text('View'),
+        ),
+        TextButton(
+          onPressed: () {
+            messenger.hideCurrentMaterialBanner();
+            widget.prefs.setString('dismissed_update', version);
+          },
+          child: const Text('Dismiss'),
+        ),
+      ],
+    ));
+  }
+
+  /// No url_launcher dependency, so instead of opening a browser we show the
+  /// release URL as selectable text with a copy button.
+  static const _donateUrl =
+      'https://www.seagm.com/en-us/overmortal-vouchers-global';
+  static const _donateRid = '28953_U1C466A474D1A0000';
+
+  void _showDonateDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Support the calculator'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('If the calculator saves you time, you can support '
+                'development by gifting in-game vouchers:\n\n'
+                '1. Open the SEAGM OverMortal voucher page\n'
+                '2. Pick any voucher amount\n'
+                "3. Paste the RID below into the site's RID field"),
+            SizedBox(height: 12),
+            SelectableText(_donateUrl),
+            SizedBox(height: 8),
+            SelectableText(_donateRid,
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(const ClipboardData(text: _donateUrl));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Site link copied')));
+            },
+            child: const Text('Copy link'),
+          ),
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(const ClipboardData(text: _donateRid));
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('RID copied')));
+            },
+            child: const Text('Copy RID'),
+          ),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+        ],
+      ),
+    );
+  }
+
+  void _showReleaseDialog(String version, String url) {
+    if (!mounted) return;
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Update available: v$version'),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text('Open this link in your browser to download the release:'),
+          const SizedBox(height: 8),
+          SelectableText(url.isEmpty
+              ? 'https://github.com/Seralth/BreakthroughCalc/releases/latest'
+              : url),
+        ]),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(
+                  text: url.isEmpty
+                      ? 'https://github.com/Seralth/BreakthroughCalc/releases/latest'
+                      : url));
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Link copied')));
+            },
+            child: const Text('Copy link'),
+          ),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+        ],
+      ),
+    );
   }
 
   void _restoreInputs() {
@@ -170,6 +383,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
           for (final s in (m['pe_sources'] as List? ?? []))
             [(s as List)[0] as String, (s[1] as num).toDouble()]
         ]);
+      _respiraSources
+        ..clear()
+        ..addAll((m['respira_sources'] as List? ?? []).cast<String>());
     } catch (_) {
       // Corrupt saved state — keep defaults.
     }
@@ -188,6 +404,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       'top_stage': inp.topStage,
       'mature_server': inp.matureServer,
       'dailies_done': inp.dailiesDone,
+      'reset_in_hours': inp.resetInHours,
       'respira_per_day': inp.respiraPerDay,
       'respira_event': inp.respiraEvent,
       'respira_exp': inp.respiraExp,
@@ -222,6 +439,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       'lvl_gush': inp.lvlGush,
       'extractor_rarity': inp.extractorRarity,
       'pe_sources': _peSources,
+      'respira_sources': _respiraSources.toList(),
     }));
   }
 
@@ -249,6 +467,31 @@ class _CalculatorPageState extends State<CalculatorPage> {
               onSelected: widget.onTheme,
               itemBuilder: (_) =>
                   [for (final t in _themes) PopupMenuItem(value: t, child: Text(t))],
+            ),
+            PopupMenuButton<String>(
+              tooltip: 'More',
+              onSelected: (v) {
+                if (v == 'check_updates') _checkForUpdates(manual: true);
+                if (v == 'donate') _showDonateDialog();
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: 'donate',
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.favorite_outline),
+                    title: Text('Donate'),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'check_updates',
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.system_update_alt),
+                    title: Text('Check for updates'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -334,6 +577,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
             inp.dailiesDone = v;
             _recalc();
           }),
+          if (inp.dailiesDone)
+            _num('Reset in (h)', inp.resetInHours, (v) {
+              inp.resetInHours = v.clamp(0, 24);
+              _recalc();
+            }),
         ]),
         _group('Cultivation Pills', [
           _dropdown('Pill rank', inp.pillRank, ranks, (v) {
@@ -390,10 +638,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
           }),
         ]),
         _group('Respira', [
-          _num('Attempts / day', inp.respiraPerDay, (v) {
-            inp.respiraPerDay = v;
-            _recalc();
-          }),
+          Row(children: [
+            Expanded(
+              child: _numCtrl('Attempts / day', _respiraCtrl, (v) {
+                inp.respiraPerDay = v;
+                _recalc();
+              }),
+            ),
+            IconButton(
+              icon: const Icon(Icons.list),
+              tooltip: 'Respira sources',
+              onPressed: _pickRespiraSources,
+            ),
+          ]),
           _num('Extra attempts today', inp.respiraEvent, (v) {
             inp.respiraEvent = v;
             _recalc();
@@ -448,7 +705,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   // ---- results ----
   Widget _resultsCard() {
     final t = Theme.of(context);
-    Widget row(String label, String value, [List<double>? band]) {
+    Widget row(String label, String value, [List<double>? band, Color? color]) {
       final showBand = band != null && band.length == 2 && (band[1] - band[0]).abs() > 1e-9;
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
@@ -459,7 +716,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
             child: RichText(
               textAlign: TextAlign.right,
               text: TextSpan(style: t.textTheme.bodyMedium, children: [
-                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(
+                    text: value,
+                    style: TextStyle(fontWeight: FontWeight.bold, color: color)),
                 if (showBand)
                   TextSpan(
                     text: '  (best ${fmtDays(band[0])} / worst ${fmtDays(band[1])})',
@@ -489,16 +748,69 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 if (res.targetValid)
                   row('Target reached in', fmtDays(res.targetDays), res.targetBand),
                 const Divider(),
+                row('Abode Aura (implied)', res.abodeAura.toStringAsFixed(1)),
                 row('Cultivation XP / day', res.baseXpPerDay.toStringAsFixed(0)),
                 row('Effective XP / day', res.effectiveXpPerDay.toStringAsFixed(0)),
                 row('Pill XP / day', res.pillXpPerDay.toStringAsFixed(0)),
+                row(
+                    'Daily XP share (pills+Respira / gem)',
+                    '${res.effectiveXpPerDay > 0 ? ((res.pillXpPerDay + res.respiraXpPerDay) / res.effectiveXpPerDay * 100).toStringAsFixed(1) : '0.0'}%'
+                    ' / +${(res.gemSpeedup * 100).round()}% speed'),
                 row('Mythic pills / day', res.mythicPillsPerDay.toStringAsFixed(2)),
                 row('Pearl XP / day', res.pearlXpPerDay.toStringAsFixed(0)),
                 row('Respira XP / day', res.respiraXpPerDay.toStringAsFixed(0)),
                 row('XP from fruits', res.fruitXp.toStringAsFixed(0)),
+                row('Fruit time saved', fmtDays(res.fruitDaysSaved)),
+                ..._absorptionRows(row),
               ]),
       ),
     );
+  }
+
+  /// Absorption diagnostics: the grade's base absorption and the implied
+  /// Strive %, shown only from Nascent Soul on (where Strive exists). Red
+  /// when implied Strive exceeds the 120% cap (likely a stale absorption
+  /// reading) or absorption is below base (implied negative Strive).
+  List<Widget> _absorptionRows(
+      Widget Function(String, String, [List<double>?, Color?]) row) {
+    final stages = engine.stages();
+    final nascentIdx = stages.indexWhere((s) => s.startsWith('Nascent'));
+    if (nascentIdx < 0 || stages.indexOf(inp.stage) < nascentIdx) return [];
+    final idx = engine.rowIndex(inp.stage, inp.phase, inp.grade);
+    if (idx < 0) return [];
+    final base = ((engine.rows[idx] as Map)['low'] as num).toDouble();
+    final t = Theme.of(context);
+    final err = t.colorScheme.error;
+    final belowBase = inp.absorptionRatio > 0 && inp.absorptionRatio < base - 1e-9;
+    // The 120% Strive cap only holds through the mortal world (Incarnation and
+    // earlier); later realms legitimately overcap, so only note it there.
+    final incarnIdx = stages.indexWhere((s) => s.startsWith('Incarnation'));
+    final mortal = incarnIdx < 0 || stages.indexOf(inp.stage) <= incarnIdx;
+    final aboveCap = res.strive > 1.2 + 1e-9;
+    final overCap = aboveCap && mortal;
+    return [
+      const Divider(),
+      row('Base absorption (grade)', '${(base * 100).toStringAsFixed(0)}%',
+          null, belowBase ? err : null),
+      row(
+          'Implied Strive',
+          overCap
+              ? '${(res.strive * 100).toStringAsFixed(0)}% — over 120% cap (stale reading?)'
+              : belowBase
+                  ? '${(res.strive * 100).toStringAsFixed(0)}% — below base; Strive can\'t be negative'
+                  : '${(res.strive * 100).toStringAsFixed(0)}%',
+          null,
+          (overCap || belowBase) ? err : null),
+      if (aboveCap && !mortal)
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(
+            'Strive above 120% — normal in later realms (overcap); '
+            'later cap tables not modeled.',
+            style: TextStyle(fontSize: 12, color: t.hintColor),
+          ),
+        ),
+    ];
   }
 
   // ---- widget helpers ----
@@ -519,7 +831,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: DropdownButtonFormField<String>(
-          value: items.contains(value) ? value : items.first,
+          initialValue: items.contains(value) ? value : items.first,
           isExpanded: true,
           decoration: InputDecoration(labelText: label),
           items: [for (final s in items) DropdownMenuItem(value: s, child: Text(s))],
@@ -604,7 +916,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           SizedBox(
             width: 78,
             child: DropdownButtonFormField<String>(
-              value: star,
+              initialValue: star,
               isExpanded: true,
               decoration: const InputDecoration(labelText: 'Star'),
               items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
@@ -672,6 +984,55 @@ class _CalculatorPageState extends State<CalculatorPage> {
     ]);
   }
 
+  // ---- respira sources ----
+  /// Bottom-sheet catalog of daily Respira attempt sources. 'attempt' entries
+  /// toggle and add/subtract from the attempts input; other kinds are shown
+  /// read-only so users learn them without double-counting.
+  void _pickRespiraSources() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => ListView(
+          children: [
+            for (final s in widget.respiraCatalog.cast<Map<String, dynamic>>())
+              if (s['kind'] == 'attempt')
+                CheckboxListTile(
+                  value: _respiraSources.contains(s['name'] as String),
+                  title: Text(s['name'] as String),
+                  subtitle: s['note'] != null
+                      ? Text(s['note'] as String, style: const TextStyle(fontSize: 11))
+                      : null,
+                  secondary: Text('+${s['value']}'),
+                  onChanged: (v) {
+                    final name = s['name'] as String;
+                    final delta = (s['value'] as num).toDouble();
+                    setSheet(() {
+                      if (v == true && _respiraSources.add(name)) {
+                        inp.respiraPerDay += delta;
+                      } else if (v != true && _respiraSources.remove(name)) {
+                        inp.respiraPerDay -= delta;
+                        if (inp.respiraPerDay < 0) inp.respiraPerDay = 0;
+                      }
+                    });
+                    _respiraCtrl.text = _fmtNum(inp.respiraPerDay);
+                    _recalc();
+                  },
+                )
+              else
+                ListTile(
+                  enabled: false,
+                  title: Text(s['name'] as String),
+                  subtitle: s['note'] != null
+                      ? Text(s['note'] as String, style: const TextStyle(fontSize: 11))
+                      : null,
+                  trailing: Text(s['kind'] == 'exp_pct' ? 'info' : 'pill input'),
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _pickCatalog() async {
     final choice = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
@@ -721,13 +1082,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
           title: Text(name),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
             DropdownButtonFormField<int>(
-              value: star,
+              initialValue: star,
               decoration: const InputDecoration(labelText: 'Star'),
               items: [for (var i = 1; i <= stars; i++) DropdownMenuItem(value: i, child: Text('$i★'))],
               onChanged: (v) => setDlg(() => star = v!),
             ),
             DropdownButtonFormField<int>(
-              value: upgrade,
+              initialValue: upgrade,
               decoration: const InputDecoration(labelText: 'Upgrade level'),
               items: [for (var i = 0; i <= maxUpgrade; i++) DropdownMenuItem(value: i, child: Text('$i'))],
               onChanged: (v) => setDlg(() => upgrade = v!),

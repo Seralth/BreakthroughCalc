@@ -1,0 +1,38 @@
+[
+ {
+  "name": "Iron Fan (immortal friend, lv 36)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt at level 36."
+ },
+ {
+  "name": "Daji (immortal friend, lv 73)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt at level 73."
+ },
+ {
+  "name": "Shen Gongbao (immortal friend, lv 117)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt at level 117."
+ },
+ {
+  "name": "Longevity (technique)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt; max before breaking through to Foundation."
+ },
+ {
+  "name": "Macaque (immortal friend, lv 17)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "+3% Respira EXP at level 17. Informational: your in-game Respira EXP tooltip already includes this."
+ },
+ {
+  "name": "Crane Boy (immortal friend, max)",
+  "kind": "pill_attempt",
+  "value": 1,
+  "note": "+1 daily PILL attempt at max level - raise the Daily pill limit input, not Respira."
+ }
+]

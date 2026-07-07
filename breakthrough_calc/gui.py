@@ -6,16 +6,32 @@ import json
 import os
 import sys
 
-from PySide6.QtCore import QEvent, QObject, Qt
+from PySide6.QtCore import QEvent, QObject, Qt, QUrl
 from PySide6.QtGui import QGuiApplication, QWheelEvent
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
+
+from . import DONATE_RID, DONATE_URL, REPO, __version__
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
     QInputDialog, QLabel,
     QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QTabWidget,
-    QVBoxLayout,
+    QTextBrowser, QVBoxLayout,
     QWidget,
 )
+
+
+def _version_tuple(s: str):
+    """'v2.7' -> (2, 7, 0); None if unparseable. Prerelease suffixes ignored."""
+    s = s.strip().lstrip("vV").split("-")[0].split("+")[0]
+    parts = s.split(".")
+    try:
+        nums = [int(p) for p in parts if p != ""]
+    except ValueError:
+        return None
+    if not nums:
+        return None
+    return tuple((nums + [0, 0, 0])[:3])
 
 
 class _WheelGuard(QObject):
@@ -55,7 +71,7 @@ class _WheelGuard(QObject):
         QApplication.sendEvent(viewport, clone)
 
 from . import theme
-from .engine import Engine, Inputs, fmt_days, load_pill_sources
+from .engine import Engine, Inputs, fmt_days, load_pill_sources, load_respira_sources
 
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
@@ -134,6 +150,8 @@ class MainWindow(QMainWindow):
         self._load_settings()
         self._loading = False
         self.recalc()
+        self._nam = QNetworkAccessManager(self)
+        self._check_updates()  # async; silent no-op offline
 
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
@@ -256,6 +274,16 @@ class MainWindow(QMainWindow):
             "projection then defers that boost to the next daily reset (today runs "
             "at base speed). Mainly affects short estimates.")
         f.addRow("", self.dailies_done)
+        self.reset_in = QDoubleSpinBox()
+        self.reset_in.setRange(0, 24); self.reset_in.setValue(24); self.reset_in.setSingleStep(0.5)
+        self.reset_in.setToolTip(
+            "Hours until the game's daily reset. Only used when the box above is "
+            "checked: the projection runs the window until the reset without the "
+            "daily pill/Respira XP (and defers event Respira to the reset), then "
+            "resumes the normal daily routine.")
+        self.reset_in.setEnabled(self.dailies_done.isChecked())
+        self.dailies_done.toggled.connect(self.reset_in.setEnabled)
+        f.addRow("Reset in (h)", self.reset_in)
         marks = QHBoxLayout()
         self.mark_blue = QDoubleSpinBox(); self.mark_purple = QDoubleSpinBox(); self.mark_gold = QDoubleSpinBox()
         for w, name in ((self.mark_blue, "Rare"), (self.mark_purple, "Epic"), (self.mark_gold, "Legendary")):
@@ -329,7 +357,37 @@ class MainWindow(QMainWindow):
         self.respira_exp.setToolTip(
             "The base (non-crit) Cultivation EXP from one Respira attempt — see the "
             "note below the field.")
-        rf.addRow("Attempts / day", self.respira_per_day)
+        self._respira_checked = set()
+        self.respira_catalog = load_respira_sources()
+        if self.respira_catalog:
+            rp_wrap = QWidget(); rp_h = QHBoxLayout(rp_wrap); rp_h.setContentsMargins(0, 0, 0, 0)
+            rp_h.addWidget(self.respira_per_day, 1)
+            rsp_btn = QPushButton("Sources…")
+            rsp_btn.setToolTip(
+                "Known Respira bonus sources. Checkable entries add/remove daily "
+                "attempts from the field. Greyed entries are informational only: "
+                "Respira EXP bonuses are already inside your in-game EXP tooltip, "
+                "and pill-attempt bonuses belong in the Daily pill attempts input.")
+            rsp_menu = QMenu(rsp_btn)
+            rsp_menu.setToolTipsVisible(True)
+            for src in self.respira_catalog:
+                if src.get("kind") == "attempt":
+                    act = rsp_menu.addAction(f'{src["name"]}  (+{src["value"]:g}/day)')
+                    act.setCheckable(True)
+                    act.setData(src)
+                else:
+                    label = "info" if src.get("kind") == "exp_pct" else "pill limit"
+                    act = rsp_menu.addAction(f'{src["name"]}  ({label})')
+                    act.setEnabled(False)
+                act.setToolTip(src.get("note", ""))
+            rsp_menu.aboutToShow.connect(self._sync_respira_menu)
+            rsp_menu.triggered.connect(self._toggle_respira_source)
+            rsp_btn.setMenu(rsp_menu)
+            self._respira_menu = rsp_menu
+            rp_h.addWidget(rsp_btn)
+            rf.addRow("Attempts / day", rp_wrap)
+        else:
+            rf.addRow("Attempts / day", self.respira_per_day)
         rf.addRow("Extra attempts today", self.respira_event)
         rf.addRow("Base EXP / attempt", self.respira_exp)
         respira_hint = QLabel(
@@ -380,7 +438,7 @@ class MainWindow(QMainWindow):
             ("Cultivation XP / day", "o_basexp"),
             ("Effective XP / day", "o_effxp"),
             ("Pill XP / day", "o_pillxp"),
-            ("Speed-up (pills / gem)", "o_speedup"),
+            ("Daily XP share (pills+Respira / gem)", "o_speedup"),
             ("Mythic pills / day", "o_mythic"),
             ("Pearl XP / day", "o_pearl"),
             ("Respira XP / day", "o_respira"),
@@ -424,14 +482,19 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(tabs)
 
     def _rebuild_info_tab(self):
+        # Rebuild the whole Reference tab (all sub-tab browsers) so accent
+        # colors baked into the HTML follow theme changes; keep the sub-tab.
+        sub = self._ref_tabs.currentIndex() if getattr(self, "_ref_tabs", None) else 0
         self._tabs.removeTab(1)
         self._tabs.insertTab(1, self._build_info_tab(), "Reference")
+        self._ref_tabs.setCurrentIndex(sub)
         self.resize(1180, 680)
 
     def _build_info_tab(self) -> QWidget:
-        """Read-only reference tables, rendered from the same data the engine
-        uses so they can't drift from the calculations."""
+        """Read-only reference, split into topic sub-tabs. Tables render from
+        the same data the engine uses so they can't drift from the calculations."""
         d = self.engine.data
+        muted = self._acc["muted"]
 
         def table(title, headers, rows, note=""):
             h = f"<h3>{title}</h3><table cellpadding='4' cellspacing='0' border='1' style='border-collapse:collapse'>"
@@ -440,11 +503,19 @@ class MainWindow(QMainWindow):
                 h += "<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>"
             h += "</table>"
             if note:
-                h += f"<p style='color:{self._acc['muted']}'>{note}</p>"
+                h += f"<p style='color:{muted}'>{note}</p>"
             return h
 
-        html = "<h2>Cultivation reference</h2>"
-        html += (
+        def page(html: str) -> QTextBrowser:
+            b = QTextBrowser()
+            b.setOpenExternalLinks(True)
+            b.setHtml(html)
+            return b
+
+
+        # ---- Basics --------------------------------------------------------
+        basics = "<h2>Basics</h2>"
+        basics += (
             "<h3>How cultivation works</h3>"
             "<p>Your character gains cultivation EXP automatically, one tick every "
             "<b>8 seconds</b> (a \"Cosmoapsis\"). The EXP per tick is your <b>Cultivation "
@@ -468,7 +539,44 @@ class MainWindow(QMainWindow):
             "Set \"Server #1's Stage\" in the calculator to model the drop-off. "
             "Counter-intuitively, Strive does not change your projected time at your "
             "current position — it cancels out of the math — it only matters for how speed "
-            "evolves as you climb.</p>"
+            "evolves as you climb.</p>")
+        basics += ("<h3>Core formulas</h3><ul>"
+                   "<li>Cultivation Speed = Abode Aura × Absorption Ratio</li>"
+                   "<li>Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for "
+                   "Connection through Incarnation</li>"
+                   "<li>Cultivation ticks every 8 seconds (one Cosmoapsis)</li>"
+                   "<li>Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul "
+                   "and fades as you approach your server's #1</li>"
+                   "<li>Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin "
+                   "for reds])</li></ul>"
+                   "<h3>Crit variance (best / worst)</h3>"
+                   "<p>Respira crits and fruit gushes are random, so the breakthrough estimate "
+                   "carries a range. The app shows a <b>best / worst</b> band (a ~90% likely "
+                   "interval, not literal extremes). Because these are sums of many independent "
+                   "rolls, luck averages out: the band is widest on short estimates and tightens "
+                   "as the horizon grows — the opposite of runaway long-term drift. Fruit gushes "
+                   "also have a pity floor (every 6th fruit is a guaranteed gush), which further "
+                   "narrows the fruit side of the band.</p>"
+                   "<h3>Tips for using the calculator</h3>"
+                   "<ul><li>Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus "
+                   "screen and press Apply — that guarantees a current speed. A red warning "
+                   "means one of your readings is stale.</li>"
+                   "<li>Re-read your numbers after any upgrade that touches aura (Energy Array, "
+                   "curios, sect level) — bonuses creep constantly and quietly.</li>"
+                   "<li>Percentages in this game stack additively almost everywhere (pill "
+                   "effect sources, artifact star + skin bonuses, energy discounts). When in "
+                   "doubt, add percentage points; don't multiply.</li>"
+                   "<li>Save a profile per character/scenario from the toolbar; each profile "
+                   "keeps its own inputs.</li>"
+                   "<li>Projections assume instant first-try breakthroughs and today's daily "
+                   "routine held constant — treat long-range estimates (with high Strive "
+                   "especially) as optimistic bounds.</li></ul>"
+                   "<p>Realm timegates pace whole-server progression; Myrimon fruits (see the "
+                   "Myrimon &amp; Extractor tab) are the main F2P tool for meeting them.</p>")
+
+        # ---- Pills & Respira -------------------------------------------------
+        pills = "<h2>Pills &amp; Respira</h2>"
+        pills += (
             "<h3>Daily pills</h3>"
             "<p>Cultivation pills are the main controllable EXP income. All colors share "
             "ONE daily attempt pool (the \"Daily pill attempts\" input) — using a blue "
@@ -476,7 +584,7 @@ class MainWindow(QMainWindow):
             "first. Red (Mythic) pills refined by the Starsea Vase are exempt from the "
             "limit. A pill's tooltip shows its total EXP with your bonus in parentheses; "
             "the calculator works with base values (total − bonus).</p>")
-        html += table(
+        pills += table(
             "Cultivation Pill base EXP (per rank)",
             ["Rank", "Rare (Blue)", "Epic (Purple)", "Legendary (Gold)", "Mythic (Red)"],
             [[rk, f"{b:,}", f"{p:,}", f"{g:,}", f"{m:,}"]
@@ -484,7 +592,21 @@ class MainWindow(QMainWindow):
             "Base values before bonuses; confirmed against in-game tooltips (tooltip shows "
             "total with the bonus in parentheses: base = total − bonus). All pill-effect "
             "bonuses add as percentage points and multiply the base once.")
-        html += (
+        pills += table(
+            "Cultivation Pill Effect sources",
+            ["Source", "Bonus"],
+            [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
+             for s in (self.pe_catalog or [])],
+            "All sources stack additively. In-game these appear as technique completion "
+            "bonuses (labeled by rank, e.g. R4 Golden Core +5%) and curio effects. Other "
+            "technique ranks and Dao Ancestor treasures grant it too — read the % from "
+            "the tooltip and add it as a custom source. Quality-specific bonuses (Star "
+            "Marks, Daozu treasures, Lotus Throne) apply only to pills of that color — "
+            "enter those in the Star Marks fields.")
+
+        # ---- Artifacts & Gems ----------------------------------------------
+        artifacts = "<h2>Artifacts &amp; Gems</h2>"
+        artifacts += (
             "<h3>Creation Artifacts</h3>"
             "<p>Three artifacts convert a shared resource — <b>Artifact Energy</b> (each "
             "artifact has its own pool) — into extra cultivation EXP:</p>"
@@ -501,7 +623,7 @@ class MainWindow(QMainWindow):
             "cap is wasted — spend before it fills. The paid daily charge (30 "
             "Fateum/Destium for +100) is usually the cheapest EXP a payer can buy; the "
             "calculator has a per-artifact checkbox for whether you use it.</p>")
-        html += table(
+        artifacts += table(
             "Creation Artifact energy",
             ["Property", "Value"],
             [["Regeneration", "1 energy / 15 min at 0★ (faster per star)"],
@@ -511,23 +633,29 @@ class MainWindow(QMainWindow):
              ["Mirror 5★", "15% chance of an extra copy per Duplication"],
              ["Pearl use cost", "10 energy; star/skin discounts add (skin −10%)"],
              ["Pearl EXP bonus", "+20% from 1★ (does not grow at higher stars)"]])
-        html += table(
+        artifacts += table(
             "Starsea Vase — refine energy cost (per pill rank)",
             ["Rank", "Standard Energy"],
             [[rk, d["vase_energy_cost"].get(rk, 100)] for rk in d["pill_xp"]],
             "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
             "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
             "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
-        html += (
+        artifacts += (
             "<h3>Aura Gems</h3>"
             "<p>An equipped Aura Gem stores aura while you're away and releases it, acting "
             "as a flat percentage speed-up on cultivation. The calculator (following "
             "Donk's sheet) models it as a constant parallel bonus by rarity:</p>")
-        html += table(
+        artifacts += table(
             "Aura Gem speed bonus",
             ["Rarity", "Bonus"],
             [[k, f"+{v * 100:.0f}%"] for k, v in d["gem_bonus"].items() if k != "None"])
-        html += (
+        artifacts += (
+            "<p><b>The Aura Gem is claimable storage</b>: it accrues gem% of your "
+            "cultivation speed up to a cap (18-32 hours' worth depending on rarity). "
+            "Claim before it caps or the excess is lost; the calculator assumes you "
+            "always claim in time.</p>")
+
+        pills += (
             "<h3>Respira</h3>"
             "<p>Respira (the daily cultivation exercise) grants a burst of Cultivation "
             "EXP from a limited number of daily attempts, resetting on Stage/half-step "
@@ -541,15 +669,31 @@ class MainWindow(QMainWindow):
             "smaller number — that is the <b>base</b> (non-crit) value to enter. Now and "
             "then an attempt gives 2×, 5×, or 10× that (a crit) — ignore those; the app "
             "already accounts for crits via the ×1.8 average. So enter the smallest / "
-            "most common EXP you see, not a big crit result.</p>"
-            "<h3>Crit variance (best / worst)</h3>"
-            "<p>Respira crits and fruit gushes are random, so the breakthrough estimate "
-            "carries a range. The app shows a <b>best / worst</b> band (a ~90% likely "
-            "interval, not literal extremes). Because these are sums of many independent "
-            "rolls, luck averages out: the band is widest on short estimates and tightens "
-            "as the horizon grows — the opposite of runaway long-term drift. Fruit gushes "
-            "also have a pity floor (every 6th fruit is a guaranteed gush), which further "
-            "narrows the fruit side of the band.</p>"
+            "most common EXP you see, not a big crit result.</p>")
+        if self.respira_catalog:
+            pills += table(
+                "Respira bonus sources",
+                ["Source", "Effect"],
+                [[s["name"],
+                  f'+{s["value"]:g} attempts/day' if s.get("kind") == "attempt"
+                  else ("EXP % — already inside your in-game EXP tooltip"
+                        if s.get("kind") == "exp_pct"
+                        else "pill attempts — enter under Daily pill attempts")]
+                 for s in self.respira_catalog],
+                "Attempt sources can be checked from the Sources… menu next to the "
+                "Attempts / day field; the greyed entries are informational only.")
+        pills += (
+            "<h3>Flat EXP — why pills matter less each grade</h3>"
+            "<p><b>Pills and Respira grant flat EXP.</b> The percentage shown on the pill "
+            "panel is relative to your current grade's EXP, so the same pills matter less "
+            "as grades grow — pill-heavy accounts slow down more than naive projections "
+            "suggest.</p>"
+            "<p><b>Daily pills and Respira reset</b> on a major breakthrough/ascension — "
+            "spend them before breaking through.</p>")
+
+        # ---- Myrimon & Extractor ---------------------------------------------
+        myrimon = "<h2>Myrimon &amp; Extractor</h2>"
+        myrimon += (
             "<h3>Myrimon Fruits</h3>"
             "<p>Fruits processed through the Aura Extractor grant a one-time EXP payout "
             "(the calculator credits it against the earliest remaining EXP). Payout scales "
@@ -560,48 +704,41 @@ class MainWindow(QMainWindow):
             "tier-up and stockpile everything else until the extractor is maxed</b>. Every "
             "fruit eaten early forfeits the better quality/EXP multipliers it would have "
             "received at higher extractor tiers — the same hoard is worth substantially "
-            "more processed at max rarity.</p>")
-        html += table(
-            "Cultivation Pill Effect sources",
-            ["Source", "Bonus"],
-            [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
-             for s in (self.pe_catalog or [])],
-            "All sources stack additively. In-game these appear as technique completion "
-            "bonuses (labeled by rank, e.g. R4 Golden Core +5%) and curio effects. Other "
-            "technique ranks and Dao Ancestor treasures grant it too — read the % from "
-            "the tooltip and add it as a custom source. Quality-specific bonuses (Star "
-            "Marks, Daozu treasures, Lotus Throne) apply only to pills of that color — "
-            "enter those in the Star Marks fields.")
-        html += ("<h3>Core formulas</h3><ul>"
-                 "<li>Cultivation Speed = Abode Aura × Absorption Ratio</li>"
-                 "<li>Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for "
-                 "Connection through Incarnation</li>"
-                 "<li>Cultivation ticks every 8 seconds (one Cosmoapsis)</li>"
-                 "<li>Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul "
-                 "and fades as you approach your server's #1</li>"
-                 "<li>Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin "
-                 "for reds])</li></ul>"
-                 "<h3>Tips for using the calculator</h3>"
-                 "<ul><li>Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus "
-                 "screen and press Apply — that guarantees a current speed. A red warning "
-                 "means one of your readings is stale.</li>"
-                 "<li>Re-read your numbers after any upgrade that touches aura (Energy Array, "
-                 "curios, sect level) — bonuses creep constantly and quietly.</li>"
-                 "<li>Percentages in this game stack additively almost everywhere (pill "
-                 "effect sources, artifact star + skin bonuses, energy discounts). When in "
-                 "doubt, add percentage points; don't multiply.</li>"
-                 "<li>Save a profile per character/scenario from the toolbar; each profile "
-                 "keeps its own inputs.</li>"
-                 "<li>Projections assume instant first-try breakthroughs and today's daily "
-                 "routine held constant — treat long-range estimates (with high Strive "
-                 "especially) as optimistic bounds.</li></ul>")
+            "more processed at max rarity. Note also that the extractor resets on a main-Stage "
+            "breakthrough (see Verified mechanics below), so burn the stockpile before "
+            "breaking through, and only after the extractor is upgraded.</p>"
+            "<p>Fruits also lose 50% of their EXP once the realm's <b>timegate</b> passes — "
+            "eat the stockpile before the timegate, not merely before your own breakthrough. "
+            "Extractor leveling priority (per the 2026 community guide): Quality → "
+            "Cultivation → Gush → High Rank, taking High Rank only after the others are "
+            "maxed. Myrimon unlocks at Virtuoso; Virtuoso through Incarnation share one "
+            "fruit/extractor tier, and each major realm afterwards gets its own. Myrimon "
+            "uses stack (after the first week's event) — save them for Sunday or until you "
+            "cross the next BR requirement.</p>"
+            "<h3>Verified mechanics (v2.7)</h3><ul>"
+            "<li><b>Fruit ranks map to realm bands</b> (R3 covers Nascent-Voidbreak; R6 "
+            "starts the Spiritual world; R12 the Immortal world) — R4/R5 don't exist.</li>"
+            "<li><b>Extractor tracks</b>: Quality raises the quality-roll odds, the "
+            "Cultivation Bonus track gives +4% orb EXP per level, and the Gush track "
+            "raises the gush multiplier.</li>"
+            "<li><b>Extractor rarity</b>: each rarity rank unlocks +20% orb EXP for its "
+            "tier (Uncommon through Mythic); when the extractor's rank matches your Stage "
+            "(server's highest), base fruit EXP +50%.</li>"
+            "<li><b>Gush</b>: base multiplier 150%, raised by the Gush track; every 6th "
+            "identical fruit is a guaranteed gush, on top of the displayed random rate.</li>"
+            "<li><b>Aura Extractor resets</b> to Common quality / bonus level 0 when you "
+            "break through a main Stage, and leftover fruits of the previous Stage are "
+            "auto-consumed at the pre-upgrade rates — finish upgrading the extractor "
+            "<b>before</b> burning a stockpile, and burn the stockpile before a main-Stage "
+            "breakthrough.</li></ul>")
 
-        lbl = QLabel(html)
-        lbl.setWordWrap(True)
-        lbl.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        lbl.setAlignment(Qt.AlignTop)
-        sc = QScrollArea(); sc.setWidgetResizable(True); sc.setWidget(lbl)
-        return sc
+        self._ref_tabs = ref = QTabWidget()
+        for title, html in (("Basics", basics),
+                            ("Pills & Respira", pills),
+                            ("Myrimon & Extractor", myrimon),
+                            ("Artifacts & Gems", artifacts)):
+            ref.addTab(page(html), title)
+        return ref
 
     # ---- signal wiring ---------------------------------------------------
     def _wire(self):
@@ -613,7 +750,7 @@ class MainWindow(QMainWindow):
         for w in (self.completion, self.speed, self.absorb, self.pill_limit,
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10,
-                  self.respira_per_day, self.respira_event, self.respira_exp, self.fruit_count):
+                  self.respira_per_day, self.respira_event, self.respira_exp, self.fruit_count, self.reset_in):
             w.valueChanged.connect(self.recalc)
         for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.abode_aura):
             w.valueChanged.connect(self.recalc)
@@ -700,6 +837,7 @@ class MainWindow(QMainWindow):
             pearl_xp_per_10=self.pearl_xp10.value(),
             mature_server=self.mature_server.isChecked(),
             dailies_done=self.dailies_done.isChecked(),
+            reset_in_hours=self.reset_in.value(),
             respira_per_day=self.respira_per_day.value(),
             respira_event=self.respira_event.value(),
             respira_exp=self.respira_exp.value(),
@@ -730,6 +868,7 @@ class MainWindow(QMainWindow):
             "pearl": self.pearl, "pearl_star": self.pearl_star,
             "pearl_skin": self.pearl_skin, "mature_server": self.mature_server,
             "dailies_done": self.dailies_done,
+            "reset_in_hours": self.reset_in,
             "respira_per_day": self.respira_per_day, "respira_event": self.respira_event,
             "respira_exp": self.respira_exp,
             "pearl_xp10": self.pearl_xp10,
@@ -751,6 +890,7 @@ class MainWindow(QMainWindow):
             else:
                 vals[key] = w.value()
         vals["pill_sources"] = [[le.text(), sp.value()] for le, sp, _ in self.pe_rows]
+        vals["respira_sources"] = sorted(self._respira_checked)
         return vals
 
     def _apply_state(self, vals: dict):
@@ -760,6 +900,10 @@ class MainWindow(QMainWindow):
         if srcs is None and "pill_effect_pct" in vals:
             srcs = [["", vals["pill_effect_pct"]]]
         self._set_pill_sources(srcs if srcs is not None else [])
+        # checked respira catalog sources; the attempts value itself is stored
+        # in respira_per_day, so only the checkmarks need restoring
+        rs = vals.get("respira_sources")
+        self._respira_checked = set(rs) if rs else set()
         # fill in construction defaults for any keys the profile doesn't set,
         # so switching profiles never carries over the previous profile's values
         vals = {**self._defaults, **{k: v for k, v in vals.items() if v is not None}}
@@ -881,6 +1025,21 @@ class MainWindow(QMainWindow):
                            ("Reset", self._reset_profile)):
             b = QPushButton(text); b.clicked.connect(slot); bar.addWidget(b)
         bar.addStretch(1)
+        # Update notice: hidden until a newer GitHub release is found.
+        self.update_label = QLabel()
+        self.update_label.setOpenExternalLinks(True)
+        self.update_label.setVisible(False)
+        bar.addWidget(self.update_label)
+        b = QPushButton("Check for updates")
+        b.setFlat(True)
+        b.setToolTip(f"Installed: v{__version__}. Checks the latest GitHub release.")
+        b.clicked.connect(lambda: self._check_updates(manual=True))
+        bar.addWidget(b)
+        d = QPushButton("Donate ♥")
+        d.setFlat(True)
+        d.setToolTip("Support development by gifting in-game vouchers.")
+        d.clicked.connect(self._show_donate)
+        bar.addWidget(d)
         bar.addWidget(QLabel("Theme:"))
         self.theme_combo = QComboBox()
         self.theme_combo.addItems(theme.THEMES)
@@ -888,6 +1047,66 @@ class MainWindow(QMainWindow):
         self.theme_combo.currentTextChanged.connect(self._on_theme_changed)
         bar.addWidget(self.theme_combo)
         return bar
+
+    # ---- donate ------------------------------------------------------------
+    def _show_donate(self):
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Support the calculator")
+        v = QVBoxLayout(dlg)
+        intro = QLabel(
+            "If the calculator saves you time, you can support development by "
+            f"gifting in-game vouchers:<ol>"
+            f"<li>Open <a href='{DONATE_URL}'>SEAGM — OverMortal vouchers</a></li>"
+            "<li>Pick any voucher amount</li>"
+            "<li>Paste the RID below into the site's <b>RID</b> field</li></ol>")
+        intro.setOpenExternalLinks(True)
+        intro.setWordWrap(True)
+        v.addWidget(intro)
+        row = QHBoxLayout()
+        rid = QLineEdit(DONATE_RID)
+        rid.setReadOnly(True)
+        row.addWidget(rid)
+        copy = QPushButton("Copy RID")
+        copy.clicked.connect(
+            lambda: QApplication.clipboard().setText(DONATE_RID))
+        row.addWidget(copy)
+        v.addLayout(row)
+        bb = QDialogButtonBox(QDialogButtonBox.Close)
+        bb.rejected.connect(dlg.reject)
+        bb.clicked.connect(dlg.accept)
+        v.addWidget(bb)
+        dlg.exec()
+
+    # ---- update check ----------------------------------------------------
+    def _check_updates(self, manual: bool = False):
+        req = QNetworkRequest(QUrl(f"https://api.github.com/repos/{REPO}/releases/latest"))
+        req.setHeader(QNetworkRequest.UserAgentHeader, f"BreakthroughCalc/{__version__}")
+        req.setTransferTimeout(5000)
+        reply = self._nam.get(req)
+        reply.finished.connect(lambda: self._on_update_reply(reply, manual))
+
+    def _on_update_reply(self, reply: QNetworkReply, manual: bool):
+        reply.deleteLater()
+        latest, url = None, f"https://github.com/{REPO}/releases/latest"
+        if reply.error() == QNetworkReply.NoError:
+            try:
+                data = json.loads(bytes(reply.readAll()).decode("utf-8"))
+                latest = _version_tuple(data.get("tag_name", ""))
+                url = data.get("html_url") or url
+            except ValueError:
+                latest = None
+        if latest is None:
+            if manual:
+                self.update_label.setText("Update check failed")
+                self.update_label.setVisible(True)
+            return
+        if latest > _version_tuple(__version__):
+            tag = ".".join(str(x) for x in latest)
+            self.update_label.setText(f'<a href="{url}">Update available: v{tag}</a>')
+            self.update_label.setVisible(True)
+        elif manual:
+            self.update_label.setText(f"Up to date (v{__version__})")
+            self.update_label.setVisible(True)
 
     def _on_theme_changed(self, name: str):
         self._theme = name
@@ -979,6 +1198,24 @@ class MainWindow(QMainWindow):
             for e in blanks:
                 self._remove_pe_row(e)
             self.recalc()
+
+    def _sync_respira_menu(self):
+        for act in self._respira_menu.actions():
+            src = act.data()
+            if src:
+                act.setChecked(src["name"] in self._respira_checked)
+
+    def _toggle_respira_source(self, act):
+        src = act.data()
+        if not src:
+            return
+        if act.isChecked():
+            self._respira_checked.add(src["name"])
+            self.respira_per_day.setValue(self.respira_per_day.value() + float(src["value"]))
+        else:
+            self._respira_checked.discard(src["name"])
+            self.respira_per_day.setValue(max(0.0, self.respira_per_day.value() - float(src["value"])))
+        self.recalc()
 
     def _ask_star_upgrade(self, src) -> float | None:
         """Small dialog matching the in-game curio upgrade screen: pick star and
@@ -1088,10 +1325,17 @@ class MainWindow(QMainWindow):
             if abs(strive) < 1e-6:
                 strive = 0.0
             msg = f"Base Absorption: {base:g}%  ·  Strive: {strive:.0f}%"
+            stages = self.engine.stages()
+            cur = stage_key(self.stage.currentText())
+            mortal = cur in stages and stages.index(cur) <= stages.index("Incarnation")
             if entered and entered < base - 1e-9:
                 msg += "  ⚠ below base — Strive can't be negative"; warn = True
             elif strive > 120 + 1e-9:
-                msg += "  ⚠ Strive over the 120% cap"; warn = True
+                if mortal:
+                    msg += "  ⚠ Strive over the 120% cap"; warn = True
+                else:
+                    msg += ("  · Strive above 120% — normal in later realms (overcap); "
+                            "cap tables beyond the mortal world aren't modeled.")
         else:
             msg = f"Base Absorption: {base:g}%  (Strive unlocks at Nascent Soul)"
             if entered and entered < base - 1e-9:
@@ -1129,7 +1373,15 @@ class MainWindow(QMainWindow):
         self.o_basexp.setText(f"{res.base_xp_per_day:,.0f}")
         self.o_effxp.setText(f"{res.effective_xp_per_day:,.0f}")
         self.o_pillxp.setText(f"{res.pill_xp_per_day:,.0f}")
-        self.o_speedup.setText(f"+{res.pill_speedup * 100:.1f}% / +{res.gem_speedup * 100:.0f}%")
+        flat_share = ((res.pill_xp_per_day + res.respira_xp_per_day)
+                      / res.effective_xp_per_day * 100
+                      if res.effective_xp_per_day else 0.0)
+        self.o_speedup.setText(f"{flat_share:.1f}% of daily XP / +{res.gem_speedup * 100:.0f}% speed")
+        self.o_speedup.setToolTip(
+            "Share of your effective daily XP that comes from flat sources "
+            "(pills + Respira), and the Aura Gem's speed bonus on cultivation. "
+            "Flat XP does not scale with grade EXP, so a high share means slower "
+            "progress at higher grades than raw speed suggests.")
         self.o_mythic.setText(f"{res.mythic_pills_per_day:.2f}")
         self.o_pearl.setText(f"{res.pearl_xp_per_day:,.0f}")
         self.o_respira.setText(f"{res.respira_xp_per_day:,.0f}")

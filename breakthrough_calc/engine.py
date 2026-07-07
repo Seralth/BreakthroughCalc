@@ -96,8 +96,20 @@ def load_data(path: str | None = None) -> dict:
 def load_pill_sources() -> list:
     """Catalog of known Cultivation Pill Effect sources (recovered from game
     data) for the GUI picker. Missing file just means no catalog."""
+    return _load_catalog("pill_effect_sources.json")
+
+
+def load_respira_sources() -> list:
+    """Catalog of known Respira attempt/EXP sources for the GUI picker.
+    kind: 'attempt' (+N daily attempts), 'exp_pct' (informational — the in-game
+    Respira EXP tooltip already includes it), 'pill_attempt' (raises the daily
+    pill limit instead)."""
+    return _load_catalog("respira_sources.json")
+
+
+def _load_catalog(fname: str) -> list:
     try:
-        with open(os.path.join(_BASE, "data", "pill_effect_sources.json")) as f:
+        with open(os.path.join(_BASE, "data", fname)) as f:
             return json.load(f)
     except (OSError, ValueError):
         return []
@@ -116,6 +128,7 @@ class Inputs:
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
     mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
     dailies_done: bool = False      # today's daily pills/respira already used; defer to next reset
+    reset_in_hours: float = 24.0    # hours until the daily reset (only used with dailies_done)
 
     # Respira (daily cultivation exercise). Each attempt grants base EXP times a
     # crit roll: x1/x2/x5/x10 at 60/30/8/2% (mean 1.8, from client config).
@@ -435,18 +448,26 @@ class Engine:
             return max(1e-12, abode * row["low"] * (1 + s))
 
         # Per-row wall-clock integration. Gem multiplies cultivation speed
-        # (claimable storage of gem% x speed — treated as continuous); pills
-        # and Respira are FLAT daily XP added on top, so their value shrinks
-        # as base speed grows in later grades (verified in-game 2026-07-07).
-        # If today's dailies are already spent, the first 24h run without the
-        # daily XP and it resumes after — piecewise, so a stronger daily setup
-        # never perversely increases a short estimate.
+        # (claimable storage of gem% x speed — treated as continuous, i.e.
+        # claimed before the 18-32h cap); pills and Respira are FLAT daily XP
+        # added on top, so their value shrinks as base speed grows in later
+        # grades (verified in-game 2026-07-07). If today's dailies are already
+        # spent, the window until the daily reset (reset_in_hours) runs without
+        # the daily XP — and event Respira, which also needs the reset, is
+        # credited when the window ends rather than up-front. Piecewise, so a
+        # stronger daily setup never perversely increases a short estimate.
         daily_rate = daily_xp / 86400.0            # XP per real second
-        start_credit = fruit_xp
+        reset_window = min(24.0, max(0.0, inp.reset_in_hours)) * 3600.0 \
+            if inp.dailies_done else 0.0
+        if reset_window > 0.0:
+            start_credit, deferred_credit = fruit_mean, respira_event_xp
+        else:
+            start_credit, deferred_credit = fruit_xp, 0.0
 
         def real_seconds(upto: int) -> float:
             credit = start_credit
-            nopill_left = 86400.0 if inp.dailies_done else 0.0
+            deferred = deferred_credit
+            window_left = reset_window
             total = 0.0
             completion = min(1.0, max(0.0, inp.grade_completion))
             remaining_cur = cur["grade_xp"] * (1 - completion)
@@ -456,15 +477,20 @@ class Engine:
                 credit -= take
                 left = xp - take
                 base_rate = speed(self.rows[j]) * (1 + gem) / TICK_SECONDS
-                if nopill_left > 0.0 and left > 0.0:
+                if window_left > 0.0 and left > 0.0:
                     sec_np = left / base_rate
-                    if sec_np <= nopill_left:
-                        nopill_left -= sec_np
+                    if sec_np <= window_left:
+                        window_left -= sec_np
                         total += sec_np
                         continue
-                    left -= base_rate * nopill_left
-                    total += nopill_left
-                    nopill_left = 0.0
+                    left -= base_rate * window_left
+                    total += window_left
+                    window_left = 0.0
+                    credit += deferred
+                    deferred = 0.0
+                    take = min(credit, left)
+                    credit -= take
+                    left -= take
                 total += left / (base_rate + daily_rate)
             return total
 
@@ -483,26 +509,38 @@ class Engine:
 
         eff_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS) * (1 + gem) + daily_xp
 
-        def band(t_days: float) -> tuple:
+        def xp_ahead(upto: int) -> float:
+            completion = min(1.0, max(0.0, inp.grade_completion))
+            total = cur["grade_xp"] * (1 - completion)
+            for j in range(idx + 1, upto + 1):
+                total += self.rows[j]["grade_xp"]
+            return max(0.0, total - start_credit - deferred_credit)
+
+        def band(t_days: float, upto: int) -> tuple:
             # Cumulative-XP SD at the point estimate, mapped to a time spread by
-            # the effective daily rate. Up-front lump variance + daily respira
-            # variance accrued over the horizon. z*SD gives the P5..P95 edges.
-            if eff_per_day <= 0 or (var_upfront <= 0 and var_daily <= 0):
+            # the average XP-per-day over THIS horizon (using the current-grade
+            # rate would overstate the spread once later, faster grades are in
+            # scope). Up-front lump variance + daily respira variance accrued
+            # over the horizon. z*SD gives the P5..P95 edges.
+            if var_upfront <= 0 and var_daily <= 0:
+                return (t_days, t_days)
+            rate = xp_ahead(upto) / t_days if t_days > 0 else eff_per_day
+            if rate <= 0:
                 return (t_days, t_days)
             var_xp = var_upfront + var_daily * max(0.0, t_days)
-            sd_days = (var_xp ** 0.5) / eff_per_day
+            sd_days = (var_xp ** 0.5) / rate
             return (max(0.0, t_days - _BAND_Z * sd_days), t_days + _BAND_Z * sd_days)
 
         res.phase_days = days(real_seconds(pend))
         res.stage_days = days(real_seconds(send))
-        res.phase_band = band(res.phase_days)
-        res.stage_band = band(res.stage_days)
+        res.phase_band = band(res.phase_days, pend)
+        res.stage_band = band(res.stage_days, send)
 
         if inp.target_stage and inp.target_stage != inp.stage:
             tstart = self.stage_start_index(inp.target_stage)
             if tstart > idx:
                 res.target_days = days(real_seconds(tstart - 1))
-                res.target_band = band(res.target_days)
+                res.target_band = band(res.target_days, tstart - 1)
                 res.target_valid = True
             elif tstart >= 0:
                 res.error = "Target stage precedes current stage."

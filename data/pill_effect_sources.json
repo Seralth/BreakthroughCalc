@@ -62,5 +62,15 @@
   "name": "Dongxuan's Pot (curio)",
   "percent": 2.0,
   "note": "Special curio, flat 2% - cannot be upgraded or starred."
+ },
+ {
+  "name": "Jiang Ziya (immortal friend, lv 116)",
+  "percent": 3.0,
+  "note": "+3% Cultivation Pill Effect at level 116 (2026 community guide)."
+ },
+ {
+  "name": "Taotie (immortal friend, lv 117)",
+  "percent": 3.0,
+  "note": "+3% Cultivation Pill Effect at level 117 (2026 community guide)."
  }
 ]
