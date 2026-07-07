@@ -310,7 +310,13 @@ class GuideTab extends StatelessWidget {
           'menus) for all three Virtuoso realms — one-time cultivation '
           'rewards.\n'
           '• Check the events panel for realm exploration events; the curio '
-          'rewards are worth the detour.'),
+          'rewards are worth the detour.\n'
+          '• Free equipment upgrade materials: open the Library of No Bound → '
+          'Encyclopedia Tales and go through the lore chronicles. Each '
+          'chronicle has a comment section with notes from game NPCs — the '
+          'first like you give in each chronicle\'s comments awards equipment '
+          'upgrade material. Worth sweeping once while pushing through '
+          'Virtuoso.'),
     ]);
 
     final nascent = page([

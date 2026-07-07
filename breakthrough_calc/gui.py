@@ -827,7 +827,13 @@ class MainWindow(QMainWindow):
             "(in the realm/world-map menus) for all three Virtuoso realms — "
             "they hand out one-time cultivation rewards.</li>"
             "<li>Check the events panel for realm exploration events; the curio "
-            "rewards are worth the detour.</li></ul>")
+            "rewards are worth the detour.</li>"
+            "<li>Free equipment upgrade materials: open the <b>Library of No "
+            "Bound → Encyclopedia Tales</b> and go through the lore chronicles. "
+            "Each chronicle has a comment section with notes from game NPCs — "
+            "the <b>first like you give in each chronicle's comments</b> awards "
+            "equipment upgrade material. Worth sweeping once while pushing "
+            "through Virtuoso.</li></ul>")
 
         nascent = (
             "<h2>Nascent Soul (~day 3 for F2P)</h2>"
