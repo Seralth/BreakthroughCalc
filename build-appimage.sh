@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")"
-[ -d .venv ] || { python3 -m venv .venv; .venv/bin/pip install PySide6 pyinstaller; }
+[ -d .venv ] || { python3 -m venv .venv; .venv/bin/pip install "PySide6==6.11.1" "pyinstaller==6.21.0"; }
 .venv/bin/pyinstaller --noconfirm --clean --name breakthrough-calc --windowed \
   --add-data data/breakthrough.json:data --add-data data/pill_effect_sources.json:data --add-data packaging/breakthrough-calc.png:. main.py
 rm -rf packaging/AppDir

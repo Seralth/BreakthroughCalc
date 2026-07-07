@@ -387,9 +387,15 @@ class Engine {
     final thresholds = [1, 6, 11, 16, 21, 26];
     final quals = lQual['quality'] as List;
     final qmults = data['quality_mult'] as List;
+    // Quality rows sum to 1.0 (levels 0-10) or 0.7 (levels 11+); the extractor
+    // fills the missing mass at its rarity tier so the tier probabilities form
+    // a true distribution (mirrors engine.py — keep in lockstep).
+    final qualSum = [for (final q in quals) _num(q)].fold(0.0, (a, b) => a + b);
+    final residual = math.max(0.0, 1.0 - qualSum);
+    final extTot = extList.fold(0.0, (a, b) => a + b);
     var eQ = 0.0;
     for (var i = 0; i < qmults.length; i++) {
-      final p = math.min(1.0, _num(quals[i]) + extList[i]);
+      final p = _num(quals[i]) + (extTot > 0 ? extList[i] / extTot * residual : 0.0);
       eQ += p * (cultiMult + (inp.lvlCulti >= thresholds[i] ? 0.2 : 0.0)) * _num(qmults[i]);
     }
 
@@ -450,7 +456,8 @@ class Engine {
       }
 
       final curShape = shapeAt(idx, inp.stage);
-      if (curGap > 0 && curShape > 0) {
+      // strive <= 0 cannot fade toward #1 (negative scale would raise speeds).
+      if (curGap > 0 && curShape > 0 && strive > 0) {
         final scale = strive / curShape;
         striveOf = (row) => scale * shapeAt(rowIdxMap[row]!, row['stage'] as String);
       }
@@ -477,7 +484,8 @@ class Engine {
     double rawSeconds(int upto) {
       var credit = startCredit;
       var total = 0.0;
-      final remainingCur = _num(cur['grade_xp']) * (1 - inp.gradeCompletion);
+      final remainingCur =
+          _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
       for (var j = idx; j <= upto; j++) {
         final xp = j == idx ? remainingCur : _num(rows[j]['grade_xp']);
         final take = math.min(credit, xp);
@@ -548,7 +556,7 @@ class Engine {
 
 String fmtDays(double d) {
   if (d < 0) d = 0;
-  final totalMin = (d * 24 * 60).toInt();
+  final totalMin = (d * 24 * 60).round();
   var out = '${totalMin ~/ 1440}D ${(totalMin % 1440) ~/ 60}H ${totalMin % 60}M';
   if (d > 365) out += '  (~${(d / 365.25).toStringAsFixed(1)} yr)';
   return out;

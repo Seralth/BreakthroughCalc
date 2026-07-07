@@ -86,6 +86,7 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
       home: CalculatorPage(
         engine: widget.engine,
         catalog: widget.catalog,
+        prefs: widget.prefs,
         theme: theme,
         onTheme: setTheme,
       ),
@@ -97,12 +98,14 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
 class CalculatorPage extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
+  final SharedPreferences prefs;
   final String theme;
   final ValueChanged<String> onTheme;
   const CalculatorPage({
     super.key,
     required this.engine,
     required this.catalog,
+    required this.prefs,
     required this.theme,
     required this.onTheme,
   });
@@ -112,7 +115,7 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-  final inp = Inputs();
+  Inputs inp = Inputs();
   late Results res;
   final _peSources = <List<dynamic>>[]; // [name, percent]
   double _abode = 0; // Abode Aura, the primary input; speed = abode * absorption
@@ -134,22 +137,98 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void initState() {
     super.initState();
     final stages = engine.stages();
-    inp.stage = stages.contains('Nascent') ? 'Nascent' : stages.first;
+    inp.stage = stages.first;
     inp.phase = engine.phasesFor(inp.stage).first;
     inp.grade = engine.gradesFor(inp.stage, inp.phase).first;
-    inp.cultiSpeed = 58.84;
-    inp.absorptionRatio = 0.275;
-    _abode = inp.cultiSpeed / inp.absorptionRatio;
+    inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
+    _restoreInputs();
+    _abode = inp.absorptionRatio > 0 ? inp.cultiSpeed / inp.absorptionRatio : 0;
     _speedCtrl.text = _fmtNum(inp.cultiSpeed);
     _abodeCtrl.text = _fmtNum(_abode);
     _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
-    inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
     _recalc();
+  }
+
+  void _restoreInputs() {
+    final raw = widget.prefs.getString('inputs_v1');
+    if (raw == null) return;
+    try {
+      final m = jsonDecode(raw) as Map<String, dynamic>;
+      final restored = Inputs.fromMap(m);
+      // Sanity-check the cascading dropdowns against the engine's data.
+      if (!engine.stages().contains(restored.stage)) return;
+      if (!engine.phasesFor(restored.stage).contains(restored.phase)) {
+        restored.phase = engine.phasesFor(restored.stage).first;
+      }
+      if (!engine.gradesFor(restored.stage, restored.phase).contains(restored.grade)) {
+        restored.grade = engine.gradesFor(restored.stage, restored.phase).first;
+      }
+      inp = restored;
+      _peSources
+        ..clear()
+        ..addAll([
+          for (final s in (m['pe_sources'] as List? ?? []))
+            [(s as List)[0] as String, (s[1] as num).toDouble()]
+        ]);
+    } catch (_) {
+      // Corrupt saved state — keep defaults.
+    }
+  }
+
+  void _saveInputs() {
+    widget.prefs.setString('inputs_v1', jsonEncode({
+      'stage': inp.stage,
+      'phase': inp.phase,
+      'grade': inp.grade,
+      'grade_completion': inp.gradeCompletion,
+      'culti_speed': inp.cultiSpeed,
+      'absorption_ratio': inp.absorptionRatio,
+      'aura_gem': inp.auraGem,
+      'target_stage': inp.targetStage,
+      'top_stage': inp.topStage,
+      'mature_server': inp.matureServer,
+      'dailies_done': inp.dailiesDone,
+      'respira_per_day': inp.respiraPerDay,
+      'respira_event': inp.respiraEvent,
+      'respira_exp': inp.respiraExp,
+      'pill_rank': inp.pillRank,
+      'pill_effect': inp.pillEffect,
+      'pill_limit': inp.pillLimit,
+      'gold_per_day': inp.goldPerDay,
+      'purple_per_day': inp.purplePerDay,
+      'blue_per_day': inp.bluePerDay,
+      'mark_blue': inp.markBlue,
+      'mark_purple': inp.markPurple,
+      'mark_gold': inp.markGold,
+      'vase': inp.vase,
+      'vase_star': inp.vaseStar,
+      'vase_skin': inp.vaseSkin,
+      'vase_input': inp.vaseInput,
+      'mirror': inp.mirror,
+      'mirror_star': inp.mirrorStar,
+      'mirror_skin': inp.mirrorSkin,
+      'pearl': inp.pearl,
+      'pearl_star': inp.pearlStar,
+      'pearl_skin': inp.pearlSkin,
+      'pearl_xp_per_10': inp.pearlXpPer10,
+      'vase_charge': inp.vaseCharge,
+      'mirror_charge': inp.mirrorCharge,
+      'pearl_charge': inp.pearlCharge,
+      'fruit_rank': inp.fruitRank,
+      'fruit_count': inp.fruitCount,
+      'fruit_highest_rank': inp.fruitHighestRank,
+      'lvl_culti': inp.lvlCulti,
+      'lvl_quality': inp.lvlQuality,
+      'lvl_gush': inp.lvlGush,
+      'extractor_rarity': inp.extractorRarity,
+      'pe_sources': _peSources,
+    }));
   }
 
   void _recalc() {
     inp.pillEffect = _peSources.fold(0.0, (a, s) => a + (s[1] as num)) / 100.0;
     setState(() => res = engine.calculate(inp));
+    _saveInputs();
   }
 
   static const _stars = ['0*', '1*', '2*', '3*', '4*', '5*'];
@@ -194,6 +273,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
             inp.stage = v!;
             inp.phase = engine.phasesFor(v).first;
             inp.grade = engine.gradesFor(v, inp.phase).first;
+            if (inp.targetStage.isNotEmpty &&
+                stages.indexOf(inp.targetStage) <= stages.indexOf(v)) {
+              inp.targetStage = '';
+            }
             _recalc();
           }),
           _dropdown('Half-step', inp.phase, engine.phasesFor(inp.stage), (v) {
@@ -206,7 +289,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             _recalc();
           }),
           _num('Grade progress (%)', inp.gradeCompletion * 100, (v) {
-            inp.gradeCompletion = v / 100;
+            inp.gradeCompletion = v.clamp(0, 100) / 100;
             _recalc();
           }),
           _numCtrl('Abode Aura', _abodeCtrl, (v) {
@@ -234,7 +317,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             _recalc();
           }),
           _dropdown('Target Stage', inp.targetStage.isEmpty ? '(none)' : inp.targetStage,
-              ['(none)', ...stages], (v) {
+              ['(none)', ...stages.sublist(stages.indexOf(inp.stage) + 1)], (v) {
             inp.targetStage = v == '(none)' ? '' : v!;
             _recalc();
           }),
@@ -396,6 +479,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
         child: !res.valid
             ? Text(res.error, style: TextStyle(color: t.colorScheme.error))
             : Column(children: [
+                if (res.error.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Text(res.error, style: TextStyle(color: t.colorScheme.error)),
+                  ),
                 row('Half-step breakthrough in', fmtDays(res.phaseDays), res.phaseBand),
                 row('Stage breakthrough in', fmtDays(res.stageDays), res.stageBand),
                 if (res.targetValid)
@@ -592,7 +680,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           for (final s in widget.catalog.cast<Map<String, dynamic>>())
             ListTile(
               title: Text(s['name'] as String),
-              trailing: Text('${s['percent']}%'),
+              trailing: Text(((s['percent'] as num?) ?? 0) == 0 ? 'varies' : '${s['percent']}%'),
               subtitle: s['note'] != null ? Text(s['note'] as String, style: const TextStyle(fontSize: 11)) : null,
               onTap: () => Navigator.pop(context, s),
             ),
@@ -600,7 +688,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       ),
     );
     if (choice != null) {
-      setState(() => _peSources.add([choice['name'], (choice['percent'] as num).toDouble()]));
+      setState(() => _peSources.add([choice['name'], ((choice['percent'] as num?) ?? 0).toDouble()]));
       _recalc();
     }
   }

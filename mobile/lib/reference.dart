@@ -118,7 +118,13 @@ class ReferenceTab extends StatelessWidget {
           table(
             'Pill Effect sources',
             ['Source', 'Bonus'],
-            [for (final s in catalog.cast<Map<String, dynamic>>()) [s['name'] as String, '${s['percent']}%']],
+            [
+              for (final s in catalog.cast<Map<String, dynamic>>())
+                [
+                  s['name'] as String,
+                  ((s['percent'] as num?) ?? 0) == 0 ? 'varies' : '${s['percent']}%'
+                ]
+            ],
             'All sources stack additively.',
           ),
       ],
