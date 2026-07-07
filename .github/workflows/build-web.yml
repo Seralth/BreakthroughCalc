@@ -1,0 +1,47 @@
+name: Deploy Web (PWA)
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.44.5"
+          channel: stable
+      - name: Sync data tables into assets
+        run: ./sync_data.sh
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Build web release
+        run: flutter build web --release --base-href /BreakthroughCalc/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: mobile/build/web
+
+  deploy:
+    needs: build-web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

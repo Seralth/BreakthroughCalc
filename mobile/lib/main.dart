@@ -1,82 +1,18 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'engine.dart';
 import 'reference.dart';
+import 'update_check.dart';
 
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
 const appVersion = '2.7.2';
-
-// ---- update check -----------------------------------------------------------
-
-/// Parse a version string like "2.7", "v2.7.1" or "2.8.0-rc1" into exactly
-/// three numeric parts (missing parts padded with 0, prerelease/build
-/// suffixes ignored). Returns null if unparseable.
-List<int>? _parseVersion(String raw) {
-  var s = raw.trim();
-  if (s.startsWith('v') || s.startsWith('V')) s = s.substring(1);
-  // Cut prerelease/build suffixes ("-rc1", "+5").
-  final cut = s.indexOf(RegExp(r'[-+]'));
-  if (cut >= 0) s = s.substring(0, cut);
-  if (s.isEmpty) return null;
-  final parts = s.split('.');
-  if (parts.length > 3) return null;
-  final nums = <int>[];
-  for (final p in parts) {
-    final n = int.tryParse(p);
-    if (n == null || n < 0) return null;
-    nums.add(n);
-  }
-  while (nums.length < 3) {
-    nums.add(0);
-  }
-  return nums;
-}
-
-/// True if [remote] is a strictly newer version than [local].
-bool _isNewer(List<int> remote, List<int> local) {
-  for (var i = 0; i < 3; i++) {
-    if (remote[i] != local[i]) return remote[i] > local[i];
-  }
-  return false;
-}
-
-/// Latest GitHub release, or null on any failure (offline, timeout, bad
-/// JSON, ...). Never throws.
-Future<({String tag, String url})?> _fetchLatestRelease() async {
-  HttpClient? client;
-  try {
-    client = HttpClient()..connectionTimeout = const Duration(seconds: 5);
-    final req = await client
-        .getUrl(Uri.parse(
-            'https://api.github.com/repos/Seralth/BreakthroughCalc/releases/latest'))
-        .timeout(const Duration(seconds: 5));
-    req.headers.set(HttpHeaders.userAgentHeader, 'BreakthroughCalc/$appVersion');
-    req.headers.set(HttpHeaders.acceptHeader, 'application/vnd.github+json');
-    final resp = await req.close().timeout(const Duration(seconds: 5));
-    if (resp.statusCode != 200) return null;
-    final body = await resp
-        .transform(utf8.decoder)
-        .join()
-        .timeout(const Duration(seconds: 5));
-    final json = jsonDecode(body);
-    if (json is! Map<String, dynamic>) return null;
-    final tag = json['tag_name'];
-    final url = json['html_url'];
-    if (tag is! String) return null;
-    return (tag: tag, url: url is String ? url : '');
-  } catch (_) {
-    return null;
-  } finally {
-    client?.close(force: true);
-  }
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -232,7 +168,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
     _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
     _respiraCtrl.text = _fmtNum(inp.respiraPerDay);
     _recalc();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
+    if (!kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
+    }
   }
 
   // ---- update check ----
@@ -240,11 +178,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
   /// ([manual] false) it only shows a banner for a not-yet-dismissed newer
   /// version, while a manual check also reports "up to date" / failures.
   Future<void> _checkForUpdates({bool manual = false}) async {
-    final rel = await _fetchLatestRelease();
+    final rel = await fetchLatestRelease(appVersion);
     if (!mounted) return;
-    final local = _parseVersion(appVersion);
-    final remote = rel == null ? null : _parseVersion(rel.tag);
-    if (rel == null || local == null || remote == null || !_isNewer(remote, local)) {
+    final local = parseVersion(appVersion);
+    final remote = rel == null ? null : parseVersion(rel.tag);
+    if (rel == null || local == null || remote == null || !isNewerVersion(remote, local)) {
       if (manual) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(rel == null
@@ -474,8 +412,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 if (v == 'check_updates') _checkForUpdates(manual: true);
                 if (v == 'donate') _showDonateDialog();
               },
-              itemBuilder: (_) => const [
-                PopupMenuItem(
+              itemBuilder: (_) => [
+                const PopupMenuItem(
                   value: 'donate',
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -483,14 +421,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     title: Text('Donate'),
                   ),
                 ),
-                PopupMenuItem(
-                  value: 'check_updates',
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.system_update_alt),
-                    title: Text('Check for updates'),
+                if (!kIsWeb)
+                  const PopupMenuItem(
+                    value: 'check_updates',
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.system_update_alt),
+                      title: Text('Check for updates'),
+                    ),
                   ),
-                ),
               ],
             ),
           ],
