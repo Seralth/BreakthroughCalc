@@ -224,6 +224,47 @@ class ReferenceTab extends StatelessWidget {
           'Claim before it caps — the calculator assumes you always do.'),
     ]);
 
+    return DefaultTabController(
+      length: 4,
+      child: Column(children: [
+        const TabBar(
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
+          tabs: [
+            Tab(text: 'Basics'),
+            Tab(text: 'Pills & Respira'),
+            Tab(text: 'Myrimon & Extractor'),
+            Tab(text: 'Artifacts & Gems'),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(children: [
+            basics,
+            pills,
+            myrimon,
+            artifacts,
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+/// Stage-by-stage cultivation guide, one sub-tab per realm band.
+class GuideTab extends StatelessWidget {
+  const GuideTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final h3 = Theme.of(context).textTheme.titleMedium;
+
+    Widget para(String s) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6), child: Text(s));
+
+    Widget page(List<Widget> children) => ListView(
+        padding: const EdgeInsets.all(16),
+        children: children);
+
     final novice = page([
       Text('Novice → Foundation', style: h3),
       para('• Breakthrough to Connection immediately.\n'
@@ -275,16 +316,12 @@ class ReferenceTab extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 9,
+      length: 5,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           tabs: [
-            Tab(text: 'Basics'),
-            Tab(text: 'Pills & Respira'),
-            Tab(text: 'Myrimon & Extractor'),
-            Tab(text: 'Artifacts & Gems'),
             Tab(text: 'Novice–Foundation'),
             Tab(text: 'Virtuoso'),
             Tab(text: 'Nascent Soul'),
@@ -294,10 +331,6 @@ class ReferenceTab extends StatelessWidget {
         ),
         Expanded(
           child: TabBarView(children: [
-            basics,
-            pills,
-            myrimon,
-            artifacts,
             novice,
             virtuoso,
             nascent,

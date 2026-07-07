@@ -479,15 +479,20 @@ class MainWindow(QMainWindow):
         tabs.addTab(central, "Calculator")
         self._tabs = tabs
         tabs.addTab(self._build_info_tab(), "Reference")
+        tabs.addTab(self._build_guide_tab(), "Guide")
         self.setCentralWidget(tabs)
 
     def _rebuild_info_tab(self):
-        # Rebuild the whole Reference tab (all sub-tab browsers) so accent
-        # colors baked into the HTML follow theme changes; keep the sub-tab.
+        # Rebuild the Reference and Guide tabs (all sub-tab browsers) so accent
+        # colors baked into the HTML follow theme changes; keep the sub-tabs.
         sub = self._ref_tabs.currentIndex() if getattr(self, "_ref_tabs", None) else 0
+        gsub = self._guide_tabs.currentIndex() if getattr(self, "_guide_tabs", None) else 0
+        self._tabs.removeTab(2)
         self._tabs.removeTab(1)
         self._tabs.insertTab(1, self._build_info_tab(), "Reference")
+        self._tabs.insertTab(2, self._build_guide_tab(), "Guide")
         self._ref_tabs.setCurrentIndex(sub)
+        self._guide_tabs.setCurrentIndex(gsub)
         self.resize(1180, 680)
 
     def _build_info_tab(self) -> QWidget:
@@ -732,6 +737,22 @@ class MainWindow(QMainWindow):
             "<b>before</b> burning a stockpile, and burn the stockpile before a main-Stage "
             "breakthrough.</li></ul>")
 
+        self._ref_tabs = ref = QTabWidget()
+        for title, html in (("Basics", basics),
+                            ("Pills & Respira", pills),
+                            ("Myrimon & Extractor", myrimon),
+                            ("Artifacts & Gems", artifacts)):
+            ref.addTab(page(html), title)
+        return ref
+
+    def _build_guide_tab(self) -> QWidget:
+        """Stage-by-stage cultivation guide, one sub-tab per realm band."""
+        def page(html: str) -> QTextBrowser:
+            b = QTextBrowser()
+            b.setOpenExternalLinks(True)
+            b.setHtml(html)
+            return b
+
         novice = (
             "<h2>Novice – Foundation</h2>"
             "<ul><li>Break through to Connection immediately.</li>"
@@ -788,18 +809,14 @@ class MainWindow(QMainWindow):
             "the aux path a minor realm behind) — the calculator's 120% warning "
             "applies to the mortal world only.</li></ul>")
 
-        self._ref_tabs = ref = QTabWidget()
-        for title, html in (("Basics", basics),
-                            ("Pills & Respira", pills),
-                            ("Myrimon & Extractor", myrimon),
-                            ("Artifacts & Gems", artifacts),
-                            ("Novice–Foundation", novice),
+        self._guide_tabs = guide = QTabWidget()
+        for title, html in (("Novice–Foundation", novice),
                             ("Virtuoso", virtuoso),
                             ("Nascent Soul", nascent),
                             ("Incarnation", incarnation),
                             ("Voidbreak+", voidbreak)):
-            ref.addTab(page(html), title)
-        return ref
+            guide.addTab(page(html), title)
+        return guide
 
     # ---- signal wiring ---------------------------------------------------
     def _wire(self):
