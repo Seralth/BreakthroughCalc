@@ -709,7 +709,7 @@ class MainWindow(QMainWindow):
             "breaking through, and only after the extractor is upgraded.</p>"
             "<p>Fruits also lose 50% of their EXP once the realm's <b>timegate</b> passes — "
             "eat the stockpile before the timegate, not merely before your own breakthrough. "
-            "Extractor leveling priority (per the 2026 community guide): Quality → "
+            "Extractor leveling priority: Quality → "
             "Cultivation → Gush → High Rank, taking High Rank only after the others are "
             "maxed. Myrimon unlocks at Virtuoso; Virtuoso through Incarnation share one "
             "fruit/extractor tier, and each major realm afterwards gets its own. Myrimon "
@@ -732,11 +732,72 @@ class MainWindow(QMainWindow):
             "<b>before</b> burning a stockpile, and burn the stockpile before a main-Stage "
             "breakthrough.</li></ul>")
 
+        novice = (
+            "<h2>Novice – Foundation</h2>"
+            "<ul><li>Break through to Connection immediately.</li>"
+            "<li>Use only blue pills at first, and don't max your pill attempts before "
+            "claiming the quest pill bag.</li>"
+            "<li>Save 5-10 pill attempts for F10, and spend pills mainly when they push "
+            "a stage breakthrough.</li>"
+            "<li>Save blue/purple pill materials for F9-F10.</li>"
+            "<li>Max the Longevity technique (+1 Respira attempt) <b>before</b> breaking "
+            "through to Foundation.</li>"
+            "<li>In Foundation, unlock Energy Unification before spending Respira "
+            "attempts, and hold pill attempts until Foundation Late with Rejuvenation "
+            "at T3.</li>"
+            "<li>Farm the energy array materials early: violetite at Violet Streams, "
+            "frostite at Lake Blackwater.</li></ul>")
+
+        virtuoso = (
+            "<h2>Virtuoso</h2>"
+            "<ul><li>Typically reached by the end of day 1.</li>"
+            "<li><b>Myrimon unlocks here</b> — see the Myrimon &amp; Extractor tab for "
+            "the full system. During the first week uses don't stack, so run the "
+            "highest realm you can daily; afterwards uses stack (save for Sunday or "
+            "the next BR threshold).</li>"
+            "<li>Clear realm abyss and cultivation ruins for all three Virtuoso "
+            "realms.</li>"
+            "<li>Complete the realm exploration events.</li></ul>")
+
+        nascent = (
+            "<h2>Nascent Soul</h2>"
+            "<ul><li>F2P pace: ~day 3, then ~3 days to Nascent Late and ~3 more to "
+            "Incarnation.</li>"
+            "<li><b>Strive unlocks here.</b> In the calculator it shows as the Strive "
+            "readout under Absorption Ratio, and the \"Server #1's Stage\" input starts "
+            "to matter for long-range estimates.</li>"
+            "<li>Keep story, demon spire, and realms maxed each cultivation stage.</li></ul>")
+
+        incarnation = (
+            "<h2>Incarnation</h2>"
+            "<ul><li>Max the extractor (Quality first) and keep fruits stockpiled; the "
+            "extractor at Mortal World rank gives +50% base fruit EXP at the highest "
+            "Stage.</li>"
+            "<li>Eat the stockpile before the realm timegate (50% EXP loss after) or "
+            "the last day before your own breakthrough.</li>"
+            "<li>Before breaking through to Voidbreak: spend all pills and Respira "
+            "(they reset), don't claim daily pill bags until after ascension, and "
+            "spend Fatevillon tokens beforehand (it resets on breakthroughs).</li></ul>")
+
+        voidbreak = (
+            "<h2>Voidbreak and beyond</h2>"
+            "<ul><li>Dailies and pill bags reset on ascension.</li>"
+            "<li>Each major realm has its own Myrimon fruit/extractor tier (R6+ fruits, "
+            "Spiritual world).</li>"
+            "<li>Strive can legitimately exceed 120% here (overcap play, e.g. running "
+            "the aux path a minor realm behind) — the calculator's 120% warning "
+            "applies to the mortal world only.</li></ul>")
+
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
                             ("Pills & Respira", pills),
                             ("Myrimon & Extractor", myrimon),
-                            ("Artifacts & Gems", artifacts)):
+                            ("Artifacts & Gems", artifacts),
+                            ("Novice–Foundation", novice),
+                            ("Virtuoso", virtuoso),
+                            ("Nascent Soul", nascent),
+                            ("Incarnation", incarnation),
+                            ("Voidbreak+", voidbreak)):
             ref.addTab(page(html), title)
         return ref
 
