@@ -13,8 +13,14 @@ The spreadsheet model, verified against its own "speed checker" cell:
       speed(r) = abode * (low_r + bonus) = culti_speed * (low_r + bonus) / absorption_ratio
   (At the current grade this reduces exactly to culti_speed — the sheet's
   "speed checker" asserts the same identity.)
-- Aura gem and pill usage act as parallel speed-up ratios: time /(1+gem)/(1+pills)
-  where pills = (daily pill XP / culti_speed * 8s) expressed as days/day.
+- Aura gem multiplies cultivation speed only (in-game it is claimable storage
+  that accrues gem% of your cultivation speed, up to 18-32h per claim — treated
+  as continuous). Pills/Respira are FLAT daily XP added on top, verified
+  in-game 2026-07-07: the pill panel shows each pill as both absolute XP and
+  the exact percentage of the current grade's XP. Per-row:
+      rate(row) = speed(row) * (1+gem) / 8s  +  daily_xp / 86400   [XP/sec]
+  (Donk's sheet instead used time /(1+gem)/(1+pills) with pills frozen at the
+  current grade's speed — optimistic on long projections and wrongly gem-boosted.)
 - Fruit XP is a one-time XP credit applied up-front.
 """
 
@@ -36,6 +42,9 @@ _BAND_Z = 1.645
 
 # Fruit pity: every Nth fruit is a guaranteed gush (deterministic, no variance).
 GUSH_GUARANTEE_EVERY = 6
+
+# Extractor rarity ladder; rank N grants +20% orb EXP to tiers 1..N (no Common line).
+EXTRACTOR_RANKS = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
 
 # Strive tier tables recovered from the client config (cfg_us_calc).
 # Young servers (world level < 30) use a major-realm-gap table; mature servers
@@ -305,15 +314,21 @@ class Engine:
         l_qual = lv[str(max(0, min(30, inp.lvl_quality)))]
 
         gc = l_gush["gush_chance"]
-        gxm = l_culti["gush_xp"]                    # sheet looks GushXP up by culti level
-        # The fruit "crit" is the gush: a gushed fruit's XP is x gxm instead of x1.
-        # Mean gush factor (gush rate gc is the calibrated total, guarantees
-        # included) — the mean is left exactly as Donk's sheet.
-        e_gush = (1 - gc) + gc * gxm
+        # Gush multiplier is upgraded via the Gush track (in-game "Gush Bonus"
+        # panel, verified 2026-07-07: Gush lvl 14 shows +206% = gush_xp 2.06;
+        # base 1.5 = the "base Gush multiplier is 150%" intro text). Donk's
+        # sheet looked this up by culti level — wrong track.
+        gxm = l_gush["gush_xp"]
 
         culti_mult = 1 + l_culti["culti_xp"]
         ext = self.data["extractor_chance"].get(inp.extractor_rarity, [1, 0, 0, 0, 0, 0])
-        thresholds = [1, 6, 11, 16, 21, 26]
+        # Extractor rarity rank unlocks "+20% <tier> Aura Orb EXP" cumulatively
+        # from Uncommon up to its own tier (in-game "EXP Boost" list — there is
+        # no Common line). Verified: Epic extractor shows exactly
+        # Uncommon/Rare/Epic +20%. (Donk's sheet gated these on culti-level
+        # thresholds instead, which also boosted the Common tier.)
+        rank_idx = EXTRACTOR_RANKS.index(inp.extractor_rarity) \
+            if inp.extractor_rarity in EXTRACTOR_RANKS else 0
         # Expected quality factor (treated as deterministic — the data models it
         # as an aggregate, not a single-tier draw, so only gush drives variance).
         # The quality table rows sum to 1.0 (levels 0-10) or 0.7 (levels 11+);
@@ -327,15 +342,17 @@ class Engine:
         e_q = 0.0
         for i, qmult in enumerate(self.data["quality_mult"]):
             p = qual[i] + (ext[i] / ext_tot * residual if ext_tot > 0 else 0.0)
-            e_q += p * (culti_mult + (0.2 if inp.lvl_culti >= thresholds[i] else 0.0)) * qmult
+            e_q += p * (culti_mult + (0.2 if 1 <= i <= rank_idx else 0.0)) * qmult
 
+        # gc is the RANDOM trigger rate; the every-6th pity is ON TOP (verified
+        # 2026-07-07: extractor panel shows "20.0% (Gush guaranteed in Aura Orb
+        # x6)" with the track bonus summing to exactly 20% — pity not included).
         n = inp.fruit_count
-        mean = base * n * e_gush * e_q
-        # Variance: every 6th fruit is a GUARANTEED gush (pity) and carries no
-        # randomness, so only the other (n - n//6) fruits contribute Bernoulli
-        # gush variance — this narrows the band by ~5/6. The mean is unchanged
-        # (still the calibrated n*gc gush rate).
         g = int(n) // GUSH_GUARANTEE_EVERY
+        exp_gushes = g + (n - g) * gc
+        mean = base * e_q * (n + exp_gushes * (gxm - 1))
+        # Variance: the g pity fruits are deterministic; only the other n-g
+        # fruits contribute Bernoulli gush variance.
         var_gush_count = (n - g) * gc * (1 - gc)
         var_total = (base * e_q) ** 2 * (gxm - 1) ** 2 * var_gush_count
         return mean, var_total
@@ -417,27 +434,19 @@ class Engine:
             s = strive_of(row) if strive_of else strive
             return max(1e-12, abode * row["low"] * (1 + s))
 
-        # `xp_seconds` is base cultivation-seconds (raw_seconds); gem and pills
-        # are applied here as speed-ups. If today's dailies are already spent,
-        # the FIRST real day runs at base speed (pills deferred, gem still
-        # applies) and the daily rate resumes after — a proper piecewise model
-        # so a stronger daily setup never perversely increases a short estimate.
-        _base_day = 86400.0 * (1 + gem)   # base-seconds covered in 1 real day, no pills
-
-        def days(xp_seconds: float) -> float:
-            full = (1 + gem) * (1 + pill_ratio)
-            if not inp.dailies_done:
-                return xp_seconds / 86400.0 / full
-            if xp_seconds <= _base_day:
-                return xp_seconds / 86400.0 / (1 + gem)
-            return 1.0 + (xp_seconds - _base_day) / 86400.0 / full
-
+        # Per-row wall-clock integration. Gem multiplies cultivation speed
+        # (claimable storage of gem% x speed — treated as continuous); pills
+        # and Respira are FLAT daily XP added on top, so their value shrinks
+        # as base speed grows in later grades (verified in-game 2026-07-07).
+        # If today's dailies are already spent, the first 24h run without the
+        # daily XP and it resumes after — piecewise, so a stronger daily setup
+        # never perversely increases a short estimate.
+        daily_rate = daily_xp / 86400.0            # XP per real second
         start_credit = fruit_xp
 
-        # seconds of cultivation from "now" through the end of row j (inclusive),
-        # with the starting credit applied against the earliest remaining XP.
-        def raw_seconds(upto: int) -> float:
+        def real_seconds(upto: int) -> float:
             credit = start_credit
+            nopill_left = 86400.0 if inp.dailies_done else 0.0
             total = 0.0
             completion = min(1.0, max(0.0, inp.grade_completion))
             remaining_cur = cur["grade_xp"] * (1 - completion)
@@ -445,8 +454,22 @@ class Engine:
                 xp = remaining_cur if j == idx else self.rows[j]["grade_xp"]
                 take = min(credit, xp)
                 credit -= take
-                total += (xp - take) / speed(self.rows[j]) * TICK_SECONDS
+                left = xp - take
+                base_rate = speed(self.rows[j]) * (1 + gem) / TICK_SECONDS
+                if nopill_left > 0.0 and left > 0.0:
+                    sec_np = left / base_rate
+                    if sec_np <= nopill_left:
+                        nopill_left -= sec_np
+                        total += sec_np
+                        continue
+                    left -= base_rate * nopill_left
+                    total += nopill_left
+                    nopill_left = 0.0
+                total += left / (base_rate + daily_rate)
             return total
+
+        def days(wall_seconds: float) -> float:
+            return wall_seconds / 86400.0
 
         # end of current phase
         pend = idx
@@ -458,7 +481,7 @@ class Engine:
         while send + 1 < len(self.rows) and self.rows[send + 1]["stage"] == inp.stage:
             send += 1
 
-        eff_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS) * (1 + gem) * (1 + pill_ratio)
+        eff_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS) * (1 + gem) + daily_xp
 
         def band(t_days: float) -> tuple:
             # Cumulative-XP SD at the point estimate, mapped to a time spread by
@@ -470,15 +493,15 @@ class Engine:
             sd_days = (var_xp ** 0.5) / eff_per_day
             return (max(0.0, t_days - _BAND_Z * sd_days), t_days + _BAND_Z * sd_days)
 
-        res.phase_days = days(raw_seconds(pend))
-        res.stage_days = days(raw_seconds(send))
+        res.phase_days = days(real_seconds(pend))
+        res.stage_days = days(real_seconds(send))
         res.phase_band = band(res.phase_days)
         res.stage_band = band(res.stage_days)
 
         if inp.target_stage and inp.target_stage != inp.stage:
             tstart = self.stage_start_index(inp.target_stage)
             if tstart > idx:
-                res.target_days = days(raw_seconds(tstart - 1))
+                res.target_days = days(real_seconds(tstart - 1))
                 res.target_band = band(res.target_days)
                 res.target_valid = True
             elif tstart >= 0:
@@ -491,7 +514,7 @@ class Engine:
         res.abode_aura = abode
         res.strive = strive
         res.base_xp_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS)
-        res.effective_xp_per_day = res.base_xp_per_day * (1 + gem) * (1 + pill_ratio)
+        res.effective_xp_per_day = res.base_xp_per_day * (1 + gem) + daily_xp
         res.pill_xp_per_day = pills["xp_per_day"]
         res.pill_speedup = pill_ratio
         res.gem_speedup = gem

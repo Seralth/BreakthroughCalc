@@ -11,3 +11,4 @@ ljd/
 
 # per-user app settings written next to the AppImage
 *.AppImage.settings.json
+packaging/appimagetool

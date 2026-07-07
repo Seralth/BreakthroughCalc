@@ -688,9 +688,67 @@ class _CalculatorPageState extends State<CalculatorPage> {
       ),
     );
     if (choice != null) {
-      setState(() => _peSources.add([choice['name'], ((choice['percent'] as num?) ?? 0).toDouble()]));
+      double? value;
+      final prompt = choice['prompt'] as Map<String, dynamic>?;
+      if (prompt != null && prompt['kind'] == 'star_upgrade') {
+        value = await _askStarUpgrade(choice['name'] as String, prompt);
+        if (value == null) return; // user cancelled
+      } else {
+        value = ((choice['percent'] as num?) ?? 0).toDouble();
+      }
+      setState(() => _peSources.add([choice['name'], value]));
       _recalc();
     }
+  }
+
+  /// Small dialog matching the in-game curio upgrade screen: pick star and
+  /// upgrade level, return the computed pill-effect %.
+  Future<double?> _askStarUpgrade(String name, Map<String, dynamic> p) {
+    final base = (p['base'] as num).toDouble();
+    final perUpgrade = (p['per_upgrade'] as num).toDouble();
+    final maxUpgrade = p['max_upgrade'] as int;
+    final stars = p['stars'] as int;
+    final starAdd = (p['star_add'] as List).cast<num>();
+    double valueFor(int star, int upgrade) =>
+        base + perUpgrade * upgrade + starAdd[star - 1].toDouble();
+
+    var star = 1;
+    var upgrade = 0;
+    return showDialog<double>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDlg) => AlertDialog(
+          title: Text(name),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            DropdownButtonFormField<int>(
+              value: star,
+              decoration: const InputDecoration(labelText: 'Star'),
+              items: [for (var i = 1; i <= stars; i++) DropdownMenuItem(value: i, child: Text('$i★'))],
+              onChanged: (v) => setDlg(() => star = v!),
+            ),
+            DropdownButtonFormField<int>(
+              value: upgrade,
+              decoration: const InputDecoration(labelText: 'Upgrade level'),
+              items: [for (var i = 0; i <= maxUpgrade; i++) DropdownMenuItem(value: i, child: Text('$i'))],
+              onChanged: (v) => setDlg(() => upgrade = v!),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Cultivation Pill Effect: ${valueFor(star, upgrade).toStringAsFixed(1)}%',
+              style: TextStyle(color: Theme.of(ctx).hintColor),
+            ),
+          ]),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.pop(
+                  ctx, double.parse(valueFor(star, upgrade).toStringAsFixed(1))),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   static String _fmtNum(double v) {

@@ -91,6 +91,19 @@ class ReferenceTab extends StatelessWidget {
             'Energy regenerates and caps — spend before it fills. The daily charge (30 '
             'Fateum/Destium for +100) is a per-artifact toggle.'),
         table(
+          'Creation Artifact energy',
+          ['Property', 'Value'],
+          [
+            ['Regeneration', '1 energy / 15 min at 0★ (faster per star)'],
+            ['Cap', '200 at 0★ (rises with stars); regen stops at cap'],
+            ['Daily charge', '+100 energy for 30 Fateum/Destium,\nonce per day per artifact'],
+            ['Mirror copy cost', '200 base; −5% (1★), −10% (3★), −10% skin\n— discounts add together'],
+            ['Mirror 5★', '15% chance of an extra copy per Duplication'],
+            ['Pearl use cost', '10 energy; star/skin discounts add (skin −10%)'],
+            ['Pearl EXP bonus', '+20% from 1★ (does not grow at higher stars)'],
+          ],
+        ),
+        table(
           'Vase refine energy cost (per rank)',
           ['Rank', 'Energy'],
           [for (final r in pillXp.keys) [r, (vaseCost[r] ?? 100).toString()]],
@@ -114,6 +127,16 @@ class ReferenceTab extends StatelessWidget {
             'band. Because these are sums of many independent rolls, luck averages out: the band '
             'is widest on short estimates and tightens over long horizons. Fruit gushes also have '
             'a pity floor (every 6th fruit is a guaranteed gush), narrowing the fruit side.'),
+        Text('Myrimon Fruits', style: h3),
+        para('Fruits processed through the Aura Extractor grant a one-time EXP payout '
+            '(the calculator credits it against the earliest remaining EXP). Payout scales '
+            'with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher '
+            'quality rolls multiply the base substantially, so extractor upgrades compound.'),
+        para('Advisory — tiering the extractor up requires consuming a number of fruits, '
+            'so spend only the minimum needed for each tier-up and stockpile everything '
+            'else until the extractor is maxed. Every fruit eaten early forfeits the '
+            'better quality/EXP multipliers it would have received at higher extractor '
+            'tiers — the same hoard is worth substantially more processed at max rarity.'),
         if (catalog.isNotEmpty)
           table(
             'Pill Effect sources',
@@ -127,6 +150,27 @@ class ReferenceTab extends StatelessWidget {
             ],
             'All sources stack additively.',
           ),
+        Text('Core formulas', style: h3),
+        para('• Cultivation Speed = Abode Aura × Absorption Ratio\n'
+            '• Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for '
+            'Connection through Incarnation\n'
+            '• Cultivation ticks every 8 seconds (one Cosmoapsis)\n'
+            '• Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul '
+            'and fades as you approach your server\'s #1\n'
+            '• Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin '
+            'for reds])'),
+        Text('Tips for using the calculator', style: h3),
+        para('• Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus '
+            'screen and press Apply — that guarantees a current speed. A red warning '
+            'means one of your readings is stale.\n'
+            '• Re-read your numbers after any upgrade that touches aura (Energy Array, '
+            'curios, sect level) — bonuses creep constantly and quietly.\n'
+            '• Percentages in this game stack additively almost everywhere (pill '
+            'effect sources, artifact star + skin bonuses, energy discounts). When in '
+            'doubt, add percentage points; don\'t multiply.\n'
+            '• Projections assume instant first-try breakthroughs and today\'s daily '
+            'routine held constant — treat long-range estimates (with high Strive '
+            'especially) as optimistic bounds.'),
       ],
     );
   }
