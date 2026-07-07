@@ -76,13 +76,44 @@ Calc) and have been checked against the game:
   confirmed exact.
 - Strive uses the tier tables from the game client.
 
+Since v2.7 the time model itself was corrected against in-game evidence
+(screenshots of the pill panel, Aura Gem, and Aura Extractor screens):
+
+- Pills and Respira grant flat daily EXP; the game's own pill panel shows each
+  pill as both absolute EXP and the exact percentage of the current grade. The
+  spreadsheet instead froze pill value as a speed ratio at your current grade
+  and applied it to all future grades.
+- The Aura Gem is claimable storage that accrues gem% of cultivation speed. It
+  multiplies cultivation only; the spreadsheet also multiplied pill EXP by it.
+- Gush: the displayed trigger rate is the random rate, the every-6th guarantee
+  is on top of it, and the multiplier is keyed to the Gush upgrade track (the
+  spreadsheet read it from the Cultivation track).
+- The extractor's Cultivation Bonus is 4% per level (the table had 2%), and its
+  +20% orb-EXP boosts unlock per extractor rarity rank.
+
+The first two errors compound over long projections. Measured divergence for a
+pill-heavy account (~530K daily pill/Respira EXP, Legendary gem, Incarnation):
+
+| Projection length | Spreadsheet model | Corrected model | Optimism error |
+|---|---|---|---|
+| ~40 days  | 36.2d  | 39.2d  | -8%  |
+| ~60 days  | ~54d   | ~60d   | -10% |
+| ~180 days | 155.6d | 183.3d | -18% |
+| ~350 days | 290.3d | 352.0d | -21% |
+
+A spreadsheet-style projection tells that account it will reach a 60-day goal
+about a week earlier than it really will. The gap scales with pill dependence:
+with weak pills and no gem the two models agree; estimates within the current
+phase were always fine either way.
+
 Some values are computed server-side (per-star energy recovery, exact Respira
-EXP) and are entered from your own tooltips; the app indicates which. The Aura
-Gem is modeled as a flat speed bonus by rarity, a deliberate simplification.
-Long-range projections are estimates.
+EXP) and are entered from your own tooltips; the app indicates which.
+Long-range projections remain estimates (Strive drift, crit luck — the
+best/worst band covers the latter).
 
 The model is documented in `breakthrough_calc/engine.py`, and a test suite pins
-the confirmed values.
+the confirmed values, including a ground-truth class pinned to the 2026-07-07
+in-game readings.
 
 ## Building from source
 
