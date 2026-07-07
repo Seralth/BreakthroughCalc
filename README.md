@@ -3,7 +3,23 @@
 A breakthrough timer for OverMortal. You enter your current Stage, cultivation
 speed, and daily inputs (pills, Creation Artifacts, Respira, Myrimon Fruits), and
 it returns the time to your next half-step, next Stage, or a chosen target Stage.
-Available for Windows, Linux, and Android.
+Available for Windows, Linux, Android, and the web.
+
+**Use it in the browser (works on iPhone):**
+<https://seralth.github.io/BreakthroughCalc/>
+
+### Install as an app
+
+- **iOS**: open the link in **Safari** (other browsers can't install web apps on
+  iPhone), tap the **Share** button, then **Add to Home Screen** and confirm.
+  You get a full-screen app icon; your inputs are kept between sessions.
+- **Android**: open the link in Chrome, tap the **⋮** menu → **Add to Home
+  screen** (or **Install app** when offered) and confirm. Note: Android users
+  should prefer the **native APK** from the [Releases](../../releases) page — it
+  performs better and updates itself via the built-in update check; the web app
+  is mainly for iPhone users, where no native build is possible outside the App
+  Store.
+- The web app always serves the latest release — no updates to manage.
 
 The app has a Reference tab that documents each mechanic and states which values
 to read from the game.
@@ -59,6 +75,7 @@ From the [Releases](../../releases) page:
 | Windows | `BreakthroughCalculator.exe` | Run directly. |
 | Linux | `BreakthroughCalculator-x86_64.AppImage` | Mark executable, then run. |
 | Android | `BreakthroughCalculator.apk` | Sideload; requires "install from unknown sources". |
+| Web / iOS | [seralth.github.io/BreakthroughCalc](https://seralth.github.io/BreakthroughCalc/) | PWA; on iPhone use Safari → Add to Home Screen. |
 
 The Android build is not on the Play Store. It is a sideload-only APK attached to
 each release.

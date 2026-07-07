@@ -398,6 +398,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
           title: const Text('Breakthrough Calculator'),
           bottom: const TabBar(tabs: [Tab(text: 'Calculator'), Tab(text: 'Reference'), Tab(text: 'Guide')]),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.favorite_outline),
+              tooltip: 'Donate',
+              onPressed: _showDonateDialog,
+            ),
             PopupMenuButton<String>(
               icon: const Icon(Icons.palette_outlined),
               tooltip: 'Theme',
@@ -406,23 +411,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
               itemBuilder: (_) =>
                   [for (final t in _themes) PopupMenuItem(value: t, child: Text(t))],
             ),
-            PopupMenuButton<String>(
-              tooltip: 'More',
-              onSelected: (v) {
-                if (v == 'check_updates') _checkForUpdates(manual: true);
-                if (v == 'donate') _showDonateDialog();
-              },
-              itemBuilder: (_) => [
-                const PopupMenuItem(
-                  value: 'donate',
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.favorite_outline),
-                    title: Text('Donate'),
-                  ),
-                ),
-                if (!kIsWeb)
-                  const PopupMenuItem(
+            if (!kIsWeb)
+              PopupMenuButton<String>(
+                tooltip: 'More',
+                onSelected: (v) {
+                  if (v == 'check_updates') _checkForUpdates(manual: true);
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(
                     value: 'check_updates',
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -430,8 +426,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       title: Text('Check for updates'),
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
         body: TabBarView(children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog), const GuideTab()]),
