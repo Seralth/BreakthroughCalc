@@ -879,12 +879,64 @@ class MainWindow(QMainWindow):
             "calculator only warns about >120% readings in mortal-world "
             "stages.</li></ul>")
 
+        pets = (
+            "<h2>Pets</h2>"
+            "<p>Pets are combat companions — they raise your battle rating and "
+            "fight beside you in PvE and PvP. They do <b>not</b> affect "
+            "cultivation speed or breakthrough timing, which is why this "
+            "calculator has no pet inputs.</p><ul>"
+            "<li><b>Upgrade one pet only.</b> Upgrades get very expensive, and "
+            "a second half-built pet is worth far less than one strong one.</li>"
+            "<li>Which one: <b>Blazelion</b> for physical-damage paths "
+            "(Corporia, Swordia); <b>Babeox</b> for magical paths (Magicka, "
+            "Ghostia, Literatia).</li>"
+            "<li>Pet skills come from <b>Demonroot</b> — buy it in the market "
+            "when you see it.</li>"
+            "<li>Pets are a low spending priority: heavy pet investment is "
+            "whale territory, and free players get most of the value from just "
+            "leveling their one pet steadily.</li>"
+            "<li>The pet system hands out speed-up items — <b>save them for "
+            "law fruits</b> in your garden rather than spending them on the "
+            "pet itself (they're part of the standard pre-Voidbreak prep).</li>"
+            "</ul>")
+
+        aux = (
+            "<h2>Aux Paths (dual pathing)</h2>"
+            "<p>Your auxiliary path is a second cultivation class alongside "
+            "your main. A good aux adds real fighting power (stats, mana, "
+            "shields, crowd control); a bad one adds only small stats. Common "
+            "picks:</p><ul>"
+            "<li><b>Corporia</b> main → Magicka aux (extra MP and shields for "
+            "survivability). Most things work; Literatia is not recommended.</li>"
+            "<li><b>Magicka</b> main → Ghostia aux (MP for shields, extra "
+            "crowd control, and a ghost that helps monster farming).</li>"
+            "<li><b>Swordia</b> main → Magicka aux for sustained damage "
+            "(MP + shields); Corporia aux for burst builds.</li>"
+            "<li><b>Ghostia</b> main → Corporia aux (survivability and a "
+            "strong ultimate that doesn't eat the mana your ghost needs); "
+            "Magicka as the alternative.</li>"
+            "<li><b>Literatia</b> main → Magicka for F2P/low spenders; "
+            "Corporia or Ghostia for committed dual-pathers.</li></ul>"
+            "<p><b>Aux paths and cultivation:</b> from Voidbreak through "
+            "Wholeness, the aux path enables the Strive overcap play: reach "
+            "half-step in Voidbreak, then at Wholeness hold your main path at "
+            "Middle G1 and pump the aux at Early G20 until absorption overcaps "
+            "(~404% at Wholeness completion), then level the main normally "
+            "keeping the aux a minor realm behind. It works because an Early "
+            "path always counts below a Middle path for Strive, so the bonus "
+            "keeps applying. This is why the calculator's 120% Strive warning "
+            "only applies to mortal-world stages.</p>"
+            "<p>The calculator models one path at a time — enter the numbers "
+            "for whichever path you're actively cultivating.</p>")
+
         self._guide_tabs = guide = QTabWidget()
         for title, html in (("Novice–Foundation", novice),
                             ("Virtuoso", virtuoso),
                             ("Nascent Soul", nascent),
                             ("Incarnation", incarnation),
-                            ("Voidbreak+", voidbreak)):
+                            ("Voidbreak+", voidbreak),
+                            ("Pets", pets),
+                            ("Aux Paths", aux)):
             guide.addTab(page(html), title)
         return guide
 

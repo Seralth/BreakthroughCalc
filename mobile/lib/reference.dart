@@ -359,8 +359,54 @@ class GuideTab extends StatelessWidget {
           'about >120% readings in mortal-world stages.'),
     ]);
 
+    final pets = page([
+      Text('Pets', style: h3),
+      para('Pets are combat companions — they raise your battle rating and '
+          'fight beside you in PvE and PvP. They do NOT affect cultivation '
+          'speed or breakthrough timing, which is why this calculator has no '
+          'pet inputs.'),
+      para('• Upgrade one pet only — upgrades get very expensive, and a '
+          'second half-built pet is worth far less than one strong one.\n'
+          '• Which one: Blazelion for physical-damage paths (Corporia, '
+          'Swordia); Babeox for magical paths (Magicka, Ghostia, '
+          'Literatia).\n'
+          '• Pet skills come from Demonroot — buy it in the market when you '
+          'see it.\n'
+          '• Pets are a low spending priority; heavy investment is whale '
+          'territory.\n'
+          '• Save the pet system\'s speed-up items for law fruits in your '
+          'garden — part of the standard pre-Voidbreak prep.'),
+    ]);
+
+    final aux = page([
+      Text('Aux Paths (dual pathing)', style: h3),
+      para('Your auxiliary path is a second cultivation class alongside your '
+          'main. A good aux adds real fighting power (stats, mana, shields, '
+          'crowd control); a bad one adds only small stats. Common picks:'),
+      para('• Corporia main → Magicka aux (MP and shields; Literatia not '
+          'recommended).\n'
+          '• Magicka main → Ghostia aux (MP for shields, extra CC, a ghost '
+          'that helps farming).\n'
+          '• Swordia main → Magicka aux for sustained damage; Corporia for '
+          'burst builds.\n'
+          '• Ghostia main → Corporia aux (survivability without eating the '
+          'ghost\'s mana); Magicka as the alternative.\n'
+          '• Literatia main → Magicka for F2P/low spenders; Corporia or '
+          'Ghostia for committed dual-pathers.'),
+      para('Aux paths and cultivation: from Voidbreak through Wholeness the '
+          'aux enables the Strive overcap play — reach half-step in '
+          'Voidbreak, then at Wholeness hold your main at Middle G1 and pump '
+          'the aux at Early G20 until absorption overcaps (~404% at Wholeness '
+          'completion), then level the main normally keeping the aux a minor '
+          'realm behind. An Early path always counts below a Middle path for '
+          'Strive, so the bonus keeps applying. This is why the calculator\'s '
+          '120% Strive warning only applies to mortal-world stages.'),
+      para('The calculator models one path at a time — enter the numbers for '
+          'whichever path you\'re actively cultivating.'),
+    ]);
+
     return DefaultTabController(
-      length: 5,
+      length: 7,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -371,6 +417,8 @@ class GuideTab extends StatelessWidget {
             Tab(text: 'Nascent Soul'),
             Tab(text: 'Incarnation'),
             Tab(text: 'Voidbreak+'),
+            Tab(text: 'Pets'),
+            Tab(text: 'Aux Paths'),
           ],
         ),
         Expanded(
@@ -380,6 +428,8 @@ class GuideTab extends StatelessWidget {
             nascent,
             incarnation,
             voidbreak,
+            pets,
+            aux,
           ]),
         ),
       ]),
