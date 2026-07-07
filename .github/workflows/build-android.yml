@@ -22,7 +22,7 @@ jobs:
           java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.27.1"
+          flutter-version: "3.44.5"
           channel: stable
       - name: Sync data tables into assets
         run: ./sync_data.sh
