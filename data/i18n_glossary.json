@@ -1,0 +1,548 @@
+{
+ "Novice": {
+  "ru": "Неофит",
+  "de": "Anfänger",
+  "es": "Principiante",
+  "zh": "凡躯",
+  "src": "exact"
+ },
+ "Connection": {
+  "ru": "Подключение",
+  "de": "Verbindung",
+  "es": "Conexión",
+  "zh": "练气",
+  "src": "exact"
+ },
+ "Foundation": {
+  "ru": "Фундамент",
+  "de": "Stiftung",
+  "es": "Fundación",
+  "zh": "筑基/锻骨",
+  "src": "exact"
+ },
+ "Virtuoso": {
+  "ru": "Сотворение",
+  "de": "Virtuoso",
+  "es": "Virtuoso",
+  "zh": "练腑",
+  "src": "exact"
+ },
+ "Nascent Soul": {
+  "ru": "Пробуждение",
+  "de": "Werdende Seele",
+  "es": "Alma Naciente",
+  "zh": "元婴/元武/元罡/元冥",
+  "src": "exact"
+ },
+ "Incarnation": {
+  "ru": "Формирование",
+  "de": "Menschwerdung",
+  "es": "Encarnación",
+  "zh": "化神期",
+  "src": "exact"
+ },
+ "Voidbreak": {
+  "ru": "Преодоление",
+  "de": "Leerenbruch",
+  "es": "Ruptura del Vacío",
+  "zh": "万象破虚",
+  "src": "exact"
+ },
+ "Wholeness": {
+  "ru": "Слияние",
+  "de": "Ganzheit",
+  "es": "Plenitud",
+  "zh": "合",
+  "src": "exact"
+ },
+ "Perfection": {
+  "ru": "Совершенство",
+  "de": "Perfektion",
+  "es": "Perfección",
+  "zh": "大乘/大乘",
+  "src": "exact"
+ },
+ "Nirvana": {
+  "ru": "Нирвана",
+  "de": "Nirwana",
+  "es": "Nirvana",
+  "zh": "脱胎",
+  "src": "exact"
+ },
+ "Celestial": {
+  "ru": "Небесный",
+  "de": "Himmlisch",
+  "es": "Celestial",
+  "zh": "象",
+  "src": "exact"
+ },
+ "Early": {
+  "ru": "Начальная",
+  "de": "Früh",
+  "es": "Inicial",
+  "zh": "前期",
+  "src": "exact"
+ },
+ "Middle": {
+  "ru": "Средняя",
+  "de": "Mitte",
+  "es": "Intermedio",
+  "zh": "中期",
+  "src": "exact"
+ },
+ "Late": {
+  "ru": "(Поздняя)",
+  "de": "Spät",
+  "es": "Fase final",
+  "zh": "后期",
+  "src": "exact"
+ },
+ "Grade": {
+  "ru": "Ступень",
+  "de": "Grad",
+  "es": "Rango",
+  "zh": "",
+  "src": "exact"
+ },
+ "Stage": {
+  "ru": "Стадия",
+  "de": "Bühne",
+  "es": "Etapa",
+  "zh": "期",
+  "src": "exact"
+ },
+ "Breakthrough": {
+  "ru": "Переход",
+  "de": "Durchbruch",
+  "es": "Adelante",
+  "zh": "突破",
+  "src": "exact"
+ },
+ "Cultivation Speed": {
+  "ru": "Скорость совершенствования",
+  "de": "Anbaugeschwindigkeit",
+  "es": "Velocidad de cultivo",
+  "zh": "修炼速度",
+  "src": "exact"
+ },
+ "Absorption Ratio": {
+  "ru": "Эфф. поглощения",
+  "de": "Absorptionsverhältnis",
+  "es": "Relación de absorción",
+  "zh": "吸收率",
+  "src": "exact"
+ },
+ "Abode Aura": {
+  "ru": "Аура обители",
+  "de": "Wohnsitz-Aura",
+  "es": "Aura de la morada",
+  "zh": "洞府灵气",
+  "src": "exact"
+ },
+ "Cultivation EXP": {
+  "ru": "Опыт дао",
+  "de": "Anbau-EXP",
+  "es": "EXP de Cultivo",
+  "zh": "境界修为",
+  "src": "exact"
+ },
+ "Strive": {
+  "ru": "Стремление",
+  "de": "Streben",
+  "es": "Esfuerzo",
+  "zh": "奋起",
+  "src": "exact"
+ },
+ "Aura Gem": {
+  "ru": "Самоцвет ауры",
+  "de": "Aura-Juwel",
+  "es": "Gema de aura",
+  "zh": "纳灵石",
+  "src": "exact"
+ },
+ "Aura Storage": {
+  "ru": "Хранилище ауры",
+  "de": "Aura-Speicher",
+  "es": "Reserva de aura",
+  "zh": "灵气累计",
+  "src": "exact"
+ },
+ "Common": {
+  "ru": "Обыч.",
+  "de": "Gemeinsam",
+  "es": "Común",
+  "zh": "荒废",
+  "src": "exact"
+ },
+ "Uncommon": {
+  "ru": "Необыч.",
+  "de": "Ungewöhnlich",
+  "es": "Poco común",
+  "zh": "绿色",
+  "src": "exact"
+ },
+ "Rare": {
+  "ru": "Редк.",
+  "de": "Selten",
+  "es": "Raro",
+  "zh": "蓝色",
+  "src": "exact"
+ },
+ "Epic": {
+  "ru": "Эпич.",
+  "de": "Epos",
+  "es": "Épico",
+  "zh": "紫色",
+  "src": "exact"
+ },
+ "Legendary": {
+  "ru": "Легендарн.",
+  "de": "Legendär",
+  "es": "Legendario",
+  "zh": "橙色",
+  "src": "exact"
+ },
+ "Mythic": {
+  "ru": "Мифич.",
+  "de": "Mythisch",
+  "es": "Mítico",
+  "zh": "超越仙品",
+  "src": "exact"
+ },
+ "Respira": {
+  "ru": "Дыхание ци",
+  "de": "Atmung",
+  "es": "Inhala",
+  "zh": "吐纳",
+  "src": "exact"
+ },
+ "Respira Attempts": {
+  "ru": "Попытки дыхания ци",
+  "de": "Atemversuche",
+  "es": "Intentos de respiración",
+  "zh": "额外吐纳次数",
+  "src": "exact"
+ },
+ "Today's Attempts": {
+  "ru": "Сегодняшние попытки: %d/%d",
+  "de": "Heutige Versuche: %d/%d",
+  "es": "Intentos de hoy: %d/%d",
+  "zh": "",
+  "src": "via \"Today's Attempts: %d/%d\""
+ },
+ "Cultivation Pill": {
+  "ru": "Пилюля дао",
+  "de": "Kultivierungspille",
+  "es": "Píldora de cultivo",
+  "zh": "道行丹",
+  "src": "exact"
+ },
+ "Cultivation Pill Effect": {
+  "ru": "Эффект пилюли дао",
+  "de": "Wirkung der Kultivierungspille",
+  "es": "Efecto de la Píldora de Cultivo",
+  "zh": "修为丹服用效果",
+  "src": "exact"
+ },
+ "Reinvigoration Pill": {
+  "ru": "Пилюля бодрости",
+  "de": "Revitalisierungspille",
+  "es": "Píldora de reinvigoración",
+  "zh": "归元丹",
+  "src": "exact"
+ },
+ "Dracospirit Pill": {
+  "ru": "Пилюля духа дракона",
+  "de": "Dracospirit-Pille",
+  "es": "Píldora Dracoespíritu",
+  "zh": "龙灵丹",
+  "src": "exact"
+ },
+ "Star Mark": {
+  "ru": "Звездная метка",
+  "de": "Stern Mark",
+  "es": "Marca Estelar",
+  "zh": "星痕",
+  "src": "exact"
+ },
+ "Pill": {
+  "ru": "Пилюля",
+  "de": "Pille",
+  "es": "Píldora",
+  "zh": "药",
+  "src": "exact"
+ },
+ "Creation Artifact": {
+  "ru": "Артефакт творения",
+  "de": "Schöpfungsartefakt",
+  "es": "Artefacto de la Creación",
+  "zh": "造化至宝",
+  "src": "exact"
+ },
+ "Vase": {
+  "ru": "Ваза",
+  "de": "Vase",
+  "es": "Jarrón",
+  "zh": "净瓶",
+  "src": "exact"
+ },
+ "Mirror": {
+  "ru": "Зеркало",
+  "de": "Spiegel",
+  "es": "Espejo",
+  "zh": "早",
+  "src": "exact"
+ },
+ "Pearl": {
+  "ru": "Жемчужное дерево",
+  "de": "Perlholz",
+  "es": "Madera Perla",
+  "zh": "琅玕木",
+  "src": "via 'Pearlwood'"
+ },
+ "Energy": {
+  "ru": "Энергия",
+  "de": "Energie",
+  "es": "Energía",
+  "zh": "能量",
+  "src": "exact"
+ },
+ "Charge": {
+  "ru": "Зарядить",
+  "de": "Aufladung",
+  "es": "Cargar",
+  "zh": "罪名",
+  "src": "exact"
+ },
+ "Myrimon Fruit": {
+  "ru": "Фрукт Миримона",
+  "de": "Myrimon-Frucht",
+  "es": "Fruta Myrimon",
+  "zh": "万妖果",
+  "src": "exact"
+ },
+ "Myrimon Soul": {
+  "ru": "Душа Миримона",
+  "de": "Myrimon Seele",
+  "es": "Alma de Mírimon",
+  "zh": "万妖魄",
+  "src": "exact"
+ },
+ "Aura Extractor": {
+  "ru": "Извлекатель ауры",
+  "de": "Aura-Extraktor",
+  "es": "Extractora de Aura",
+  "zh": "化灵台",
+  "src": "exact"
+ },
+ "Aura Orb": {
+  "ru": "Сферы ауры ×%d",
+  "de": "Aura-Kugeln ×%d",
+  "es": "Orbes de aura ×%d",
+  "zh": "",
+  "src": "via 'Aura Orbs ×%d'"
+ },
+ "Gush": {
+  "ru": "Поток",
+  "de": "Schwall",
+  "es": "Oleada",
+  "zh": "灵涌",
+  "src": "via '<color=#f4e4a2>Gush guaranteed next time</color>' (fruit context)"
+ },
+ "Quality": {
+  "ru": "Качество",
+  "de": "Qualität",
+  "es": "Calidad",
+  "zh": "品质",
+  "src": "exact"
+ },
+ "Cultivation Bonus": {
+  "ru": "Бонус совершенствования",
+  "de": "Anbaubonus",
+  "es": "Bono de cultivo",
+  "zh": "修炼增幅",
+  "src": "exact"
+ },
+ "High Rank": {
+  "ru": "Высокий ранг",
+  "de": "Hoher Rang",
+  "es": "Rango alto",
+  "zh": "高品",
+  "src": "exact"
+ },
+ "Extractor": {
+  "ru": "Извлекатель ауры",
+  "de": "Aura-Extraktor",
+  "es": "Extractora de Aura",
+  "zh": "化灵台",
+  "src": "via 'Aura Extractor'"
+ },
+ "Longevity": {
+  "ru": "Долголетие",
+  "de": "Langlebigkeit",
+  "es": "Longevidad",
+  "zh": "长生诀",
+  "src": "exact"
+ },
+ "Energy Unification": {
+  "ru": "Слияние энергии",
+  "de": "Energievereinigung",
+  "es": "Unificación de Energía",
+  "zh": "三花聚顶",
+  "src": "exact"
+ },
+ "Rejuvenation": {
+  "ru": "Омоложение",
+  "de": "Verjüngung",
+  "es": "Rejuvenecimiento",
+  "zh": "五气朝元",
+  "src": "exact"
+ },
+ "Demon Spire": {
+  "ru": "Башня демонов",
+  "de": "Dämonenturm",
+  "es": "Aguja Demoníaca",
+  "zh": "镇妖塔",
+  "src": "exact"
+ },
+ "Realm Abyss": {
+  "ru": "Бездна царства",
+  "de": "Reichsabgrund",
+  "es": "Abismo del Reino",
+  "zh": "秘境深渊",
+  "src": "exact"
+ },
+ "Cultivation Ruins": {
+  "ru": "Руины совершенствования",
+  "de": "Kultivierungsruinen",
+  "es": "Ruinas de cultivo",
+  "zh": "修真遗迹",
+  "src": "exact"
+ },
+ "Fateum": {
+  "ru": "Печать судьбы",
+  "de": "Fateum",
+  "es": "Fateum",
+  "zh": "机缘阁",
+  "src": "exact"
+ },
+ "Jiang Ziya": {
+  "ru": "Цзян Цзыя",
+  "de": "Jiang Ziya",
+  "es": "Jiang Ziya",
+  "zh": "姜子牙",
+  "src": "exact"
+ },
+ "Taotie": {
+  "ru": "Таоте",
+  "de": "Taotie",
+  "es": "Tao Tie",
+  "zh": "饕餮",
+  "src": "exact"
+ },
+ "Iron Fan": {
+  "ru": "Железный веер",
+  "de": "Eisenfächer",
+  "es": "Abanico de Hierro",
+  "zh": "铁扇",
+  "src": "exact"
+ },
+ "Daji": {
+  "ru": "Дацзи",
+  "de": "Daji",
+  "es": "Daji",
+  "zh": "妲己",
+  "src": "exact"
+ },
+ "Shen Gongbao": {
+  "ru": "Шэнь Гунбао",
+  "de": "Shen Gongbao",
+  "es": "Shen Gongbao",
+  "zh": "申公豹",
+  "src": "exact"
+ },
+ "Macaque": {
+  "ru": "Шестиухая макака",
+  "de": "Sechsohriger Makaken",
+  "es": "Mono de seis orejas",
+  "zh": "六耳猕猴",
+  "src": "via 'Six Eared Macaque'"
+ },
+ "Crane Boy": {
+  "ru": "Мальчик-журавленок",
+  "de": "Kranichjunge",
+  "es": "Niño grulla",
+  "zh": "白鹤童子",
+  "src": "exact"
+ },
+ "Yang Spirit Jade": {
+  "ru": "Духовный нефрит ян",
+  "de": "Yang-Geist-Jade",
+  "es": "Jade Espiritual Yang",
+  "zh": "离阳灵玉",
+  "src": "exact"
+ },
+ "Dongxuan's Pot": {
+  "ru": "Сосуд Дунсюаня",
+  "de": "Dongxuans Topf",
+  "es": "Jarrón de Dongxuan",
+  "zh": "洞玄玉壶",
+  "src": "exact"
+ },
+ "Golden Core": {
+  "ru": "Золотое ядро",
+  "de": "Goldener Kern",
+  "es": "Núcleo Dorado",
+  "zh": "九转金丹功",
+  "src": "exact"
+ },
+ "Server": {
+  "ru": "Сервер",
+  "de": "Server",
+  "es": "Servidor",
+  "zh": "面",
+  "src": "exact"
+ },
+ "Daily Reset": {
+  "ru": "Ежедневное время сброса Auto Blitz",
+  "de": "Tägliche Rücksetzzeit von Auto Blitz",
+  "es": "Hora del reinicio diario del Asalto Automático",
+  "zh": "自动闭关每天刷新时间",
+  "src": "via 'Daily reset time of Auto Blitz'"
+ },
+ "Immortal Friend": {
+  "ru": "Бессмертный Друг",
+  "de": "Rangliste der Unsterblicher Freunde",
+  "es": "Amigo inmortal",
+  "zh": "仙友榜",
+  "src": "exact"
+ },
+ "Technique": {
+  "ru": "Техника",
+  "de": "Technik",
+  "es": "Técnica",
+  "zh": "功法修炼",
+  "src": "exact"
+ },
+ "Half-step": {
+  "ru": "Половина",
+  "de": "Halber Schritt zu",
+  "es": "A mitad de camino de",
+  "zh": "",
+  "src": "via 'Half Step to %s'"
+ },
+ "Fatevillon": {
+  "ru": "Чертог судьбы",
+  "de": "Fatevillion",
+  "es": "Fatevillion",
+  "zh": "天机阁置换",
+  "src": "exact 'Fatevillion'"
+ },
+ "Dailies": {
+  "ru": "Ежедневн.",
+  "de": "Täglich",
+  "es": "Diario",
+  "zh": "每日提示",
+  "src": "via 'Daily'"
+ }
+}
