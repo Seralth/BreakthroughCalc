@@ -11,7 +11,7 @@ import 'reference.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.7.1';
+const appVersion = '2.7.2';
 
 // ---- update check -----------------------------------------------------------
 
