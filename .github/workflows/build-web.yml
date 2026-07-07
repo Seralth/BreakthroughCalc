@@ -2,7 +2,8 @@ name: Deploy Web (PWA)
 
 on:
   push:
-    tags: ["v*"]
+    branches: [master]
+    paths: ["mobile/**", "data/**", ".github/workflows/build-web.yml"]
   workflow_dispatch:
 
 permissions:
