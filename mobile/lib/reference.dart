@@ -224,8 +224,58 @@ class ReferenceTab extends StatelessWidget {
           'Claim before it caps — the calculator assumes you always do.'),
     ]);
 
+    final novice = page([
+      Text('Novice → Foundation', style: h3),
+      para('• Breakthrough to Connection immediately.\n'
+          '• Only blue pills at first; don\'t max attempts before the quest '
+          'pill bag arrives.\n'
+          '• Save 5–10 attempts for F10; spend pills mainly to push stage '
+          'breakthroughs.\n'
+          '• Save blue/purple pill materials for F9–F10.\n'
+          '• Max Longevity (+1 Respira) before the Foundation breakthrough.\n'
+          '• In Foundation, unlock Energy Unification before spending Respira, '
+          'and hold pill attempts until Foundation Late + Rejuvenation T3.\n'
+          '• Farm array materials early (violetite/frostite).'),
+    ]);
+
+    final virtuoso = page([
+      Text('Virtuoso', style: h3),
+      para('• Usually reached by the end of day 1.\n'
+          '• Myrimon unlocks here — see the Myrimon & Extractor tab. First-week '
+          'uses don\'t stack: run the highest realm daily; afterwards save for '
+          'Sunday or the next BR threshold.\n'
+          '• Clear realm abyss/cultivation ruins for all three Virtuoso realms.'),
+    ]);
+
+    final nascent = page([
+      Text('Nascent Soul', style: h3),
+      para('• F2P pace: roughly day 3; about 3 days to Late, then about 3 more '
+          'to Incarnation.\n'
+          '• Strive unlocks here — the Strive readout and "Server #1\'s Stage" '
+          'input start mattering for long-range estimates.\n'
+          '• Keep story/spire/realms maxed.'),
+    ]);
+
+    final incarnation = page([
+      Text('Incarnation', style: h3),
+      para('• Max the extractor (Quality first) and keep stockpiling fruits; '
+          'base fruit EXP gets +50% at extractor rank match.\n'
+          '• Eat the stockpile before the realm timegate (50% loss after) or on '
+          'the last day before your breakthrough.\n'
+          '• Pre-Voidbreak: spend pills/Respira (they reset), don\'t claim pill '
+          'bags until after ascension, spend Fatevillon tokens first.'),
+    ]);
+
+    final voidbreak = page([
+      Text('Voidbreak and beyond', style: h3),
+      para('• Dailies/pill bags reset on ascension.\n'
+          '• Each realm has its own Myrimon tier (R6+ fruits).\n'
+          '• Strive may exceed 120% legitimately from Voidbreak on (overcap); '
+          'the calculator\'s 120% warning applies to the mortal world only.'),
+    ]);
+
     return DefaultTabController(
-      length: 4,
+      length: 9,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -235,6 +285,11 @@ class ReferenceTab extends StatelessWidget {
             Tab(text: 'Pills & Respira'),
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
+            Tab(text: 'Novice–Foundation'),
+            Tab(text: 'Virtuoso'),
+            Tab(text: 'Nascent Soul'),
+            Tab(text: 'Incarnation'),
+            Tab(text: 'Voidbreak+'),
           ],
         ),
         Expanded(
@@ -243,6 +298,11 @@ class ReferenceTab extends StatelessWidget {
             pills,
             myrimon,
             artifacts,
+            novice,
+            virtuoso,
+            nascent,
+            incarnation,
+            voidbreak,
           ]),
         ),
       ]),
