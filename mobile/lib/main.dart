@@ -454,11 +454,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Breakthrough Calculator'),
-          bottom: const TabBar(tabs: [Tab(text: 'Calculator'), Tab(text: 'Reference')]),
+          bottom: const TabBar(tabs: [Tab(text: 'Calculator'), Tab(text: 'Reference'), Tab(text: 'Guide')]),
           actions: [
             PopupMenuButton<String>(
               icon: const Icon(Icons.palette_outlined),
@@ -495,7 +495,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             ),
           ],
         ),
-        body: TabBarView(children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog)]),
+        body: TabBarView(children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog), const GuideTab()]),
       ),
     );
   }
