@@ -7,6 +7,7 @@ import os
 import sys
 
 from PySide6.QtCore import QEvent, QObject, Qt
+from PySide6.QtGui import QGuiApplication, QWheelEvent
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
@@ -19,13 +20,39 @@ from PySide6.QtWidgets import (
 
 class _WheelGuard(QObject):
     """Swallow wheel events on unfocused spin/combo widgets so scrolling the
-    form doesn't silently change values (Qt steps them even without focus)."""
+    form doesn't silently change values (Qt steps them even without focus).
+
+    The event is re-dispatched to the enclosing QScrollArea's viewport so the
+    page still scrolls while the cursor is over one of the many spinboxes.
+    The viewport itself has no filter installed, so this cannot recurse."""
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Wheel and not obj.hasFocus():
             event.ignore()
+            self._forward_to_scroll_area(obj, event)
             return True
         return super().eventFilter(obj, event)
+
+    @staticmethod
+    def _forward_to_scroll_area(obj, event):
+        parent = obj.parent()
+        while parent is not None and not isinstance(parent, QScrollArea):
+            parent = parent.parent()
+        if parent is None:
+            return
+        viewport = parent.viewport()
+        clone = QWheelEvent(
+            viewport.mapFromGlobal(event.globalPosition()),
+            event.globalPosition(),
+            event.pixelDelta(),
+            event.angleDelta(),
+            event.buttons(),
+            event.modifiers(),
+            event.phase(),
+            event.inverted(),
+            event.source(),
+        )
+        QApplication.sendEvent(viewport, clone)
 
 from . import theme
 from .engine import Engine, Inputs, fmt_days, load_pill_sources
@@ -96,6 +123,8 @@ class MainWindow(QMainWindow):
         self._settings_file = settings_path()
         self._loading = True
         self._theme = self._read_store().get("theme", "Seralth")
+        if self._theme not in theme.THEMES:  # unknown persisted name -> default
+            self._theme = "Seralth"
         self._acc = theme.accents(self._theme)
         self._muted_labels = []
         self._build_ui()
@@ -594,6 +623,9 @@ class MainWindow(QMainWindow):
             w.toggled.connect(self.recalc)
         self._install_wheel_guard()
         self._install_tooltips()
+        hints = QGuiApplication.styleHints()
+        if hasattr(hints, "colorSchemeChanged"):  # Qt >= 6.5
+            hints.colorSchemeChanged.connect(self._on_color_scheme_changed)
 
     def _install_wheel_guard(self):
         self._wheel_guard = _WheelGuard(self)
@@ -607,7 +639,9 @@ class MainWindow(QMainWindow):
             self.speed: "The in-game Cultivation Speed: XP gained per 8-second Cosmoapsis tick.",
             self.absorb: "Your Absorption Ratio as a percent (e.g. 27.5). Shown below is the Stage's base for the selected Grade.",
             self.completion: "How far into the current Grade you are, as a percent.",
-            self.gem: "Aura Gem rarity. Modeled as a flat cultivation speed-up (Donk's approximation of the storage mechanic).",
+            self.gem: "Aura Gem rarity. In-game it's claimable storage that accrues gem% of your cultivation speed "
+                      "(up to 18-32h per claim); modeled as a continuous speed multiplier on cultivation only — "
+                      "pills/Respira are flat XP and are NOT boosted by the gem.",
             self.target: "Optional: a future Stage to time your arrival at.",
             self.pill_limit: "Daily pill-use limit that caps Gold/Purple/Blue usage.",
             self.pearl_xp10: "Timereversal Pearl: EXP granted per 10 energy.",
@@ -867,6 +901,11 @@ class MainWindow(QMainWindow):
         self._rebuild_info_tab()
         self.recalc()
         obj = self._read_store(); obj["theme"] = name; self._write_store(obj)
+
+    def _on_color_scheme_changed(self, *_):
+        # Re-apply only when tracking the OS scheme; explicit themes are static.
+        if self._theme == "System":
+            self._on_theme_changed("System")
 
     # ---- A/B compare -----------------------------------------------------
     def _pin_results(self):

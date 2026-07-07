@@ -378,13 +378,16 @@ class Engine {
     final lQual = lvl(inp.lvlQuality);
 
     final gc = _num(lGush['gush_chance']);
-    final gxm = _num(lCulti['gush_xp']);
-    final eGush = (1 - gc) + gc * gxm;
+    // Gush multiplier is on the Gush track (in-game verified 2026-07-07;
+    // mirrors engine.py — keep in lockstep).
+    final gxm = _num(lGush['gush_xp']);
 
     final cultiMult = 1 + _num(lCulti['culti_xp']);
     final ext = (data['extractor_chance'] as Map<String, dynamic>)[inp.extractorRarity];
     final extList = ext != null ? [for (final x in ext as List) _num(x)] : [1.0, 0, 0, 0, 0, 0];
-    final thresholds = [1, 6, 11, 16, 21, 26];
+    // Extractor rarity rank grants +20% orb EXP to tiers 1..rank (no Common line).
+    const ranks = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'];
+    final rankIdx = math.max(0, ranks.indexOf(inp.extractorRarity));
     final quals = lQual['quality'] as List;
     final qmults = data['quality_mult'] as List;
     // Quality rows sum to 1.0 (levels 0-10) or 0.7 (levels 11+); the extractor
@@ -396,12 +399,14 @@ class Engine {
     var eQ = 0.0;
     for (var i = 0; i < qmults.length; i++) {
       final p = _num(quals[i]) + (extTot > 0 ? extList[i] / extTot * residual : 0.0);
-      eQ += p * (cultiMult + (inp.lvlCulti >= thresholds[i] ? 0.2 : 0.0)) * _num(qmults[i]);
+      eQ += p * (cultiMult + (i >= 1 && i <= rankIdx ? 0.2 : 0.0)) * _num(qmults[i]);
     }
 
+    // gc is the RANDOM trigger rate; the every-6th pity is on top.
     final n = inp.fruitCount;
-    final mean = base * n * eGush * eQ;
     final g = n.toInt() ~/ gushGuaranteeEvery;
+    final expGushes = g + (n - g) * gc;
+    final mean = base * eQ * (n + expGushes * (gxm - 1));
     final varGushCount = (n - g) * gc * (1 - gc);
     final varTotal =
         math.pow(base * eQ, 2) * math.pow(gxm - 1, 2) * varGushCount;
@@ -468,21 +473,15 @@ class Engine {
       return math.max(1e-12, abode * _num(row['low']) * (1 + s));
     }
 
-    // If today's dailies are already spent, the first real day runs at base
-    // speed (pills deferred, gem still applies), daily rate resuming after — a
-    // piecewise model so a stronger daily setup never increases a short estimate.
-    final baseDay = 86400.0 * (1 + gem);
-    double days(double xpSeconds) {
-      final full = (1 + gem) * (1 + pillRatio);
-      if (!inp.dailiesDone) return xpSeconds / 86400.0 / full;
-      if (xpSeconds <= baseDay) return xpSeconds / 86400.0 / (1 + gem);
-      return 1.0 + (xpSeconds - baseDay) / 86400.0 / full;
-    }
-
+    // Per-row wall-clock integration: gem multiplies cultivation speed only;
+    // pills/Respira are flat daily XP on top. With dailiesDone the first 24h
+    // run without the daily XP (mirrors engine.py — keep in lockstep).
+    final dailyRate = dailyXp / 86400.0;
     final startCredit = fruitXp;
 
-    double rawSeconds(int upto) {
+    double realSeconds(int upto) {
       var credit = startCredit;
+      var nopillLeft = inp.dailiesDone ? 86400.0 : 0.0;
       var total = 0.0;
       final remainingCur =
           _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
@@ -490,10 +489,25 @@ class Engine {
         final xp = j == idx ? remainingCur : _num(rows[j]['grade_xp']);
         final take = math.min(credit, xp);
         credit -= take;
-        total += (xp - take) / speed(rows[j]) * tickSeconds;
+        var left = xp - take;
+        final baseRate = speed(rows[j]) * (1 + gem) / tickSeconds;
+        if (nopillLeft > 0.0 && left > 0.0) {
+          final secNp = left / baseRate;
+          if (secNp <= nopillLeft) {
+            nopillLeft -= secNp;
+            total += secNp;
+            continue;
+          }
+          left -= baseRate * nopillLeft;
+          total += nopillLeft;
+          nopillLeft = 0.0;
+        }
+        total += left / (baseRate + dailyRate);
       }
       return total;
     }
+
+    double days(double wallSeconds) => wallSeconds / 86400.0;
 
     var pend = idx;
     while (pend + 1 < rows.length &&
@@ -507,7 +521,7 @@ class Engine {
     }
 
     final effPerDay =
-        inp.cultiSpeed * (86400.0 / tickSeconds) * (1 + gem) * (1 + pillRatio);
+        inp.cultiSpeed * (86400.0 / tickSeconds) * (1 + gem) + dailyXp;
 
     List<double> band(double tDays) {
       if (effPerDay <= 0 || (varUpfront <= 0 && varDaily <= 0)) {
@@ -518,15 +532,15 @@ class Engine {
       return [math.max(0.0, tDays - _bandZ * sdDays), tDays + _bandZ * sdDays];
     }
 
-    res.phaseDays = days(rawSeconds(pend));
-    res.stageDays = days(rawSeconds(send));
+    res.phaseDays = days(realSeconds(pend));
+    res.stageDays = days(realSeconds(send));
     res.phaseBand = band(res.phaseDays);
     res.stageBand = band(res.stageDays);
 
     if (inp.targetStage.isNotEmpty && inp.targetStage != inp.stage) {
       final tstart = stageStartIndex(inp.targetStage);
       if (tstart > idx) {
-        res.targetDays = days(rawSeconds(tstart - 1));
+        res.targetDays = days(realSeconds(tstart - 1));
         res.targetBand = band(res.targetDays);
         res.targetValid = true;
       } else if (tstart >= 0) {
@@ -541,7 +555,7 @@ class Engine {
     res.abodeAura = abode;
     res.strive = strive;
     res.baseXpPerDay = inp.cultiSpeed * (86400.0 / tickSeconds);
-    res.effectiveXpPerDay = res.baseXpPerDay * (1 + gem) * (1 + pillRatio);
+    res.effectiveXpPerDay = res.baseXpPerDay * (1 + gem) + dailyXp;
     res.pillXpPerDay = pills['xp_per_day']!;
     res.pillSpeedup = pillRatio;
     res.gemSpeedup = gem;

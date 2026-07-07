@@ -321,6 +321,79 @@ class FruitQualityDistribution(unittest.TestCase):
                 self.assertLessEqual(a, b + 1e-9, msg=f"lvl {lvl}: {means}")
 
 
+class ScreenshotGroundTruth2026_07_07(unittest.TestCase):
+    """Pinned to in-game readings (Incarnation (L) Middle G1, extractor at
+    Mortal World rank Epic, tracks Culti 20 / Quality 15 / Gush 14)."""
+
+    def setUp(self):
+        self.e = Engine()
+        self.fl = self.e.data["fruit_levels"]
+
+    def test_culti_bonus_is_4pct_per_level(self):
+        # Upgrade panel: "Crafting yields 80% Aura Orb cultivation. (+4%)" at Lv20.
+        self.assertAlmostEqual(self.fl["20"]["culti_xp"], 0.80)
+        for lvl in range(31):
+            self.assertAlmostEqual(self.fl[str(lvl)]["culti_xp"], 0.04 * lvl)
+
+    def test_gush_track_readings(self):
+        # Stats panel at Gush 14: trigger rate 20.0% (pity listed separately),
+        # gush orbs +206% EXP; intro: base multiplier 150%.
+        self.assertAlmostEqual(self.fl["14"]["gush_chance"], 0.20)
+        self.assertAlmostEqual(self.fl["14"]["gush_xp"], 2.06)
+        self.assertAlmostEqual(self.fl["0"]["gush_xp"], 1.5)
+
+    def test_orb_quality_distribution_matches_extractor_panel(self):
+        # Quality 15 + Epic extractor -> Blue 70 / Purple 30 (sums to 100).
+        qual = self.fl["15"]["quality"]
+        ext = self.e.data["extractor_chance"]["Epic"]
+        residual = 1.0 - sum(qual)
+        p = [q + x / sum(ext) * residual for q, x in zip(qual, ext)]
+        self.assertAlmostEqual(p[2], 0.70)
+        self.assertAlmostEqual(p[3], 0.30)
+        self.assertAlmostEqual(sum(p), 1.0)
+
+    def test_pity_gushes_add_to_mean(self):
+        # gc is the random rate; every 6th fruit gushes on top of it.
+        kw = dict(fruit_rank="R8", lvl_culti=20, lvl_quality=15, lvl_gush=14,
+                  extractor_rarity="Epic")
+        m6, _ = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
+        m5, _ = self.e._fruit_stats(base_inputs(fruit_count=5, **kw))
+        gc = self.fl["14"]["gush_chance"]
+        gxm = self.fl["14"]["gush_xp"]
+        # 6th fruit is the pity: contributes 1 fruit at the FULL gush multiplier.
+        per_fruit_gushed = (m5 / 5) / ((1 - gc) + gc * gxm) * gxm
+        self.assertAlmostEqual(m6, m5 + per_fruit_gushed, places=6)
+
+    def test_gush_multiplier_keyed_by_gush_level(self):
+        # Raising the Gush track (not the Culti track) must raise the payout.
+        kw = dict(fruit_rank="R8", fruit_count=5, lvl_culti=20, lvl_quality=15,
+                  extractor_rarity="Epic")
+        lo, _ = self.e._fruit_stats(base_inputs(lvl_gush=0, **kw))
+        hi, _ = self.e._fruit_stats(base_inputs(lvl_gush=14, **kw))
+        self.assertGreater(hi, lo)
+
+    def test_gem_does_not_multiply_pill_xp(self):
+        # Aura Gem is claimable storage of gem% x cultivation speed; pills are
+        # flat XP. Effective rate must be base*(1+gem) + daily, not
+        # base*(1+gem)*(1+pills).
+        kw = dict(pill_rank="4R", pill_limit=10, gold_per_day=2,
+                  purple_per_day=4, blue_per_day=4, pill_effect=0.154)
+        r = self.e.calculate(base_inputs(aura_gem="Mythic", **kw))
+        expected = r.base_xp_per_day * 1.28 + r.pill_xp_per_day
+        self.assertAlmostEqual(r.effective_xp_per_day, expected, places=6)
+
+    def test_orb_exp_boost_gated_by_extractor_rank(self):
+        # Epic rank boosts Uncommon..Epic orb tiers by +20%; a Common extractor
+        # boosts nothing. At quality 0 (all-Common orbs) rarity Epic vs Common
+        # must differ only via the residual fill, which is zero at quality<=10.
+        kw = dict(fruit_rank="R8", fruit_count=5, lvl_culti=20, lvl_gush=14)
+        m_c, _ = self.e._fruit_stats(base_inputs(
+            lvl_quality=0, extractor_rarity="Common", **kw))
+        m_e, _ = self.e._fruit_stats(base_inputs(
+            lvl_quality=0, extractor_rarity="Epic", **kw))
+        self.assertAlmostEqual(m_c, m_e, places=6)  # tier 0 gets no +20% either way
+
+
 class InputHardening(unittest.TestCase):
     def setUp(self):
         self.e = Engine()
@@ -342,6 +415,16 @@ class InputHardening(unittest.TestCase):
         a = self.e.calculate(neg)
         b = self.e.calculate(plain)
         self.assertAlmostEqual(a.stage_days, b.stage_days, places=9)
+
+
+class DataConsistency(unittest.TestCase):
+    def test_star_cost_column_matches_energy_discount(self):
+        # star[k][1] and artifact_energy_discount encode the same fact
+        # (mirror copy cost = 200 x (1 - disc%)); keep them from drifting.
+        e = Engine()
+        for k, disc in e.data["artifact_energy_discount"].items():
+            self.assertEqual(e.data["star"][k][1], 200 * (100 - disc) / 100,
+                             msg=f"star[{k}][1] disagrees with discount {disc}%")
 
 
 class Formatting(unittest.TestCase):
