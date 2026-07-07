@@ -8,3 +8,6 @@ __pycache__/
 apk_analysis/
 Il2CppDumper/
 ljd/
+
+# per-user app settings written next to the AppImage
+*.AppImage.settings.json

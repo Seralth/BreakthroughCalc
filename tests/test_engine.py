@@ -286,7 +286,62 @@ class RespiraAndBands(unittest.TestCase):
         kw = dict(fruit_rank="R3", lvl_culti=10, lvl_quality=10, lvl_gush=10)
         _, v6 = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
         _, v1 = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
-        self.assertAlmostEqual(v6, 5 * v1, places=6)
+        self.assertAlmostEqual(v6 / (5 * v1), 1.0, places=9)
+
+
+class FruitQualityDistribution(unittest.TestCase):
+    """The tier probabilities (quality level + extractor) must form a true
+    distribution, and a rarer extractor must never lower the projection."""
+
+    def setUp(self):
+        self.e = Engine()
+
+    def tier_probs(self, lvl_quality, rarity):
+        qual = self.e.data["fruit_levels"][str(lvl_quality)]["quality"]
+        ext = self.e.data["extractor_chance"][rarity]
+        residual = max(0.0, 1.0 - sum(qual))
+        ext_tot = sum(ext)
+        return [q + (x / ext_tot * residual if ext_tot > 0 else 0.0)
+                for q, x in zip(qual, ext)]
+
+    def test_probability_mass_is_one_for_all_combos(self):
+        for lvl in range(31):
+            for rarity in self.e.data["extractor_chance"]:
+                self.assertAlmostEqual(
+                    sum(self.tier_probs(lvl, rarity)), 1.0, places=9,
+                    msg=f"lvl {lvl} + {rarity}")
+
+    def test_better_extractor_never_lowers_mean(self):
+        order = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
+        kw = dict(fruit_rank="R8", fruit_count=10, lvl_culti=20, lvl_gush=20)
+        for lvl in (0, 5, 10, 11, 20, 30):
+            means = [self.e._fruit_stats(base_inputs(
+                lvl_quality=lvl, extractor_rarity=r, **kw))[0] for r in order]
+            for a, b in zip(means, means[1:]):
+                self.assertLessEqual(a, b + 1e-9, msg=f"lvl {lvl}: {means}")
+
+
+class InputHardening(unittest.TestCase):
+    def setUp(self):
+        self.e = Engine()
+
+    def test_grade_completion_clamped(self):
+        # completion > 1 must behave exactly like 100%, not go negative.
+        over = self.e.calculate(base_inputs(grade_completion=2.5))
+        full = self.e.calculate(base_inputs(grade_completion=1.0))
+        self.assertTrue(over.valid)
+        self.assertAlmostEqual(over.stage_days, full.stage_days, places=9)
+
+    def test_negative_strive_disables_dropoff(self):
+        # Absorption below the base band implies strive < 0; drop-off must not
+        # engage (a negative scale would make speeds RISE toward #1).
+        cur = base_inputs()
+        low = self.e.rows[self.e.row_index(cur.stage, cur.phase, cur.grade)]["low"]
+        neg = base_inputs(absorption_ratio=low * 0.9, top_stage="Incarnation")
+        plain = base_inputs(absorption_ratio=low * 0.9)
+        a = self.e.calculate(neg)
+        b = self.e.calculate(plain)
+        self.assertAlmostEqual(a.stage_days, b.stage_days, places=9)
 
 
 class Formatting(unittest.TestCase):

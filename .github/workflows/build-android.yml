@@ -26,14 +26,14 @@ jobs:
           channel: stable
       - name: Sync data tables into assets
         run: ./sync_data.sh
+      - name: Resolve dependencies
+        run: flutter pub get
       - name: Verify engine parity with the Python engine
         run: |
           python3 test/gen_expected.py
           dart run test/parity.dart
       - name: Build release APK
-        run: |
-          flutter pub get
-          flutter build apk --release
+        run: flutter build apk --release
       - name: Rename APK
         run: mv build/app/outputs/flutter-apk/app-release.apk BreakthroughCalculator.apk
       - uses: actions/upload-artifact@v4

@@ -33,7 +33,8 @@ from .engine import Engine, Inputs, fmt_days, load_pill_sources
 PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
 PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
 
-# Display-only canonical Stage names; internal data keys (and settings) stay unchanged.
+# Display-only canonical Stage names; internal data keys stay unchanged
+# (settings store the display names, via QComboBox.currentText()).
 STAGE_LABELS = {"Nascent": "Nascent Soul"}
 STAGE_KEYS = {v: k for k, v in STAGE_LABELS.items()}
 
@@ -100,6 +101,7 @@ class MainWindow(QMainWindow):
         self._build_ui()
         self._wire()
         self._on_stage_changed()
+        self._defaults = self._collect_state()  # canonical construction defaults
         self._load_settings()
         self._loading = False
         self.recalc()
@@ -125,7 +127,7 @@ class MainWindow(QMainWindow):
         self.speed = QDoubleSpinBox(); self.speed.setRange(0, 1e12); self.speed.setDecimals(2)
         self.absorb = QDoubleSpinBox(); self.absorb.setRange(0, 10000); self.absorb.setDecimals(3); self.absorb.setSuffix(" %")
         self.gem = QComboBox(); self.gem.addItems(list(self.engine.data["gem_bonus"].keys()))
-        self.target = QComboBox(); self.target.addItem(""); self.target.addItems(self.engine.stages())
+        self.target = QComboBox(); self.target.addItem(""); self.target.addItems([stage_disp(s) for s in self.engine.stages()])
         f.addRow("Stage", self.stage)
         f.addRow("Half-step", self.phase)
         f.addRow("Grade", self.grade)
@@ -724,6 +726,9 @@ class MainWindow(QMainWindow):
         if srcs is None and "pill_effect_pct" in vals:
             srcs = [["", vals["pill_effect_pct"]]]
         self._set_pill_sources(srcs if srcs is not None else [])
+        # fill in construction defaults for any keys the profile doesn't set,
+        # so switching profiles never carries over the previous profile's values
+        vals = {**self._defaults, **{k: v for k, v in vals.items() if v is not None}}
         wm = self._widget_map()
         # stage first so the phase/grade combos repopulate, then everything else
         for key in ["stage", "phase", "grade"] + [k for k in vals if k not in ("stage", "phase", "grade")]:
@@ -734,14 +739,17 @@ class MainWindow(QMainWindow):
                 v = PHASE_LABELS.get(str(v), v)
             if key in ("stage", "target", "top_stage"):
                 v = stage_disp(str(v))
-            if isinstance(w, QComboBox):
-                i = w.findText(str(v))
-                if i >= 0:
-                    w.setCurrentIndex(i)
-            elif isinstance(w, QCheckBox):
-                w.setChecked(bool(v))
-            else:
-                w.setValue(v)
+            try:
+                if isinstance(w, QComboBox):
+                    i = w.findText(str(v))
+                    if i >= 0:
+                        w.setCurrentIndex(i)
+                elif isinstance(w, QCheckBox):
+                    w.setChecked(bool(v))
+                else:
+                    w.setValue(v)
+            except (TypeError, ValueError):
+                pass  # tolerate hand-edited settings with wrong value types
         self._loading = prev
 
     # ---- profile store (JSON: {version, current, profiles: {name: state}}) ----
@@ -824,16 +832,7 @@ class MainWindow(QMainWindow):
         self.recalc()
 
     def _reset_profile(self):
-        prev, self._loading = self._loading, True
-        for w in self._widget_map().values():
-            if isinstance(w, QComboBox):
-                w.setCurrentIndex(0)
-            elif isinstance(w, QCheckBox):
-                w.setChecked(False)
-            else:
-                w.setValue(0)
-        self._set_pill_sources([])
-        self._loading = prev
+        self._apply_state(self._defaults)
         self.recalc()
 
     def _build_toolbar(self) -> QHBoxLayout:
@@ -928,12 +927,13 @@ class MainWindow(QMainWindow):
             for e in existing:
                 self._remove_pe_row(e)
         else:
-            value = float(src["percent"])
             if src.get("prompt", {}).get("kind") == "star_upgrade":
                 picked = self._ask_star_upgrade(src)
                 if picked is None:        # user cancelled
                     return
                 value = picked
+            else:
+                value = float(src["percent"]) if src.get("percent") else 0.0
             # drop a leftover blank placeholder row
             blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
             self._add_pe_row(src["name"], value)
@@ -994,7 +994,7 @@ class MainWindow(QMainWindow):
             msg += "  ⚠ over limit — extra pills won't count"
             self.pill_attempts.setStyleSheet(f"color: {self._acc['warn']};")
         else:
-            self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
+            self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};")
         self.pill_attempts.setText(msg)
 
     def _update_array_out(self):
@@ -1103,18 +1103,8 @@ class MainWindow(QMainWindow):
         rows = [
             ("Stage", self.stage.currentText()), ("Half-step", self.phase.currentText()),
             ("Grade", self.grade.currentText()),
-            ("Half-step breakthrough in", plain(self.o_phase.text())),
-            ("Stage breakthrough in", plain(self.o_stage.text())),
-            ("Target Stage reached in", plain(self.o_target.text())),
-            ("Abode Aura (implied)", self.o_abode.text()),
-            ("Cultivation XP / day", self.o_basexp.text()),
-            ("Effective XP / day", self.o_effxp.text()),
-            ("Pill XP / day", self.o_pillxp.text()),
-            ("Mythic pills / day", self.o_mythic.text()),
-            ("Respira XP / day", self.o_respira.text()),
-            ("XP from fruits", self.o_fruit.text()),
-            ("Fruit time saved", self.o_fruit_days.text()),
         ]
+        rows += [(text, plain(getattr(self, attr).text())) for text, attr in self.RESULT_ROWS]
         text = "\n".join(f"{k}: {v}" for k, v in rows)
         QApplication.clipboard().setText(text)
         self.copy_btn.setText("Copied ✓")

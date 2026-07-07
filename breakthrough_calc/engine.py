@@ -90,7 +90,7 @@ def load_pill_sources() -> list:
     try:
         with open(os.path.join(_BASE, "data", "pill_effect_sources.json")) as f:
             return json.load(f)
-    except OSError:
+    except (OSError, ValueError):
         return []
 
 
@@ -316,9 +316,17 @@ class Engine:
         thresholds = [1, 6, 11, 16, 21, 26]
         # Expected quality factor (treated as deterministic — the data models it
         # as an aggregate, not a single-tier draw, so only gush drives variance).
+        # The quality table rows sum to 1.0 (levels 0-10) or 0.7 (levels 11+);
+        # the extractor fills the missing mass at its rarity tier, so the tier
+        # probabilities always form a true distribution. (Naively adding the two
+        # tables double-counts up to 100% of the mass and makes a BETTER
+        # extractor lower the projection for mismatched combos.)
+        qual = l_qual["quality"]
+        residual = max(0.0, 1.0 - sum(qual))
+        ext_tot = sum(ext)
         e_q = 0.0
         for i, qmult in enumerate(self.data["quality_mult"]):
-            p = min(1.0, l_qual["quality"][i] + ext[i])
+            p = qual[i] + (ext[i] / ext_tot * residual if ext_tot > 0 else 0.0)
             e_q += p * (culti_mult + (0.2 if inp.lvl_culti >= thresholds[i] else 0.0)) * qmult
 
         n = inp.fruit_count
@@ -398,7 +406,9 @@ class Engine:
                 return _strive_shape(major)
 
             cur_shape = shape_at(idx, inp.stage)
-            if cur_gap > 0 and cur_shape > 0:
+            # strive <= 0 (absorption at/below base) cannot fade toward #1 —
+            # a negative scale would make speeds RISE toward them.
+            if cur_gap > 0 and cur_shape > 0 and strive > 0:
                 scale = strive / cur_shape
                 def strive_of(row):
                     return scale * shape_at(row_idx[id(row)], row["stage"])
@@ -429,7 +439,8 @@ class Engine:
         def raw_seconds(upto: int) -> float:
             credit = start_credit
             total = 0.0
-            remaining_cur = cur["grade_xp"] * (1 - inp.grade_completion)
+            completion = min(1.0, max(0.0, inp.grade_completion))
+            remaining_cur = cur["grade_xp"] * (1 - completion)
             for j in range(idx, upto + 1):
                 xp = remaining_cur if j == idx else self.rows[j]["grade_xp"]
                 take = min(credit, xp)
@@ -496,7 +507,7 @@ class Engine:
 def fmt_days(d: float) -> str:
     if d < 0:
         d = 0
-    total_min = int(d * 24 * 60)
+    total_min = round(d * 24 * 60)
     out = f"{total_min // 1440}D {total_min % 1440 // 60}H {total_min % 60}M"
     if d > 365:
         out += f"  (~{d / 365.25:.1f} yr)"
