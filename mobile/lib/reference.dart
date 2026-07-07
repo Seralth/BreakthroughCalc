@@ -266,53 +266,97 @@ class GuideTab extends StatelessWidget {
         children: children);
 
     final novice = page([
-      Text('Novice → Foundation', style: h3),
-      para('• Breakthrough to Connection immediately.\n'
-          '• Only blue pills at first; don\'t max attempts before the quest '
-          'pill bag arrives.\n'
-          '• Save 5–10 attempts for F10; spend pills mainly to push stage '
-          'breakthroughs.\n'
-          '• Save blue/purple pill materials for F9–F10.\n'
-          '• Max Longevity (+1 Respira) before the Foundation breakthrough.\n'
-          '• In Foundation, unlock Energy Unification before spending Respira, '
-          'and hold pill attempts until Foundation Late + Rejuvenation T3.\n'
-          '• Farm array materials early (violetite/frostite).'),
+      Text('Novice → Foundation (your first day)', style: h3),
+      para('These first realms go by in hours. The goal is simple: keep the '
+          'cultivation bar filling and break through the moment you can — the '
+          'Breakthrough button appears on the main cultivation screen when the '
+          'bar is full.'),
+      para('• Break through to Connection immediately; nothing in Novice is '
+          'worth lingering for.\n'
+          '• Pills are the bottles on the bottom row of the cultivation screen '
+          '— each grants instant EXP against a daily attempt limit. Use only '
+          'blue pills at first, and don\'t max your attempts before claiming '
+          'the pill bag from the early quests. Save 5–10 attempts for '
+          'Foundation 10, and spend pills mainly when they push a stage '
+          'breakthrough. (What each pill is worth: Reference → Pills & '
+          'Respira.)\n'
+          '• Alchemy: save blue/purple pill materials for F9–F10 instead of '
+          'crafting them immediately.\n'
+          '• Respira is the daily breathing exercise on the cultivation screen '
+          '(the "Today\'s Attempts" counter). Before the Foundation '
+          'breakthrough, open Techniques and max Longevity — it permanently '
+          'adds +1 daily Respira attempt and is cheapest now.\n'
+          '• In Foundation, unlock the Energy Unification technique before '
+          'spending Respira attempts, and hold pill attempts until Foundation '
+          'Late with Rejuvenation at T3.\n'
+          '• Energy Array materials come from the world-map realms: 56 '
+          'violetite from Violet Streams, then 110 frostite from Lake '
+          'Blackwater. The array permanently raises your Abode Aura — the base '
+          'of your cultivation speed (Reference → Basics).'),
     ]);
 
     final virtuoso = page([
-      Text('Virtuoso', style: h3),
-      para('• Usually reached by the end of day 1.\n'
-          '• Myrimon unlocks here — see the Myrimon & Extractor tab. First-week '
-          'uses don\'t stack: run the highest realm daily; afterwards save for '
-          'Sunday or the next BR threshold.\n'
-          '• Clear realm abyss/cultivation ruins for all three Virtuoso realms.'),
+      Text('Virtuoso (usually end of day 1)', style: h3),
+      para('• Myrimon unlocks here — the Aura Extractor lotus next to your '
+          'character on the cultivation screen, fed by fruits from the weekly '
+          'Myrimon dungeon runs. It becomes your biggest free source of '
+          'cultivation EXP, so read Reference → Myrimon & Extractor before '
+          'spending anything.\n'
+          '• During the first week of the Myrimon event your daily runs don\'t '
+          'accumulate — use them every day at the highest realm you can clear. '
+          'Afterwards they stack: bank them for Sunday or until you can clear '
+          'a higher-requirement dungeon.\n'
+          '• Work through Realm Abyss and Cultivation Ruins (in the realm '
+          'menus) for all three Virtuoso realms — one-time cultivation '
+          'rewards.\n'
+          '• Check the events panel for realm exploration events; the curio '
+          'rewards are worth the detour.'),
     ]);
 
     final nascent = page([
-      Text('Nascent Soul', style: h3),
-      para('• F2P pace: roughly day 3; about 3 days to Late, then about 3 more '
-          'to Incarnation.\n'
-          '• Strive unlocks here — the Strive readout and "Server #1\'s Stage" '
-          'input start mattering for long-range estimates.\n'
-          '• Keep story/spire/realms maxed.'),
+      Text('Nascent Soul (~day 3 for F2P)', style: h3),
+      para('• Pacing: roughly 3 days to Nascent Late and 3 more to '
+          'Incarnation. Spenders arrive faster — don\'t panic if you\'re a day '
+          'behind.\n'
+          '• Strive unlocks here: a catch-up bonus that raises your absorption '
+          'while you\'re behind your server\'s #1 cultivator. In this '
+          'calculator it appears as the implied Strive readout, and the '
+          '"Server #1\'s Stage" input starts to matter for long-range '
+          'estimates (Reference → Basics covers the math).\n'
+          '• Keep the story, Demon Spire, and realms pushed as far as they\'ll '
+          'go each cultivation stage — several systems gate on them.'),
     ]);
 
     final incarnation = page([
       Text('Incarnation', style: h3),
-      para('• Max the extractor (Quality first) and keep stockpiling fruits; '
-          'base fruit EXP gets +50% at extractor rank match.\n'
-          '• Eat the stockpile before the realm timegate (50% loss after) or on '
-          'the last day before your breakthrough.\n'
-          '• Pre-Voidbreak: spend pills/Respira (they reset), don\'t claim pill '
-          'bags until after ascension, spend Fatevillon tokens first.'),
+      para('• The extractor endgame for the mortal world: open Aura Extractor '
+          '→ Boost and max its tracks — Quality first, then Cultivation, then '
+          'Gush (High Rank last). Keep stockpiling fruits instead of eating '
+          'them: every extractor level makes each fruit worth more, and at '
+          'Mortal World rank the extractor adds +50% base fruit EXP while '
+          'you\'re at the server\'s highest Stage.\n'
+          '• Eat the stockpile before the realm timegate — fruits lose 50% of '
+          'their EXP once the next realm\'s timegate passes — or on the last '
+          'day before your own breakthrough, whichever comes first. (Full '
+          'fruit math: Reference → Myrimon & Extractor.)\n'
+          '• Before breaking through to Voidbreak: spend all pills and Respira '
+          '(they reset), don\'t claim daily pill bags until after ascension, '
+          'and spend Fatevillon shop tokens beforehand — that shop resets on '
+          'breakthroughs too.'),
     ]);
 
     final voidbreak = page([
       Text('Voidbreak and beyond', style: h3),
-      para('• Dailies/pill bags reset on ascension.\n'
-          '• Each realm has its own Myrimon tier (R6+ fruits).\n'
-          '• Strive may exceed 120% legitimately from Voidbreak on (overcap); '
-          'the calculator\'s 120% warning applies to the mortal world only.'),
+      para('• Dailies and pill bags reset on ascension — spend before you '
+          'break through, same as the Incarnation checklist.\n'
+          '• Each major realm from here has its own Myrimon tier: a new fruit '
+          'rank (R6+) and a fresh extractor starting back at Common quality '
+          'and bonus level 0. The stockpile-then-eat rhythm repeats every '
+          'realm.\n'
+          '• Strive above 120% is normal here — the 120% cap belongs to the '
+          'mortal world; later realms allow overcapping (e.g. keeping your aux '
+          'path a minor realm behind your main). The calculator only warns '
+          'about >120% readings in mortal-world stages.'),
     ]);
 
     return DefaultTabController(
