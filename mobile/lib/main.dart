@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'engine.dart';
+import 'i18n.dart';
 import 'reference.dart';
 import 'update_check.dart';
 
@@ -29,6 +30,8 @@ Future<void> main() async {
         await rootBundle.loadString('assets/data/respira_sources.json')) as List;
   } catch (_) {}
   final prefs = await SharedPreferences.getInstance();
+  final savedLang = prefs.getString('lang');
+  if (savedLang != null && langs.containsKey(savedLang)) currentLang = savedLang;
   runApp(BreakthroughApp(engine, catalog, respiraCatalog, prefs));
 }
 
@@ -90,6 +93,11 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
     widget.prefs.setString('theme', t);
   }
 
+  void setLang(String l) {
+    setState(() => currentLang = l);
+    widget.prefs.setString('lang', l);
+  }
+
   @override
   Widget build(BuildContext context) {
     final platform = MediaQuery.platformBrightnessOf(context);
@@ -104,6 +112,7 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
         prefs: widget.prefs,
         theme: theme,
         onTheme: setTheme,
+        onLang: setLang,
       ),
     );
   }
@@ -117,6 +126,7 @@ class CalculatorPage extends StatefulWidget {
   final SharedPreferences prefs;
   final String theme;
   final ValueChanged<String> onTheme;
+  final ValueChanged<String> onLang;
   const CalculatorPage({
     super.key,
     required this.engine,
@@ -125,6 +135,7 @@ class CalculatorPage extends StatefulWidget {
     required this.prefs,
     required this.theme,
     required this.onTheme,
+    required this.onLang,
   });
 
   @override
@@ -186,8 +197,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
       if (manual) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(rel == null
-              ? 'Update check failed — are you online?'
-              : 'Up to date (v$appVersion)'),
+              ? tr('Update check failed — are you online?')
+              : '${tr('Up to date')} (v$appVersion)'),
         ));
       }
       return;
@@ -197,7 +208,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentMaterialBanner();
     messenger.showMaterialBanner(MaterialBanner(
-      content: Text('Update available: v$version'),
+      content: Text('${tr('Update available')}: v$version'),
       leading: const Icon(Icons.system_update_alt),
       actions: [
         TextButton(
@@ -205,14 +216,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
             messenger.hideCurrentMaterialBanner();
             _showReleaseDialog(version, rel.url);
           },
-          child: const Text('View'),
+          child: Text(tr('View')),
         ),
         TextButton(
           onPressed: () {
             messenger.hideCurrentMaterialBanner();
             widget.prefs.setString('dismissed_update', version);
           },
-          child: const Text('Dismiss'),
+          child: Text(tr('Dismiss')),
         ),
       ],
     ));
@@ -228,20 +239,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Support the calculator'),
-        content: const Column(
+        title: Text(tr('Support the calculator')),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('If the calculator saves you time, you can support '
-                'development by gifting in-game vouchers:\n\n'
-                '1. Open the SEAGM OverMortal voucher page\n'
-                '2. Pick any voucher amount\n'
-                "3. Paste the RID below into the site's RID field"),
-            SizedBox(height: 12),
-            SelectableText(_donateUrl),
-            SizedBox(height: 8),
-            SelectableText(_donateRid,
+            Text('${tr('If the calculator saves you time, you can support '
+                    'development by gifting in-game vouchers:')}\n\n'
+                '${tr('1. Open the SEAGM OverMortal voucher page')}\n'
+                '${tr('2. Pick any voucher amount')}\n'
+                '${tr("3. Paste the RID below into the site's RID field")}'),
+            const SizedBox(height: 12),
+            const SelectableText(_donateUrl),
+            const SizedBox(height: 8),
+            const SelectableText(_donateRid,
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
@@ -250,19 +261,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
             onPressed: () {
               Clipboard.setData(const ClipboardData(text: _donateUrl));
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Site link copied')));
+                  SnackBar(content: Text(tr('Site link copied'))));
             },
-            child: const Text('Copy link'),
+            child: Text(tr('Copy link')),
           ),
           TextButton(
             onPressed: () {
               Clipboard.setData(const ClipboardData(text: _donateRid));
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('RID copied')));
+                  SnackBar(content: Text(tr('RID copied'))));
             },
-            child: const Text('Copy RID'),
+            child: Text(tr('Copy RID')),
           ),
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Close'))),
         ],
       ),
     );
@@ -273,9 +284,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Update available: v$version'),
+        title: Text('${tr('Update available')}: v$version'),
         content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('Open this link in your browser to download the release:'),
+          Text(tr('Open this link in your browser to download the release:')),
           const SizedBox(height: 8),
           SelectableText(url.isEmpty
               ? 'https://github.com/Seralth/BreakthroughCalc/releases/latest'
@@ -290,11 +301,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       : url));
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Link copied')));
+                  SnackBar(content: Text(tr('Link copied'))));
             },
-            child: const Text('Copy link'),
+            child: Text(tr('Copy link')),
           ),
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Close'))),
         ],
       ),
     );
@@ -395,35 +406,49 @@ class _CalculatorPageState extends State<CalculatorPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Breakthrough Calculator'),
-          bottom: const TabBar(tabs: [Tab(text: 'Calculator'), Tab(text: 'Reference'), Tab(text: 'Guide')]),
+          title: Text(tr('Breakthrough Calculator')),
+          bottom: TabBar(tabs: [
+            Tab(text: tr('Calculator')),
+            Tab(text: tr('Reference')),
+            Tab(text: tr('Guide')),
+          ]),
           actions: [
             IconButton(
               icon: const Icon(Icons.favorite_outline),
-              tooltip: 'Donate',
+              tooltip: tr('Donate'),
               onPressed: _showDonateDialog,
             ),
             PopupMenuButton<String>(
               icon: const Icon(Icons.palette_outlined),
-              tooltip: 'Theme',
+              tooltip: tr('Theme'),
               initialValue: widget.theme,
               onSelected: widget.onTheme,
               itemBuilder: (_) =>
                   [for (final t in _themes) PopupMenuItem(value: t, child: Text(t))],
             ),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.language),
+              tooltip: tr('Language'),
+              initialValue: currentLang,
+              onSelected: widget.onLang,
+              itemBuilder: (_) => [
+                for (final e in langs.entries)
+                  PopupMenuItem(value: e.key, child: Text(e.value)),
+              ],
+            ),
             if (!kIsWeb)
               PopupMenuButton<String>(
-                tooltip: 'More',
+                tooltip: tr('More'),
                 onSelected: (v) {
                   if (v == 'check_updates') _checkForUpdates(manual: true);
                 },
-                itemBuilder: (_) => const [
+                itemBuilder: (_) => [
                   PopupMenuItem(
                     value: 'check_updates',
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Icon(Icons.system_update_alt),
-                      title: Text('Check for updates'),
+                      leading: const Icon(Icons.system_update_alt),
+                      title: Text(tr('Check for updates')),
                     ),
                   ),
                 ],
@@ -446,8 +471,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
       padding: const EdgeInsets.all(12),
       children: [
         _resultsCard(),
-        _group('Cultivation Base', [
-          _dropdown('Stage', inp.stage, stages, (v) {
+        _group(tr('Cultivation Base'), [
+          _dropdown(tr('Stage'), inp.stage, stages, (v) {
             inp.stage = v!;
             inp.phase = engine.phasesFor(v).first;
             inp.grade = engine.gradesFor(v, inp.phase).first;
@@ -456,33 +481,33 @@ class _CalculatorPageState extends State<CalculatorPage> {
               inp.targetStage = '';
             }
             _recalc();
-          }),
-          _dropdown('Half-step', inp.phase, engine.phasesFor(inp.stage), (v) {
+          }, display: trStage),
+          _dropdown(tr('Half-step'), inp.phase, engine.phasesFor(inp.stage), (v) {
             inp.phase = v!;
             inp.grade = engine.gradesFor(inp.stage, v).first;
             _recalc();
-          }),
-          _dropdown('Grade', inp.grade, engine.gradesFor(inp.stage, inp.phase), (v) {
+          }, display: trPhase),
+          _dropdown(tr('Grade'), inp.grade, engine.gradesFor(inp.stage, inp.phase), (v) {
             inp.grade = v!;
             _recalc();
           }),
-          _num('Grade progress (%)', inp.gradeCompletion * 100, (v) {
+          _num(tr('Grade progress (%)'), inp.gradeCompletion * 100, (v) {
             inp.gradeCompletion = v.clamp(0, 100) / 100;
             _recalc();
           }),
-          _numCtrl('Abode Aura', _abodeCtrl, (v) {
+          _numCtrl(tr('Abode Aura'), _abodeCtrl, (v) {
             _abode = v;
             inp.cultiSpeed = _abode * inp.absorptionRatio;
             _speedCtrl.text = _fmtNum(inp.cultiSpeed);
             _recalc();
           }),
-          _numCtrl('Absorption Ratio (%)', _absorbCtrl, (v) {
+          _numCtrl(tr('Absorption Ratio (%)'), _absorbCtrl, (v) {
             inp.absorptionRatio = v / 100;
             inp.cultiSpeed = _abode * inp.absorptionRatio;
             _speedCtrl.text = _fmtNum(inp.cultiSpeed);
             _recalc();
           }),
-          _numCtrl('Cultivation Speed', _speedCtrl, (v) {
+          _numCtrl(tr('Cultivation Speed'), _speedCtrl, (v) {
             inp.cultiSpeed = v;
             if (inp.absorptionRatio > 0) {
               _abode = inp.cultiSpeed / inp.absorptionRatio;
@@ -490,148 +515,148 @@ class _CalculatorPageState extends State<CalculatorPage> {
             }
             _recalc();
           }),
-          _dropdown('Aura Gem', inp.auraGem, gems, (v) {
+          _dropdown(tr('Aura Gem'), inp.auraGem, gems, (v) {
             inp.auraGem = v!;
             _recalc();
-          }),
-          _dropdown('Target Stage', inp.targetStage.isEmpty ? '(none)' : inp.targetStage,
+          }, display: tr),
+          _dropdown(tr('Target Stage'), inp.targetStage.isEmpty ? '(none)' : inp.targetStage,
               ['(none)', ...stages.sublist(stages.indexOf(inp.stage) + 1)], (v) {
             inp.targetStage = v == '(none)' ? '' : v!;
             _recalc();
-          }),
-          _dropdown('Server #1 Stage (Strive)', inp.topStage.isEmpty ? '(none)' : inp.topStage,
+          }, display: trStage),
+          _dropdown(tr('Server #1 Stage (Strive)'), inp.topStage.isEmpty ? '(none)' : inp.topStage,
               ['(none)', ...stages], (v) {
             inp.topStage = v == '(none)' ? '' : v!;
             _recalc();
-          }),
-          _check('Mature server (world 30+)', inp.matureServer, (v) {
+          }, display: trStage),
+          _check(tr('Mature server (world 30+)'), inp.matureServer, (v) {
             inp.matureServer = v;
             _recalc();
           }),
-          _check("Already used today's pills/respira", inp.dailiesDone, (v) {
+          _check(tr("Already used today's pills/respira"), inp.dailiesDone, (v) {
             inp.dailiesDone = v;
             _recalc();
           }),
           if (inp.dailiesDone)
-            _num('Reset in (h)', inp.resetInHours, (v) {
+            _num(tr('Reset in (h)'), inp.resetInHours, (v) {
               inp.resetInHours = v.clamp(0, 24);
               _recalc();
             }),
         ]),
-        _group('Cultivation Pills', [
-          _dropdown('Pill rank', inp.pillRank, ranks, (v) {
+        _group(tr('Cultivation Pills'), [
+          _dropdown(tr('Pill rank'), inp.pillRank, ranks, (v) {
             inp.pillRank = v!;
             _recalc();
           }),
           _peSourcesEditor(),
-          _num('Daily pill attempts', inp.pillLimit, (v) {
+          _num(tr('Daily pill attempts'), inp.pillLimit, (v) {
             inp.pillLimit = v;
             _recalc();
           }),
-          _num('Legendary (Gold) / day', inp.goldPerDay, (v) {
+          _num(tr('Legendary (Gold) / day'), inp.goldPerDay, (v) {
             inp.goldPerDay = v;
             _recalc();
           }),
-          _num('Epic (Purple) / day', inp.purplePerDay, (v) {
+          _num(tr('Epic (Purple) / day'), inp.purplePerDay, (v) {
             inp.purplePerDay = v;
             _recalc();
           }),
-          _num('Rare (Blue) / day', inp.bluePerDay, (v) {
+          _num(tr('Rare (Blue) / day'), inp.bluePerDay, (v) {
             inp.bluePerDay = v;
             _recalc();
           }),
-          _num('Star Mark: Blue (+ratio)', inp.markBlue, (v) {
+          _num(tr('Star Mark: Blue (+ratio)'), inp.markBlue, (v) {
             inp.markBlue = v;
             _recalc();
           }),
-          _num('Star Mark: Purple (+ratio)', inp.markPurple, (v) {
+          _num(tr('Star Mark: Purple (+ratio)'), inp.markPurple, (v) {
             inp.markPurple = v;
             _recalc();
           }),
-          _num('Star Mark: Gold (+ratio)', inp.markGold, (v) {
+          _num(tr('Star Mark: Gold (+ratio)'), inp.markGold, (v) {
             inp.markGold = v;
             _recalc();
           }),
         ]),
-        _group('Creation Artifacts', [
-          _artifact('Starsea Vase', inp.vase, inp.vaseStar, inp.vaseSkin, inp.vaseCharge,
+        _group(tr('Creation Artifacts'), [
+          _artifact(tr('Starsea Vase'), inp.vase, inp.vaseStar, inp.vaseSkin, inp.vaseCharge,
               (v) => inp.vase = v, (v) => inp.vaseStar = v, (v) => inp.vaseSkin = v,
               (v) => inp.vaseCharge = v),
-          _dropdown('Vase input pill', inp.vaseInput, ['Blue', 'Purple', 'Gold'], (v) {
+          _dropdown(tr('Vase input pill'), inp.vaseInput, ['Blue', 'Purple', 'Gold'], (v) {
             inp.vaseInput = v!;
             _recalc();
-          }),
-          _artifact('Dual-Star Mirror', inp.mirror, inp.mirrorStar, inp.mirrorSkin,
+          }, display: tr),
+          _artifact(tr('Dual-Star Mirror'), inp.mirror, inp.mirrorStar, inp.mirrorSkin,
               inp.mirrorCharge, (v) => inp.mirror = v, (v) => inp.mirrorStar = v,
               (v) => inp.mirrorSkin = v, (v) => inp.mirrorCharge = v),
-          _artifact('Timereversal Pearl', inp.pearl, inp.pearlStar, inp.pearlSkin,
+          _artifact(tr('Timereversal Pearl'), inp.pearl, inp.pearlStar, inp.pearlSkin,
               inp.pearlCharge, (v) => inp.pearl = v, (v) => inp.pearlStar = v,
               (v) => inp.pearlSkin = v, (v) => inp.pearlCharge = v),
-          _num('Pearl EXP per 10 energy', inp.pearlXpPer10, (v) {
+          _num(tr('Pearl EXP per 10 energy'), inp.pearlXpPer10, (v) {
             inp.pearlXpPer10 = v;
             _recalc();
           }),
         ]),
-        _group('Respira', [
+        _group(tr('Respira'), [
           Row(children: [
             Expanded(
-              child: _numCtrl('Attempts / day', _respiraCtrl, (v) {
+              child: _numCtrl(tr('Attempts / day'), _respiraCtrl, (v) {
                 inp.respiraPerDay = v;
                 _recalc();
               }),
             ),
             IconButton(
               icon: const Icon(Icons.list),
-              tooltip: 'Respira sources',
+              tooltip: tr('Respira sources'),
               onPressed: _pickRespiraSources,
             ),
           ]),
-          _num('Extra attempts today', inp.respiraEvent, (v) {
+          _num(tr('Extra attempts today'), inp.respiraEvent, (v) {
             inp.respiraEvent = v;
             _recalc();
           }),
-          _num('Base EXP / attempt', inp.respiraExp, (v) {
+          _num(tr('Base EXP / attempt'), inp.respiraExp, (v) {
             inp.respiraExp = v;
             _recalc();
           }),
-          const Padding(
-            padding: EdgeInsets.only(top: 4),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
             child: Text(
-              "Do a few Respira: most give the same small EXP (the base — enter that); "
-              "some give 2×/5×/10× (crits — ignore, handled automatically).",
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              tr("Do a few Respira: most give the same small EXP (the base — enter that); "
+                  "some give 2×/5×/10× (crits — ignore, handled automatically)."),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
         ]),
-        _group('Myrimon Fruit', [
-          _dropdown('Fruit rank', inp.fruitRank, fruitRanks, (v) {
+        _group(tr('Myrimon Fruit'), [
+          _dropdown(tr('Fruit rank'), inp.fruitRank, fruitRanks, (v) {
             inp.fruitRank = v!;
             _recalc();
           }),
-          _check('Highest rank (+50%)', inp.fruitHighestRank, (v) {
+          _check(tr('Highest rank (+50%)'), inp.fruitHighestRank, (v) {
             inp.fruitHighestRank = v;
             _recalc();
           }),
-          _num('No. of fruits', inp.fruitCount, (v) {
+          _num(tr('No. of fruits'), inp.fruitCount, (v) {
             inp.fruitCount = v;
             _recalc();
           }),
-          _numInt('Culti level', inp.lvlCulti, (v) {
+          _numInt(tr('Culti level'), inp.lvlCulti, (v) {
             inp.lvlCulti = v;
             _recalc();
           }),
-          _numInt('Quality level', inp.lvlQuality, (v) {
+          _numInt(tr('Quality level'), inp.lvlQuality, (v) {
             inp.lvlQuality = v;
             _recalc();
           }),
-          _numInt('Gush level', inp.lvlGush, (v) {
+          _numInt(tr('Gush level'), inp.lvlGush, (v) {
             inp.lvlGush = v;
             _recalc();
           }),
-          _dropdown('Extractor quality', inp.extractorRarity, rarities, (v) {
+          _dropdown(tr('Extractor quality'), inp.extractorRarity, rarities, (v) {
             inp.extractorRarity = v!;
             _recalc();
-          }),
+          }, display: tr),
         ]),
       ],
     );
@@ -656,7 +681,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     style: TextStyle(fontWeight: FontWeight.bold, color: color)),
                 if (showBand)
                   TextSpan(
-                    text: '  (best ${fmtDays(band[0])} / worst ${fmtDays(band[1])})',
+                    text: '  (${tr('best')} ${trDuration(fmtDays(band[0]))} / ${tr('worst')} ${trDuration(fmtDays(band[1]))})',
                     style: TextStyle(color: t.hintColor, fontWeight: FontWeight.normal),
                   ),
               ]),
@@ -671,31 +696,31 @@ class _CalculatorPageState extends State<CalculatorPage> {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: !res.valid
-            ? Text(res.error, style: TextStyle(color: t.colorScheme.error))
+            ? Text(tr(res.error), style: TextStyle(color: t.colorScheme.error))
             : Column(children: [
                 if (res.error.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(res.error, style: TextStyle(color: t.colorScheme.error)),
+                    child: Text(tr(res.error), style: TextStyle(color: t.colorScheme.error)),
                   ),
-                row('Half-step breakthrough in', fmtDays(res.phaseDays), res.phaseBand),
-                row('Stage breakthrough in', fmtDays(res.stageDays), res.stageBand),
+                row(tr('Half-step breakthrough in'), trDuration(fmtDays(res.phaseDays)), res.phaseBand),
+                row(tr('Stage breakthrough in'), trDuration(fmtDays(res.stageDays)), res.stageBand),
                 if (res.targetValid)
-                  row('Target reached in', fmtDays(res.targetDays), res.targetBand),
+                  row(tr('Target reached in'), trDuration(fmtDays(res.targetDays)), res.targetBand),
                 const Divider(),
-                row('Abode Aura (implied)', res.abodeAura.toStringAsFixed(1)),
-                row('Cultivation XP / day', res.baseXpPerDay.toStringAsFixed(0)),
-                row('Effective XP / day', res.effectiveXpPerDay.toStringAsFixed(0)),
-                row('Pill XP / day', res.pillXpPerDay.toStringAsFixed(0)),
+                row(tr('Abode Aura (implied)'), res.abodeAura.toStringAsFixed(1)),
+                row(tr('Cultivation XP / day'), res.baseXpPerDay.toStringAsFixed(0)),
+                row(tr('Effective XP / day'), res.effectiveXpPerDay.toStringAsFixed(0)),
+                row(tr('Pill XP / day'), res.pillXpPerDay.toStringAsFixed(0)),
                 row(
-                    'Daily XP share (pills+Respira / gem)',
+                    tr('Daily XP share (pills+Respira / gem)'),
                     '${res.effectiveXpPerDay > 0 ? ((res.pillXpPerDay + res.respiraXpPerDay) / res.effectiveXpPerDay * 100).toStringAsFixed(1) : '0.0'}%'
-                    ' / +${(res.gemSpeedup * 100).round()}% speed'),
-                row('Mythic pills / day', res.mythicPillsPerDay.toStringAsFixed(2)),
-                row('Pearl XP / day', res.pearlXpPerDay.toStringAsFixed(0)),
-                row('Respira XP / day', res.respiraXpPerDay.toStringAsFixed(0)),
-                row('XP from fruits', res.fruitXp.toStringAsFixed(0)),
-                row('Fruit time saved', fmtDays(res.fruitDaysSaved)),
+                    ' / +${(res.gemSpeedup * 100).round()}% ${tr('speed')}'),
+                row(tr('Mythic pills / day'), res.mythicPillsPerDay.toStringAsFixed(2)),
+                row(tr('Pearl XP / day'), res.pearlXpPerDay.toStringAsFixed(0)),
+                row(tr('Respira XP / day'), res.respiraXpPerDay.toStringAsFixed(0)),
+                row(tr('XP from fruits'), res.fruitXp.toStringAsFixed(0)),
+                row(tr('Fruit time saved'), trDuration(fmtDays(res.fruitDaysSaved))),
                 ..._absorptionRows(row),
               ]),
       ),
@@ -725,14 +750,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final overCap = aboveCap && mortal;
     return [
       const Divider(),
-      row('Base absorption (grade)', '${(base * 100).toStringAsFixed(0)}%',
+      row(tr('Base absorption (grade)'), '${(base * 100).toStringAsFixed(0)}%',
           null, belowBase ? err : null),
       row(
-          'Implied Strive',
+          tr('Implied Strive'),
           overCap
-              ? '${(res.strive * 100).toStringAsFixed(0)}% — over 120% cap (stale reading?)'
+              ? '${(res.strive * 100).toStringAsFixed(0)}% — ${tr('over 120% cap (stale reading?)')}'
               : belowBase
-                  ? '${(res.strive * 100).toStringAsFixed(0)}% — below base; Strive can\'t be negative'
+                  ? '${(res.strive * 100).toStringAsFixed(0)}% — ${tr("below base; Strive can't be negative")}'
                   : '${(res.strive * 100).toStringAsFixed(0)}%',
           null,
           (overCap || belowBase) ? err : null),
@@ -740,8 +765,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
         Padding(
           padding: const EdgeInsets.only(top: 2),
           child: Text(
-            'Strive above 120% — normal in later realms (overcap); '
-            'later cap tables not modeled.',
+            tr('Strive above 120% — normal in later realms (overcap); '
+                'later cap tables not modeled.'),
             style: TextStyle(fontSize: 12, color: t.hintColor),
           ),
         ),
@@ -762,14 +787,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
         ),
       );
 
-  Widget _dropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged) =>
+  /// [display] maps an INTERNAL item key to its localized label; the dropdown
+  /// value (and everything persisted) stays the internal key.
+  Widget _dropdown(String label, String value, List<String> items, ValueChanged<String?> onChanged,
+          {String Function(String)? display}) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: DropdownButtonFormField<String>(
           initialValue: items.contains(value) ? value : items.first,
           isExpanded: true,
           decoration: InputDecoration(labelText: label),
-          items: [for (final s in items) DropdownMenuItem(value: s, child: Text(s))],
+          items: [
+            for (final s in items)
+              DropdownMenuItem(value: s, child: Text(display == null ? s : display(s)))
+          ],
           onChanged: onChanged,
         ),
       );
@@ -853,7 +884,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             child: DropdownButtonFormField<String>(
               initialValue: star,
               isExpanded: true,
-              decoration: const InputDecoration(labelText: 'Star'),
+              decoration: InputDecoration(labelText: tr('Star')),
               items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
               onChanged: on ? (v) { onStar(v!); _recalc(); } : null,
             ),
@@ -863,8 +894,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
           Padding(
             padding: const EdgeInsets.only(left: 24, bottom: 4),
             child: Row(children: [
-              labeledCheck('Skin', skin, onSkin),
-              labeledCheck('Daily charge', charge, onCharge),
+              labeledCheck(tr('Skin'), skin, onSkin),
+              labeledCheck(tr('Daily charge'), charge, onCharge),
             ]),
           ),
       ]),
@@ -882,7 +913,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
             Expanded(
               child: TextFormField(
                 initialValue: _peSources[i][0] as String,
-                decoration: const InputDecoration(labelText: 'Pill-effect source'),
+                decoration: InputDecoration(labelText: tr('Pill-effect source')),
                 onChanged: (t) => _peSources[i][0] = t,
               ),
             ),
@@ -903,16 +934,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
           ]),
         ),
       Row(children: [
-        Expanded(child: Text('Pill effect total: ${total.toStringAsFixed(2)}%',
+        Expanded(child: Text('${tr('Pill effect total')}: ${total.toStringAsFixed(2)}%',
             style: TextStyle(color: Theme.of(context).hintColor))),
         TextButton.icon(
           icon: const Icon(Icons.add),
-          label: const Text('Add'),
+          label: Text(tr('Add')),
           onPressed: () { setState(() => _peSources.add(['', 0.0])); },
         ),
         TextButton.icon(
           icon: const Icon(Icons.list),
-          label: const Text('Catalog'),
+          label: Text(tr('Catalog')),
           onPressed: _pickCatalog,
         ),
       ]),
@@ -960,7 +991,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   subtitle: s['note'] != null
                       ? Text(s['note'] as String, style: const TextStyle(fontSize: 11))
                       : null,
-                  trailing: Text(s['kind'] == 'exp_pct' ? 'info' : 'pill input'),
+                  trailing: Text(s['kind'] == 'exp_pct' ? tr('info') : tr('pill input')),
                 ),
           ],
         ),
@@ -976,7 +1007,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           for (final s in widget.catalog.cast<Map<String, dynamic>>())
             ListTile(
               title: Text(s['name'] as String),
-              trailing: Text(((s['percent'] as num?) ?? 0) == 0 ? 'varies' : '${s['percent']}%'),
+              trailing: Text(((s['percent'] as num?) ?? 0) == 0 ? tr('varies') : '${s['percent']}%'),
               subtitle: s['note'] != null ? Text(s['note'] as String, style: const TextStyle(fontSize: 11)) : null,
               onTap: () => Navigator.pop(context, s),
             ),
@@ -1018,28 +1049,28 @@ class _CalculatorPageState extends State<CalculatorPage> {
           content: Column(mainAxisSize: MainAxisSize.min, children: [
             DropdownButtonFormField<int>(
               initialValue: star,
-              decoration: const InputDecoration(labelText: 'Star'),
+              decoration: InputDecoration(labelText: tr('Star')),
               items: [for (var i = 1; i <= stars; i++) DropdownMenuItem(value: i, child: Text('$i★'))],
               onChanged: (v) => setDlg(() => star = v!),
             ),
             DropdownButtonFormField<int>(
               initialValue: upgrade,
-              decoration: const InputDecoration(labelText: 'Upgrade level'),
+              decoration: InputDecoration(labelText: tr('Upgrade level')),
               items: [for (var i = 0; i <= maxUpgrade; i++) DropdownMenuItem(value: i, child: Text('$i'))],
               onChanged: (v) => setDlg(() => upgrade = v!),
             ),
             const SizedBox(height: 8),
             Text(
-              'Cultivation Pill Effect: ${valueFor(star, upgrade).toStringAsFixed(1)}%',
+              '${tr('Cultivation Pill Effect')}: ${valueFor(star, upgrade).toStringAsFixed(1)}%',
               style: TextStyle(color: Theme.of(ctx).hintColor),
             ),
           ]),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tr('Cancel'))),
             TextButton(
               onPressed: () => Navigator.pop(
                   ctx, double.parse(valueFor(star, upgrade).toStringAsFixed(1))),
-              child: const Text('OK'),
+              child: Text(tr('OK')),
             ),
           ],
         ),
