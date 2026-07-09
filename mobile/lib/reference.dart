@@ -433,6 +433,15 @@ class ReferenceTab extends StatelessWidget {
       para('The exact weight constants exist in client data but the server\'s '
           'final assembly (level factors, rounding) isn\'t visible, so per-stat '
           'BR predictions from these weights are approximate.'),
+      para('One BR formula is fully client-side — standard monster BR:\n\n'
+          '    floor( (hp_std^0.98 + mp_std^0.98) × hp_mult × max(atk_mults) )\n\n'
+          'where hp_std/mp_std are the standard stat values for the monster\'s '
+          'level and the multipliers are the monster\'s own scaling. The 0.98 '
+          'exponent means BR grows slightly sub-linearly with raw stats. The '
+          'same per-level standards table drives realm normalization: the '
+          '"standard" each flat stat is measured against grows by roughly 5–8× '
+          'per realm tier, which is exactly why a flat crit value loses '
+          'percentage on breakthrough.'),
     ]);
 
     return DefaultTabController(
