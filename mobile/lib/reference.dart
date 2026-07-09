@@ -375,22 +375,67 @@ class ReferenceTab extends StatelessWidget {
         '* Penetration and Block are contested against the opponent\'s same '
         'stat: each only functions while yours is higher than theirs.',
       ),
-      Text('Crit internals', style: h3),
-      para('• Base crit multiplier is 150%, and crit damage is rounded down. '
-          'Crit DMG% bonuses raise that multiplier.\n'
-          '• Soul-bound Talismans crit at a separate 120% base.\n'
-          '• Crit Additive DMG is a flat amount added on top of a crit (base 0) '
-          '— independent of the multiplier.\n'
-          '• Crit Block trades 1:1 — each 1% removes 1% from the attacker\'s '
-          'crit multiplier against you.\n'
-          '• Crit Resistance reduces the chance of being crit; like Crit '
-          'Chance it\'s flat and realm-normalized.'),
-      Text('Sustain', style: h3),
+      Text('Penetration and Block, exactly', style: h3),
+      para('These are mirror-image contested stats: each is compared against '
+          'the opponent\'s copy of the same stat, and only the side with the '
+          'higher value gets any effect at all.'),
+      para('Penetration (physical or spell): while your Penetration is higher '
+          'than the target\'s, every point of it strips 0.1% off the target\'s '
+          'defense against your hits — 500 pen means the target defends with '
+          '50% less DEF. Against someone with more Penetration than you, yours '
+          'does nothing.'),
+      para('Block (physical or spell): while your Block is higher than the '
+          'attacker\'s, each incoming hit has a 30% chance to trigger a block, '
+          'and a triggered block reduces that hit\'s damage by 0.1% per point '
+          'of your advantage — the margin counts, not your raw total. On '
+          'average it\'s worth 30% × 0.1% × margin per hit.'),
+      para('Practical read: both are stat-check races. Small investments do '
+          'literally nothing against players who invest more — unlike defense '
+          'or crit, which always contribute.'),
+      Text('Stuns, exactly', style: h3),
+      para('Stun effects have two dials — whether the stun lands and how long '
+          'it lasts — and each dial has an attacker stat and a defender stat '
+          'fighting each other:\n'
+          '• Stun chance: the attacker\'s enhance adds +0.2% proc chance per '
+          'point (capped at +100%); the defender\'s resist removes 0.2% per '
+          'point (capped at −50%).\n'
+          '• Stun duration: the attacker\'s enhance adds +0.5% duration per '
+          'point (capped at +25%); the defender\'s resist removes 0.5% per '
+          'point (capped at −50%).'),
+      para('On top of these, three flat percent stats exist that the game '
+          'explicitly says are "not affected by any other effect" — they apply '
+          'after the contested math: a direct % increase to stun duration you '
+          'inflict, a direct % reduction to the chance of being stunned (1% = '
+          'exactly 1%), and a direct % reduction to stun duration you suffer.'),
+      Text('Crit, exactly', style: h3),
+      para('• Crit Chance is flat and realm-normalized (see above); it applies '
+          'to Ability and Relic hits and rises mainly from realm '
+          'breakthroughs, weapons and accessories.\n'
+          '• Crit Resistance is the defensive mirror: also flat and '
+          'realm-normalized, it reduces the chance of being crit, and comes '
+          'mainly from breakthroughs and armor. Its tooltip shows your '
+          'effective resist % for your realm.\n'
+          '• Crit DMG: a crit deals 150% damage baseline, rounded down; Crit '
+          'DMG% raises this multiplier. Soul-bound Talismans have their own '
+          '120% crit base.\n'
+          '• Crit Additive DMG: a flat damage amount added on top of a crit '
+          '(base 0) — added after the multiplier, not multiplied by it.\n'
+          '• Crit Block trades exactly 1:1 — each 1% removes 1% from the '
+          'attacker\'s crit multiplier against you (150% becomes 140% against '
+          '10% Crit Block). It reduces how hard crits hit, never whether they '
+          'happen.'),
+      para('Practical read: the chance fight (Crit Chance vs Crit Resistance) '
+          'and the damage fight (Crit DMG vs Crit Block) are separate. '
+          'Stacking Crit DMG does nothing against someone you can\'t crit, and '
+          'Crit Block won\'t stop crits from landing — it only blunts them.'),
+      Text('Sustain, exactly', style: h3),
       para('Out of combat you regenerate 2% of max HP and MP per second; regen '
-          'stats raise this. Shields come in three kinds — standard (absorbs a '
-          'fixed capacity), MP-fed (drains Max MP instead of a capacity pool) '
-          'and HP-fed blood shields — plus statuses that boost shield strength '
-          'or add damage while a shield holds.'),
+          'stats raise this rate. Shields come in three kinds: standard '
+          'shields absorb a fixed capacity of damage, MP-fed shields route '
+          'damage into your Max MP pool instead of a capacity limit, and blood '
+          'shields are fed from HP. There are also statuses that strengthen an '
+          'active shield\'s absorption, deal bonus damage while your shield '
+          'holds, and cleanse debuffs when a shield is applied.'),
       Text('The gear stat formula', style: h3),
       para('An item\'s visible stat line is computed as:\n\n'
           '    floor( base[rank][affix] × roll × rarity_scale )\n\n'
