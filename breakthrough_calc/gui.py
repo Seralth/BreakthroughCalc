@@ -1008,7 +1008,18 @@ class MainWindow(QMainWindow):
             "</ul>"
             "<p>The exact weight constants exist in client data but the "
             "server's final assembly (level factors, rounding) isn't visible, "
-            "so per-stat BR predictions from these weights are approximate.</p>")
+            "so per-stat BR predictions from these weights are approximate.</p>"
+            "<p>One BR formula <i>is</i> fully client-side — standard monster "
+            "BR:</p>"
+            "<p style='margin-left:16px'><code>floor( (hp_std^0.98 + "
+            "mp_std^0.98) × hp_mult × max(atk_mults) )</code></p>"
+            "<p>where <code>hp_std</code>/<code>mp_std</code> are the standard "
+            "stat values for the monster's level and the multipliers are the "
+            "monster's own scaling. The 0.98 exponent means BR grows slightly "
+            "sub-linearly with raw stats. The same per-level standards table "
+            "drives realm normalization: the \"standard\" each flat stat is "
+            "measured against grows by roughly 5–8× per realm tier, which is "
+            "exactly why a flat crit value loses percentage on breakthrough.</p>")
 
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
