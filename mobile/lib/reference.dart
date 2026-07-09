@@ -364,16 +364,16 @@ class ReferenceTab extends StatelessWidget {
         'Per-point coefficients and caps',
         ['Stat', 'Per point', 'Cap'],
         [
-          ['Penetration (phys/spell)', '−0.1% target DEF*', '—'],
-          ['Block (phys/spell)', '30% proc; −0.1% DMG*', '—'],
+          ['Penetration (phys/spell)', '−0.1% target DEF per point*', '—'],
+          ['Block (phys/spell)', '30% proc; −0.1% DMG per point of advantage*', '—'],
           ['Stun duration enhance', '+0.5% duration', '+25%'],
           ['Stun duration resist', '−0.5% duration taken', '−50%'],
           ['Stun chance enhance', '+0.2% proc chance', '+100%'],
           ['Stun chance resist', '−0.2% proc chance', '−50%'],
           ['Elemental Rule level', '+0.05% DMG per level over target', '—'],
         ],
-        '* Penetration applies when it exceeds the target\'s defense stat; '
-        'Block when it exceeds the attacker\'s attack stat.',
+        '* Penetration and Block are contested against the opponent\'s same '
+        'stat: each only functions while yours is higher than theirs.',
       ),
       Text('Crit internals', style: h3),
       para('• Base crit multiplier is 150%, and crit damage is rounded down. '
