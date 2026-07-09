@@ -764,11 +764,94 @@ class MainWindow(QMainWindow):
             "<b>before</b> burning a stockpile, and burn the stockpile before a main-Stage "
             "breakthrough.</li></ul>")
 
+        # ---- Combat & Gear ---------------------------------------------------
+        # Sourced from decompiled client config tables (attrib, equipment,
+        # equip_ten_lv_affix, affix_mark_rank, equip_suit, level_equip).
+        # Combat itself is resolved server-side; these are the client-visible rules.
+        combat = "<h2>Combat Stats &amp; Gear</h2>"
+        combat += (
+            "<p>A high-level map of the combat side of the game. None of it affects "
+            "cultivation speed — it's here so the systems and their relationships are "
+            "in one place. Exact numbers are given where they're confirmed; anything "
+            "the client doesn't expose (most concrete bonus values) is described "
+            "generically rather than guessed.</p>"
+            "<h3>How stats work</h3>"
+            "<p>Characters have five <b>base stats</b>, and every point of a base stat "
+            "converts into <b>combat stats</b> at a fixed rate. Combat stats come in "
+            "physical/magical pairs — attack, defense, hit rate and dodge each exist "
+            "in both flavors, and which pair matters depends on whether your path "
+            "fights with physical or magical damage.</p>")
+        combat += table(
+            "Base stat conversions (per point)",
+            ["Base stat", "Grants"],
+            [("Physique", "+4 Physical ATK, +2 Physical DEF"),
+             ("Psyche", "+4 Magical ATK, +2 Magical DEF"),
+             ("STR", "+1000 Max HP, +3 Physical DEF"),
+             ("CON", "+1000 Max MP, +3 Magical DEF"),
+             ("Agility", "+3 Dodge and +3 Hit Rate (both physical and magical)")])
+        combat += (
+            "<p>On top of the pairs sit four crit stats: <b>Crit Chance</b> (capped "
+            "by character level), <b>Crit DMG</b> (a % multiplier on crits), and the "
+            "defensive mirrors <b>Crit Defense</b> and <b>Crit Resistance</b>. There "
+            "is also a family of PvP-only stats — final damage dealt to and taken "
+            "from other Taoists, plus Relic-specific and Ability-specific versions — "
+            "which mostly come from gear sets and resonances rather than base "
+            "stats.</p>"
+            "<h3>Gear basics</h3>"
+            "<p>Gear slots are weapon, armor and accessory, with <b>Relics</b> as "
+            "their own parallel category. Rarity runs white → green → blue → purple "
+            "→ orange. When an item is forged, each stat line rolls a quality score, "
+            "so two copies of the same item can differ; higher rarity also scales "
+            "the whole item up. Base stat lines, possible bonus affixes, and which "
+            "extra affix the item gains from augmentation are all fixed per item "
+            "template — only the roll varies.</p>"
+            "<h3>Augmentation (gear leveling)</h3>"
+            "<p>Augmenting raises an item's level and grows its base stats smoothly "
+            "— a small fixed percentage per level. Separately, every <b>10th</b> "
+            "level the item unlocks an extra affix line (which affix is fixed per "
+            "item — e.g. a Crit DMG% line on one weapon, an ATK line on another); "
+            "the line's value then grows with further augmentation.</p>"
+            "<p><b>Augmentation Resonance</b> is a party-wide bonus keyed to the "
+            "augment level of <i>everything</i> you have equipped: pushing your "
+            "lowest-level piece past the next rank threshold unlocks the next "
+            "resonance rank. This is where PvP lines like \"Relic DMG dealt to "
+            "Taoists +x%\" and \"DMG taken from Taoists −x%\" come from, so it's "
+            "usually worth leveling gear evenly instead of maxing one piece.</p>"
+            "<h3>Carvings (enchant lines)</h3>"
+            "<p>From Foundation onward, gear can hold <b>Carvings</b> — extra stat "
+            "lines that level up separately by feeding Carving EXP items. Carving "
+            "slots unlock as the item's augment level rises, and a carving's own "
+            "quality tier (white → orange) climbs at fixed level breakpoints, "
+            "raising its value scale. Only Rare-or-better gear can upgrade "
+            "carvings, and costs scale with the gear's rank. Like augmentation, "
+            "carvings have a <b>Carving Resonance</b>: a bonus keyed to carving "
+            "levels across currently equipped gear.</p>"
+            "<h3>Gear sets</h3>"
+            "<p>Each realm has its own gear set, activated by wearing enough "
+            "current-realm pieces (and enough of their base affixes). Set tiers "
+            "grant the PvP damage lines above plus unlocks like higher carving "
+            "caps. On breakthrough the old realm's set bonus <b>turns off</b> — "
+            "you re-activate it with the new realm's gear. Special \"Xuantian\" "
+            "affix sets exist as well, counted separately for weapon/armor/"
+            "accessory versus Relics.</p>"
+            "<h3>Immortactic (xianshu) gear</h3>"
+            "<p>A separate gear track with its own leveling and star systems; its "
+            "stats grow in 2-level steps and its Crit DMG rises at every 20th "
+            "level.</p>"
+            "<h3>What's confirmed vs. server-side</h3>"
+            "<p>The conversion table, threshold cadences and system rules above "
+            "come from client data and are reliable. The concrete <i>values</i> — "
+            "what each 10-level affix grants, each resonance rank's payload, each "
+            "set tier's bonus — are computed server-side and need in-game readings "
+            "to pin down. Treat any specific number not listed here as unknown "
+            "rather than zero.</p>")
+
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
                             ("Pills & Respira", pills),
                             ("Myrimon & Extractor", myrimon),
-                            ("Artifacts & Gems", artifacts)):
+                            ("Artifacts & Gems", artifacts),
+                            ("Combat & Gear", combat)):
             ref.addTab(page(html), title)
         return ref
 
