@@ -248,15 +248,28 @@ class ReferenceTab extends StatelessWidget {
           'version. Your path fights with one or the other, so Physique-type '
           'stats matter to a body cultivator the way Psyche-type stats matter to '
           'a mage — the other half mostly just pads your defense.'),
-      para('Crits work the way you\'d guess: Crit Chance to trigger one (there\'s '
-          'a cap that rises with level), Crit DMG for how hard it hits, and Crit '
-          'Defense / Resistance to blunt enemy crits. You\'ll also see PvP-only '
-          'lines like "DMG dealt to Taoists +x%" — those don\'t come from base '
-          'stats at all; they come from the gear systems below.'),
+      para('You\'ll also see PvP-only lines like "DMG dealt to Taoists +x%" — '
+          'those don\'t come from base stats at all; they come from the gear '
+          'systems below.'),
+      Text('How crit works', style: h3),
+      para('Crit Chance is shown as a flat number, not a percent. The game '
+          'converts it to a real chance relative to your realm — the same flat '
+          'crit that felt great at Foundation is worth a smaller percentage by '
+          'Nascent Soul. To see your actual percentage, tap the crit stat '
+          'in-game: its tooltip shows your current crit rate for your realm. '
+          '(The exact conversion curve lives on the server, so no formula here — '
+          'the tooltip is the source of truth.)'),
+      para('The rest of the crit family, confirmed from game data:\n'
+          '• Crit DMG: a crit deals 150% damage baseline (rounded down); Crit '
+          'DMG bonuses raise that multiplier.\n'
+          '• Crit Defense: each +1% cuts an attacker\'s crit multiplier by 1% '
+          'against you.\n'
+          '• Crit Resistance: lowers the chance of being crit in the first '
+          'place.'),
       Text('Gear in one paragraph', style: h3),
       para('You wear a weapon, armor and an accessory, plus Relics as their own '
           'separate category. Rarity climbs white → green → blue → purple → '
-          'orange. When an item is forged its stats roll within a range — so two '
+          'yellow. When an item is forged its stats roll within a range — so two '
           'copies of the same item can differ, and a well-rolled piece is worth '
           'keeping.'),
       Text('Leveling gear (Augmentation)', style: h3),
@@ -265,9 +278,10 @@ class ReferenceTab extends StatelessWidget {
           '• Every 10th level: it unlocks an extra bonus line. Which line is '
           'fixed per item — one weapon always grows a Crit DMG line, another an '
           'ATK line.\n'
-          '• Resonance: a team-wide bonus that looks at the level of your lowest '
-          'equipped piece. Push everything past the next threshold together and '
-          'you unlock PvP bonuses like "Relic DMG to Taoists +x%".'),
+          '• Resonance: a bonus across your whole equipped set that looks at '
+          'the level of your lowest piece. Push everything past the next '
+          'threshold together and you unlock PvP bonuses like "Relic DMG to '
+          'Taoists +x%".'),
       para('Practical takeaway: level your gear evenly. One maxed sword does '
           'less for you than eight pieces raised together, because Resonance '
           'only counts your weakest piece.'),
