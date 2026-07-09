@@ -312,8 +312,42 @@ class ReferenceTab extends StatelessWidget {
           'expose, see the Advanced tab.'),
     ]);
 
-    // Expert-level combat internals; only client-stated mechanics carry numbers.
+    // Expert-level internals; only client-stated mechanics carry numbers.
     final advanced = page([
+      Text('Cultivation internals', style: h3),
+      para('The exact numbers behind the calculator\'s model, for readers who '
+          'want to check the math.'),
+      table(
+        'Respira crit roll (per attempt)',
+        ['Multiplier', 'Chance'],
+        [
+          ['×1', '60%'],
+          ['×2', '30%'],
+          ['×5', '8%'],
+          ['×10', '2%'],
+        ],
+        'Mean multiplier 1.8, variance 2.56 per attempt — the main driver of '
+        'the best/worst band on short horizons.',
+      ),
+      para('Fruit gush pity: every 6th identical fruit is a guaranteed gush, on '
+          'top of the displayed random rate. The variance model treats that '
+          '1-in-6 as deterministic — only the other 5/6 of fruits roll randomly '
+          '— which narrows the fruit side of the band.'),
+      para('Strive tier tables (client config; the live value is recomputed '
+          'hourly server-side, so only the shape is used, anchored to your real '
+          'Strive):\n'
+          '• Young servers (world level < 30): by major-realm gap to server #1 '
+          '— 15/20/30/40/50/60/70% for gaps 1–7.\n'
+          '• Mature servers (world level ≥ 30): by minor-level gap — 70% at '
+          '≥60 levels, 30% at ≥50, 20% at ≥40 — plus an additive major-realm '
+          'bonus of 30% (1 realm) or 50% (2+). The 70% + 50% sum is the ~120% '
+          'cap seen on aged servers.'),
+      para('The best/worst band is a ~90% central interval (P5–P95): the '
+          'calculator sums the variance of every random roll over the horizon '
+          'and takes ±1.645 standard deviations around the mean. The band is '
+          'widest in relative terms on short projections and tightens as the '
+          'horizon grows.'),
+      Text('Combat internals', style: h3),
       para('Exact mechanics recovered from the game\'s own stat definitions and '
           'tooltip text. Everything numbered here is stated by the client; '
           'damage resolution itself runs on the server, so treat this as the '
@@ -379,6 +413,26 @@ class ReferenceTab extends StatelessWidget {
           'reduction does nothing in duels. There are also path-split modifiers '
           '— damage vs Immortal-path and vs Demon-path cultivators are separate '
           'stats.'),
+      Text('How Battle Rating is put together', style: h3),
+      para('The total is computed server-side, but the client defines the '
+          'structure: every stat carries a BR weight, and your BR is the '
+          'weighted sum of everything you have, plus pre-scored blocks for '
+          'gear. The in-game BR breakdown panel groups it into: character level '
+          '& realm, inner skill, gear (base + affixes + augment levels + '
+          'carvings), Relics (same sub-parts), Abilities and their training, '
+          'Curios (base + active + set), pets (level, skills, growth), plus '
+          'talismans, celebrity cards and the rest.'),
+      para('Two useful things fall out of the client weights:\n'
+          '• Defense is weighted ~2.1× attack per point (and HP/MP pool points '
+          'far below either) — the game "prices" a point of defense as worth '
+          'about twice a point of attack.\n'
+          '• Each gear piece and Relic arrives with its BR pre-computed (a '
+          'base score, and for Relics a realm-corrected score that only '
+          'applies once your realm meets the item\'s requirement — an '
+          'under-realm Relic shows its uncorrected, lower BR).'),
+      para('The exact weight constants exist in client data but the server\'s '
+          'final assembly (level factors, rounding) isn\'t visible, so per-stat '
+          'BR predictions from these weights are approximate.'),
     ]);
 
     return DefaultTabController(
