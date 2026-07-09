@@ -308,11 +308,81 @@ class ReferenceTab extends StatelessWidget {
           'exact values — what a given 10-level bonus or resonance rank grants — '
           'are decided server-side and vary by item and realm, so this page '
           'doesn\'t guess at them. Where a number isn\'t listed, read it as '
-          '"unknown", not "zero".'),
+          '"unknown", not "zero". For the exact per-point math the game does '
+          'expose, see the Advanced tab.'),
+    ]);
+
+    // Expert-level combat internals; only client-stated mechanics carry numbers.
+    final advanced = page([
+      para('Exact mechanics recovered from the game\'s own stat definitions and '
+          'tooltip text. Everything numbered here is stated by the client; '
+          'damage resolution itself runs on the server, so treat this as the '
+          'rulebook rather than a full damage calculator.'),
+      Text('Flat stats and realm normalization', style: h3),
+      para('Crit Chance, Crit Resistance, Hit Rate and Dodge are stored as flat '
+          'values and converted to effective percentages against a '
+          'realm-dependent standard. This is why the game\'s own tooltip reports '
+          'your "crit rate at your current realm": the flat number keeps its '
+          'value, but each realm raises the standard it\'s measured against, '
+          'deflating the percentage. The normalization curve is server-side; '
+          'the in-game tooltip is the only exact readout.'),
+      table(
+        'Per-point coefficients and caps',
+        ['Stat', 'Per point', 'Cap'],
+        [
+          ['Penetration (phys/spell)', '−0.1% target DEF*', '—'],
+          ['Block (phys/spell)', '30% proc; −0.1% DMG*', '—'],
+          ['Stun duration enhance', '+0.5% duration', '+25%'],
+          ['Stun duration resist', '−0.5% duration taken', '−50%'],
+          ['Stun chance enhance', '+0.2% proc chance', '+100%'],
+          ['Stun chance resist', '−0.2% proc chance', '−50%'],
+          ['Elemental Rule level', '+0.05% DMG per level over target', '—'],
+        ],
+        '* Penetration applies when it exceeds the target\'s defense stat; '
+        'Block when it exceeds the attacker\'s attack stat.',
+      ),
+      Text('Crit internals', style: h3),
+      para('• Base crit multiplier is 150%, and crit damage is rounded down. '
+          'Crit DMG% bonuses raise that multiplier.\n'
+          '• Soul-bound Talismans crit at a separate 120% base.\n'
+          '• Crit Additive DMG is a flat amount added on top of a crit (base 0) '
+          '— independent of the multiplier.\n'
+          '• Crit Block trades 1:1 — each 1% removes 1% from the attacker\'s '
+          'crit multiplier against you.\n'
+          '• Crit Resistance reduces the chance of being crit; like Crit '
+          'Chance it\'s flat and realm-normalized.'),
+      Text('Sustain', style: h3),
+      para('Out of combat you regenerate 2% of max HP and MP per second; regen '
+          'stats raise this. Shields come in three kinds — standard (absorbs a '
+          'fixed capacity), MP-fed (drains Max MP instead of a capacity pool) '
+          'and HP-fed blood shields — plus statuses that boost shield strength '
+          'or add damage while a shield holds.'),
+      Text('The gear stat formula', style: h3),
+      para('An item\'s visible stat line is computed as:\n\n'
+          '    floor( base[rank][affix] × roll × rarity_scale )\n\n'
+          '• base[rank][affix] — a lookup keyed by the item\'s level '
+          'requirement and which affix the line is; this table is server-side.\n'
+          '• roll — the forge-time quality roll, interpolated linearly between '
+          'the affix\'s min and max range (a 0–100 score).\n'
+          '• rarity_scale — a flat multiplier per rarity color; higher rarity '
+          'scales every line on the item.'),
+      para('Carving lines use the same base lookup times a per-carving-level '
+          'multiplier, which is why a carving\'s value jumps when its rarity '
+          'tier steps up. Augment levels multiply the item\'s base stats by a '
+          'smooth per-level curve on top of all of this.'),
+      Text('Damage families', style: h3),
+      para('Offense and defense are tracked separately per source: Abilities, '
+          'Relics and Immortactic arts each have their own attack, defense and '
+          'crit lines, and PvP ("vs Taoists") and PvE ("vs monsters") are '
+          'independent trees on top of that. Two consequences worth knowing: a '
+          '"Relic DMG +x%" line does nothing for your Ability damage, and PvE '
+          'reduction does nothing in duels. There are also path-split modifiers '
+          '— damage vs Immortal-path and vs Demon-path cultivators are separate '
+          'stats.'),
     ]);
 
     return DefaultTabController(
-      length: 5,
+      length: 6,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -323,6 +393,7 @@ class ReferenceTab extends StatelessWidget {
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
             Tab(text: 'Combat & Gear'),
+            Tab(text: 'Advanced'),
           ],
         ),
         Expanded(
@@ -332,6 +403,7 @@ class ReferenceTab extends StatelessWidget {
             myrimon,
             artifacts,
             combat,
+            advanced,
           ]),
         ),
       ]),
