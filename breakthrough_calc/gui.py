@@ -862,14 +862,99 @@ class MainWindow(QMainWindow):
             "exact <i>values</i> — what a given 10-level bonus or resonance rank "
             "grants — are decided server-side and vary by item and realm, so this "
             "page doesn't guess at them. Where a number isn't listed, read it as "
-            "\"unknown\", not \"zero\".</p>")
+            "\"unknown\", not \"zero\". For the exact per-point math the game does "
+            "expose, see the Advanced tab.</p>")
+
+        # ---- Combat & Gear: Advanced ---------------------------------------
+        # Expert-level internals recovered from the client's own stat
+        # definitions and tooltip text; only mechanics the game states
+        # explicitly are listed with numbers.
+        advanced = "<h2>Combat Internals (Advanced)</h2>"
+        advanced += (
+            "<p>Exact mechanics recovered from the game's own stat definitions "
+            "and tooltip text. Everything numbered here is stated by the client; "
+            "damage resolution itself runs on the server, so treat this as the "
+            "rulebook rather than a full damage calculator.</p>"
+
+            "<h3>Flat stats and realm normalization</h3>"
+            "<p>Crit Chance, Crit Resistance, Hit Rate and Dodge are stored as "
+            "flat values and converted to effective percentages against a "
+            "<i>realm-dependent standard</i>. This is why the game's own tooltip "
+            "reports your \"crit rate at your current realm\": the flat number "
+            "keeps its value, but each realm raises the standard it's measured "
+            "against, deflating the percentage. The normalization curve is "
+            "server-side; the in-game tooltip is the only exact readout.</p>"
+
+            "<h3>Per-point mechanics (client-stated)</h3>")
+        advanced += table(
+            "Per-point coefficients and caps",
+            ["Stat", "Effect per point", "Cap"],
+            [("Penetration (phys/spell)", "−0.1% target defense when your "
+              "penetration exceeds the target's defense stat", "—"),
+             ("Block (phys/spell)", "30% proc chance; each point −0.1% damage "
+              "when your block exceeds the attacker's attack", "—"),
+             ("Stun duration enhance", "+0.5% stun duration", "+25%"),
+             ("Stun duration resist", "−0.5% stun duration taken", "−50%"),
+             ("Stun chance enhance", "+0.2% stun proc chance", "+100%"),
+             ("Stun chance resist", "−0.2% stun proc chance", "−50%"),
+             ("Elemental Rule level", "+0.05% damage per level of advantage "
+              "over the target", "—")])
+        advanced += (
+            "<h3>Crit internals</h3>"
+            "<ul>"
+            "<li>Base crit multiplier is <b>150%</b>, and crit damage is rounded "
+            "<i>down</i>. Crit DMG% bonuses raise this multiplier.</li>"
+            "<li>Soul-bound Talismans crit at a separate <b>120%</b> base.</li>"
+            "<li><b>Crit Additive DMG</b> is a flat amount added on top of a "
+            "crit (base 0) — it scales independently of the multiplier.</li>"
+            "<li><b>Crit Block</b> trades 1:1 — each 1% removes 1% from the "
+            "attacker's crit multiplier against you.</li>"
+            "<li><b>Crit Resistance</b> reduces the <i>chance</i> of being crit; "
+            "like Crit Chance it's flat and realm-normalized.</li>"
+            "</ul>"
+
+            "<h3>Sustain</h3>"
+            "<p>Out of combat you regenerate <b>2% of max HP and MP per "
+            "second</b>; regen stats raise this. Shields come in three kinds — "
+            "standard (absorbs a fixed capacity), MP-fed (drains Max MP instead "
+            "of a capacity pool) and HP-fed blood shields — plus statuses that "
+            "boost shield strength or add damage while a shield holds.</p>"
+
+            "<h3>The gear stat formula</h3>"
+            "<p>An item's visible stat line is computed as:</p>"
+            "<p style='margin-left:16px'><code>floor( base[rank][affix] × "
+            "roll × rarity_scale )</code></p>"
+            "<ul>"
+            "<li><code>base[rank][affix]</code> — a lookup keyed by the item's "
+            "level requirement and which affix the line is; this table is "
+            "server-side.</li>"
+            "<li><code>roll</code> — the forge-time quality roll, interpolated "
+            "linearly between the affix's min and max range (a 0–100 score).</li>"
+            "<li><code>rarity_scale</code> — a flat multiplier per rarity color; "
+            "higher rarity scales every line on the item.</li>"
+            "</ul>"
+            "<p>Carving lines use the same base lookup times a per-carving-level "
+            "multiplier, which is why a carving's value jumps when its rarity "
+            "tier steps up. Augment levels multiply the item's base stats by a "
+            "smooth per-level curve on top of all of this.</p>"
+
+            "<h3>Damage families</h3>"
+            "<p>Offense and defense are tracked separately per <i>source</i>: "
+            "Abilities, Relics and Immortactic arts each have their own attack, "
+            "defense and crit lines, and PvP (\"vs Taoists\") and PvE (\"vs "
+            "monsters\") are independent trees on top of that. Two consequences "
+            "worth knowing: a \"Relic DMG +x%\" line does nothing for your "
+            "Ability damage, and PvE reduction does nothing in duels. There are "
+            "also path-split modifiers — damage vs Immortal-path and vs "
+            "Demon-path cultivators are separate stats.</p>")
 
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
                             ("Pills & Respira", pills),
                             ("Myrimon & Extractor", myrimon),
                             ("Artifacts & Gems", artifacts),
-                            ("Combat & Gear", combat)):
+                            ("Combat & Gear", combat),
+                            ("Advanced", advanced)):
             ref.addTab(page(html), title)
         return ref
 
