@@ -18,21 +18,67 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Breakthrough calculator for OverMortal: cultivation speed, pills, fruits and breakthrough time projections.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="breakthrough_calc">
+  <meta name="apple-mobile-web-app-title" content="Breakthrough Calc">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>breakthrough_calc</title>
+  <title>Breakthrough Calculator</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // Auto-apply PWA updates. Flutter's service worker downloads a new version
+    // in the background but keeps serving the old cache until every tab is
+    // closed, which reads as "the app never updates" — especially on iOS
+    // home-screen installs. Instead: tell a waiting worker to take over
+    // (Flutter's worker handles the 'skipWaiting' message) and reload once
+    // when it does.
+    if ('serviceWorker' in navigator) {
+      let reloading = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (reloading) return;
+        reloading = true;
+        window.location.reload();
+      });
+
+      function activate(worker) {
+        if (worker) worker.postMessage('skipWaiting');
+      }
+
+      function checkForUpdate() {
+        navigator.serviceWorker.getRegistration().then(function (reg) {
+          if (!reg) return;
+          activate(reg.waiting);
+          reg.addEventListener('updatefound', function () {
+            const installing = reg.installing;
+            if (!installing) return;
+            installing.addEventListener('statechange', function () {
+              // Only reload for updates of an already-controlled page, not
+              // the very first install.
+              if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                activate(reg.waiting || installing);
+              }
+            });
+          });
+          reg.update().catch(function () {});
+        });
+      }
+
+      window.addEventListener('load', checkForUpdate);
+      // iOS standalone PWAs stay suspended for days; re-check when the app
+      // comes back to the foreground.
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') checkForUpdate();
+      });
+    }
+  </script>
 </body>
 </html>

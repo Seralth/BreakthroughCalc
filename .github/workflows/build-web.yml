@@ -33,6 +33,11 @@ jobs:
         run: flutter pub get
       - name: Build web release
         run: flutter build web --release --base-href /BreakthroughCalc/
+      - name: Cache-bust the app entrypoint
+        # GitHub Pages caches everything for 10 minutes and iOS PWAs hold on
+        # far longer; stamping the loader URL with the commit forces clients
+        # that re-fetch index.html to also re-fetch the app code.
+        run: sed -i "s|flutter_bootstrap.js\"|flutter_bootstrap.js?v=${GITHUB_SHA}\"|" build/web/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: mobile/build/web
