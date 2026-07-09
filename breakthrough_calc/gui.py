@@ -869,8 +869,47 @@ class MainWindow(QMainWindow):
         # Expert-level internals recovered from the client's own stat
         # definitions and tooltip text; only mechanics the game states
         # explicitly are listed with numbers.
-        advanced = "<h2>Combat Internals (Advanced)</h2>"
+        advanced = "<h2>Cultivation Internals (Advanced)</h2>"
         advanced += (
+            "<p>The exact numbers behind the calculator's model, for readers who "
+            "want to check the math.</p>"
+            "<h3>Respira crit distribution</h3>")
+        advanced += table(
+            "Per-attempt crit roll (from client config)",
+            ["Multiplier", "Chance"],
+            [("×1", "60%"), ("×2", "30%"), ("×5", "8%"), ("×10", "2%")],
+            "Mean multiplier 1.8 (the calculator's expected value), variance 2.56 "
+            "per attempt — the main driver of the best/worst band on short "
+            "horizons.")
+        advanced += (
+            "<h3>Fruit gush pity</h3>"
+            "<p>Every 6th identical fruit is a guaranteed gush, on top of the "
+            "displayed random rate. The variance model treats that 1-in-6 as "
+            "deterministic — only the other 5/6 of fruits carry Bernoulli "
+            "variance at the displayed gush chance — which narrows the fruit "
+            "side of the band.</p>"
+            "<h3>Strive tier tables</h3>"
+            "<p>Recovered from client config; the live value is recomputed "
+            "hourly on the server, so the calculator uses these only for the "
+            "<i>shape</i> of the drop-off, anchored to your real Strive.</p>"
+            "<ul>"
+            "<li><b>Young servers</b> (world level &lt; 30): by major-realm gap "
+            "to server #1 — 15% / 20% / 30% / 40% / 50% / 60% / 70% for gaps "
+            "1–7.</li>"
+            "<li><b>Mature servers</b> (world level ≥ 30): by minor-<i>level</i> "
+            "gap — 70% at ≥60 levels, 30% at ≥50, 20% at ≥40 — plus an additive "
+            "major-realm bonus of 30% (1 realm) or 50% (2+ realms). The 70% + "
+            "50% sum is the ~120% cap seen on aged servers.</li>"
+            "</ul>"
+            "<h3>How the best/worst band is built</h3>"
+            "<p>The band is a ~90% central interval (P5–P95): the calculator "
+            "sums the variance of every random roll over the horizon (Respira "
+            "crits, non-pity gushes) and takes ±1.645 standard deviations "
+            "around the mean. Because variance grows with the square root of "
+            "the number of rolls, the band is widest in relative terms on "
+            "short projections and tightens as the horizon grows.</p>"
+
+            "<h2>Combat Internals (Advanced)</h2>"
             "<p>Exact mechanics recovered from the game's own stat definitions "
             "and tooltip text. Everything numbered here is stated by the client; "
             "damage resolution itself runs on the server, so treat this as the "
@@ -946,7 +985,30 @@ class MainWindow(QMainWindow):
             "worth knowing: a \"Relic DMG +x%\" line does nothing for your "
             "Ability damage, and PvE reduction does nothing in duels. There are "
             "also path-split modifiers — damage vs Immortal-path and vs "
-            "Demon-path cultivators are separate stats.</p>")
+            "Demon-path cultivators are separate stats.</p>"
+
+            "<h3>How Battle Rating is put together</h3>"
+            "<p>The total is computed server-side, but the client defines the "
+            "structure: every stat carries a BR weight, and your BR is the "
+            "weighted sum of everything you have, plus pre-scored blocks for "
+            "gear. The in-game BR breakdown panel groups it into: character "
+            "level &amp; realm, inner skill, gear (base + affixes + augment "
+            "levels + carvings), Relics (same sub-parts), Abilities and their "
+            "training, Curios (base + active + set), pets (level, skills, "
+            "growth), plus talismans, celebrity cards and the rest.</p>"
+            "<p>Two useful things fall out of the client weights:</p>"
+            "<ul>"
+            "<li><b>Defense is weighted ~2.1× attack per point</b> (and HP/MP "
+            "pool points are weighted far below either) — the game \"prices\" a "
+            "point of defense as worth about twice a point of attack.</li>"
+            "<li><b>Each gear piece and Relic arrives with its BR pre-computed</b> "
+            "(a base score, and for Relics a realm-corrected score that only "
+            "applies once your realm meets the item's requirement — an "
+            "under-realm Relic shows its uncorrected, lower BR).</li>"
+            "</ul>"
+            "<p>The exact weight constants exist in client data but the "
+            "server's final assembly (level factors, rounding) isn't visible, "
+            "so per-stat BR predictions from these weights are approximate.</p>")
 
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
