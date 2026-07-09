@@ -224,8 +224,87 @@ class ReferenceTab extends StatelessWidget {
           'Claim before it caps — the calculator assumes you always do.'),
     ]);
 
+    // Combat-side systems overview. Combat is resolved server-side; these are
+    // the client-visible rules, with exact numbers only where confirmed.
+    final combat = page([
+      para('A high-level map of the combat side of the game. None of it affects '
+          'cultivation speed — it\'s here so the systems and their relationships '
+          'are in one place. Exact numbers are given where they\'re confirmed; '
+          'anything the client doesn\'t expose (most concrete bonus values) is '
+          'described generically rather than guessed.'),
+      Text('How stats work', style: h3),
+      para('Characters have five base stats, and every point of a base stat '
+          'converts into combat stats at a fixed rate. Combat stats come in '
+          'physical/magical pairs — attack, defense, hit rate and dodge each '
+          'exist in both flavors, and which pair matters depends on whether your '
+          'path fights with physical or magical damage.'),
+      table(
+        'Base stat conversions (per point)',
+        ['Base stat', 'Grants'],
+        [
+          ['Physique', '+4 Physical ATK, +2 Physical DEF'],
+          ['Psyche', '+4 Magical ATK, +2 Magical DEF'],
+          ['STR', '+1000 Max HP, +3 Physical DEF'],
+          ['CON', '+1000 Max MP, +3 Magical DEF'],
+          ['Agility', '+3 Dodge and +3 Hit Rate (both)'],
+        ],
+      ),
+      para('On top of the pairs sit four crit stats: Crit Chance (capped by '
+          'character level), Crit DMG (a % multiplier on crits), and the '
+          'defensive mirrors Crit Defense and Crit Resistance. There is also a '
+          'family of PvP-only stats — final damage dealt to and taken from other '
+          'Taoists, plus Relic-specific and Ability-specific versions — which '
+          'mostly come from gear sets and resonances rather than base stats.'),
+      Text('Gear basics', style: h3),
+      para('Gear slots are weapon, armor and accessory, with Relics as their own '
+          'parallel category. Rarity runs white → green → blue → purple → orange. '
+          'When an item is forged, each stat line rolls a quality score, so two '
+          'copies of the same item can differ; higher rarity also scales the whole '
+          'item up. Base stat lines, possible bonus affixes, and which extra affix '
+          'the item gains from augmentation are all fixed per item template — only '
+          'the roll varies.'),
+      Text('Augmentation (gear leveling)', style: h3),
+      para('Augmenting raises an item\'s level and grows its base stats smoothly — '
+          'a small fixed percentage per level. Separately, every 10th level the '
+          'item unlocks an extra affix line (which affix is fixed per item — e.g. '
+          'a Crit DMG% line on one weapon, an ATK line on another); the line\'s '
+          'value then grows with further augmentation.'),
+      para('Augmentation Resonance is a bonus keyed to the augment level of '
+          'everything you have equipped: pushing your lowest-level piece past the '
+          'next rank threshold unlocks the next resonance rank. This is where PvP '
+          'lines like "Relic DMG dealt to Taoists +x%" and "DMG taken from Taoists '
+          '−x%" come from, so it\'s usually worth leveling gear evenly instead of '
+          'maxing one piece.'),
+      Text('Carvings (enchant lines)', style: h3),
+      para('From Foundation onward, gear can hold Carvings — extra stat lines that '
+          'level up separately by feeding Carving EXP items. Carving slots unlock '
+          'as the item\'s augment level rises, and a carving\'s own quality tier '
+          '(white → orange) climbs at fixed level breakpoints, raising its value '
+          'scale. Only Rare-or-better gear can upgrade carvings, and costs scale '
+          'with the gear\'s rank. Like augmentation, carvings have a Carving '
+          'Resonance: a bonus keyed to carving levels across currently equipped '
+          'gear.'),
+      Text('Gear sets', style: h3),
+      para('Each realm has its own gear set, activated by wearing enough '
+          'current-realm pieces (and enough of their base affixes). Set tiers '
+          'grant the PvP damage lines above plus unlocks like higher carving caps. '
+          'On breakthrough the old realm\'s set bonus turns off — you re-activate '
+          'it with the new realm\'s gear. Special "Xuantian" affix sets exist as '
+          'well, counted separately for weapon/armor/accessory versus Relics.'),
+      Text('Immortactic (xianshu) gear', style: h3),
+      para('A separate gear track with its own leveling and star systems; its '
+          'stats grow in 2-level steps and its Crit DMG rises at every 20th '
+          'level.'),
+      Text('What\'s confirmed vs. server-side', style: h3),
+      para('The conversion table, threshold cadences and system rules above come '
+          'from client data and are reliable. The concrete values — what each '
+          '10-level affix grants, each resonance rank\'s payload, each set tier\'s '
+          'bonus — are computed server-side and need in-game readings to pin down. '
+          'Treat any specific number not listed here as unknown rather than zero.'),
+    ]);
+
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -235,6 +314,7 @@ class ReferenceTab extends StatelessWidget {
             Tab(text: 'Pills & Respira'),
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
+            Tab(text: 'Combat & Gear'),
           ],
         ),
         Expanded(
@@ -243,6 +323,7 @@ class ReferenceTab extends StatelessWidget {
             pills,
             myrimon,
             artifacts,
+            combat,
           ]),
         ),
       ]),
