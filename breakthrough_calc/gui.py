@@ -928,10 +928,12 @@ class MainWindow(QMainWindow):
         advanced += table(
             "Per-point coefficients and caps",
             ["Stat", "Effect per point", "Cap"],
-            [("Penetration (phys/spell)", "−0.1% target defense when your "
-              "penetration exceeds the target's defense stat", "—"),
-             ("Block (phys/spell)", "30% proc chance; each point −0.1% damage "
-              "when your block exceeds the attacker's attack", "—"),
+            [("Penetration (phys/spell)", "−0.1% target defense per point, "
+              "active only while your Penetration is higher than the "
+              "target's", "—"),
+             ("Block (phys/spell)", "while your Block is higher than the "
+              "attacker's: 30% chance per hit to block, reducing damage "
+              "0.1% per point of advantage", "—"),
              ("Stun duration enhance", "+0.5% stun duration", "+25%"),
              ("Stun duration resist", "−0.5% stun duration taken", "−50%"),
              ("Stun chance enhance", "+0.2% stun proc chance", "+100%"),
