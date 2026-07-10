@@ -78,6 +78,7 @@ class StageXpCurve(unittest.TestCase):
         self.assertEqual(self.rows[("Nascent", "LATE", "G6")], 1671600.0)
         self.assertEqual(self.rows[("Virtuoso", "MIDDLE", "G2")], 77190.0)
         # Deep-curve rows confirmed EXACT in-game (no correction needed):
+        self.assertEqual(self.rows[("Incarnation", "LATE", "G1")], 1483013.0)
         self.assertEqual(self.rows[("Wholeness", "MIDDLE", "G20")], 21644001.0)
         self.assertEqual(self.rows[("Perfection", "LATE", "G20")], 75067764.0)
 
