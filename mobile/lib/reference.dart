@@ -203,6 +203,13 @@ class ReferenceTab extends StatelessWidget {
           'Pyroessence your auxiliary path. A red requirement line = realm not '
           'met on that item\'s path. Path Switch swaps each elixir\'s remaining '
           'quantity, use attempts and efficiency along with the paths.'),
+      Text('Getting EXP elixirs', style: h3),
+      para('In normal play EXP elixirs only trickle in — small amounts, often '
+          'priced in Fateum, which F2P players should generally spend on the '
+          'garden first. The exception: breaking through to a new realm offers '
+          'three real-money elixir packs, among the best value in the game for '
+          'anyone optimizing money spent — the 150%/120% early tolerance tiers '
+          'make each realm\'s batch worth the most right when you buy it.'),
       Text('The Sense stat', style: h3),
       para('Sense (internally spirit_max) currently only gates treasure capacity: '
           'Fabao slots at Sense 1/7/13/16/19/22, Gubao slots at 15/18/21. It '

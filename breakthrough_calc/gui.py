@@ -803,6 +803,16 @@ class MainWindow(QMainWindow):
             "Path Switch, each elixir's remaining quantity, use attempts and "
             "efficiency swap along with the paths.</p>"
 
+            "<h3>Getting EXP elixirs</h3>"
+            "<p>In normal play, EXP elixirs only trickle in — small amounts from "
+            "various sources, often priced in Fateum, which is scarce enough that "
+            "a F2P player should generally prioritize spending it on the garden "
+            "first. The exception: <b>breaking through to a new realm offers three "
+            "real-money elixir packs</b>, and for anyone optimizing money spent "
+            "these packs are among the best value in the game — the elixirs' "
+            "150%/120% early tiers make each realm's batch worth the most right "
+            "when you buy it.</p>"
+
             "<h3>The Sense stat</h3>"
             "<p>Sense (internally <code>spirit_max</code>) currently does one "
             "thing: it gates how many treasures you can carry — Fabao slots "
