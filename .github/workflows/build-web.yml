@@ -32,7 +32,9 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
       - name: Build web release
-        run: flutter build web --release --base-href /BreakthroughCalc/
+        run: flutter build web --release --base-href /
+      - name: Add custom-domain CNAME
+        run: echo omvault.app > build/web/CNAME
       - name: Cache-bust the app entrypoint
         # GitHub Pages caches everything for 10 minutes and iOS PWAs hold on
         # far longer; stamping the loader URL with the commit forces clients
