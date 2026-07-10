@@ -619,8 +619,92 @@ class ReferenceTab extends StatelessWidget {
           'percentage on breakthrough.'),
     ]);
 
+    // System explainers assembled from the client's own tooltip/description
+    // strings (i18n dump) plus user-verified play notes; server-side numbers
+    // are omitted rather than guessed.
+    final systems = page([
+      para('Short explainers for the systems the rest of this app keeps '
+          'mentioning. Everything quoted is from the game\'s own text; where '
+          'a number is server-side, it\'s omitted rather than guessed.'),
+      Text('Currencies', style: h3),
+      para('• Spiritium — "the basic currency in the cultivation world. '
+          'Mainly obtained in Realms. Used in Market, Alchemy, Forge Room and '
+          'other daily matters." Realm idle production scales with Demon '
+          'Spire progress.\n'
+          '• Fateum — the premium-adjacent currency, "obtained from gameplay '
+          'or by exchanging Destium"; spent in the Fatevillion shop, on Path '
+          'Switches, refreshes, and artifact daily charges.\n'
+          '• Destium — purchase-only; converts to Fateum 1:1 (irreversible). '
+          'Also used in the Auction House.'),
+      para('Spending guidance: Fateum is the scarce one for F2P — prioritize '
+          'the garden (law fruits) once laws unlock at Voidbreak, ahead of '
+          'elixirs and convenience refreshes. Payers get the most per unit '
+          'from artifact daily charges and the realm-breakthrough elixir '
+          'packs.'),
+      Text('Garden & Elemental Laws', style: h3),
+      para('The garden grows seeds into rewards: each seed takes plot slots '
+          'and matures over time; you get limited daily watering attempts to '
+          'speed growth (the first is free each day — don\'t miss it), and '
+          'growth can be rushed with energy + Spiritium. Seeds yield alchemy '
+          'materials, technique seeds, and — the headline crop — Law '
+          'Fruits.'),
+      para('Elemental Laws (unlock around Voidbreak) are a long-term damage '
+          'system: Law Points accrue naturally over time (faster as your '
+          'laws level) and are spent to upgrade laws once you meet the Stage '
+          'requirement. Higher total law level deals bonus damage to '
+          'lower-level enemies — the bigger the gap, the more damage. Every '
+          '100M Law Points auto-converts to a Tao Motto. Eating Law Fruits '
+          '"greatly benefits the study of laws", and Blitz spends Law Fruits '
+          'for Law Points directly; advancing a Law Fruit has a 15% chance '
+          'to yield an extra fruit. This is why the guide says to bank pet '
+          'speed-ups and Fateum for the garden before Voidbreak: law levels '
+          'are a time-integral, so starting earlier compounds.'),
+      Text('Breakthrough failure', style: h3),
+      para('Stage breakthroughs can fail. A failure injures your Primordial '
+          'Soul, which must be restored before the next attempt — but '
+          '"cultivation won\'t be affected while injured", so EXP keeps '
+          'accruing. Pills "increase breakthrough success rate" (their own '
+          'tooltip). The calculator assumes first-try breakthroughs, so a '
+          'failure streak pushes real dates slightly past its estimates.'),
+      Text('Path Switch', style: h3),
+      para('Available from Foundation. Costs Fateum (rising 800 → 2400) with '
+          'a 7-day cooldown, and is blocked during competitive phases '
+          '(ascendance events, brawl registrations, matchmaking, mining, '
+          'server/sect transfer days). Your elixirs\' state swaps with the '
+          'paths: remaining quantity, use attempts, and tolerance efficiency '
+          'all follow the path they belong to.'),
+      Text('Sects', style: h3),
+      para('The social layer: joining one opens the Sect Library (pill '
+          'formulas are exchanged here from R2 up), sect salary, tasks, '
+          'treasure hunts, and the sect events (Meditation, Duel, Clash). '
+          'Sect realm dominion gives practical buffs — +20% gathering speed '
+          'on Spiritual Veins in the dominated realm. If nothing else, be in '
+          'a sect for the library and salary.'),
+      Text('Demon Spire', style: h3),
+      para('A floor-climbing combat tower. Your current floor pays '
+          'continuous hourly income — Ability Knowledge (levels your '
+          'Abilities) and a bonus to Spiritium production in Realms — so '
+          'every floor cleared is a permanent income raise. Climb whenever '
+          'your battle rating allows.'),
+      Text('Curios', style: h3),
+      para('Collectible items placed on the Sacred Altar (six slots). A slot '
+          'boosts the passive stats of curios matching its type (HP, MP, '
+          'P.ATK, M.ATK, P.DEF, M.DEF); percentage-stat curios don\'t '
+          'benefit. Altar effects multiply with a curio\'s Star-Up. Rarities '
+          'run Rare → Epic → Legendary → Mythic, from a draw system with '
+          'guarantees. Several curios also carry the cultivation bonuses '
+          '(pill effect, Respira) listed elsewhere in this reference.'),
+      Text('Techniques', style: h3),
+      para('Unlockable passives: meet a technique\'s requirements to learn '
+          'it, then spend Technique Points to tier it up — special effects '
+          'unlock at Tiers 3, 6 and 9. The early-game picks the guide names '
+          '(Longevity, Energy Unification, Rejuvenation) are examples of '
+          'buying these tier effects at their cheapest; the same logic — '
+          'tier breakpoints first — carries through the rest of the game.'),
+    ]);
+
     return DefaultTabController(
-      length: 7,
+      length: 8,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -632,6 +716,7 @@ class ReferenceTab extends StatelessWidget {
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
             Tab(text: 'Combat & Gear'),
+            Tab(text: 'World Systems'),
             Tab(text: 'Advanced'),
           ],
         ),
@@ -643,6 +728,7 @@ class ReferenceTab extends StatelessWidget {
             myrimon,
             artifacts,
             combat,
+            systems,
             advanced,
           ]),
         ),
