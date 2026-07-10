@@ -151,6 +151,10 @@ class ReferenceTab extends StatelessWidget {
           'pills crafted via alchemy (used from the backpack), and aux-path EXP '
           'items named pills (cultivation screen, Elixir tab — e.g. Hundred '
           'Fortunes Pill — mechanically elixirs).'),
+      para('Elixirs are the other permanent family: reward/shop items granting '
+          'either combat stats ("stat elixirs") or cultivation EXP ("EXP '
+          'elixirs"), both with diminishing returns the more of an item you '
+          'consume. Both families are covered below.'),
       Text('Stat pills (alchemy)', style: h3),
       para('Crafted from per-rank formulas (Windride = +10 P.EVA, Agility = '
           '+10 M.EVA). Flat effect, no decay, until the rank\'s permanent use cap: '
@@ -159,6 +163,11 @@ class ReferenceTab extends StatelessWidget {
           'with the formula unlearned. Each major realm breakthrough unlocks the '
           'next rank\'s 50 uses per line (Compare BR "Stat Pill Use Limit": '
           'Nascent Soul 320, Incarnation 420, Voidbreak 520).'),
+      para('Practical read: there is no way to waste a stat pill — every use '
+          'pays the same flat amount and the budget refills only by reaching '
+          'new realms — so take them as you get them. The only real decision '
+          'is whether the crafting cost is worth it, and that gets steep at '
+          'high ranks.'),
       table(
         'Stat pill crafting cost (one craft)',
         ['Rank', 'Herb', 'Spiritium', 'Formula source'],
@@ -174,12 +183,22 @@ class ReferenceTab extends StatelessWidget {
       ),
       Text('Stat elixirs (tolerance ladder)', style: h3),
       para('Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) grant '
-          'permanent combat stats with diminishing returns: the effect ratio '
-          'steps down in tiers as the lifetime "Used" count grows, ending at '
-          '"Pill limit reached; it no longer takes effect". The a/b counter on '
-          'the item is your position inside the current tier. The ladder belongs '
-          'to the item, not the character — any realm steps through the same '
-          'tiers. The first 10 uses pay 150% of the listed stat.'),
+          'permanent combat stats — but with diminishing returns. Each item '
+          'tracks how many you\'ve consumed over your character\'s lifetime '
+          '(the "Used" number on its panel), and the effect ratio steps down '
+          'through fixed tiers as that count grows: the first few pay 150% of '
+          'the listed stat, later ones less and less, until "Pill limit '
+          'reached; it no longer takes effect" ends the item for good. The a/b '
+          'counter on the panel is your position inside the current tier, not '
+          'the overall cap.'),
+      para('The ladder is a property of the item, not the character — a 3R '
+          'elixir steps through the same tiers no matter whose realm consumes '
+          'it.'),
+      para('Practical read: there is no timing play — an elixir is worth the '
+          'same whenever you take it, so use them as they arrive. When buying, '
+          'remember the posted stat is the base: your next pill actually pays '
+          'base × your current ratio, so an item deep into its ladder is worth '
+          'a fraction of its face value.'),
       table(
         'Effect-ratio tiers (uses per tier)',
         ['Ratio', '3R', '4R', '5R'],
@@ -191,10 +210,12 @@ class ReferenceTab extends StatelessWidget {
           ['70%', '?', '60', '?'],
           ['50/30/20%', '?', '?', '?'],
         ],
-        'Verified against 18 items whose totals reproduce exactly. "?" tiers '
-        'not yet crossed; the tooltip ladder continues 70 → 50 → 30 → 20% before '
-        'the hard cap. Cultivation-EXP elixirs use different, wider tiers '
-        '(first tier 20 uses).',
+        'Verified against 18 observed items, whose lifetime totals all '
+        'reproduce exactly from these widths (each tier contributes '
+        'uses × base × ratio). "?" marks tiers no character has crossed yet; '
+        'the in-game tooltip says the ladder continues 70 → 50 → 30 → 20% '
+        'before the hard cap. Cultivation-EXP elixirs use different, wider '
+        'tiers (first tier 20 uses, not 10).',
       ),
       Text('Elixirs and paths', style: h3),
       para('EXP elixirs are path-specific: the Vigor ladder feeds Literatia, '

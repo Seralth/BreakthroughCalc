@@ -743,6 +743,10 @@ class MainWindow(QMainWindow):
             "Hundred Fortunes Pill): cultivation EXP for your auxiliary path — "
             "mechanically elixirs.</li>"
             "</ul>"
+            "<p><b>Elixirs</b> are the other permanent family: reward/shop items "
+            "granting either combat stats (\"stat elixirs\") or cultivation EXP "
+            "(\"EXP elixirs\"), both with diminishing returns the more of an item "
+            "you consume. Both families are covered below.</p>"
 
             "<h3>Stat pills (alchemy)</h3>"
             "<p>Crafted from per-rank formulas (e.g. Windride = +10 P.EVA, Agility = "
@@ -754,7 +758,12 @@ class MainWindow(QMainWindow):
             "<p>Each <b>major realm breakthrough unlocks the next rank's 50 uses</b> "
             "per pill line rather than raising old caps — the Compare BR panel's "
             "\"Stat Pill Use Limit\" reads 320 at Nascent Soul, 420 at Incarnation, "
-            "520 at Voidbreak (two evasion pill lines × the unlocked ranks).</p>")
+            "520 at Voidbreak (two evasion pill lines × the unlocked ranks).</p>"
+            "<p><b>Practical read:</b> there is no way to waste a stat pill — every "
+            "use pays the same flat amount and the budget refills only by reaching "
+            "new realms — so take them as you get them. The only real decision is "
+            "whether the crafting cost is worth it, and that gets steep at high "
+            "ranks.</p>")
         elixirs += table(
             "Stat pill crafting cost (one craft)",
             ["Rank", "Herb", "Spiritium", "Formula source"],
@@ -767,18 +776,23 @@ class MainWindow(QMainWindow):
             "R1–R5 is worth (20+40+50+50+50) × 10 = 2,100 of the stat.")
         elixirs += (
             "<h3>Stat elixirs (tolerance ladder)</h3>"
-            "<p>Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) are "
-            "reward/shop items granting permanent combat stats — but with "
-            "<b>diminishing returns</b>: each has a lifetime-use counter, and the "
-            "<b>effect ratio</b> steps down in tiers as it grows, ending at "
-            "\"Pill limit reached; it no longer takes effect\". The item panel "
-            "shows the current ratio and an <code>a/b</code> counter — your "
-            "position inside the <i>current</i> tier — plus the lifetime total "
-            "under \"Used\".</p>"
+            "<p>Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) grant "
+            "permanent combat stats — but with <b>diminishing returns</b>. Each "
+            "item tracks how many you've consumed over your character's lifetime "
+            "(the \"Used\" number on its panel), and the <b>effect ratio</b> steps "
+            "down through fixed tiers as that count grows: the first few pay 150% "
+            "of the listed stat, later ones less and less, until \"Pill limit "
+            "reached; it no longer takes effect\" ends the item for good. The "
+            "<code>a/b</code> counter on the panel is your position inside the "
+            "<i>current</i> tier, not the overall cap.</p>"
             "<p>The ladder is a property of the item, <b>not the character</b>: "
             "a 3R elixir steps through the same tiers no matter whose realm "
-            "consumes it. Early uses are the valuable ones — the first 10 pay "
-            "150% of the listed stat.</p>")
+            "consumes it.</p>"
+            "<p><b>Practical read:</b> there is no timing play — an elixir is "
+            "worth the same whenever you take it, so use them as they arrive. "
+            "When buying, remember the posted stat is the <i>base</i>: your next "
+            "pill actually pays base × your current ratio, so an item deep into "
+            "its ladder is worth a fraction of its face value.</p>")
         elixirs += table(
             "Stat elixir effect-ratio tiers (uses per tier)",
             ["Effect ratio", "3R", "4R", "5R"],
@@ -788,11 +802,12 @@ class MainWindow(QMainWindow):
              ["80%", "50", "—", "—"],
              ["70%", "?", "60", "?"],
              ["50% / 30% / 20%", "?", "?", "?"]],
-            "Verified against 18 items whose lifetime totals reproduce exactly "
-            "(e.g. a +20 base 3R at 51 used: 10×30 + 20×20 + 21×16 = 1,036). "
-            "\"?\" tiers haven't been crossed yet; the tooltip ladder continues "
-            "70 → 50 → 30 → 20% before the hard cap. Cultivation-EXP elixirs "
-            "use different (wider) tiers — their first tier is 20 uses.")
+            "Verified against 18 observed items, whose lifetime totals all "
+            "reproduce exactly from these widths (each tier contributes "
+            "uses × base × ratio). \"?\" marks tiers no character has crossed "
+            "yet; the in-game tooltip says the ladder continues 70 → 50 → 30 → "
+            "20% before the hard cap. Cultivation-EXP elixirs use different "
+            "(wider) tiers — their first tier is 20 uses, not 10.")
         elixirs += (
             "<h3>Elixirs and paths</h3>"
             "<p>Cultivation-EXP elixirs are path-specific: the Vigor ladder feeds "
@@ -806,7 +821,7 @@ class MainWindow(QMainWindow):
             "<h3>Getting EXP elixirs</h3>"
             "<p>In normal play, EXP elixirs only trickle in — small amounts from "
             "various sources, often priced in Fateum, which is scarce enough that "
-            "a F2P player should generally prioritize spending it on the garden "
+            "an F2P player should generally prioritize spending it on the garden "
             "first. The exception: <b>breaking through to a new realm offers three "
             "real-money elixir packs</b>, and for anyone optimizing money spent "
             "these packs are among the best value in the game — the elixirs' "
