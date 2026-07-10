@@ -142,6 +142,74 @@ class ReferenceTab extends StatelessWidget {
       para('Daily pills/Respira reset on major breakthrough/ascension — spend them first.'),
     ]);
 
+    // Permanent consumables — verified 2026-07-10 from in-game screens
+    // (formula panel, elixir tooltips, Compare BR "Pill and Elixir Details").
+    final elixirs = page([
+      Text('Three things called "pill"', style: h3),
+      para('The cultivation screen splits consumables into Pill and Elixir tabs, '
+          'and "pill" means three different things: daily cultivation pills '
+          '(Pill tab — see Pills & Respira), permanent stat pills crafted via '
+          'alchemy (Elixir tab), and aux-path EXP items named pills (e.g. Hundred '
+          'Fortunes Pill — mechanically elixirs).'),
+      Text('Stat pills (alchemy)', style: h3),
+      para('Crafted from per-rank formulas (Windride = +10 P.EVA, Agility = '
+          '+10 M.EVA). Flat effect, no decay, until the rank\'s permanent use cap: '
+          'R1 20 · R2 40 · R3+ 50 uses. The cap is on the pill, not the formula — '
+          'shop/reward pills spend the same budget, and the counter ticks even '
+          'with the formula unlearned. Each major realm breakthrough unlocks the '
+          'next rank\'s 50 uses per line (Compare BR "Stat Pill Use Limit": '
+          'Nascent Soul 320, Incarnation 420, Voidbreak 520).'),
+      table(
+        'Stat pill crafting cost (one craft)',
+        ['Rank', 'Herb', 'Spiritium', 'Formula source'],
+        [
+          ['R1', 'Greenspirit ×1', '500', 'Market'],
+          ['R2', 'Miragium ×2', '5,000', 'Sect Library'],
+          ['R3', 'Spirit Marrow ×3', '24,000', 'Sect Library'],
+          ['R4', 'Loftine ×4', '80,000', 'Sect Library'],
+          ['R5', 'Udumbara ×6', '300,000', 'Sect Library'],
+        ],
+        'All formulas craft at Max Quality. A fully capped +10 line across '
+        'R1–R5 = (20+40+50+50+50) × 10 = 2,100 stat.',
+      ),
+      Text('Stat elixirs (tolerance ladder)', style: h3),
+      para('Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) grant '
+          'permanent combat stats with diminishing returns: the effect ratio '
+          'steps down in tiers as the lifetime "Used" count grows, ending at '
+          '"Pill limit reached; it no longer takes effect". The a/b counter on '
+          'the item is your position inside the current tier. The ladder belongs '
+          'to the item, not the character — any realm steps through the same '
+          'tiers. The first 10 uses pay 150% of the listed stat.'),
+      table(
+        'Effect-ratio tiers (uses per tier)',
+        ['Ratio', '3R', '4R', '5R'],
+        [
+          ['150%', '10', '10', '10'],
+          ['120%', '—', '20', '20'],
+          ['100%', '20', '30', '40'],
+          ['80%', '50', '—', '—'],
+          ['70%', '?', '60', '?'],
+          ['50/30/20%', '?', '?', '?'],
+        ],
+        'Verified against 18 items whose totals reproduce exactly. "?" tiers '
+        'not yet crossed; the tooltip ladder continues 70 → 50 → 30 → 20% before '
+        'the hard cap. Cultivation-EXP elixirs use different, wider tiers '
+        '(first tier 20 uses).',
+      ),
+      Text('Elixirs and paths', style: h3),
+      para('EXP elixirs are path-specific: the Vigor ladder feeds Literatia, '
+          'Fatebreaker Ghostia, Emerald Magicka, Nonagen Corporia, Cloudcut Grit '
+          'Swordia; Spiritual Nectar feeds your current path, Hundred Fortunes / '
+          'Pyroessence your auxiliary path. A red requirement line = realm not '
+          'met on that item\'s path. Path Switch swaps each elixir\'s remaining '
+          'quantity, use attempts and efficiency along with the paths.'),
+      Text('The Sense stat', style: h3),
+      para('Sense (internally spirit_max) currently only gates treasure capacity: '
+          'Fabao slots at Sense 1/7/13/16/19/22, Gubao slots at 15/18/21. It '
+          'grows ~1 per realm level; the tooltip says more uses are planned. It '
+          'is not part of any exposed damage or cultivation formula.'),
+    ]);
+
     final myrimon = page([
       Text('Myrimon Fruits', style: h3),
       para('Fruits processed through the Aura Extractor grant a one-time EXP payout '
@@ -495,7 +563,7 @@ class ReferenceTab extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 6,
+      length: 7,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
@@ -503,6 +571,7 @@ class ReferenceTab extends StatelessWidget {
           tabs: [
             Tab(text: 'Basics'),
             Tab(text: 'Pills & Respira'),
+            Tab(text: 'Elixirs & Stat Pills'),
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
             Tab(text: 'Combat & Gear'),
@@ -513,6 +582,7 @@ class ReferenceTab extends StatelessWidget {
           child: TabBarView(children: [
             basics,
             pills,
+            elixirs,
             myrimon,
             artifacts,
             combat,

@@ -724,6 +724,91 @@ class MainWindow(QMainWindow):
             "<p><b>Daily pills and Respira reset</b> on a major breakthrough/ascension — "
             "spend them before breaking through.</p>")
 
+        # ---- Elixirs & Stat Pills (permanent consumables) --------------------
+        # Verified 2026-07-10 from in-game screens (formula panel, elixir
+        # tooltips, Compare BR "Pill and Elixir Details") — see repo notes.
+        elixirs = "<h2>Elixirs &amp; Stat Pills</h2>"
+        elixirs += (
+            "<p>Beyond the daily cultivation pills, the game has <b>permanent</b> "
+            "consumables that live under the cultivation screen's Elixir tab. The "
+            "word \"pill\" is overloaded in-game — three different things carry it:</p>"
+            "<ul>"
+            "<li><b>Cultivation pills</b> (Pill tab): daily-limited EXP items — covered "
+            "on the Pills &amp; Respira page. Daily attempts reset on a Main Stage "
+            "breakthrough.</li>"
+            "<li><b>Stat pills</b> (Elixir tab, crafted via alchemy formulas): flat "
+            "permanent combat stats with a fixed lifetime use cap.</li>"
+            "<li><b>Aux-path \"pills\"</b> (Elixir tab, e.g. Hundred Fortunes Pill): "
+            "cultivation EXP for your auxiliary path — mechanically elixirs.</li>"
+            "</ul>"
+
+            "<h3>Stat pills (alchemy)</h3>"
+            "<p>Crafted from per-rank formulas (e.g. Windride = +10 P.EVA, Agility = "
+            "+10 M.EVA). Every use grants the full listed stat — no decay — until the "
+            "pill's <b>permanent use cap</b> for that rank is exhausted: "
+            "<b>R1 20 · R2 40 · R3+ 50</b> uses. The counter is on the pill itself, "
+            "so pills from shops or rewards spend the same budget as crafted ones, "
+            "and it ticks even if you never learn the formula.</p>"
+            "<p>Each <b>major realm breakthrough unlocks the next rank's 50 uses</b> "
+            "per pill line rather than raising old caps — the Compare BR panel's "
+            "\"Stat Pill Use Limit\" reads 320 at Nascent Soul, 420 at Incarnation, "
+            "520 at Voidbreak (two evasion pill lines × the unlocked ranks).</p>")
+        elixirs += table(
+            "Stat pill crafting cost (one craft)",
+            ["Rank", "Herb", "Spiritium", "Formula source"],
+            [["R1", "Greenspirit ×1", "500", "Market"],
+             ["R2", "Miragium ×2", "5,000", "Sect Library"],
+             ["R3", "Spirit Marrow ×3", "24,000", "Sect Library"],
+             ["R4", "Loftine ×4", "80,000", "Sect Library"],
+             ["R5", "Udumbara ×6", "300,000", "Sect Library"]],
+            "All formulas craft at Max Quality. A fully capped +10 line across "
+            "R1–R5 is worth (20+40+50+50+50) × 10 = 2,100 of the stat.")
+        elixirs += (
+            "<h3>Stat elixirs (tolerance ladder)</h3>"
+            "<p>Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) are "
+            "reward/shop items granting permanent combat stats — but with "
+            "<b>diminishing returns</b>: each has a lifetime-use counter, and the "
+            "<b>effect ratio</b> steps down in tiers as it grows, ending at "
+            "\"Pill limit reached; it no longer takes effect\". The item panel "
+            "shows the current ratio and an <code>a/b</code> counter — your "
+            "position inside the <i>current</i> tier — plus the lifetime total "
+            "under \"Used\".</p>"
+            "<p>The ladder is a property of the item, <b>not the character</b>: "
+            "a 3R elixir steps through the same tiers no matter whose realm "
+            "consumes it. Early uses are the valuable ones — the first 10 pay "
+            "150% of the listed stat.</p>")
+        elixirs += table(
+            "Stat elixir effect-ratio tiers (uses per tier)",
+            ["Effect ratio", "3R", "4R", "5R"],
+            [["150%", "10", "10", "10"],
+             ["120%", "—", "20", "20"],
+             ["100%", "20", "30", "40"],
+             ["80%", "50", "—", "—"],
+             ["70%", "?", "60", "?"],
+             ["50% / 30% / 20%", "?", "?", "?"]],
+            "Verified against 18 items whose lifetime totals reproduce exactly "
+            "(e.g. a +20 base 3R at 51 used: 10×30 + 20×20 + 21×16 = 1,036). "
+            "\"?\" tiers haven't been crossed yet; the tooltip ladder continues "
+            "70 → 50 → 30 → 20% before the hard cap. Cultivation-EXP elixirs "
+            "use different (wider) tiers — their first tier is 20 uses.")
+        elixirs += (
+            "<h3>Elixirs and paths</h3>"
+            "<p>Cultivation-EXP elixirs are path-specific: the Vigor ladder feeds "
+            "Literatia, Fatebreaker Ghostia, Emerald Magicka, Nonagen Corporia, "
+            "Cloudcut Grit Swordia; Spiritual Nectar feeds your current path and "
+            "Hundred Fortunes / Pyroessence your auxiliary path. A red requirement "
+            "line means the realm requirement isn't met on that item's path. On a "
+            "Path Switch, each elixir's remaining quantity, use attempts and "
+            "efficiency swap along with the paths.</p>"
+
+            "<h3>The Sense stat</h3>"
+            "<p>Sense (internally <code>spirit_max</code>) currently does one "
+            "thing: it gates how many treasures you can carry — Fabao slots "
+            "unlock at Sense 1/7/13/16/19/22 and Gubao slots at 15/18/21. It "
+            "grows by about 1 per realm level, and the game's own tooltip says "
+            "further uses are planned. It is not part of any damage or "
+            "cultivation formula the client exposes.</p>")
+
         # ---- Myrimon & Extractor ---------------------------------------------
         myrimon = "<h2>Myrimon &amp; Extractor</h2>"
         myrimon += (
@@ -1099,6 +1184,7 @@ class MainWindow(QMainWindow):
         self._ref_tabs = ref = QTabWidget()
         for title, html in (("Basics", basics),
                             ("Pills & Respira", pills),
+                            ("Elixirs & Stat Pills", elixirs),
                             ("Myrimon & Extractor", myrimon),
                             ("Artifacts & Gems", artifacts),
                             ("Combat & Gear", combat),
