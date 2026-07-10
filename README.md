@@ -6,7 +6,7 @@ it returns the time to your next half-step, next Stage, or a chosen target Stage
 Available for Windows, Linux, Android, and the web.
 
 **Use it in the browser (works on iPhone):**
-<https://seralth.github.io/BreakthroughCalc/>
+<https://omvault.app/>
 
 ### Install as an app
 
@@ -75,7 +75,7 @@ From the [Releases](../../releases) page:
 | Windows | `BreakthroughCalculator.exe` | Run directly. |
 | Linux | `BreakthroughCalculator-x86_64.AppImage` | Mark executable, then run. |
 | Android | `BreakthroughCalculator.apk` | Sideload; requires "install from unknown sources". |
-| Web / iOS | [seralth.github.io/BreakthroughCalc](https://seralth.github.io/BreakthroughCalc/) | PWA; on iPhone use Safari → Add to Home Screen. |
+| Web / iOS | [omvault.app](https://omvault.app/) | PWA; on iPhone use Safari → Add to Home Screen. |
 
 The Android build is not on the Play Store. It is a sideload-only APK attached to
 each release.
