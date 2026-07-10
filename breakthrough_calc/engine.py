@@ -40,7 +40,9 @@ _RESPIRA_CRIT_VAR = sum(p * m * m for m, p in _RESPIRA_CRIT) - _RESPIRA_CRIT_MEA
 # z for a ~90% central interval (P5..P95), the "best/worst" band.
 _BAND_Z = 1.645
 
-# Fruit pity: every Nth fruit is a guaranteed gush (deterministic, no variance).
+# Fruit pity: a gush is guaranteed within N fruits of the last gush (SOFT
+# pity — any gush resets the counter; observed in-game 2026-07-10: a random
+# gush on the 5th fruit reset the "guaranteed in x6" counter back to 6).
 GUSH_GUARANTEE_EVERY = 6
 
 # Extractor rarity ladder; rank N grants +20% orb EXP to tiers 1..N (no Common line).
@@ -357,16 +359,36 @@ class Engine:
             p = qual[i] + (ext[i] / ext_tot * residual if ext_tot > 0 else 0.0)
             e_q += p * (culti_mult + (0.2 if 1 <= i <= rank_idx else 0.0)) * qmult
 
-        # gc is the RANDOM trigger rate; the every-6th pity is ON TOP (verified
-        # 2026-07-07: extractor panel shows "20.0% (Gush guaranteed in Aura Orb
-        # x6)" with the track bonus summing to exactly 20% — pity not included).
-        n = inp.fruit_count
-        g = int(n) // GUSH_GUARANTEE_EVERY
-        exp_gushes = g + (n - g) * gc
+        # gc is the RANDOM trigger rate (extractor panel: "20.0% (Gush
+        # guaranteed in Aura Orb x6)" — track bonus sums to exactly 20%, pity
+        # listed separately). The pity is SOFT: any gush resets the x6 counter
+        # (observed 2026-07-10 — a random gush on the 5th fruit reset the
+        # counter to 6), so a gush is guaranteed within 6 fruits of the LAST
+        # gush, not on every literal 6th. Model: Markov chain over consecutive
+        # misses s = 0..4; the fruit gushes with prob 1 at s = 5, else gc.
+        # Exact mean/variance of the gush count via moment recursion, counter
+        # assumed fresh at batch start.
+        n = int(inp.fruit_count)
+        k = GUSH_GUARANTEE_EVERY
+        p = [0.0] * k   # P(miss streak = s)
+        m = [0.0] * k   # E[gushes · 1{streak = s}]
+        q = [0.0] * k   # E[gushes² · 1{streak = s}]
+        p[0] = 1.0
+        for _ in range(n):
+            p2 = [0.0] * k; m2 = [0.0] * k; q2 = [0.0] * k
+            for s in range(k):
+                pg = 1.0 if s == k - 1 else gc
+                p2[0] += pg * p[s]
+                m2[0] += pg * (m[s] + p[s])
+                q2[0] += pg * (q[s] + 2 * m[s] + p[s])
+                if s < k - 1:
+                    p2[s + 1] += (1 - pg) * p[s]
+                    m2[s + 1] += (1 - pg) * m[s]
+                    q2[s + 1] += (1 - pg) * q[s]
+            p, m, q = p2, m2, q2
+        exp_gushes = sum(m)
+        var_gush_count = max(0.0, sum(q) - exp_gushes ** 2)
         mean = base * e_q * (n + exp_gushes * (gxm - 1))
-        # Variance: the g pity fruits are deterministic; only the other n-g
-        # fruits contribute Bernoulli gush variance.
-        var_gush_count = (n - g) * gc * (1 - gc)
         var_total = (base * e_q) ** 2 * (gxm - 1) ** 2 * var_gush_count
         return mean, var_total
 

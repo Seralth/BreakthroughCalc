@@ -281,12 +281,14 @@ class RespiraAndBands(unittest.TestCase):
         self.assertGreater(var, 0)
 
     def test_gush_guarantee_reduces_variance(self):
-        # Every 6th fruit is a guaranteed gush, so 6 fruits carry only 5 fruits'
-        # worth of gush variance (guaranteed one is deterministic).
+        # The soft pity (gush guaranteed within 6 of the last gush) truncates
+        # long miss streaks, so 6 fruits carry LESS gush variance than 6
+        # independent Bernoulli fruits.
         kw = dict(fruit_rank="R3", lvl_culti=10, lvl_quality=10, lvl_gush=10)
         _, v6 = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
         _, v1 = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
-        self.assertAlmostEqual(v6 / (5 * v1), 1.0, places=9)
+        self.assertLess(v6, 6 * v1)
+        self.assertGreater(v6, 0)
 
 
 class FruitQualityDistribution(unittest.TestCase):
@@ -353,16 +355,20 @@ class ScreenshotGroundTruth2026_07_07(unittest.TestCase):
         self.assertAlmostEqual(sum(p), 1.0)
 
     def test_pity_gushes_add_to_mean(self):
-        # gc is the random rate; every 6th fruit gushes on top of it.
+        # Soft pity (observed 2026-07-10): any gush resets the "guaranteed in
+        # x6" counter, so the 6th fruit gushes for sure only if the first 5
+        # all missed; otherwise it rolls gc like any other fruit.
         kw = dict(fruit_rank="R8", lvl_culti=20, lvl_quality=15, lvl_gush=14,
                   extractor_rarity="Epic")
         m6, _ = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
         m5, _ = self.e._fruit_stats(base_inputs(fruit_count=5, **kw))
+        m1, _ = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
         gc = self.fl["14"]["gush_chance"]
         gxm = self.fl["14"]["gush_xp"]
-        # 6th fruit is the pity: contributes 1 fruit at the FULL gush multiplier.
-        per_fruit_gushed = (m5 / 5) / ((1 - gc) + gc * gxm) * gxm
-        self.assertAlmostEqual(m6, m5 + per_fruit_gushed, places=6)
+        per_fruit = m1 / (1 + gc * (gxm - 1))  # base * E[quality factor]
+        p6 = (1 - gc) ** 5 + (1 - (1 - gc) ** 5) * gc  # gush prob on fruit 6
+        self.assertAlmostEqual(m6, m5 + per_fruit * (1 + p6 * (gxm - 1)),
+                               places=6)
 
     def test_gush_multiplier_keyed_by_gush_level(self):
         # Raising the Gush track (not the Culti track) must raise the payout.
