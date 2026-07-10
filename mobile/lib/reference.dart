@@ -49,8 +49,23 @@ class ReferenceTab extends StatelessWidget {
       );
     }
 
+    Widget footer() => Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 8),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Divider(),
+            Text(
+                'Spotted an error, or have data for a "?" in a table (a '
+                'screenshot of a tier you\'ve crossed, an endgame number)? '
+                'Much of this page is reconstructed from player screenshots, '
+                'and single data points regularly fill real gaps — please '
+                'report it at:',
+                style: muted),
+            const SelectableText('https://github.com/Seralth/BreakthroughCalc/issues'),
+          ]),
+        );
+
     Widget page(List<Widget> children) =>
-        ListView(padding: const EdgeInsets.all(12), children: children);
+        ListView(padding: const EdgeInsets.all(12), children: [...children, footer()]);
 
     final pillXp = d['pill_xp'] as Map<String, dynamic>;
     final vaseCost = d['vase_energy_cost'] as Map<String, dynamic>? ?? {};
@@ -633,9 +648,22 @@ class GuideTab extends StatelessWidget {
     Widget para(String s) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 6), child: Text(s));
 
+    Widget footer() => Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 8),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Divider(),
+            Text(
+                'Spotted an error or something missing? Much of this guide '
+                'comes from player observations — please report corrections '
+                'and new data at:',
+                style: TextStyle(color: Theme.of(context).hintColor, fontSize: 12)),
+            const SelectableText('https://github.com/Seralth/BreakthroughCalc/issues'),
+          ]),
+        );
+
     Widget page(List<Widget> children) => ListView(
         padding: const EdgeInsets.all(16),
-        children: children);
+        children: [...children, footer()]);
 
     final novice = page([
       Text('Novice → Foundation (your first day)', style: h3),

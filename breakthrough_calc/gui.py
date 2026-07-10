@@ -539,10 +539,18 @@ class MainWindow(QMainWindow):
                 h += f"<p style='color:{muted}'>{note}</p>"
             return h
 
+        footer = (
+            f"<hr><p style='color:{muted}'>Spotted an error, or have data for a "
+            "\"?\" in a table (a screenshot of a tier you've crossed, an endgame "
+            "number)? Much of this page is reconstructed from player screenshots, "
+            "and single data points regularly fill real gaps — please report it "
+            "at <a href='https://github.com/Seralth/BreakthroughCalc/issues'>"
+            "github.com/Seralth/BreakthroughCalc/issues</a>.</p>")
+
         def page(html: str) -> QTextBrowser:
             b = QTextBrowser()
             b.setOpenExternalLinks(True)
-            b.setHtml(html)
+            b.setHtml(html + footer)
             return b
 
 
@@ -1221,10 +1229,17 @@ class MainWindow(QMainWindow):
 
     def _build_guide_tab(self) -> QWidget:
         """Stage-by-stage cultivation guide, one sub-tab per realm band."""
+        footer = (
+            "<hr><p style='color:gray'>Spotted an error or something missing? "
+            "Much of this guide comes from player observations — please report "
+            "corrections and new data at "
+            "<a href='https://github.com/Seralth/BreakthroughCalc/issues'>"
+            "github.com/Seralth/BreakthroughCalc/issues</a>.</p>")
+
         def page(html: str) -> QTextBrowser:
             b = QTextBrowser()
             b.setOpenExternalLinks(True)
-            b.setHtml(html)
+            b.setHtml(html + footer)
             return b
 
         novice = (
