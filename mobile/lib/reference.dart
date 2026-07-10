@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'engine.dart';
+
+const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
+
+/// Tappable issues-page link used by the reference/guide footers.
+Widget issuesLink(BuildContext context) => InkWell(
+      onTap: () => launchUrl(Uri.parse(_issuesUrl),
+          mode: LaunchMode.externalApplication),
+      child: Text(_issuesUrl,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              decoration: TextDecoration.underline)),
+    );
 
 /// Read-only reference tables + primer, rendered from the same engine data so
 /// the numbers can't drift from the calculations. Organized as scrollable
@@ -60,7 +73,7 @@ class ReferenceTab extends StatelessWidget {
                 'and single data points regularly fill real gaps — please '
                 'report it at:',
                 style: muted),
-            const SelectableText('https://github.com/Seralth/BreakthroughCalc/issues'),
+            issuesLink(context),
           ]),
         );
 
@@ -658,7 +671,7 @@ class GuideTab extends StatelessWidget {
                 'comes from player observations — please report corrections '
                 'and new data at:',
                 style: TextStyle(color: Theme.of(context).hintColor, fontSize: 12)),
-            const SelectableText('https://github.com/Seralth/BreakthroughCalc/issues'),
+            issuesLink(context),
           ]),
         );
 
