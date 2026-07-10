@@ -1,0 +1,25 @@
+# Elixir, pill taxonomy, alchemy, and Sense mechanics
+
+
+Verified from 30 in-game screenshots (2026-07-10, Incarnation (L) Late player) + APK dump:
+
+- **Path letters decoded**: the (L)/(G)/(M)/(C)/(S) in realm names = the five paths — Literatia, Ghostia, Magicka, Corporia, Swordia. Header shows main path + auxiliary path realms.
+- **Elixir dynamic effect ratio**: tooltip ladder 150→120→100→70→50→30→20%, then 0% at lifetime cap ("Pill limit reached"). **Realm-independent** (same item = same ladder for any character). `a/b` = position in CURRENT tier; "Used" = lifetime total.
+- **STAT-elixir tier widths SOLVED (2026-07-10, verified against ALL 18 observed items AND Compare-BR stat totals, exact to the point)**: 150% tier is width **10** for stat elixirs. Per rank: **3R** = 150×10, 100×20 (no 120% tier!), 80×50, then ?; **4R** = 150×10, 120×20, 100×30, 70×60, then ?; **5R** = 150×10, 120×20, 100×40, then ?. Later widths (70% for 5R; 50/30/20% all ranks) unknown — observe as counters cross tiers. E.g. Yijing 3R +20 base, Used 51 at 80% 21/50: 10×30+20×20+21×16=1036 ✓. Compare-BR elixir totals = exact sum of the 3 items per stat (Crit 660+1408+684=2752 ✓ etc.).
+- **XP elixir acquisition** (user, 2026-07-10): three real-money elixir packs are offered on each realm breakthrough — among the best $/value in the game for spenders. Otherwise XP elixirs trickle in small amounts, often costing Fateum; F2P should prioritize Fateum on the garden (very high priority) over elixirs.
+- XP elixirs use DIFFERENT ladders/widths than stat elixirs (150% tier is 20-wide on 5R XP items; "Effect ratio reduces after taking 20 more" tooltip) — deferred, revisit later.
+- Red-colored Req text = requirement not met on that pill's path; ratio applies to base effect (e.g. +20 Crit at 120% → +24/pill).
+- Stat elixirs give permanent combat stats (+10/+20 per pill base); cultivation elixirs give path-specific Cultivation EXP (Erudite/Rectifying/Luminous/Harmonious/Sagacious Vigor ladder for Literatia, Fatebreaker=Ghostia, Emerald=Magicka, Nonagen=Corporia, Cloudcut=Swordia, Spiritual Nectar=current path).
+- Balance tables are server-side; tier widths must be read from screens, not APK.
+- **Taxonomy (user-corrected 2026-07-10) — "pill" is overloaded, three different things**. Cultivation screen has Pill and Elixir tabs:
+  - **Pill tab** = cultivation XP pills with a DAILY attempt limit ("No more pill attempts left today"; daily attempts reset on Main Stage breakthrough).
+  - **Elixir tab** contains: (1) main-path cultivation XP *elixirs* (Vigor ladder, Spiritual Nectar), (2) aux-path cultivation XP items *named* pills (Hundred Fortunes Pill, Pyroessence), and (3) aggregate stats FROM the permanent stat pills (Compare BR groups them there) — but the **stat pills themselves are backpack items**, crafted via alchemy (Windride/Agility line) and consumed from the backpack, NOT used from the cultivation Elixir screen (user-corrected 2026-07-10).
+  - Stat pills have a **fixed lifetime cap** — "Use Attempts (Permanent): a/b", full flat effect until cap, no decay. Cap per rank: R1 /20, R2 /40, R3+ /50; counters tick even when the formula is Not Obtained. Compare-BR "Stat Pill Status Use Limit" (320/420/520) counts these.
+  - Stat *elixirs* (Yijing/Celeszure/etc.) are the tolerance-ladder items; Compare-BR "Elixir Stats" counts those.
+- **Alchemy formulas ("Select" screen)**: per-rank tabs with collection counts (1R 6/10, 2R 3/8, 3R 4/8, 4R 3/8, 5R 2/8). Pill lines seen: Windride=+10 P.EVA, Agility=+10 M.EVA (plus Voidbreak, Reinvigoration, Dracospirit, Meridian, Rejuvenation, Incarnation/Nascent Soul Pill & Powder, etc.). Crafting cost ladder: R1 Greenspirit×1+500 Spiritium (Market), R2 Miragium×2+5K, R3 Spirit Marrow×3+24K, R4 Loftine×4+80K, R5 Udumbara×6+300K Spiritium (R2+ via Sect Library). All formulas craft at "Max Quality".
+- **Pill Use Limit scales with realm** (Compare BR → "Pill and Elixir Details", 2026-07-10): total Stat Pill Use Limit = Nascent Soul 320, Incarnation 420, Voidbreak 520 — +100 per major realm. Matches per-rank caps ×2 pill lines (P.EVA Windride + M.EVA Agility): 2×(20+40+50+50)=320 at NS (R5 locked), 2×(20+40+50+50+50)=420 at Incarnation, +R6 (50) at Voidbreak = 520. So each major realm unlocks the next rank's 50 attempts per line. Verified flat effect: main had 124 used → P.EVA +570 (=57×10) + M.EVA +670 (=67×10), matching formula counters exactly (Windride 8+11+12+12+14=57, Agility 19+12+12+12+12=67). Compare BR also shows total "Elixir Used" quantity and per-stat elixir totals.
+- **OPEN QUESTIONS before writing reference sections / committing** (as of 2026-07-10):
+  1. ~~Pills cap vs realm~~ SOLVED (above).
+  2. Stat elixirs: mostly solved (see above); only tail-tier widths (70/50/30/20%) missing for exact lifetime totals.
+  3. XP elixirs: different ladder from stat elixirs; optimal-use modeling deferred until their widths are mapped.
+- **Sense stat**: internal `spirit_max` (神识); only current use = treasure-carry capacity (fabao slots at spirit 1/7/13/16/19/22, gubao at 15/18/21, cfg_us_calc.lua:3893); +~1/realm level; tooltip says more uses planned.
