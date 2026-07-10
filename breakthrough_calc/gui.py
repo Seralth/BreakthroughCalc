@@ -993,6 +993,108 @@ class MainWindow(QMainWindow):
             "\"unknown\", not \"zero\". For the exact per-point math the game does "
             "expose, see the Advanced tab.</p>")
 
+        # ---- World Systems ---------------------------------------------------
+        # System explainers assembled from the client's own tooltip/description
+        # strings (i18n dump) plus user-verified play notes; numbers that are
+        # server-side balance data are omitted rather than guessed.
+        systems = "<h2>World Systems</h2>"
+        systems += (
+            "<p>Short explainers for the systems the rest of this app keeps "
+            "mentioning. Everything quoted is from the game's own text; where "
+            "a number is server-side, it's omitted rather than guessed.</p>"
+
+            "<h3>Currencies</h3>"
+            "<ul>"
+            "<li><b>Spiritium</b> — \"the basic currency in the cultivation "
+            "world. Mainly obtained in Realms. Used in Market, Alchemy, Forge "
+            "Room and other daily matters.\" Realm idle production scales with "
+            "your Demon Spire progress.</li>"
+            "<li><b>Fateum</b> — the premium-adjacent currency, \"obtained "
+            "from gameplay or by exchanging Destium\"; spent in the "
+            "Fatevillion shop, on Path Switches, refreshes, and artifact "
+            "daily charges.</li>"
+            "<li><b>Destium</b> — purchase-only; converts to Fateum 1:1 "
+            "(irreversible). Also used in the Auction House.</li>"
+            "</ul>"
+            "<p><b>Spending guidance:</b> Fateum is the scarce one for F2P — "
+            "prioritize the garden (law fruits) once laws unlock at Voidbreak, "
+            "ahead of elixirs and convenience refreshes. Payers get the most "
+            "per unit from artifact daily charges and the realm-breakthrough "
+            "elixir packs.</p>"
+
+            "<h3>Garden &amp; Elemental Laws</h3>"
+            "<p>The <b>garden</b> grows seeds into rewards: each seed takes up "
+            "plot slots and matures over time; you get a limited number of "
+            "daily <b>watering</b> attempts to speed growth (the first is free "
+            "each day — don't miss it), and growth can also be rushed with "
+            "energy + Spiritium. Seeds yield alchemy materials, technique "
+            "seeds, and — the headline crop — <b>Law Fruits</b>.</p>"
+            "<p><b>Elemental Laws</b> (unlock around Voidbreak) are a "
+            "long-term damage system: <b>Law Points</b> accrue naturally over "
+            "time (faster as your laws level), and are spent to upgrade your "
+            "laws once you meet the Stage requirement. A higher total law "
+            "level deals bonus damage to lower-level enemies — the bigger the "
+            "gap, the more damage. Every 100M Law Points auto-converts to a "
+            "<b>Tao Motto</b>. Eating Law Fruits \"greatly benefits the study "
+            "of laws\", and <b>Blitz</b> spends Law Fruits to buy Law Points "
+            "directly; advancing a Law Fruit has a 15% chance to yield an "
+            "extra fruit. This is why the guide says to bank pet speed-ups "
+            "and Fateum for the garden before Voidbreak: law levels are a "
+            "time-integral, so starting earlier compounds.</p>"
+
+            "<h3>Breakthrough failure</h3>"
+            "<p>Stage breakthroughs <b>can fail</b>. A failure injures your "
+            "<b>Primordial Soul</b>, which must be restored before you can "
+            "attempt again — but \"cultivation won't be affected while "
+            "injured\", so EXP keeps accruing. Pills \"increase breakthrough "
+            "success rate\" (per their own tooltip). The calculator assumes "
+            "first-try breakthroughs, so a failure streak pushes real dates "
+            "slightly past its estimates.</p>"
+
+            "<h3>Path Switch</h3>"
+            "<p>Available from Foundation. Costs Fateum (rising 800 → 2400) "
+            "with a <b>7-day cooldown</b>, and is blocked during competitive "
+            "phases (ascendance events, brawl registrations, matchmaking, "
+            "mining, server/sect transfer days). Your elixirs' state swaps "
+            "with the paths: remaining quantity, use attempts, and tolerance "
+            "efficiency all follow the path they belong to.</p>"
+
+            "<h3>Sects</h3>"
+            "<p>The social layer: joining one opens the <b>Sect Library</b> "
+            "(pill formulas are exchanged here from R2 up), sect salary, "
+            "tasks, treasure hunts, and the sect events (Meditation, Duel, "
+            "Clash). Sect realm dominion gives practical buffs — +20% "
+            "gathering speed on Spiritual Veins in the dominated realm. "
+            "If nothing else, be in <i>a</i> sect for the library and "
+            "salary.</p>"
+
+            "<h3>Demon Spire</h3>"
+            "<p>A floor-climbing combat tower. Your current floor pays "
+            "<b>continuous hourly income</b> — Ability Knowledge (which "
+            "levels your Abilities) and a bonus to Spiritium production in "
+            "Realms — so every floor you clear is a permanent income raise. "
+            "Climb it whenever your battle rating allows; it's one of the "
+            "\"keep pushed at every stage\" systems.</p>"
+
+            "<h3>Curios</h3>"
+            "<p>Collectible items placed on the <b>Sacred Altar</b> (six "
+            "slots). A slot boosts the passive stats of curios matching its "
+            "type (HP, MP, P.ATK, M.ATK, P.DEF, M.DEF); percentage-stat "
+            "curios don't benefit. Altar effects multiply with a curio's "
+            "Star-Up. Rarities run Rare → Epic → Legendary → Mythic, from a "
+            "draw system with guarantees. Several curios also carry the "
+            "cultivation bonuses (pill effect, Respira) listed elsewhere in "
+            "this reference.</p>"
+
+            "<h3>Techniques</h3>"
+            "<p>Unlockable passives: meet a technique's requirements to learn "
+            "it, then spend <b>Technique Points</b> to tier it up — "
+            "<b>special effects unlock at Tiers 3, 6 and 9</b>. The early-game "
+            "picks the guide names (Longevity, Energy Unification, "
+            "Rejuvenation) are examples of buying these tier effects at their "
+            "cheapest; the same logic — tier breakpoints first — carries "
+            "through the rest of the game.</p>")
+
         # ---- Combat & Gear: Advanced ---------------------------------------
         # Expert-level internals recovered from the client's own stat
         # definitions and tooltip text; only mechanics the game states
@@ -1224,6 +1326,7 @@ class MainWindow(QMainWindow):
                             ("Myrimon & Extractor", myrimon),
                             ("Artifacts & Gems", artifacts),
                             ("Combat & Gear", combat),
+                            ("World Systems", systems),
                             ("Advanced", advanced)):
             ref.addTab(page(html), title)
         return ref
