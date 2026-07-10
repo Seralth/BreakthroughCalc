@@ -146,10 +146,10 @@ class ReferenceTab extends StatelessWidget {
     // (formula panel, elixir tooltips, Compare BR "Pill and Elixir Details").
     final elixirs = page([
       Text('Three things called "pill"', style: h3),
-      para('The cultivation screen splits consumables into Pill and Elixir tabs, '
-          'and "pill" means three different things: daily cultivation pills '
-          '(Pill tab — see Pills & Respira), permanent stat pills crafted via '
-          'alchemy (Elixir tab), and aux-path EXP items named pills (e.g. Hundred '
+      para('"Pill" means three different things: daily cultivation pills '
+          '(cultivation screen, Pill tab — see Pills & Respira), permanent stat '
+          'pills crafted via alchemy (used from the backpack), and aux-path EXP '
+          'items named pills (cultivation screen, Elixir tab — e.g. Hundred '
           'Fortunes Pill — mechanically elixirs).'),
       Text('Stat pills (alchemy)', style: h3),
       para('Crafted from per-rank formulas (Windride = +10 P.EVA, Agility = '
