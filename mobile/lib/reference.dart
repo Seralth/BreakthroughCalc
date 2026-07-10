@@ -430,6 +430,33 @@ class ReferenceTab extends StatelessWidget {
       para('A separate side-track of equipment with its own levels and stars. '
           'Its stats grow in 2-level steps, with a Crit DMG boost every 20th '
           'level.'),
+      Text('Affix priorities (community tier list)', style: h3),
+      para('Which gear/relic affix lines to chase, per a widely circulated '
+          'community tier list (opinion, but consistent with the mechanics '
+          'above). Stat caps drive a lot of it: Crit hard-caps at 50%, '
+          'Hit/EVA at 99% — capped stats are dead value past the cap.\n'
+          '• T0 — always chase: base-stat % (Wonder +30–46% everything; '
+          'Blade Rage / Spellforge +20–28% P/M.ATK), relic cast speed '
+          '(Spirit +9–21%), ultimate attack % (Ulti Sharp/Occult +15–21%), '
+          'attack frequency (Bladeglow +11–15.4% on swords), relic limit '
+          'breakers (Ether Veil / Infinite Edge +15–25.2%). Cast speed and '
+          'limit breakers matter most from Voidbreak on, where raw damage '
+          'caps easily.\n'
+          '• T1 — good: crit multiplier/damage (Annihilation, Pursuit), '
+          'crit chance (Fatal — dead past the 50% cap), flat attack '
+          '(Sharp/Occult — match physical/magical to your path or it\'s '
+          'wasted), Physique/Manipulation (+4 ATK +2 DEF per point, same '
+          'path-matching rule), Agility (+3 Hit and EVA per point), flat '
+          'HP/MP.\n'
+          '• T2 — situational: flat Hit/EVA lines, P/M.DEF (weak — '
+          'Penetration ignores defense proportionally), Crit Resist, the '
+          'paralysis quartet (duration generally beats chance).\n'
+          '• T3 — avoid: HP/MP regen (only ticks out of combat, which '
+          'never happens in duels or the Voidgate) and Bladesoul '
+          '(sword-control resist).'),
+      para('Paralysis math from the same source: boost and resist cancel '
+          '1:1; each leftover point shifts proc chance by 0.2% (bounded '
+          '50–100%) and duration by 0.5% (max ±50%).'),
       Text('About the missing numbers', style: h3),
       para('The rules and thresholds above are confirmed from game data. The '
           'exact values — what a given 10-level bonus or resonance rank grants — '
@@ -636,11 +663,42 @@ class ReferenceTab extends StatelessWidget {
           'Switches, refreshes, and artifact daily charges.\n'
           '• Destium — purchase-only; converts to Fateum 1:1 (irreversible). '
           'Also used in the Auction House.'),
+      para('Two more shop currencies worth knowing: Revealstone (Seeker '
+          'Shop) and Citrine + Sect Contribution (Sect Library) — see the '
+          'shop guide below.'),
       para('Spending guidance: Fateum is the scarce one for F2P — prioritize '
           'the garden (law fruits) once laws unlock at Voidbreak, ahead of '
           'elixirs and convenience refreshes. Payers get the most per unit '
           'from artifact daily charges and the realm-breakthrough elixir '
           'packs.'),
+      Text('Shop-by-shop buying guide', style: h3),
+      para('Community-consensus priorities (from circulating player guides — '
+          'sanity-checked but not client data):\n'
+          '• Market (Spiritium): Demonroot (pet skills), Kunlun Jade '
+          '(backpack space), Monster Core, Rare+ cultivation pills, Atlases, '
+          'stat elixirs. It refreshes every 3 hours; you get 10 manual '
+          'refreshes/day (each costs more Spiritium) and every 5th refresh '
+          'guarantees an Epic item.\n'
+          '• Seeker Shop (Revealstone): buy NOTHING before Voidbreak. '
+          'Nature Mantras there cost ~200 each and you\'ll want 3,300+ — '
+          'hundreds of thousands of Revealstone — and F2P sources are '
+          'scarce.\n'
+          '• Sect Library (Citrine / Sect Contribution): Ability '
+          'Manuscripts first — skipping them slows ability progression '
+          'badly — then blueprints and alchemy formulas. Citrine comes from '
+          'mining spiritual veins (capped ~2 h/day + 7 h/week — mine daily, '
+          'highest vein tier first).\n'
+          '• Fatevillion (Fateum): the Cultivation Bag is the standout '
+          'must-buy; cultivation elixirs are worth it for F2P while your '
+          'tolerance ratio is above ~120%; Demonlure for realm farming; '
+          'anything at a 70% discount deserves a look. The shop resets on '
+          'EVERY breakthrough — minor ones included — so check it before '
+          'each one.'),
+      para('Cheap daily Fateum habits: the first daily Technique Points '
+          'purchase (100 points for 50 Fateum) and the second daily sect '
+          'Construct (first free, second 50) are both efficient. Refreshing '
+          'unclaimed Bounty Quests below Rare and Sect Tasks below C-rating '
+          'once a day upgrades them guaranteed.'),
       Text('Garden & Elemental Laws', style: h3),
       para('The garden grows seeds into rewards: each seed takes plot slots '
           'and matures over time; you get limited daily watering attempts to '
@@ -648,7 +706,7 @@ class ReferenceTab extends StatelessWidget {
           'growth can be rushed with energy + Spiritium. Seeds yield alchemy '
           'materials, technique seeds, and — the headline crop — Law '
           'Fruits.'),
-      para('Elemental Laws (unlock around Voidbreak) are a long-term damage '
+      para('Elemental Laws (unlock at Voidbreak) are a long-term damage '
           'system: Law Points accrue naturally over time (faster as your '
           'laws level) and are spent to upgrade laws once you meet the Stage '
           'requirement. Higher total law level deals bonus damage to '
@@ -659,13 +717,30 @@ class ReferenceTab extends StatelessWidget {
           'to yield an extra fruit. This is why the guide says to bank pet '
           'speed-ups and Fateum for the garden before Voidbreak: law levels '
           'are a time-integral, so starting earlier compounds.'),
+      para('Community practice (consistent advice, unverified numbers): '
+          'have 24 garden slots by Voidbreak; on ascension day unlock laws '
+          'immediately and get fruits planted. Blitz has a daily budget '
+          '(~120 hours\' worth) — ideally spend all of it every day. Law '
+          'fruits range Uncommon → Legendary; early on harvest low rarities '
+          'for cheap fast levels, shift higher as seeds accumulate. '
+          'Leveling order: all laws to 50 one at a time, then to 150, and '
+          'so on in +100 steps. The payoff: roughly +50% damage per 1,000 '
+          'total law levels above your opponent — law suppression only '
+          'applies while you\'re ahead.'),
       Text('Breakthrough failure', style: h3),
       para('Stage breakthroughs can fail. A failure injures your Primordial '
           'Soul, which must be restored before the next attempt — but '
           '"cultivation won\'t be affected while injured", so EXP keeps '
           'accruing. Pills "increase breakthrough success rate" (their own '
-          'tooltip). The calculator assumes first-try breakthroughs, so a '
-          'failure streak pushes real dates slightly past its estimates.'),
+          'tooltip).'),
+      para('In practice (mortal world): the Primordial Soul recovery is a '
+          'wait — around an hour at early stages, but growing steeply with '
+          'realm (a mid/late Incarnation failure has been observed at 13 '
+          'hours). Breakthrough pills shorten the wait; better pills shorten '
+          'it more. Unless you\'re racing for your server\'s top spots, a '
+          'failure costs little — but in a race those hours decide it. The '
+          'calculator assumes first-try breakthroughs, so a failure streak '
+          'pushes real dates past its estimates by the recovery waits.'),
       Text('Path Switch', style: h3),
       para('Available from Foundation. Costs Fateum (rising 800 → 2400) with '
           'a 7-day cooldown, and is blocked during competitive phases '
@@ -678,8 +753,12 @@ class ReferenceTab extends StatelessWidget {
           'formulas are exchanged here from R2 up), sect salary, tasks, '
           'treasure hunts, and the sect events (Meditation, Duel, Clash). '
           'Sect realm dominion gives practical buffs — +20% gathering speed '
-          'on Spiritual Veins in the dominated realm. If nothing else, be in '
-          'a sect for the library and salary.'),
+          'on Spiritual Veins in the dominated realm.'),
+      para('Picking one: sects are guilds — join an active one and have fun; '
+          'an active sect naturally progresses and its benefits follow. If '
+          'you care about the PvP sect events, aim for a stronger active '
+          'sect, but that\'s personal preference. Just don\'t sit sectless: '
+          'the library and salary alone are worth it.'),
       Text('Demon Spire', style: h3),
       para('A floor-climbing combat tower. Your current floor pays '
           'continuous hourly income — Ability Knowledge (levels your '
@@ -764,6 +843,43 @@ class GuideTab extends StatelessWidget {
     Widget page(List<Widget> children) => ListView(
         padding: const EdgeInsets.all(16),
         children: [...children, footer()]);
+
+    // Path meta from a circulating community guide (2026) plus the
+    // maintainer's read of Discord consensus — opinion, not client data.
+    final choosing = page([
+      Text('Choosing your path', style: h3),
+      para('The first decision in the game. It\'s less permanent than it '
+          'looks — Path Switch exists from Foundation (7-day cooldown, '
+          'rising Fateum cost) — but your path shapes combat style, gear '
+          'priorities, and which elixirs/pets/aux picks fit. This summary '
+          'is community consensus, and the consensus is genuinely mixed — '
+          'treat it as orientation, not law.'),
+      Text('The five paths', style: h3),
+      para('• Swordia (HP/physical) — highest sustained DPS in the game; '
+          'strong in both PvP and PvE bossing. Very reliant on its relics '
+          '(flying swords). The safe strong pick.\n'
+          '• Corporia (HP/physical) — burst physical damage with a '
+          'death-immunity ultimate; not relic-reliant. Weaker early, much '
+          'stronger later; PvE is its weak side — a PvP-leaning pick.\n'
+          '• Magicka (MP/magic) — AoE damage, lots of shields and crowd '
+          'control. Good at PvE farming and holds up in PvP, though it '
+          'takes more piloting than Swordia. The flexible pick.\n'
+          '• Ghostia (MP/magic) — summons a ghost companion that taunts '
+          'and deals damage; unblockable-paralyze ultimate. Very '
+          'relic-reliant. Strong PvE and dueling.\n'
+          '• Literatia (MP/magic) — the newest path: builds erudition to '
+          'unleash a high-burst mana dump (Literal Reality). Weak early in '
+          'the mortal world and scales up later; good AoE farm and PvE, '
+          'PvP still unproven.'),
+      para('Rules of thumb: want one answer for everything — Swordia. '
+          'PvE/farming focus — Ghostia or Magicka. PvP focus — Corporia or '
+          'Swordia. Patient scaler who accepts a weak mortal world — '
+          'Literatia. Aux pairings are on the Aux Paths tab.'),
+      para('Relic-reliant paths (Swordia, Ghostia) care more about relic '
+          'income and forging; ability-focused paths (Corporia, Magicka, '
+          'Literatia) lean on ability levels — which come from Demon Spire '
+          'climbing (Reference → World Systems).'),
+    ]);
 
     final routine = page([
       Text('Your daily loop', style: h3),
@@ -959,12 +1075,13 @@ class GuideTab extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 8,
+      length: 9,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           tabs: [
+            Tab(text: 'Choosing a Path'),
             Tab(text: 'Daily Routine'),
             Tab(text: 'Novice–Foundation'),
             Tab(text: 'Virtuoso'),
@@ -977,6 +1094,7 @@ class GuideTab extends StatelessWidget {
         ),
         Expanded(
           child: TabBarView(children: [
+            choosing,
             routine,
             novice,
             virtuoso,
