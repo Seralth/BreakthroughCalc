@@ -836,6 +836,11 @@ class MainWindow(QMainWindow):
             "<p><b>Practical takeaway:</b> level your gear evenly. One maxed sword "
             "does less for you than eight pieces raised together, because "
             "Resonance only counts your weakest piece.</p>"
+            "<p><b>Nothing is locked in:</b> the forge's <b>Reset</b> tab lets "
+            "you reset any item, returning <b>100% of the materials</b> poured "
+            "into it — and the base item itself — so you can redistribute "
+            "upgrade materials among different pieces (say, to even out levels "
+            "for Resonance) without losing your investment.</p>"
 
             "<h3>Carvings (the enchant lines)</h3>"
             "<p>From Foundation on, gear can hold <b>Carvings</b> — bonus stat "
