@@ -679,6 +679,45 @@ class GuideTab extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [...children, footer()]);
 
+    final routine = page([
+      Text('Your daily loop', style: h3),
+      para('OverMortal is an idle game with a short list of things that '
+          'actually need your hands each day. Everything here is collected '
+          'from the other guide pages — this is just the checklist form.'),
+      Text('Every day', style: h3),
+      para('• Spend your daily pill attempts — highest color first (all '
+          'colors share one attempt pool; Vase reds are exempt).\n'
+          '• Use your Respira attempts.\n'
+          '• Keep artifact energy below its cap — Vase refines, Mirror '
+          'duplications, Pearl uses. Energy regenerating into a full pool is '
+          'wasted. If you pay, the 30 Fateum/Destium daily charge per '
+          'artifact is among the cheapest EXP money buys.\n'
+          '• Claim your Aura Gem before its storage caps (18–32 h by rarity) '
+          '— once full it stops accruing.\n'
+          '• Check the market for Demonroot (pet skills) and similar limited '
+          'stock.\n'
+          '• Take stat pills and elixirs as they arrive — there\'s no timing '
+          'play on either (Reference → Elixirs & Stat Pills).\n'
+          '• Myrimon runs: during the event\'s first week they don\'t '
+          'accumulate — use them daily at the highest realm you can clear.'),
+      Text('Weekly', style: h3),
+      para('• Banked Myrimon runs: spend them on Sunday, or hold them until '
+          'you can clear a higher-requirement dungeon. Fruits go to the '
+          'stockpile, not the extractor, until the extractor is maxed '
+          '(Reference → Myrimon & Extractor).'),
+      Text('Before every major breakthrough', style: h3),
+      para('• Spend all daily pills and Respira attempts — they reset on the '
+          'breakthrough.\n'
+          '• Eat the fruit stockpile — the extractor resets to Common on a '
+          'main-Stage breakthrough and auto-consumes leftovers at pre-upgrade '
+          'rates.\n'
+          '• Spend Fatevillon shop tokens — that shop resets too.\n'
+          '• Don\'t claim pill bags until after the ascension.\n'
+          '• If you spend money: the three elixir packs offered on reaching '
+          'the new realm are among the best value in the game (Reference → '
+          'Elixirs & Stat Pills).'),
+    ]);
+
     final novice = page([
       Text('Novice → Foundation (your first day)', style: h3),
       para('These first realms go by in hours. The goal is simple: keep the '
@@ -744,7 +783,11 @@ class GuideTab extends StatelessWidget {
           '"Server #1\'s Stage" input starts to matter for long-range '
           'estimates (Reference → Basics covers the math).\n'
           '• Keep the story, Demon Spire, and realms pushed as far as they\'ll '
-          'go each cultivation stage — several systems gate on them.'),
+          'go each cultivation stage — several systems gate on them.\n'
+          '• By now stat pills and elixirs are flowing in from shops and '
+          'rewards. Take them as they arrive — neither can be wasted by using '
+          'them early, and stat pills\' use caps grow with each realm anyway '
+          '(Reference → Elixirs & Stat Pills).'),
     ]);
 
     final incarnation = page([
@@ -762,7 +805,11 @@ class GuideTab extends StatelessWidget {
           '• Before breaking through to Voidbreak: spend all pills and Respira '
           '(they reset), don\'t claim daily pill bags until after ascension, '
           'and spend Fatevillon shop tokens beforehand — that shop resets on '
-          'breakthroughs too.'),
+          'breakthroughs too.\n'
+          '• On the ascension itself you\'ll be offered three real-money '
+          'elixir packs — if you spend at all, these are among the best value '
+          'in the game (Reference → Elixirs & Stat Pills explains why the '
+          'early tolerance tiers make them worth the most).'),
     ]);
 
     final voidbreak = page([
@@ -826,12 +873,13 @@ class GuideTab extends StatelessWidget {
     ]);
 
     return DefaultTabController(
-      length: 7,
+      length: 8,
       child: Column(children: [
         const TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
           tabs: [
+            Tab(text: 'Daily Routine'),
             Tab(text: 'Novice–Foundation'),
             Tab(text: 'Virtuoso'),
             Tab(text: 'Nascent Soul'),
@@ -843,6 +891,7 @@ class GuideTab extends StatelessWidget {
         ),
         Expanded(
           child: TabBarView(children: [
+            routine,
             novice,
             virtuoso,
             nascent,

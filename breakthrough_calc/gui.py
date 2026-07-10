@@ -1243,6 +1243,54 @@ class MainWindow(QMainWindow):
             b.setHtml(html + footer)
             return b
 
+        routine = (
+            "<h2>Your daily loop</h2>"
+            "<p>OverMortal is an idle game with a short list of things that "
+            "actually need your hands each day. Everything here is collected "
+            "from the other guide pages — this is just the checklist "
+            "form.</p>"
+            "<h3>Every day</h3><ul>"
+            "<li><b>Spend your daily pill attempts</b> — highest color first "
+            "(all colors share the one attempt pool; Vase reds are exempt and "
+            "always free to eat).</li>"
+            "<li><b>Use your Respira attempts.</b></li>"
+            "<li><b>Keep artifact energy below its cap</b> — Vase refines, "
+            "Mirror duplications, Pearl uses. Energy regenerating into a full "
+            "pool is wasted. If you pay, the 30 Fateum/Destium daily charge "
+            "per artifact is among the cheapest EXP money buys.</li>"
+            "<li><b>Claim your Aura Gem</b> before its storage caps (18–32 "
+            "hours depending on rarity) — once it's full it stops "
+            "accruing.</li>"
+            "<li><b>Check the market</b> for Demonroot (pet skills) and "
+            "similar limited stock.</li>"
+            "<li><b>Take stat pills and elixirs as they arrive</b> — there's "
+            "no timing play on either (Reference → Elixirs &amp; Stat "
+            "Pills).</li>"
+            "<li><b>Myrimon runs</b>: during the event's first week they don't "
+            "accumulate — use them daily at the highest realm you can clear. "
+            "After the first week they stack (see Weekly).</li>"
+            "</ul>"
+            "<h3>Weekly</h3><ul>"
+            "<li>Banked <b>Myrimon runs</b>: spend them on Sunday, or hold "
+            "them until you can clear a higher-requirement dungeon. Fruits go "
+            "to the stockpile, not the extractor, until the extractor is "
+            "maxed (Reference → Myrimon &amp; Extractor).</li>"
+            "</ul>"
+            "<h3>Before every major breakthrough</h3><ul>"
+            "<li><b>Spend all daily pills and Respira attempts</b> — they "
+            "reset on the breakthrough.</li>"
+            "<li><b>Eat the fruit stockpile</b> — the extractor resets to "
+            "Common on a main-Stage breakthrough and auto-consumes leftovers "
+            "at pre-upgrade rates.</li>"
+            "<li><b>Spend Fatevillon shop tokens</b> — that shop resets "
+            "too.</li>"
+            "<li><b>Don't claim pill bags</b> until after the ascension — "
+            "claimed bags count against the old realm.</li>"
+            "<li>If you spend money: the <b>three elixir packs</b> offered on "
+            "reaching the new realm are among the best value in the game "
+            "(Reference → Elixirs &amp; Stat Pills).</li>"
+            "</ul>")
+
         novice = (
             "<h2>Novice – Foundation (your first day)</h2>"
             "<p>These first realms go by in hours. The goal is simple: keep the "
@@ -1312,7 +1360,12 @@ class MainWindow(QMainWindow):
             "Strive enters the math.)</li>"
             "<li>Keep the <b>story</b>, <b>Demon Spire</b>, and <b>realms</b> "
             "pushed as far as they'll go at every cultivation stage — several "
-            "systems gate on them.</li></ul>")
+            "systems gate on them.</li>"
+            "<li>By now <b>stat pills and elixirs</b> are flowing in from "
+            "shops and rewards. Take them as they arrive — neither can be "
+            "wasted by using them early, and stat pills' use caps grow with "
+            "each realm anyway. What they are and how their limits work: "
+            "Reference → Elixirs &amp; Stat Pills.</li></ul>")
 
         incarnation = (
             "<h2>Incarnation</h2>"
@@ -1332,7 +1385,11 @@ class MainWindow(QMainWindow):
             "Respira attempts</b> (they reset on the breakthrough), <b>don't</b> "
             "claim daily pill bags until after ascension, and spend your "
             "<b>Fatevillon</b> shop tokens beforehand — that shop resets on "
-            "breakthroughs too.</li></ul>")
+            "breakthroughs too.</li>"
+            "<li>On the ascension itself you'll be offered <b>three real-money "
+            "elixir packs</b> — if you spend at all, these are among the best "
+            "value in the game (Reference → Elixirs &amp; Stat Pills explains "
+            "why the early tolerance tiers make them worth the most).</li></ul>")
 
         voidbreak = (
             "<h2>Voidbreak and beyond</h2>"
@@ -1399,7 +1456,8 @@ class MainWindow(QMainWindow):
             "for whichever path you're actively cultivating.</p>")
 
         self._guide_tabs = guide = QTabWidget()
-        for title, html in (("Novice–Foundation", novice),
+        for title, html in (("Daily Routine", routine),
+                            ("Novice–Foundation", novice),
                             ("Virtuoso", virtuoso),
                             ("Nascent Soul", nascent),
                             ("Incarnation", incarnation),
