@@ -242,7 +242,8 @@ class ReferenceTab extends StatelessWidget {
       Text('Getting EXP elixirs', style: h3),
       para('In normal play EXP elixirs only trickle in — small amounts, often '
           'priced in Fateum, which F2P players should generally spend on the '
-          'garden first. The exception: breaking through to a new realm offers '
+          'garden first — it feeds the law system that starts at Voidbreak '
+          '(see Guide → Voidbreak+). The exception: breaking through to a new realm offers '
           'three real-money elixir packs, among the best value in the game for '
           'anyone optimizing money spent — the 150%/120% early tolerance tiers '
           'make each realm\'s batch worth the most right when you buy it.'),
