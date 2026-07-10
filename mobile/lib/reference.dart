@@ -79,7 +79,7 @@ class ReferenceTab extends StatelessWidget {
       para('Respira crits and fruit gushes are random, so estimates carry a ~90% best/worst '
           'band. Because these are sums of many independent rolls, luck averages out: the band '
           'is widest on short estimates and tightens over long horizons. Fruit gushes also have '
-          'a pity floor (every 6th fruit is a guaranteed gush), narrowing the fruit side.'),
+          'a pity floor (a gush is guaranteed within 6 fruits of the last one), narrowing the fruit side.'),
       Text('Timegates', style: h3),
       para('Timegates pace whole-server progression; Myrimon is the main F2P tool for '
           'meeting them.'),
@@ -162,8 +162,10 @@ class ReferenceTab extends StatelessWidget {
           'orb EXP for its tier, and extractor rank at your Stage gives base fruit '
           'EXP +50%.'),
       Text('Gush', style: h3),
-      para('Gush: base 150% multiplier, raised on the Gush track. Every 6th '
-          'identical fruit is a guaranteed gush, on top of the displayed random rate.'),
+      para('Gush: base 150% multiplier, raised on the Gush track. A gush is '
+          'guaranteed within 6 fruits of the last one (soft pity — any gush, '
+          'random or guaranteed, resets the counter), on top of the displayed '
+          'random rate.'),
       Text('Reset on breakthrough', style: h3),
       para('The Aura Extractor resets to Common quality / bonus 0 on main-Stage '
           'breakthrough and auto-consumes leftover previous-Stage fruits at '
@@ -329,10 +331,13 @@ class ReferenceTab extends StatelessWidget {
         'Mean multiplier 1.8, variance 2.56 per attempt — the main driver of '
         'the best/worst band on short horizons.',
       ),
-      para('Fruit gush pity: every 6th identical fruit is a guaranteed gush, on '
-          'top of the displayed random rate. The variance model treats that '
-          '1-in-6 as deterministic — only the other 5/6 of fruits roll randomly '
-          '— which narrows the fruit side of the band.'),
+      para('Fruit gush pity: the "Gush guaranteed in Aura Orb x6" counter is a '
+          'soft pity — any gush, random or guaranteed, resets it (verified '
+          'in-game 2026-07-10 with a counted batch). So a gush is guaranteed '
+          'within 6 fruits of the last one, and the displayed chance is the '
+          'per-fruit random rate. The calculator models the miss streak as a '
+          'Markov chain and computes the exact gush-count mean and variance, '
+          'which narrows the fruit side of the band.'),
       para('Strive tier tables (client config; the live value is recomputed '
           'hourly server-side, so only the shape is used, anchored to your real '
           'Strive):\n'

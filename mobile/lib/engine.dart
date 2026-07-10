@@ -23,7 +23,8 @@ final double respiraCritVar =
         respiraCritMean * respiraCritMean; // 2.56
 const double _bandZ = 1.645; // ~90% (P5..P95) interval
 
-// Fruit pity: every Nth fruit is a guaranteed gush (deterministic, no variance).
+// Fruit pity: a gush is guaranteed within N fruits of the last gush (SOFT
+// pity — any gush resets the counter; verified in-game 2026-07-10).
 const int gushGuaranteeEvery = 6;
 
 const Map<int, double> _striveShapeTbl = {
@@ -405,12 +406,37 @@ class Engine {
       eQ += p * (cultiMult + (i >= 1 && i <= rankIdx ? 0.2 : 0.0)) * _num(qmults[i]);
     }
 
-    // gc is the RANDOM trigger rate; the every-6th pity is on top.
-    final n = inp.fruitCount;
-    final g = n.toInt() ~/ gushGuaranteeEvery;
-    final expGushes = g + (n - g) * gc;
+    // gc is the RANDOM trigger rate; the x6 pity is SOFT — any gush resets
+    // the counter, so a gush is guaranteed within 6 of the LAST gush. Exact
+    // mean/variance via a 6-state Markov moment recursion over the miss
+    // streak, counter fresh at batch start (mirrors engine.py — lockstep).
+    final n = inp.fruitCount.toInt();
+    const k = gushGuaranteeEvery;
+    var p = List<double>.filled(k, 0.0); // P(miss streak = s)
+    var m = List<double>.filled(k, 0.0); // E[gushes * 1{streak = s}]
+    var q = List<double>.filled(k, 0.0); // E[gushes^2 * 1{streak = s}]
+    p[0] = 1.0;
+    for (var i = 0; i < n; i++) {
+      final p2 = List<double>.filled(k, 0.0);
+      final m2 = List<double>.filled(k, 0.0);
+      final q2 = List<double>.filled(k, 0.0);
+      for (var s = 0; s < k; s++) {
+        final pg = s == k - 1 ? 1.0 : gc;
+        p2[0] += pg * p[s];
+        m2[0] += pg * (m[s] + p[s]);
+        q2[0] += pg * (q[s] + 2 * m[s] + p[s]);
+        if (s < k - 1) {
+          p2[s + 1] += (1 - pg) * p[s];
+          m2[s + 1] += (1 - pg) * m[s];
+          q2[s + 1] += (1 - pg) * q[s];
+        }
+      }
+      p = p2; m = m2; q = q2;
+    }
+    final expGushes = m.fold(0.0, (a, b) => a + b);
+    final varGushCount =
+        math.max(0.0, q.fold(0.0, (a, b) => a + b) - expGushes * expGushes);
     final mean = base * eQ * (n + expGushes * (gxm - 1));
-    final varGushCount = (n - g) * gc * (1 - gc);
     final varTotal =
         math.pow(base * eQ, 2) * math.pow(gxm - 1, 2) * varGushCount;
     return [mean, varTotal.toDouble()];

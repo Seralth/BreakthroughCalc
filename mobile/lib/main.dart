@@ -13,7 +13,7 @@ import 'update_check.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.8.1';
+const appVersion = '2.9';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
