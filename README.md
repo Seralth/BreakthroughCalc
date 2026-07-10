@@ -51,8 +51,8 @@ Inputs:
 - Creation Artifacts: Starsea Vase, Dual-Star Mirror, Timereversal Pearl, with
   stars, skins, daily charge, and energy costs.
 - Respira: daily attempts, crit average, event bonuses.
-- Myrimon Fruits: rank, gush, quality, extractor, and the guaranteed gush every
-  sixth fruit.
+- Myrimon Fruits: rank, gush, quality, extractor, and the gush pity (a gush is
+  guaranteed within six fruits of the last one).
 - Aura Gems.
 - Strive, with server-age handling.
 - A catalog of known pill-effect sources (technique books, curios) selectable
@@ -99,8 +99,10 @@ v2.7 corrected the time model against verified game mechanics:
   speed ratio at the current grade and applied it to all future grades.
 - The Aura Gem multiplies cultivation speed only; the spreadsheet also
   multiplied pill EXP by it.
-- The gush guarantee (every 6th fruit) is applied on top of the random trigger
-  rate, and the gush multiplier follows the Gush upgrade track.
+- The gush guarantee is a soft pity on top of the random trigger rate: any
+  gush resets the "guaranteed in x6" counter, so a gush is guaranteed within
+  6 fruits of the last one, not on every literal 6th (verified in-game with a
+  counted batch). The gush multiplier follows the Gush upgrade track.
 - The extractor's Cultivation Bonus is 4% per level, and its +20% orb-EXP
   boosts unlock per extractor rarity rank.
 
