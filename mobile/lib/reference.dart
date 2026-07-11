@@ -1,9 +1,58 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'engine.dart';
 
 const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
+
+/// In-text cross-reference markup: `[[ref:slug|label]]` / `[[guide:slug|label]]`.
+/// Slug order must match the Tab order in ReferenceTab / GuideTab below.
+const refSlugs = {'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3,
+                  'artifacts': 4, 'combat': 5, 'systems': 6, 'advanced': 7};
+const guideSlugs = {'paths': 0, 'routine': 1, 'novice': 2, 'virtuoso': 3,
+                    'nascent': 4, 'incarnation': 5, 'voidbreak': 6,
+                    'pets': 7, 'aux': 8};
+
+class DocLink {
+  final int tab; // top-level tab index: 1 = Reference, 2 = Guide
+  final int sub; // sub-tab index within it
+  const DocLink(this.tab, this.sub);
+}
+
+/// Pending cross-reference jump. Set when a link is tapped; the main scaffold
+/// switches the top-level tab and the target tab consumes it — on first build
+/// if its TabBarView page wasn't alive when the link was tapped.
+final ValueNotifier<DocLink?> docLinkRequest = ValueNotifier(null);
+
+final _docLinkRe = RegExp(r'\[\[(ref|guide):([a-z]+)\|([^\]]+)\]\]');
+
+/// Paragraph text with [[...]] cross-reference markup rendered as tappable
+/// links (styled like [issuesLink]). Plain text passes through untouched.
+Widget docText(BuildContext context, String s) {
+  if (!s.contains('[[')) return Text(s);
+  final linkStyle = TextStyle(
+      color: Theme.of(context).colorScheme.primary,
+      decoration: TextDecoration.underline);
+  final spans = <InlineSpan>[];
+  var pos = 0;
+  for (final m in _docLinkRe.allMatches(s)) {
+    if (m.start > pos) spans.add(TextSpan(text: s.substring(pos, m.start)));
+    final tree = m.group(1)!, slug = m.group(2)!, label = m.group(3)!;
+    final sub = tree == 'ref' ? refSlugs[slug] : guideSlugs[slug];
+    spans.add(sub == null
+        ? TextSpan(text: label)
+        : TextSpan(
+            text: label,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => docLinkRequest.value =
+                  DocLink(tree == 'ref' ? 1 : 2, sub)));
+    pos = m.end;
+  }
+  if (pos < s.length) spans.add(TextSpan(text: s.substring(pos)));
+  return Text.rich(TextSpan(children: spans));
+}
 
 /// Tappable issues-page link used by the reference/guide footers.
 Widget issuesLink(BuildContext context) => InkWell(
@@ -18,20 +67,52 @@ Widget issuesLink(BuildContext context) => InkWell(
 /// Read-only reference tables + primer, rendered from the same engine data so
 /// the numbers can't drift from the calculations. Organized as scrollable
 /// sub-tabs: mechanics first, then a stage-by-stage progression walkthrough.
-class ReferenceTab extends StatelessWidget {
+class ReferenceTab extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
   const ReferenceTab({super.key, required this.engine, required this.catalog});
 
   @override
+  State<ReferenceTab> createState() => _ReferenceTabState();
+}
+
+class _ReferenceTabState extends State<ReferenceTab>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabs = TabController(length: 8, vsync: this);
+
+  @override
+  void initState() {
+    super.initState();
+    docLinkRequest.addListener(_onDocLink);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onDocLink());
+  }
+
+  void _onDocLink() {
+    final req = docLinkRequest.value;
+    if (req == null || req.tab != 1 || !mounted) return;
+    _tabs.animateTo(req.sub);
+    docLinkRequest.value = null;
+  }
+
+  @override
+  void dispose() {
+    docLinkRequest.removeListener(_onDocLink);
+    _tabs.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final engine = widget.engine;
+    final catalog = widget.catalog;
     final d = engine.data;
     final t = Theme.of(context);
     final h3 = t.textTheme.titleMedium;
     final muted = TextStyle(color: t.hintColor, fontSize: 12);
 
-    Widget para(String s) =>
-        Padding(padding: const EdgeInsets.symmetric(vertical: 6), child: Text(s));
+    Widget para(String s) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: docText(context, s));
 
     Widget table(String title, List<String> headers, List<List<String>> rows, [String? note]) {
       return Padding(
@@ -256,7 +337,7 @@ class ReferenceTab extends StatelessWidget {
       para('In normal play EXP elixirs only trickle in — small amounts, often '
           'priced in Fateum, which F2P players should generally spend on the '
           'garden first — it feeds the law system that starts at Voidbreak '
-          '(see Guide → Voidbreak+). The exception: breaking through to a new realm offers '
+          '(see [[guide:voidbreak|Guide → Voidbreak+]]). The exception: breaking through to a new realm offers '
           'three real-money elixir packs, among the best value in the game for '
           'anyone optimizing money spent — the 150%/120% early tolerance tiers '
           'make each realm\'s batch worth the most right when you buy it.'),
@@ -463,7 +544,7 @@ class ReferenceTab extends StatelessWidget {
           'are decided server-side and vary by item and realm, so this page '
           'doesn\'t guess at them. Where a number isn\'t listed, read it as '
           '"unknown", not "zero". For the exact per-point math the game does '
-          'expose, see the Advanced tab.'),
+          'expose, see the [[ref:advanced|Advanced tab]].'),
     ]);
 
     // Expert-level internals; only client-stated mechanics carry numbers.
@@ -782,13 +863,12 @@ class ReferenceTab extends StatelessWidget {
           'tier breakpoints first — carries through the rest of the game.'),
     ]);
 
-    return DefaultTabController(
-      length: 8,
-      child: Column(children: [
-        const TabBar(
+    return Column(children: [
+        TabBar(
+          controller: _tabs,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
-          tabs: [
+          tabs: const [
             Tab(text: 'Basics'),
             Tab(text: 'Pills & Respira'),
             Tab(text: 'Elixirs & Stat Pills'),
@@ -800,7 +880,7 @@ class ReferenceTab extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: TabBarView(children: [
+          child: TabBarView(controller: _tabs, children: [
             basics,
             pills,
             elixirs,
@@ -811,21 +891,50 @@ class ReferenceTab extends StatelessWidget {
             advanced,
           ]),
         ),
-      ]),
-    );
+      ]);
   }
 }
 
 /// Stage-by-stage cultivation guide, one sub-tab per realm band.
-class GuideTab extends StatelessWidget {
+class GuideTab extends StatefulWidget {
   const GuideTab({super.key});
+
+  @override
+  State<GuideTab> createState() => _GuideTabState();
+}
+
+class _GuideTabState extends State<GuideTab>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabs = TabController(length: 9, vsync: this);
+
+  @override
+  void initState() {
+    super.initState();
+    docLinkRequest.addListener(_onDocLink);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onDocLink());
+  }
+
+  void _onDocLink() {
+    final req = docLinkRequest.value;
+    if (req == null || req.tab != 2 || !mounted) return;
+    _tabs.animateTo(req.sub);
+    docLinkRequest.value = null;
+  }
+
+  @override
+  void dispose() {
+    docLinkRequest.removeListener(_onDocLink);
+    _tabs.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final h3 = Theme.of(context).textTheme.titleMedium;
 
     Widget para(String s) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6), child: Text(s));
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: docText(context, s));
 
     Widget footer() => Padding(
           padding: const EdgeInsets.only(top: 16, bottom: 8),
@@ -874,11 +983,11 @@ class GuideTab extends StatelessWidget {
       para('Rules of thumb: want one answer for everything — Swordia. '
           'PvE/farming focus — Ghostia or Magicka. PvP focus — Corporia or '
           'Swordia. Patient scaler who accepts a weak mortal world — '
-          'Literatia. Aux pairings are on the Aux Paths tab.'),
+          'Literatia. Aux pairings are on the [[guide:aux|Aux Paths tab]].'),
       para('Relic-reliant paths (Swordia, Ghostia) care more about relic '
           'income and forging; ability-focused paths (Corporia, Magicka, '
           'Literatia) lean on ability levels — which come from Demon Spire '
-          'climbing (Reference → World Systems).'),
+          'climbing ([[ref:systems|Reference → World Systems]]).'),
     ]);
 
     final routine = page([
@@ -899,14 +1008,14 @@ class GuideTab extends StatelessWidget {
           '• Check the market for Demonroot (pet skills) and similar limited '
           'stock.\n'
           '• Take stat pills and elixirs as they arrive — there\'s no timing '
-          'play on either (Reference → Elixirs & Stat Pills).\n'
+          'play on either ([[ref:elixirs|Reference → Elixirs & Stat Pills]]).\n'
           '• Myrimon runs: during the event\'s first week they don\'t '
           'accumulate — use them daily at the highest realm you can clear.'),
       Text('Weekly', style: h3),
       para('• Banked Myrimon runs: spend them on Sunday, or hold them until '
           'you can clear a higher-requirement dungeon. Fruits go to the '
           'stockpile, not the extractor, until the extractor is maxed '
-          '(Reference → Myrimon & Extractor).'),
+          '([[ref:myrimon|Reference → Myrimon & Extractor]]).'),
       Text('Before every major breakthrough', style: h3),
       para('• Spend all daily pills and Respira attempts — they reset on the '
           'breakthrough.\n'
@@ -916,8 +1025,8 @@ class GuideTab extends StatelessWidget {
           '• Spend Fatevillion shop tokens — that shop resets too.\n'
           '• Don\'t claim pill bags until after the ascension.\n'
           '• If you spend money: the three elixir packs offered on reaching '
-          'the new realm are among the best value in the game (Reference → '
-          'Elixirs & Stat Pills).'),
+          'the new realm are among the best value in the game '
+          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]).'),
     ]);
 
     final novice = page([
@@ -933,8 +1042,8 @@ class GuideTab extends StatelessWidget {
           'blue pills at first, and don\'t max your attempts before claiming '
           'the pill bag from the early quests. Save 5–10 attempts for '
           'Foundation 10, and spend pills mainly when they push a stage '
-          'breakthrough. (What each pill is worth: Reference → Pills & '
-          'Respira.)\n'
+          'breakthrough. (What each pill is worth: '
+          '[[ref:pills|Reference → Pills & Respira]].)\n'
           '• Alchemy: save blue/purple pill materials for F9–F10 instead of '
           'crafting them immediately.\n'
           '• Respira is the daily breathing exercise on the cultivation screen '
@@ -947,7 +1056,7 @@ class GuideTab extends StatelessWidget {
           '• Energy Array materials come from the world-map realms: 56 '
           'violetite from Violet Streams, then 110 frostite from Lake '
           'Blackwater. The array permanently raises your Abode Aura — the base '
-          'of your cultivation speed (Reference → Basics).'),
+          'of your cultivation speed ([[ref:basics|Reference → Basics]]).'),
     ]);
 
     final virtuoso = page([
@@ -955,7 +1064,8 @@ class GuideTab extends StatelessWidget {
       para('• Myrimon unlocks here — the Aura Extractor lotus next to your '
           'character on the cultivation screen, fed by fruits from the weekly '
           'Myrimon dungeon runs. It becomes your biggest free source of '
-          'cultivation EXP, so read Reference → Myrimon & Extractor before '
+          'cultivation EXP, so read [[ref:myrimon|Reference → Myrimon & '
+          'Extractor]] before '
           'spending anything.\n'
           '• During the first week of the Myrimon event your daily runs don\'t '
           'accumulate — use them every day at the highest realm you can clear. '
@@ -983,13 +1093,13 @@ class GuideTab extends StatelessWidget {
           'while you\'re behind your server\'s #1 cultivator. In this '
           'calculator it appears as the implied Strive readout, and the '
           '"Server #1\'s Stage" input starts to matter for long-range '
-          'estimates (Reference → Basics covers the math).\n'
+          'estimates ([[ref:basics|Reference → Basics]] covers the math).\n'
           '• Keep the story, Demon Spire, and realms pushed as far as they\'ll '
           'go each cultivation stage — several systems gate on them.\n'
           '• By now stat pills and elixirs are flowing in from shops and '
           'rewards. Take them as they arrive — neither can be wasted by using '
           'them early, and stat pills\' use caps grow with each realm anyway '
-          '(Reference → Elixirs & Stat Pills).'),
+          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]).'),
     ]);
 
     final incarnation = page([
@@ -1003,14 +1113,15 @@ class GuideTab extends StatelessWidget {
           '• Eat the stockpile before the realm timegate — fruits lose 50% of '
           'their EXP once the next realm\'s timegate passes — or on the last '
           'day before your own breakthrough, whichever comes first. (Full '
-          'fruit math: Reference → Myrimon & Extractor.)\n'
+          'fruit math: [[ref:myrimon|Reference → Myrimon & Extractor]].)\n'
           '• Before breaking through to Voidbreak: spend all pills and Respira '
           '(they reset), don\'t claim daily pill bags until after ascension, '
           'and spend Fatevillion shop tokens beforehand — that shop resets on '
           'breakthroughs too.\n'
           '• On the ascension itself you\'ll be offered three real-money '
           'elixir packs — if you spend at all, these are among the best value '
-          'in the game (Reference → Elixirs & Stat Pills explains why the '
+          'in the game ([[ref:elixirs|Reference → Elixirs & Stat Pills]] '
+          'explains why the '
           'early tolerance tiers make them worth the most).'),
     ]);
 
@@ -1074,13 +1185,12 @@ class GuideTab extends StatelessWidget {
           'whichever path you\'re actively cultivating.'),
     ]);
 
-    return DefaultTabController(
-      length: 9,
-      child: Column(children: [
-        const TabBar(
+    return Column(children: [
+        TabBar(
+          controller: _tabs,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
-          tabs: [
+          tabs: const [
             Tab(text: 'Choosing a Path'),
             Tab(text: 'Daily Routine'),
             Tab(text: 'Novice–Foundation'),
@@ -1093,7 +1203,7 @@ class GuideTab extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: TabBarView(children: [
+          child: TabBarView(controller: _tabs, children: [
             choosing,
             routine,
             novice,
@@ -1105,7 +1215,6 @@ class GuideTab extends StatelessWidget {
             aux,
           ]),
         ),
-      ]),
-    );
+      ]);
   }
 }

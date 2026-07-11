@@ -7,7 +7,7 @@ import os
 import sys
 
 from PySide6.QtCore import QEvent, QObject, Qt, QUrl
-from PySide6.QtGui import QGuiApplication, QWheelEvent
+from PySide6.QtGui import QDesktopServices, QGuiApplication, QWheelEvent
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
 from . import DONATE_RID, DONATE_URL, REPO, __version__
@@ -523,6 +523,27 @@ class MainWindow(QMainWindow):
         self._guide_tabs.setCurrentIndex(gsub)
         self.resize(1180, 680)
 
+    # Internal link scheme for Reference/Guide cross-references:
+    # app://ref/<slug> and app://guide/<slug>. Slug order must match the
+    # addTab order in _build_info_tab / _build_guide_tab.
+    _REF_SLUGS = {"basics": 0, "pills": 1, "elixirs": 2, "myrimon": 3,
+                  "artifacts": 4, "combat": 5, "systems": 6, "advanced": 7}
+    _GUIDE_SLUGS = {"paths": 0, "routine": 1, "novice": 2, "virtuoso": 3,
+                    "nascent": 4, "incarnation": 5, "voidbreak": 6,
+                    "pets": 7, "aux": 8}
+
+    def _open_doc_link(self, url: QUrl):
+        if url.scheme() != "app":
+            QDesktopServices.openUrl(url)
+            return
+        tree, slug = url.host(), url.path().strip("/")
+        if tree == "ref" and slug in self._REF_SLUGS:
+            self._tabs.setCurrentIndex(1)
+            self._ref_tabs.setCurrentIndex(self._REF_SLUGS[slug])
+        elif tree == "guide" and slug in self._GUIDE_SLUGS:
+            self._tabs.setCurrentIndex(2)
+            self._guide_tabs.setCurrentIndex(self._GUIDE_SLUGS[slug])
+
     def _build_info_tab(self) -> QWidget:
         """Read-only reference, split into topic sub-tabs. Tables render from
         the same data the engine uses so they can't drift from the calculations."""
@@ -549,7 +570,8 @@ class MainWindow(QMainWindow):
 
         def page(html: str) -> QTextBrowser:
             b = QTextBrowser()
-            b.setOpenExternalLinks(True)
+            b.setOpenLinks(False)
+            b.anchorClicked.connect(self._open_doc_link)
             b.setHtml(html + footer)
             return b
 
@@ -831,7 +853,7 @@ class MainWindow(QMainWindow):
             "various sources, often priced in Fateum, which is scarce enough that "
             "an F2P player should generally prioritize spending it on the garden "
             "first — it feeds the law system that starts at Voidbreak (see "
-            "Guide → Voidbreak+). The exception: <b>breaking through to a new realm offers three "
+            "<a href='app://guide/voidbreak'>Guide → Voidbreak+</a>). The exception: <b>breaking through to a new realm offers three "
             "real-money elixir packs</b>, and for anyone optimizing money spent "
             "these packs are among the best value in the game — the elixirs' "
             "150%/120% early tiers make each realm's batch worth the most right "
@@ -1024,7 +1046,7 @@ class MainWindow(QMainWindow):
             "grants — are decided server-side and vary by item and realm, so this "
             "page doesn't guess at them. Where a number isn't listed, read it as "
             "\"unknown\", not \"zero\". For the exact per-point math the game does "
-            "expose, see the Advanced tab.</p>")
+            "expose, see the <a href='app://ref/advanced'>Advanced tab</a>.</p>")
 
         # ---- World Systems ---------------------------------------------------
         # System explainers assembled from the client's own tooltip/description
@@ -1434,7 +1456,8 @@ class MainWindow(QMainWindow):
 
         def page(html: str) -> QTextBrowser:
             b = QTextBrowser()
-            b.setOpenExternalLinks(True)
+            b.setOpenLinks(False)
+            b.anchorClicked.connect(self._open_doc_link)
             b.setHtml(html + footer)
             return b
 
@@ -1472,12 +1495,13 @@ class MainWindow(QMainWindow):
             "<p><b>Rules of thumb:</b> want one answer for everything — "
             "Swordia. PvE/farming focus — Ghostia or Magicka. PvP focus — "
             "Corporia or Swordia. Patient scaler who accepts a weak mortal "
-            "world — Literatia. Aux pairings are on the Aux Paths tab.</p>"
+            "world — Literatia. Aux pairings are on the "
+            "<a href='app://guide/aux'>Aux Paths tab</a>.</p>"
             "<p>Note that relic-reliant paths (Swordia, Ghostia) care more "
             "about relic income and forging; ability-focused paths "
             "(Corporia, Magicka, Literatia) lean on ability levels — which "
-            "come from Demon Spire climbing (Reference → World "
-            "Systems).</p>")
+            "come from Demon Spire climbing (<a href='app://ref/systems'>"
+            "Reference → World Systems</a>).</p>")
 
         routine = (
             "<h2>Your daily loop</h2>"
@@ -1500,8 +1524,8 @@ class MainWindow(QMainWindow):
             "<li><b>Check the market</b> for Demonroot (pet skills) and "
             "similar limited stock.</li>"
             "<li><b>Take stat pills and elixirs as they arrive</b> — there's "
-            "no timing play on either (Reference → Elixirs &amp; Stat "
-            "Pills).</li>"
+            "no timing play on either (<a href='app://ref/elixirs'>"
+            "Reference → Elixirs &amp; Stat Pills</a>).</li>"
             "<li><b>Myrimon runs</b>: during the event's first week they don't "
             "accumulate — use them daily at the highest realm you can clear. "
             "After the first week they stack (see Weekly).</li>"
@@ -1510,7 +1534,8 @@ class MainWindow(QMainWindow):
             "<li>Banked <b>Myrimon runs</b>: spend them on Sunday, or hold "
             "them until you can clear a higher-requirement dungeon. Fruits go "
             "to the stockpile, not the extractor, until the extractor is "
-            "maxed (Reference → Myrimon &amp; Extractor).</li>"
+            "maxed (<a href='app://ref/myrimon'>Reference → Myrimon &amp; "
+            "Extractor</a>).</li>"
             "</ul>"
             "<h3>Before every major breakthrough</h3><ul>"
             "<li><b>Spend all daily pills and Respira attempts</b> — they "
@@ -1524,7 +1549,8 @@ class MainWindow(QMainWindow):
             "claimed bags count against the old realm.</li>"
             "<li>If you spend money: the <b>three elixir packs</b> offered on "
             "reaching the new realm are among the best value in the game "
-            "(Reference → Elixirs &amp; Stat Pills).</li>"
+            "(<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
+            "Pills</a>).</li>"
             "</ul>")
 
         novice = (
@@ -1541,7 +1567,8 @@ class MainWindow(QMainWindow):
             "your daily attempts until you've claimed the pill bag from the early "
             "quests. Save 5-10 attempts for Foundation 10, and spend pills mainly "
             "when they push you over a stage breakthrough. (What each pill is "
-            "worth: Reference → Pills &amp; Respira.)</li>"
+            "worth: <a href='app://ref/pills'>Reference → Pills &amp; "
+            "Respira</a>.)</li>"
             "<li><b>Alchemy:</b> save your blue and purple pill materials for "
             "F9-F10 rather than crafting them the moment you get them.</li>"
             "<li><b>Respira</b> is the daily breathing exercise on the cultivation "
@@ -1555,8 +1582,9 @@ class MainWindow(QMainWindow):
             "<li><b>Energy Array</b> materials come from the world-map realms: "
             "56 violetite from <b>Violet Streams</b>, then 110 frostite from "
             "<b>Lake Blackwater</b>. The array permanently raises your Abode "
-            "Aura, which is the base of your cultivation speed (Reference → "
-            "Basics explains the speed formula).</li></ul>")
+            "Aura, which is the base of your cultivation speed "
+            "(<a href='app://ref/basics'>Reference → Basics</a> explains the "
+            "speed formula).</li></ul>")
 
         virtuoso = (
             "<h2>Virtuoso (usually end of day 1)</h2>"
@@ -1564,7 +1592,8 @@ class MainWindow(QMainWindow):
             "Extractor</b> lotus next to your character on the cultivation "
             "screen, fed by fruits from the weekly Myrimon dungeon runs. This "
             "becomes your single biggest free source of cultivation EXP, so read "
-            "Reference → Myrimon &amp; Extractor before spending anything.</li>"
+            "<a href='app://ref/myrimon'>Reference → Myrimon &amp; "
+            "Extractor</a> before spending anything.</li>"
             "<li>During the first week of the Myrimon event your daily runs "
             "<b>don't accumulate</b> — use them every day, at the highest realm "
             "you can clear. After that first week they stack, so you can bank "
@@ -1592,8 +1621,8 @@ class MainWindow(QMainWindow):
             "you'll see your absorption ratio exceed the stage's base. In this "
             "calculator it appears as the implied Strive readout under the "
             "Absorption Ratio input, and the \"Server #1's Stage\" input starts "
-            "to matter for long-range estimates. (Reference → Basics covers how "
-            "Strive enters the math.)</li>"
+            "to matter for long-range estimates. (<a href='app://ref/basics'>"
+            "Reference → Basics</a> covers how Strive enters the math.)</li>"
             "<li>Keep the <b>story</b>, <b>Demon Spire</b>, and <b>realms</b> "
             "pushed as far as they'll go at every cultivation stage — several "
             "systems gate on them.</li>"
@@ -1601,7 +1630,8 @@ class MainWindow(QMainWindow):
             "shops and rewards. Take them as they arrive — neither can be "
             "wasted by using them early, and stat pills' use caps grow with "
             "each realm anyway. What they are and how their limits work: "
-            "Reference → Elixirs &amp; Stat Pills.</li></ul>")
+            "<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
+            "Pills</a>.</li></ul>")
 
         incarnation = (
             "<h2>Incarnation</h2>"
@@ -1615,8 +1645,8 @@ class MainWindow(QMainWindow):
             "<li><b>Eat the stockpile before the realm timegate</b> — fruits "
             "lose 50% of their EXP once the next realm's timegate passes — or on "
             "the last day before your own breakthrough, whichever comes first. "
-            "(Timegates and the full fruit math: Reference → Myrimon &amp; "
-            "Extractor.)</li>"
+            "(Timegates and the full fruit math: <a href='app://ref/myrimon'>"
+            "Reference → Myrimon &amp; Extractor</a>.)</li>"
             "<li>Before breaking through to Voidbreak: <b>spend all pills and "
             "Respira attempts</b> (they reset on the breakthrough), <b>don't</b> "
             "claim daily pill bags until after ascension, and spend your "
@@ -1624,7 +1654,8 @@ class MainWindow(QMainWindow):
             "breakthroughs too.</li>"
             "<li>On the ascension itself you'll be offered <b>three real-money "
             "elixir packs</b> — if you spend at all, these are among the best "
-            "value in the game (Reference → Elixirs &amp; Stat Pills explains "
+            "value in the game (<a href='app://ref/elixirs'>Reference → "
+            "Elixirs &amp; Stat Pills</a> explains "
             "why the early tolerance tiers make them worth the most).</li></ul>")
 
         voidbreak = (

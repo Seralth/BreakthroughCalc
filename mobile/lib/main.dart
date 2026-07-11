@@ -142,7 +142,9 @@ class CalculatorPage extends StatefulWidget {
   State<CalculatorPage> createState() => _CalculatorPageState();
 }
 
-class _CalculatorPageState extends State<CalculatorPage> {
+class _CalculatorPageState extends State<CalculatorPage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _topTabs = TabController(length: 3, vsync: this);
   Inputs inp = Inputs();
   late Results res;
   final _peSources = <List<dynamic>>[]; // [name, percent]
@@ -155,8 +157,17 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   Engine get engine => widget.engine;
 
+  // Cross-reference links ([[ref:...]]) request a top-level tab switch here;
+  // the target tab's own controller handles the sub-tab jump.
+  void _onDocLink() {
+    final req = docLinkRequest.value;
+    if (req != null) _topTabs.animateTo(req.tab);
+  }
+
   @override
   void dispose() {
+    docLinkRequest.removeListener(_onDocLink);
+    _topTabs.dispose();
     _speedCtrl.dispose();
     _abodeCtrl.dispose();
     _absorbCtrl.dispose();
@@ -167,6 +178,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   void initState() {
     super.initState();
+    docLinkRequest.addListener(_onDocLink);
     final stages = engine.stages();
     inp.stage = stages.first;
     inp.phase = engine.phasesFor(inp.stage).first;
@@ -402,12 +414,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(tr('Breakthrough Calculator')),
-          bottom: TabBar(tabs: [
+          bottom: TabBar(controller: _topTabs, tabs: [
             Tab(text: tr('Calculator')),
             Tab(text: tr('Reference')),
             Tab(text: tr('Guide')),
@@ -455,9 +465,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
               ),
           ],
         ),
-        body: TabBarView(children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog), const GuideTab()]),
-      ),
-    );
+        body: TabBarView(controller: _topTabs, children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog), const GuideTab()]),
+      );
   }
 
   Widget _calcTab() {
