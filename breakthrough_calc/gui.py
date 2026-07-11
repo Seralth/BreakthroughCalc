@@ -530,7 +530,7 @@ class MainWindow(QMainWindow):
                   "artifacts": 4, "combat": 5, "systems": 6, "advanced": 7}
     _GUIDE_SLUGS = {"paths": 0, "routine": 1, "novice": 2, "virtuoso": 3,
                     "nascent": 4, "incarnation": 5, "voidbreak": 6,
-                    "pets": 7, "aux": 8}
+                    "pets": 7, "aux": 8, "spending": 9}
 
     def _open_doc_link(self, url: QUrl):
         if url.scheme() != "app":
@@ -1207,7 +1207,46 @@ class MainWindow(QMainWindow):
             "picks the guide names (Longevity, Energy Unification, "
             "Rejuvenation) are examples of buying these tier effects at their "
             "cheapest; the same logic — tier breakpoints first — carries "
-            "through the rest of the game.</p>")
+            "through the rest of the game.</p>"
+
+            # Community-guide material (2026) from here down — priorities
+            # and tier lists are consensus, not client data.
+            "<h3>Technique roadmap (community priorities)</h3>"
+            "<p>The consensus per-rank picks, tier breakpoints first:</p><ul>"
+            "<li><b>R4</b>: Golden Core (+5% pill effect at completion) and "
+            "Astrology to Tier 7.</li>"
+            "<li><b>R5</b>: Ninefall and Bloodization to Tier 7.</li>"
+            "<li><b>R6</b>: Dragon's Flight or Yin's Grasp to Tier 10.</li>"
+            "<li><b>R7</b> (from the app's own source data): Floral Essence "
+            "— +3% pill effect at Tier 6, +1 daily pill attempt at Tier 9; "
+            "Great Yang Manual — +4% pill effect at Tier 9.</li>"
+            "<li><b>R10</b>: Immortal Ascension to Tier 13.</li>"
+            "</ul>"
+            "<p>The community list for R8–R9 wasn't preserved — if you have "
+            "it, please report it via the footer link. For Technique Points, "
+            "the consensus <b>Spirit World</b> strategy is three passes: "
+            "clear what you can, come back stronger, finish later — rather "
+            "than grinding one full clear early.</p>"
+
+            "<h3>Curio priorities (community)</h3>"
+            "<ul><li>Value order: <b>abode/pill-bonus curios &gt; main-path "
+            "ATK &gt; HP/MP</b>.</li>"
+            "<li>Star up <b>Pen &amp; Block equally</b> — a Pen roughly "
+            "1000 over the opponent's Block negates their defense.</li>"
+            "<li>Get <b>everything to 2–3 stars minimum</b> before pushing "
+            "any single curio deep.</li>"
+            "<li>Daemonfae, Field and Reincarnation curios have their own "
+            "niches — hold them rather than feeding them away.</li></ul>"
+
+            "<h3>Fields (Perfection, community)</h3>"
+            "<p>At Perfection you pick a Field; the consensus mapping:</p>"
+            "<ul><li><b>Solarium</b> — PvE-leaning and the usual F2P "
+            "pick.</li>"
+            "<li><b>Swordium</b> — the general-purpose choice.</li>"
+            "<li><b>Darkmyth</b> — team-oriented; pick it with your sect, "
+            "not solo.</li></ul>"
+            "<p>Fields level and enlighten separately and have their own "
+            "field-soul structure — details not yet captured here.</p>")
 
         # ---- Combat & Gear: Advanced ---------------------------------------
         # Expert-level internals recovered from the client's own stat
@@ -1551,6 +1590,12 @@ class MainWindow(QMainWindow):
             "reaching the new realm are among the best value in the game "
             "(<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
             "Pills</a>).</li>"
+            "</ul>"
+            "<h3>Quality-of-life settings</h3><ul>"
+            "<li>Turn off <b>wandering</b> (settings) — it only animates your "
+            "character walking around and costs attention for nothing.</li>"
+            "<li>Set <b>battle speed to 3×</b> once it unlocks; there is no "
+            "downside.</li>"
             "</ul>")
 
         novice = (
@@ -1670,7 +1715,41 @@ class MainWindow(QMainWindow):
             "to the mortal world; later realms allow overcapping (for example by "
             "keeping your aux path a minor realm behind your main). The "
             "calculator only warns about >120% readings in mortal-world "
-            "stages.</li></ul>")
+            "stages.</li></ul>"
+
+            # Community-guide material (2026): friend levels/payoffs are the
+            # circulating consensus list, cross-checked against the app's own
+            # pill/Respira source data where the two overlap.
+            "<h3>Ascension day (community checklist)</h3>"
+            "<p>The order of operations for the day you break through to "
+            "Voidbreak:</p><ul>"
+            "<li><b>Before</b> the breakthrough: don't claim dailies or pill "
+            "bags — they count against the old realm (same rule as every "
+            "major breakthrough).</li>"
+            "<li><b>Immediately after</b>: unlock <b>laws</b> as soon as "
+            "possible, buy <b>law fragments</b>, plant <b>law fruits</b> in "
+            "the garden, and buy <b>Nature Mantras</b>.</li>"
+            "<li>Unlock <b>Pandemonium</b> and its three maps.</li>"
+            "<li>Claim the <b>treasure trove</b> at Voidbreak, not at "
+            "Incarnation — it scales with the realm you claim it in.</li>"
+            "</ul>"
+            "<h3>Immortal Friends (community priorities)</h3>"
+            "<p>Friends' levels pay off in cultivation terms at specific "
+            "breakpoints. The consensus unlock/level priorities:</p><ul>"
+            "<li><b>Crane Boy</b> to max — <b>+1 daily pill attempt</b>.</li>"
+            "<li><b>Iron Fan</b> 36, <b>Daji</b> 73, <b>Shen Gongbao</b> 117 "
+            "— <b>+1 daily Respira attempt</b> each.</li>"
+            "<li><b>Jiang Ziya</b> 116 and <b>Taotie</b> 117 — <b>+3% pill "
+            "effect</b> each.</li>"
+            "<li><b>Macaque</b> 17 — +3% Respira EXP (already included in "
+            "your in-game Respira tooltip).</li>"
+            "<li>Also on the community priority list (payoff not recorded "
+            "yet): <b>White Astra</b> 31, <b>Princess Adalinda</b> 81, "
+            "<b>Leizhenzi</b> 129.</li>"
+            "</ul>"
+            "<p>These attempt/effect bonuses are exactly what the "
+            "calculator's pill and Respira source pickers model — tick them "
+            "there once you hit the breakpoints.</p>")
 
         pets = (
             "<h2>Pets</h2>"
@@ -1722,6 +1801,36 @@ class MainWindow(QMainWindow):
             "<p>The calculator models one path at a time — enter the numbers "
             "for whichever path you're actively cultivating.</p>")
 
+        # Spending advice is community consensus (2026 guide + Discord);
+        # BR figures are era-specific estimates, not client data.
+        spending = (
+            "<h2>Spending (if you pay at all)</h2>"
+            "<p>None of this is a recommendation to spend — it's the "
+            "community's answer to \"if I do, what's actually worth it?\" "
+            "All of it is consensus opinion.</p>"
+            "<h3>Priorities</h3><ul>"
+            "<li><b>Permanent one-time buys first</b>: the watering curio "
+            "set and the permanent passes beat any consumable pack — you "
+            "buy them once and they pay out forever.</li>"
+            "<li>The <b>three elixir packs on reaching a new realm</b> are "
+            "among the best consumable value in the game (early tolerance "
+            "tiers make them worth the most — see <a href='app://ref/"
+            "elixirs'>Reference → Elixirs &amp; Stat Pills</a>).</li>"
+            "<li>The daily 30 Fateum/Destium <b>artifact charges</b> are "
+            "among the cheapest EXP money buys.</li>"
+            "<li><b>Law fruit packs are atrocious value — do not buy "
+            "them.</b></li>"
+            "<li>Heavy <b>pet</b> investment is whale territory "
+            "(<a href='app://guide/pets'>Guide → Pets</a>).</li>"
+            "</ul>"
+            "<h3>Timegate BR targets (era-specific community estimates)</h3>"
+            "<p>Rough battle-rating bands players report aiming for at each "
+            "realm's timegate content, by spending tier (F2P → heavy). "
+            "These drift with every era — treat as orientation only:</p>"
+            "<ul><li><b>Incarnation</b>: 800m – 2b+</li>"
+            "<li><b>Voidbreak</b>: 9b – 25b+</li>"
+            "<li><b>Wholeness</b>: 45b – 100b+</li></ul>")
+
         self._guide_tabs = guide = QTabWidget()
         for title, html in (("Choosing a Path", paths),
                             ("Daily Routine", routine),
@@ -1731,7 +1840,8 @@ class MainWindow(QMainWindow):
                             ("Incarnation", incarnation),
                             ("Voidbreak+", voidbreak),
                             ("Pets", pets),
-                            ("Aux Paths", aux)):
+                            ("Aux Paths", aux),
+                            ("Spending", spending)):
             guide.addTab(page(html), title)
         return guide
 

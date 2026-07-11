@@ -12,7 +12,7 @@ const refSlugs = {'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3,
                   'artifacts': 4, 'combat': 5, 'systems': 6, 'advanced': 7};
 const guideSlugs = {'paths': 0, 'routine': 1, 'novice': 2, 'virtuoso': 3,
                     'nascent': 4, 'incarnation': 5, 'voidbreak': 6,
-                    'pets': 7, 'aux': 8};
+                    'pets': 7, 'aux': 8, 'spending': 9};
 
 class DocLink {
   final int tab; // top-level tab index: 1 = Reference, 2 = Guide
@@ -861,6 +861,39 @@ class _ReferenceTabState extends State<ReferenceTab>
           '(Longevity, Energy Unification, Rejuvenation) are examples of '
           'buying these tier effects at their cheapest; the same logic — '
           'tier breakpoints first — carries through the rest of the game.'),
+      // Community-guide material (2026) from here down — priorities and
+      // tier lists are consensus, not client data.
+      Text('Technique roadmap (community priorities)', style: h3),
+      para('The consensus per-rank picks, tier breakpoints first:\n'
+          '• R4: Golden Core (+5% pill effect at completion) and Astrology '
+          'to Tier 7.\n'
+          '• R5: Ninefall and Bloodization to Tier 7.\n'
+          '• R6: Dragon\'s Flight or Yin\'s Grasp to Tier 10.\n'
+          '• R7 (from the app\'s own source data): Floral Essence — +3% '
+          'pill effect at Tier 6, +1 daily pill attempt at Tier 9; Great '
+          'Yang Manual — +4% pill effect at Tier 9.\n'
+          '• R10: Immortal Ascension to Tier 13.'),
+      para('The community list for R8–R9 wasn\'t preserved — if you have '
+          'it, please report it via the footer link. For Technique Points, '
+          'the consensus Spirit World strategy is three passes: clear what '
+          'you can, come back stronger, finish later — rather than grinding '
+          'one full clear early.'),
+      Text('Curio priorities (community)', style: h3),
+      para('• Value order: abode/pill-bonus curios > main-path ATK > '
+          'HP/MP.\n'
+          '• Star up Pen & Block equally — a Pen roughly 1000 over the '
+          'opponent\'s Block negates their defense.\n'
+          '• Get everything to 2–3 stars minimum before pushing any single '
+          'curio deep.\n'
+          '• Daemonfae, Field and Reincarnation curios have their own '
+          'niches — hold them rather than feeding them away.'),
+      Text('Fields (Perfection, community)', style: h3),
+      para('At Perfection you pick a Field; the consensus mapping:\n'
+          '• Solarium — PvE-leaning and the usual F2P pick.\n'
+          '• Swordium — the general-purpose choice.\n'
+          '• Darkmyth — team-oriented; pick it with your sect, not solo.\n'
+          'Fields level and enlighten separately and have their own '
+          'field-soul structure — details not yet captured here.'),
     ]);
 
     return Column(children: [
@@ -905,7 +938,7 @@ class GuideTab extends StatefulWidget {
 
 class _GuideTabState extends State<GuideTab>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabs = TabController(length: 9, vsync: this);
+  late final TabController _tabs = TabController(length: 10, vsync: this);
 
   @override
   void initState() {
@@ -1027,6 +1060,10 @@ class _GuideTabState extends State<GuideTab>
           '• If you spend money: the three elixir packs offered on reaching '
           'the new realm are among the best value in the game '
           '([[ref:elixirs|Reference → Elixirs & Stat Pills]]).'),
+      Text('Quality-of-life settings', style: h3),
+      para('• Turn off wandering (settings) — it only animates your '
+          'character walking around and costs attention for nothing.\n'
+          '• Set battle speed to 3× once it unlocks; there is no downside.'),
     ]);
 
     final novice = page([
@@ -1137,6 +1174,35 @@ class _GuideTabState extends State<GuideTab>
           'mortal world; later realms allow overcapping (e.g. keeping your aux '
           'path a minor realm behind your main). The calculator only warns '
           'about >120% readings in mortal-world stages.'),
+      // Community-guide material (2026): friend levels/payoffs are the
+      // circulating consensus list, cross-checked against the app's own
+      // pill/Respira source data where the two overlap.
+      Text('Ascension day (community checklist)', style: h3),
+      para('The order of operations for the day you break through to '
+          'Voidbreak:\n'
+          '• Before the breakthrough: don\'t claim dailies or pill bags — '
+          'they count against the old realm (same rule as every major '
+          'breakthrough).\n'
+          '• Immediately after: unlock laws as soon as possible, buy law '
+          'fragments, plant law fruits in the garden, and buy Nature '
+          'Mantras.\n'
+          '• Unlock Pandemonium and its three maps.\n'
+          '• Claim the treasure trove at Voidbreak, not at Incarnation — '
+          'it scales with the realm you claim it in.'),
+      Text('Immortal Friends (community priorities)', style: h3),
+      para('Friends\' levels pay off in cultivation terms at specific '
+          'breakpoints. The consensus unlock/level priorities:\n'
+          '• Crane Boy to max — +1 daily pill attempt.\n'
+          '• Iron Fan 36, Daji 73, Shen Gongbao 117 — +1 daily Respira '
+          'attempt each.\n'
+          '• Jiang Ziya 116 and Taotie 117 — +3% pill effect each.\n'
+          '• Macaque 17 — +3% Respira EXP (already included in your '
+          'in-game Respira tooltip).\n'
+          '• Also on the community priority list (payoff not recorded '
+          'yet): White Astra 31, Princess Adalinda 81, Leizhenzi 129.'),
+      para('These attempt/effect bonuses are exactly what the calculator\'s '
+          'pill and Respira source pickers model — tick them there once you '
+          'hit the breakpoints.'),
     ]);
 
     final pets = page([
@@ -1185,6 +1251,35 @@ class _GuideTabState extends State<GuideTab>
           'whichever path you\'re actively cultivating.'),
     ]);
 
+    // Spending advice is community consensus (2026 guide + Discord);
+    // BR figures are era-specific estimates, not client data.
+    final spending = page([
+      Text('Spending (if you pay at all)', style: h3),
+      para('None of this is a recommendation to spend — it\'s the '
+          'community\'s answer to "if I do, what\'s actually worth it?" '
+          'All of it is consensus opinion.'),
+      Text('Priorities', style: h3),
+      para('• Permanent one-time buys first: the watering curio set and the '
+          'permanent passes beat any consumable pack — you buy them once '
+          'and they pay out forever.\n'
+          '• The three elixir packs on reaching a new realm are among the '
+          'best consumable value in the game — early tolerance tiers make '
+          'them worth the most ([[ref:elixirs|Reference → Elixirs & Stat '
+          'Pills]]).\n'
+          '• The daily 30 Fateum/Destium artifact charges are among the '
+          'cheapest EXP money buys.\n'
+          '• Law fruit packs are atrocious value — do not buy them.\n'
+          '• Heavy pet investment is whale territory '
+          '([[guide:pets|Guide → Pets]]).'),
+      Text('Timegate BR targets (era-specific community estimates)', style: h3),
+      para('Rough battle-rating bands players report aiming for at each '
+          'realm\'s timegate content, by spending tier (F2P → heavy). These '
+          'drift with every era — treat as orientation only:\n'
+          '• Incarnation: 800m – 2b+\n'
+          '• Voidbreak: 9b – 25b+\n'
+          '• Wholeness: 45b – 100b+'),
+    ]);
+
     return Column(children: [
         TabBar(
           controller: _tabs,
@@ -1200,6 +1295,7 @@ class _GuideTabState extends State<GuideTab>
             Tab(text: 'Voidbreak+'),
             Tab(text: 'Pets'),
             Tab(text: 'Aux Paths'),
+            Tab(text: 'Spending'),
           ],
         ),
         Expanded(
@@ -1213,6 +1309,7 @@ class _GuideTabState extends State<GuideTab>
             voidbreak,
             pets,
             aux,
+            spending,
           ]),
         ),
       ]);
