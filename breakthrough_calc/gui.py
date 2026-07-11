@@ -1481,7 +1481,8 @@ class MainWindow(QMainWindow):
                             ("Combat & Gear", combat),
                             ("World Systems", systems),
                             ("Advanced", advanced)):
-            ref.addTab(page(html), title)
+            # Escape & so QTabWidget doesn't eat it as a mnemonic marker
+            ref.addTab(page(html), title.replace("&", "&&"))
         return ref
 
     def _build_guide_tab(self) -> QWidget:
