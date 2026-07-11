@@ -1059,7 +1059,8 @@ class _GuideTabState extends State<GuideTab>
           '• Don\'t claim pill bags until after the ascension.\n'
           '• If you spend money: the three elixir packs offered on reaching '
           'the new realm are among the best value in the game '
-          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]).'),
+          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]); the full '
+          'what\'s-worth-it list is on [[guide:spending|Guide → Spending]].'),
       Text('Quality-of-life settings', style: h3),
       para('• Turn off wandering (settings) — it only animates your '
           'character walking around and costs attention for nothing.\n'
