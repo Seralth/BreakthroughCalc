@@ -25,6 +25,9 @@ in `breakthrough_calc/engine.py`; ground-truth tests in `tests/test_engine.py`
 
 - `docs/knowledge/game-mechanics-verified.md` — verified pill/gem/gush/orb/
   extractor semantics (2026-07-07 screenshots)
+- `docs/knowledge/combat-mechanics.md` — verified combat/gear stat mechanics
+  (crit/hit/pen/block/control constants from cfg_us_calc.lua) + community
+  affix tier-list cross-check; kept separate from cultivation knowledge
 - `docs/knowledge/elixir-sense-mechanics.md` — elixir tolerance ladders, pill
   taxonomy (3 distinct "pill" meanings), alchemy, Sense stat; has OPEN
   QUESTIONS — check before writing reference sections
