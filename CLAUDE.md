@@ -36,7 +36,8 @@ in `breakthrough_calc/engine.py`; ground-truth tests in `tests/test_engine.py`
 
 ## Working notes
 
-- Pending feature: a simple donation button (desktop footer/About + mobile
-  about screen) — blocked on Seralth choosing platform/URL; ask when relevant.
+- Donation button (done, desktop + mobile): SEAGM in-game voucher gifting —
+  URL and recipient ID in `breakthrough_calc/__init__.py` (no URL prefill
+  supported by SEAGM, so instructions include the RID for manual entry).
 - RE tooling: `apk_analysis/` (see `RE_FINDINGS.md`), Il2CppDumper, ljd;
   Python venv at `.venv`.
