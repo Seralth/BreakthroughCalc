@@ -506,6 +506,7 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
         tabs.addTab(central, tr("Calculator"))
         self._tabs = tabs
+        self._doc_history = []
         tabs.addTab(self._build_info_tab(), tr("Reference"))
         tabs.addTab(self._build_guide_tab(), tr("Guide"))
         self.setCentralWidget(tabs)
@@ -521,6 +522,7 @@ class MainWindow(QMainWindow):
         self._tabs.insertTab(2, self._build_guide_tab(), tr("Guide"))
         self._ref_tabs.setCurrentIndex(sub)
         self._guide_tabs.setCurrentIndex(gsub)
+        self._update_back_buttons()
         self.resize(1180, 680)
 
     # Internal link scheme for Reference/Guide cross-references:
@@ -539,11 +541,50 @@ class MainWindow(QMainWindow):
             return
         tree, slug = url.host(), url.path().strip("/")
         if tree == "ref" and slug in self._REF_SLUGS:
+            self._push_doc_history()
             self._tabs.setCurrentIndex(1)
             self._ref_tabs.setCurrentIndex(self._REF_SLUGS[slug])
         elif tree == "guide" and slug in self._GUIDE_SLUGS:
+            self._push_doc_history()
             self._tabs.setCurrentIndex(2)
             self._guide_tabs.setCurrentIndex(self._GUIDE_SLUGS[slug])
+
+    # Back-navigation for the app:// cross-links: each link click pushes the
+    # (tab, sub-tab, scroll) the reader left, so the Back button in the tab
+    # corner returns them to the exact spot they were reading.
+    def _doc_location(self):
+        idx = self._tabs.currentIndex()
+        sub = {1: self._ref_tabs, 2: self._guide_tabs}.get(idx)
+        if sub is None:
+            return None
+        w = sub.currentWidget()
+        scroll = w.verticalScrollBar().value() if isinstance(w, QTextBrowser) else 0
+        return (idx, sub.currentIndex(), scroll)
+
+    def _push_doc_history(self):
+        loc = self._doc_location()
+        if loc:
+            self._doc_history.append(loc)
+            self._update_back_buttons()
+
+    def _go_back(self):
+        if not self._doc_history:
+            return
+        idx, sub_idx, scroll = self._doc_history.pop()
+        self._tabs.setCurrentIndex(idx)
+        sub = {1: self._ref_tabs, 2: self._guide_tabs}[idx]
+        sub.setCurrentIndex(sub_idx)
+        w = sub.currentWidget()
+        if isinstance(w, QTextBrowser):
+            w.verticalScrollBar().setValue(scroll)
+        self._update_back_buttons()
+
+    def _update_back_buttons(self):
+        show = bool(self._doc_history)
+        for btn in (getattr(self, "_ref_back", None),
+                    getattr(self, "_guide_back", None)):
+            if btn is not None:
+                btn.setVisible(show)
 
     def _build_info_tab(self) -> QWidget:
         """Read-only reference, split into topic sub-tabs. Tables render from
@@ -1562,6 +1603,10 @@ class MainWindow(QMainWindow):
                             ("Advanced", advanced)):
             # Escape & so QTabWidget doesn't eat it as a mnemonic marker
             ref.addTab(page(html), title.replace("&", "&&"))
+        self._ref_back = QPushButton(tr("← Back"))
+        self._ref_back.clicked.connect(self._go_back)
+        self._ref_back.setVisible(False)
+        ref.setCornerWidget(self._ref_back)
         return ref
 
     def _build_guide_tab(self) -> QWidget:
@@ -1924,6 +1969,10 @@ class MainWindow(QMainWindow):
                             ("Aux Paths", aux),
                             ("Spending", spending)):
             guide.addTab(page(html), title)
+        self._guide_back = QPushButton(tr("← Back"))
+        self._guide_back.clicked.connect(self._go_back)
+        self._guide_back.setVisible(False)
+        guide.setCornerWidget(self._guide_back)
         return guide
 
     # ---- signal wiring ---------------------------------------------------
