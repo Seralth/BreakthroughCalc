@@ -18,7 +18,28 @@ const guideSlugs = {'paths': 0, 'routine': 1, 'novice': 2, 'virtuoso': 3,
 class DocLink {
   final int tab; // top-level tab index: 1 = Reference, 2 = Guide
   final int sub; // sub-tab index within it
-  const DocLink(this.tab, this.sub);
+  final String? anchor; // anchorKeys id (e.g. 'ref:elixirs:tolerance')
+  const DocLink(this.tab, this.sub, [this.anchor]);
+}
+
+/// Section anchors for cross-links ([[ref:slug#anchor|...]]). Target
+/// headings register a GlobalKey here; after a jump the tab handler
+/// scrolls the section into view.
+final Map<String, GlobalKey> anchorKeys = {};
+GlobalKey anchorKey(String id) => anchorKeys.putIfAbsent(id, () => GlobalKey());
+
+/// Scroll the anchor into view once its page has built (the TabBarView
+/// page may not exist on the first frame after a cross-tree jump — retry
+/// briefly until its context is mounted).
+void scrollToDocAnchor(String id, [int tries = 12]) {
+  final ctx = anchorKeys[id]?.currentContext;
+  if (ctx != null) {
+    Scrollable.ensureVisible(ctx,
+        duration: const Duration(milliseconds: 250), alignment: 0.05);
+  } else if (tries > 0) {
+    Future.delayed(const Duration(milliseconds: 50),
+        () => scrollToDocAnchor(id, tries - 1));
+  }
 }
 
 /// Pending cross-reference jump. Set when a link is tapped; the main scaffold
@@ -65,7 +86,8 @@ Widget docBackButton() => ValueListenableBuilder<List<DocLink>>(
             ),
     );
 
-final _docLinkRe = RegExp(r'\[\[(ref|guide):([a-z]+)\|([^\]]+)\]\]');
+final _docLinkRe =
+    RegExp(r'\[\[(ref|guide):([a-z]+)(?:#([a-z]+))?\|([^\]]+)\]\]');
 
 /// Paragraph text with [[...]] cross-reference markup rendered as tappable
 /// links (styled like [issuesLink]). Plain text passes through untouched.
@@ -78,7 +100,8 @@ Widget docText(BuildContext context, String s) {
   var pos = 0;
   for (final m in _docLinkRe.allMatches(s)) {
     if (m.start > pos) spans.add(TextSpan(text: s.substring(pos, m.start)));
-    final tree = m.group(1)!, slug = m.group(2)!, label = m.group(3)!;
+    final tree = m.group(1)!, slug = m.group(2)!;
+    final anchor = m.group(3), label = m.group(4)!;
     final sub = tree == 'ref' ? refSlugs[slug] : guideSlugs[slug];
     spans.add(sub == null
         ? TextSpan(text: label)
@@ -86,7 +109,8 @@ Widget docText(BuildContext context, String s) {
             text: label,
             style: linkStyle,
             recognizer: TapGestureRecognizer()
-              ..onTap = () => openDocLink(DocLink(tree == 'ref' ? 1 : 2, sub))));
+              ..onTap = () => openDocLink(DocLink(tree == 'ref' ? 1 : 2, sub,
+                  anchor == null ? null : '$tree:$slug:$anchor'))));
     pos = m.end;
   }
   if (pos < s.length) spans.add(TextSpan(text: s.substring(pos)));
@@ -132,6 +156,7 @@ class _ReferenceTabState extends State<ReferenceTab>
     if (req == null || req.tab != 1 || !mounted) return;
     _tabs.animateTo(req.sub);
     docLinkRequest.value = null;
+    if (req.anchor != null) scrollToDocAnchor(req.anchor!);
   }
 
   @override
@@ -198,15 +223,21 @@ class _ReferenceTabState extends State<ReferenceTab>
           ]),
         );
 
-    Widget page(List<Widget> children) =>
-        ListView(padding: const EdgeInsets.all(12), children: [...children, footer()]);
+    // SingleChildScrollView (not ListView) so every section is mounted and
+    // scrollToDocAnchor/ensureVisible can reach anchors below the fold.
+    Widget page(List<Widget> children) => SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [...children, footer()]));
 
     final pillXp = d['pill_xp'] as Map<String, dynamic>;
     final vaseCost = d['vase_energy_cost'] as Map<String, dynamic>? ?? {};
     final gems = d['gem_bonus'] as Map<String, dynamic>;
 
     final basics = page([
-      Text('How cultivation works', style: h3),
+      Text('How cultivation works',
+          key: anchorKey('ref:basics:cultivation'), style: h3),
       para('Cultivation EXP accrues one tick every 8 seconds (a "Cosmoapsis"). '
           'Cultivation Speed = Abode Aura × Absorption Ratio — all read from the '
           'in-game Cultivation Bonus screen. Progression is Stage → Half-step → Grade, '
@@ -232,7 +263,8 @@ class _ReferenceTabState extends State<ReferenceTab>
       Text('Timegates', style: h3),
       para('Timegates pace whole-server progression; Myrimon is the main F2P tool for '
           'meeting them.'),
-      Text('Tips for using the calculator', style: h3),
+      Text('Tips for using the calculator',
+          key: anchorKey('ref:basics:tips'), style: h3),
       para('• Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus '
           'screen and press Apply — that guarantees a current speed. A red warning '
           'means one of your readings is stale.\n'
@@ -247,7 +279,7 @@ class _ReferenceTabState extends State<ReferenceTab>
     ]);
 
     final pills = page([
-      Text('Daily pills', style: h3),
+      Text('Daily pills', key: anchorKey('ref:pills:daily'), style: h3),
       para('All pill colors share one daily attempt pool — spend your highest color first. '
           'Vase red (mythic) pills are exempt. A pill tooltip shows total EXP with the bonus '
           'in parentheses; base = total − bonus.'),
@@ -330,7 +362,8 @@ class _ReferenceTabState extends State<ReferenceTab>
         'All formulas craft at Max Quality. A fully capped +10 line across '
         'R1–R5 = (20+40+50+50+50) × 10 = 2,100 stat.',
       ),
-      Text('Stat elixirs (tolerance ladder)', style: h3),
+      Text('Stat elixirs (tolerance ladder)',
+          key: anchorKey('ref:elixirs:tolerance'), style: h3),
       para('Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) grant '
           'permanent combat stats — but with diminishing returns. Each item '
           'tracks how many you\'ve consumed over your character\'s lifetime '
@@ -373,7 +406,8 @@ class _ReferenceTabState extends State<ReferenceTab>
           'Pyroessence your auxiliary path. A red requirement line = realm not '
           'met on that item\'s path. Path Switch swaps each elixir\'s remaining '
           'quantity, use attempts and efficiency along with the paths.'),
-      Text('Getting EXP elixirs', style: h3),
+      Text('Getting EXP elixirs',
+          key: anchorKey('ref:elixirs:expelixirs'), style: h3),
       para('In normal play EXP elixirs only trickle in — small amounts, often '
           'priced in Fateum, which F2P players should generally spend on the '
           'garden first — it feeds the law system that starts at Voidbreak '
@@ -389,7 +423,7 @@ class _ReferenceTabState extends State<ReferenceTab>
     ]);
 
     final myrimon = page([
-      Text('Myrimon Fruits', style: h3),
+      Text('Myrimon Fruits', key: anchorKey('ref:myrimon:fruits'), style: h3),
       para('Fruits processed through the Aura Extractor grant a one-time EXP payout '
           '(the calculator credits it against the earliest remaining EXP). Payout scales '
           'with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher '
@@ -417,7 +451,8 @@ class _ReferenceTabState extends State<ReferenceTab>
           'breakthrough and auto-consumes leftover previous-Stage fruits at '
           'pre-upgrade rates — upgrade fully before burning a stockpile, and burn '
           'it before breaking through.'),
-      Text('Leveling and stockpiling', style: h3),
+      Text('Leveling and stockpiling',
+          key: anchorKey('ref:myrimon:verified'), style: h3),
       para('Extractor leveling priority: Quality → Cultivation → Gush → High Rank '
           '(High Rank last, only after the rest are maxed).'),
       para('Advisory — tiering the extractor up requires consuming a number of fruits, '
@@ -562,7 +597,7 @@ class _ReferenceTabState extends State<ReferenceTab>
           'are decided server-side and vary by item and realm, so this page '
           'doesn\'t guess at them. Where a number isn\'t listed, read it as '
           '"unknown", not "zero". For the exact per-point math the game does '
-          'expose, see the [[ref:advanced|Advanced tab]].'),
+          'expose, see the [[ref:advanced#perpoint|Advanced tab]].'),
     ]);
 
     // Affix tier ranking is community consensus (opinion); per-point math
@@ -638,7 +673,7 @@ class _ReferenceTabState extends State<ReferenceTab>
       ]),
       para('Defense lines are weak because Penetration strips up to 50% of '
           'defense when the attacker wins the contested check — see the '
-          '[[ref:advanced|Advanced tab]].'),
+          '[[ref:advanced#penblock|Advanced tab]].'),
       para('Paralysis math, corrected against client data: boost and resist '
           'cancel 1:1; each leftover point shifts proc chance by 0.2% '
           '(enhance capped at +100%, resist at −50%) and duration by 0.5% — '
@@ -715,7 +750,9 @@ class _ReferenceTabState extends State<ReferenceTab>
           'value, but each realm raises the standard it\'s measured against, '
           'deflating the percentage. The normalization curve is server-side; '
           'the in-game tooltip is the only exact readout.'),
-      table(
+      KeyedSubtree(
+          key: anchorKey('ref:advanced:perpoint'),
+          child: table(
         'Per-point coefficients and caps',
         ['Stat', 'Per point', 'Cap'],
         [
@@ -729,8 +766,9 @@ class _ReferenceTabState extends State<ReferenceTab>
         ],
         '* Penetration and Block are contested against the opponent\'s same '
         'stat: each only functions while yours is higher than theirs.',
-      ),
-      Text('Penetration and Block, exactly', style: h3),
+      )),
+      Text('Penetration and Block, exactly',
+          key: anchorKey('ref:advanced:penblock'), style: h3),
       para('These are mirror-image contested stats: each is compared against '
           'the opponent\'s copy of the same stat, and only the side with the '
           'higher value gets any effect at all.'),
@@ -957,7 +995,7 @@ class _ReferenceTabState extends State<ReferenceTab>
           'you care about the PvP sect events, aim for a stronger active '
           'sect, but that\'s personal preference. Just don\'t sit sectless: '
           'the library and salary alone are worth it.'),
-      Text('Demon Spire', style: h3),
+      Text('Demon Spire', key: anchorKey('ref:systems:spire'), style: h3),
       para('A floor-climbing combat tower. Your current floor pays '
           'continuous hourly income — Ability Knowledge (levels your '
           'Abilities) and a bonus to Spiritium production in Realms — so '
@@ -1076,6 +1114,7 @@ class _GuideTabState extends State<GuideTab>
     if (req == null || req.tab != 2 || !mounted) return;
     _tabs.animateTo(req.sub);
     docLinkRequest.value = null;
+    if (req.anchor != null) scrollToDocAnchor(req.anchor!);
   }
 
   @override
@@ -1106,9 +1145,13 @@ class _GuideTabState extends State<GuideTab>
           ]),
         );
 
-    Widget page(List<Widget> children) => ListView(
+    // SingleChildScrollView (not ListView) so every section is mounted and
+    // scrollToDocAnchor/ensureVisible can reach anchors below the fold.
+    Widget page(List<Widget> children) => SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        children: [...children, footer()]);
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [...children, footer()]));
 
     // Path meta from a circulating community guide (2026) plus the
     // maintainer's read of Discord consensus — opinion, not client data.
@@ -1144,7 +1187,7 @@ class _GuideTabState extends State<GuideTab>
       para('Relic-reliant paths (Swordia, Ghostia) care more about relic '
           'income and forging; ability-focused paths (Corporia, Magicka, '
           'Literatia) lean on ability levels — which come from Demon Spire '
-          'climbing ([[ref:systems|Reference → World Systems]]).'),
+          'climbing ([[ref:systems#spire|Reference → World Systems]]).'),
     ]);
 
     final routine = page([
@@ -1172,7 +1215,7 @@ class _GuideTabState extends State<GuideTab>
       para('• Banked Myrimon runs: spend them on Sunday, or hold them until '
           'you can clear a higher-requirement dungeon. Fruits go to the '
           'stockpile, not the extractor, until the extractor is maxed '
-          '([[ref:myrimon|Reference → Myrimon & Extractor]]).'),
+          '([[ref:myrimon#verified|Reference → Myrimon & Extractor]]).'),
       Text('Before every major breakthrough', style: h3),
       para('• Spend all daily pills and Respira attempts — they reset on the '
           'breakthrough.\n'
@@ -1183,7 +1226,7 @@ class _GuideTabState extends State<GuideTab>
           '• Don\'t claim pill bags until after the ascension.\n'
           '• If you spend money: the three elixir packs offered on reaching '
           'the new realm are among the best value in the game '
-          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]); the full '
+          '([[ref:elixirs#expelixirs|Reference → Elixirs & Stat Pills]]); the full '
           'what\'s-worth-it list is on [[guide:spending|Guide → Spending]].'),
       Text('Quality-of-life settings', style: h3),
       para('• Turn off wandering (settings) — it only animates your '
@@ -1205,7 +1248,7 @@ class _GuideTabState extends State<GuideTab>
           'the pill bag from the early quests. Save 5–10 attempts for '
           'Foundation 10, and spend pills mainly when they push a stage '
           'breakthrough. (What each pill is worth: '
-          '[[ref:pills|Reference → Pills & Respira]].)\n'
+          '[[ref:pills#daily|Reference → Pills & Respira]].)\n'
           '• Alchemy: save blue/purple pill materials for F9–F10 instead of '
           'crafting them immediately.\n'
           '• Respira is the daily breathing exercise on the cultivation screen '
@@ -1218,7 +1261,7 @@ class _GuideTabState extends State<GuideTab>
           '• Energy Array materials come from the world-map realms: 56 '
           'violetite from Violet Streams, then 110 frostite from Lake '
           'Blackwater. The array permanently raises your Abode Aura — the base '
-          'of your cultivation speed ([[ref:basics|Reference → Basics]]).'),
+          'of your cultivation speed ([[ref:basics#cultivation|Reference → Basics]]).'),
     ]);
 
     final virtuoso = page([
@@ -1255,13 +1298,13 @@ class _GuideTabState extends State<GuideTab>
           'while you\'re behind your server\'s #1 cultivator. In this '
           'calculator it appears as the implied Strive readout, and the '
           '"Server #1\'s Stage" input starts to matter for long-range '
-          'estimates ([[ref:basics|Reference → Basics]] covers the math).\n'
+          'estimates ([[ref:basics#tips|Reference → Basics]] covers the math).\n'
           '• Keep the story, Demon Spire, and realms pushed as far as they\'ll '
           'go each cultivation stage — several systems gate on them.\n'
           '• By now stat pills and elixirs are flowing in from shops and '
           'rewards. Take them as they arrive — neither can be wasted by using '
           'them early, and stat pills\' use caps grow with each realm anyway '
-          '([[ref:elixirs|Reference → Elixirs & Stat Pills]]).'),
+          '([[ref:elixirs#tolerance|Reference → Elixirs & Stat Pills]]).'),
     ]);
 
     final incarnation = page([
@@ -1275,14 +1318,14 @@ class _GuideTabState extends State<GuideTab>
           '• Eat the stockpile before the realm timegate — fruits lose 50% of '
           'their EXP once the next realm\'s timegate passes — or on the last '
           'day before your own breakthrough, whichever comes first. (Full '
-          'fruit math: [[ref:myrimon|Reference → Myrimon & Extractor]].)\n'
+          'fruit math: [[ref:myrimon#fruits|Reference → Myrimon & Extractor]].)\n'
           '• Before breaking through to Voidbreak: spend all pills and Respira '
           '(they reset), don\'t claim daily pill bags until after ascension, '
           'and spend Fatevillion shop tokens beforehand — that shop resets on '
           'breakthroughs too.\n'
           '• On the ascension itself you\'ll be offered three real-money '
           'elixir packs — if you spend at all, these are among the best value '
-          'in the game ([[ref:elixirs|Reference → Elixirs & Stat Pills]] '
+          'in the game ([[ref:elixirs#expelixirs|Reference → Elixirs & Stat Pills]] '
           'explains why the '
           'early tolerance tiers make them worth the most).'),
     ]);
@@ -1389,7 +1432,7 @@ class _GuideTabState extends State<GuideTab>
           'and they pay out forever.\n'
           '• The three elixir packs on reaching a new realm are among the '
           'best consumable value in the game — early tolerance tiers make '
-          'them worth the most ([[ref:elixirs|Reference → Elixirs & Stat '
+          'them worth the most ([[ref:elixirs#tolerance|Reference → Elixirs & Stat '
           'Pills]]).\n'
           '• The daily 30 Fateum/Destium artifact charges are among the '
           'cheapest EXP money buys.\n'
