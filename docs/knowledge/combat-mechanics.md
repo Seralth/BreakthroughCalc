@@ -72,9 +72,8 @@ The circulating tier list's mechanics claims, checked against the above:
   coefficients (m/n and p/q above); the combining equation is server-side,
   so treat 1:1 as plausible inference, not fact.
 
-Known gui.py inconsistency: the Combat & Gear tab's community-tier-list
-paragraph still repeats the "duration ±50%" claim; the Advanced tab has the
-verified +25% cap. The community paragraph should be corrected or footnoted.
+The Combat & Gear tab's community-tier-list paragraph (desktop gui.py and
+mobile reference.dart) has been corrected to the verified numbers.
 
 ## Not knowable from the client
 
