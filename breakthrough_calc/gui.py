@@ -540,14 +540,29 @@ class MainWindow(QMainWindow):
             QDesktopServices.openUrl(url)
             return
         tree, slug = url.host(), url.path().strip("/")
+        anchor = url.fragment()
         if tree == "ref" and slug in self._REF_SLUGS:
             self._push_doc_history()
             self._tabs.setCurrentIndex(1)
             self._ref_tabs.setCurrentIndex(self._REF_SLUGS[slug])
+            self._scroll_to_anchor(self._ref_tabs, anchor)
         elif tree == "guide" and slug in self._GUIDE_SLUGS:
             self._push_doc_history()
             self._tabs.setCurrentIndex(2)
             self._guide_tabs.setCurrentIndex(self._GUIDE_SLUGS[slug])
+            self._scroll_to_anchor(self._guide_tabs, anchor)
+
+    @staticmethod
+    def _scroll_to_anchor(sub, anchor):
+        # Land on the relevant section (app://ref/<slug>#<anchor>); without
+        # an anchor, start the destination page from the top.
+        w = sub.currentWidget()
+        if not isinstance(w, QTextBrowser):
+            return
+        if anchor:
+            w.scrollToAnchor(anchor)
+        else:
+            w.verticalScrollBar().setValue(0)
 
     # Back-navigation for the app:// cross-links: each link click pushes the
     # (tab, sub-tab, scroll) the reader left, so the Back button in the tab
@@ -621,7 +636,7 @@ class MainWindow(QMainWindow):
         # ---- Basics --------------------------------------------------------
         basics = "<h2>Basics</h2>"
         basics += (
-            "<h3>How cultivation works</h3>"
+            "<a name='cultivation'></a><h3>How cultivation works</h3>"
             "<p>Your character gains cultivation EXP automatically, one tick every "
             "<b>8 seconds</b> (a \"Cosmoapsis\"). The EXP per tick is your <b>Cultivation "
             "Speed</b>, and everything about progression speed hangs off this one number:</p>"
@@ -662,7 +677,7 @@ class MainWindow(QMainWindow):
                    "as the horizon grows — the opposite of runaway long-term drift. Fruit gushes "
                    "also have a pity floor (a gush is guaranteed within 6 fruits of the last one), which further "
                    "narrows the fruit side of the band.</p>"
-                   "<h3>Tips for using the calculator</h3>"
+                   "<a name='tips'></a><h3>Tips for using the calculator</h3>"
                    "<ul><li>Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus "
                    "screen and press Apply — that guarantees a current speed. A red warning "
                    "means one of your readings is stale.</li>"
@@ -682,7 +697,7 @@ class MainWindow(QMainWindow):
         # ---- Pills & Respira -------------------------------------------------
         pills = "<h2>Pills &amp; Respira</h2>"
         pills += (
-            "<h3>Daily pills</h3>"
+            "<a name='daily'></a><h3>Daily pills</h3>"
             "<p>Cultivation pills are the main controllable EXP income. All colors share "
             "ONE daily attempt pool (the \"Daily pill attempts\" input) — using a blue "
             "costs the same attempt a gold would, so always consume your highest color "
@@ -847,7 +862,7 @@ class MainWindow(QMainWindow):
             "All formulas craft at Max Quality. A fully capped +10 line across "
             "R1–R5 is worth (20+40+50+50+50) × 10 = 2,100 of the stat.")
         elixirs += (
-            "<h3>Stat elixirs (tolerance ladder)</h3>"
+            "<a name='tolerance'></a><h3>Stat elixirs (tolerance ladder)</h3>"
             "<p>Stat elixirs (Yijing, Celeszure, Gouchen, dews and fruits…) grant "
             "permanent combat stats — but with <b>diminishing returns</b>. Each "
             "item tracks how many you've consumed over your character's lifetime "
@@ -890,7 +905,7 @@ class MainWindow(QMainWindow):
             "Path Switch, each elixir's remaining quantity, use attempts and "
             "efficiency swap along with the paths.</p>"
 
-            "<h3>Getting EXP elixirs</h3>"
+            "<a name='expelixirs'></a><h3>Getting EXP elixirs</h3>"
             "<p>In normal play, EXP elixirs only trickle in — small amounts from "
             "various sources, often priced in Fateum, which is scarce enough that "
             "an F2P player should generally prioritize spending it on the garden "
@@ -912,7 +927,7 @@ class MainWindow(QMainWindow):
         # ---- Myrimon & Extractor ---------------------------------------------
         myrimon = "<h2>Myrimon &amp; Extractor</h2>"
         myrimon += (
-            "<h3>Myrimon Fruits</h3>"
+            "<a name='fruits'></a><h3>Myrimon Fruits</h3>"
             "<p>Fruits processed through the Aura Extractor grant a one-time EXP payout "
             "(the calculator credits it against the earliest remaining EXP). Payout scales "
             "with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher "
@@ -933,7 +948,7 @@ class MainWindow(QMainWindow):
             "fruit/extractor tier, and each major realm afterwards gets its own. Myrimon "
             "uses stack (after the first week's event) — save them for Sunday or until you "
             "cross the next BR requirement.</p>"
-            "<h3>Verified mechanics (v2.7)</h3><ul>"
+            "<a name='verified'></a><h3>Verified mechanics (v2.7)</h3><ul>"
             "<li><b>Fruit ranks map to realm bands</b> (R3 covers Nascent-Voidbreak; R6 "
             "starts the Spiritual world; R12 the Immortal world) — R4/R5 don't exist.</li>"
             "<li><b>Extractor tracks</b>: Quality raises the quality-roll odds, the "
@@ -1061,7 +1076,7 @@ class MainWindow(QMainWindow):
             "grants — are decided server-side and vary by item and realm, so this "
             "page doesn't guess at them. Where a number isn't listed, read it as "
             "\"unknown\", not \"zero\". For the exact per-point math the game does "
-            "expose, see the <a href='app://ref/advanced'>Advanced tab</a>.</p>")
+            "expose, see the <a href='app://ref/advanced#perpoint'>Advanced tab</a>.</p>")
 
         # ---- Affixes ---------------------------------------------------------
         # Tier ranking is a widely circulated community list (opinion);
@@ -1141,7 +1156,7 @@ class MainWindow(QMainWindow):
         affixes += (
             "<p>Defense lines are weak because Penetration strips up to "
             "50% of defense when the attacker wins the contested check — "
-            "see the <a href='app://ref/advanced'>Advanced tab</a>.</p>"
+            "see the <a href='app://ref/advanced#penblock'>Advanced tab</a>.</p>"
             "<p><b>Paralysis math, corrected against client data:</b> "
             "boost and resist cancel 1:1; each leftover point shifts proc "
             "chance by 0.2% (enhance capped at +100%, resist at −50%) and "
@@ -1301,7 +1316,7 @@ class MainWindow(QMainWindow):
             "don't sit sectless: the library and salary alone are worth "
             "it.</p>"
 
-            "<h3>Demon Spire</h3>"
+            "<a name='spire'></a><h3>Demon Spire</h3>"
             "<p>A floor-climbing combat tower. Your current floor pays "
             "<b>continuous hourly income</b> — Ability Knowledge (which "
             "levels your Abilities) and a bonus to Spiritium production in "
@@ -1438,6 +1453,7 @@ class MainWindow(QMainWindow):
             "against, deflating the percentage. The normalization curve is "
             "server-side; the in-game tooltip is the only exact readout.</p>"
 
+            "<a name='perpoint'></a>"
             "<h3>Per-point mechanics (client-stated)</h3>")
         advanced += table(
             "Per-point coefficients and caps",
@@ -1455,7 +1471,7 @@ class MainWindow(QMainWindow):
              ("Elemental Rule level", "+0.05% damage per level of advantage "
               "over the target", "—")])
         advanced += (
-            "<h3>Penetration and Block, exactly</h3>"
+            "<a name='penblock'></a><h3>Penetration and Block, exactly</h3>"
             "<p>These are <b>mirror-image contested stats</b>: each is compared "
             "against the <i>opponent's</i> copy of the same stat, and only the "
             "side with the higher value gets any effect at all.</p>"
@@ -1664,7 +1680,7 @@ class MainWindow(QMainWindow):
             "<p>Note that relic-reliant paths (Swordia, Ghostia) care more "
             "about relic income and forging; ability-focused paths "
             "(Corporia, Magicka, Literatia) lean on ability levels — which "
-            "come from Demon Spire climbing (<a href='app://ref/systems'>"
+            "come from Demon Spire climbing (<a href='app://ref/systems#spire'>"
             "Reference → World Systems</a>).</p>")
 
         routine = (
@@ -1698,7 +1714,7 @@ class MainWindow(QMainWindow):
             "<li>Banked <b>Myrimon runs</b>: spend them on Sunday, or hold "
             "them until you can clear a higher-requirement dungeon. Fruits go "
             "to the stockpile, not the extractor, until the extractor is "
-            "maxed (<a href='app://ref/myrimon'>Reference → Myrimon &amp; "
+            "maxed (<a href='app://ref/myrimon#verified'>Reference → Myrimon &amp; "
             "Extractor</a>).</li>"
             "</ul>"
             "<h3>Before every major breakthrough</h3><ul>"
@@ -1713,7 +1729,7 @@ class MainWindow(QMainWindow):
             "claimed bags count against the old realm.</li>"
             "<li>If you spend money: the <b>three elixir packs</b> offered on "
             "reaching the new realm are among the best value in the game "
-            "(<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
+            "(<a href='app://ref/elixirs#expelixirs'>Reference → Elixirs &amp; Stat "
             "Pills</a>); the full what's-worth-it list is on "
             "<a href='app://guide/spending'>Guide → Spending</a>.</li>"
             "</ul>"
@@ -1738,7 +1754,7 @@ class MainWindow(QMainWindow):
             "your daily attempts until you've claimed the pill bag from the early "
             "quests. Save 5-10 attempts for Foundation 10, and spend pills mainly "
             "when they push you over a stage breakthrough. (What each pill is "
-            "worth: <a href='app://ref/pills'>Reference → Pills &amp; "
+            "worth: <a href='app://ref/pills#daily'>Reference → Pills &amp; "
             "Respira</a>.)</li>"
             "<li><b>Alchemy:</b> save your blue and purple pill materials for "
             "F9-F10 rather than crafting them the moment you get them.</li>"
@@ -1754,7 +1770,7 @@ class MainWindow(QMainWindow):
             "56 violetite from <b>Violet Streams</b>, then 110 frostite from "
             "<b>Lake Blackwater</b>. The array permanently raises your Abode "
             "Aura, which is the base of your cultivation speed "
-            "(<a href='app://ref/basics'>Reference → Basics</a> explains the "
+            "(<a href='app://ref/basics#cultivation'>Reference → Basics</a> explains the "
             "speed formula).</li></ul>")
 
         virtuoso = (
@@ -1792,7 +1808,7 @@ class MainWindow(QMainWindow):
             "you'll see your absorption ratio exceed the stage's base. In this "
             "calculator it appears as the implied Strive readout under the "
             "Absorption Ratio input, and the \"Server #1's Stage\" input starts "
-            "to matter for long-range estimates. (<a href='app://ref/basics'>"
+            "to matter for long-range estimates. (<a href='app://ref/basics#tips'>"
             "Reference → Basics</a> covers how Strive enters the math.)</li>"
             "<li>Keep the <b>story</b>, <b>Demon Spire</b>, and <b>realms</b> "
             "pushed as far as they'll go at every cultivation stage — several "
@@ -1801,7 +1817,7 @@ class MainWindow(QMainWindow):
             "shops and rewards. Take them as they arrive — neither can be "
             "wasted by using them early, and stat pills' use caps grow with "
             "each realm anyway. What they are and how their limits work: "
-            "<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
+            "<a href='app://ref/elixirs#tolerance'>Reference → Elixirs &amp; Stat "
             "Pills</a>.</li></ul>")
 
         incarnation = (
@@ -1816,7 +1832,7 @@ class MainWindow(QMainWindow):
             "<li><b>Eat the stockpile before the realm timegate</b> — fruits "
             "lose 50% of their EXP once the next realm's timegate passes — or on "
             "the last day before your own breakthrough, whichever comes first. "
-            "(Timegates and the full fruit math: <a href='app://ref/myrimon'>"
+            "(Timegates and the full fruit math: <a href='app://ref/myrimon#fruits'>"
             "Reference → Myrimon &amp; Extractor</a>.)</li>"
             "<li>Before breaking through to Voidbreak: <b>spend all pills and "
             "Respira attempts</b> (they reset on the breakthrough), <b>don't</b> "
@@ -1825,7 +1841,7 @@ class MainWindow(QMainWindow):
             "breakthroughs too.</li>"
             "<li>On the ascension itself you'll be offered <b>three real-money "
             "elixir packs</b> — if you spend at all, these are among the best "
-            "value in the game (<a href='app://ref/elixirs'>Reference → "
+            "value in the game (<a href='app://ref/elixirs#expelixirs'>Reference → "
             "Elixirs &amp; Stat Pills</a> explains "
             "why the early tolerance tiers make them worth the most).</li></ul>")
 
@@ -1941,7 +1957,7 @@ class MainWindow(QMainWindow):
             "<li>The <b>three elixir packs on reaching a new realm</b> are "
             "among the best consumable value in the game (early tolerance "
             "tiers make them worth the most — see <a href='app://ref/"
-            "elixirs'>Reference → Elixirs &amp; Stat Pills</a>).</li>"
+            "elixirs#tolerance'>Reference → Elixirs &amp; Stat Pills</a>).</li>"
             "<li>The daily 30 Fateum/Destium <b>artifact charges</b> are "
             "among the cheapest EXP money buys.</li>"
             "<li><b>Law fruit packs are atrocious value — do not buy "
