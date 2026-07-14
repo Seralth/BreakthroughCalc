@@ -6,7 +6,9 @@ import 'engine.dart';
 
 const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
 
-/// In-text cross-reference markup: `[[ref:slug|label]]` / `[[guide:slug|label]]`.
+/// In-text cross-reference markup: `[[ref:slug|label]]` / `[[guide:slug|label]]`,
+/// with an optional `#section` after the slug that scrolls to a header
+/// registered via [anchorKey] (e.g. `[[ref:systems#shops|label]]`).
 /// Slug order must match the Tab order in ReferenceTab / GuideTab below.
 const refSlugs = {'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3,
                   'artifacts': 4, 'combat': 5, 'systems': 6, 'advanced': 7};
@@ -17,7 +19,8 @@ const guideSlugs = {'paths': 0, 'routine': 1, 'novice': 2, 'virtuoso': 3,
 class DocLink {
   final int tab; // top-level tab index: 1 = Reference, 2 = Guide
   final int sub; // sub-tab index within it
-  const DocLink(this.tab, this.sub);
+  final String? anchor; // qualified section id, e.g. 'ref/systems#shops'
+  const DocLink(this.tab, this.sub, [this.anchor]);
 }
 
 /// Pending cross-reference jump. Set when a link is tapped; the main scaffold
@@ -25,7 +28,28 @@ class DocLink {
 /// if its TabBarView page wasn't alive when the link was tapped.
 final ValueNotifier<DocLink?> docLinkRequest = ValueNotifier(null);
 
-final _docLinkRe = RegExp(r'\[\[(ref|guide):([a-z]+)\|([^\]]+)\]\]');
+final _docLinkRe =
+    RegExp(r'\[\[(ref|guide):([a-z]+)(?:#([a-z]+))?\|([^\]]+)\]\]');
+
+/// Section anchors for `#section` jumps. Header widgets register a key via
+/// [anchorKey]; [scrollToAnchor] retries across frames because the target
+/// sub-tab may not be built yet when the link is tapped (TabBarView only
+/// builds the current page).
+final _anchorKeys = <String, GlobalKey>{};
+
+GlobalKey anchorKey(String id) => _anchorKeys.putIfAbsent(id, () => GlobalKey());
+
+void scrollToAnchor(String id, [int tries = 12]) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final ctx = _anchorKeys[id]?.currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(ctx,
+          duration: const Duration(milliseconds: 250), alignment: 0.02);
+    } else if (tries > 0) {
+      scrollToAnchor(id, tries - 1);
+    }
+  });
+}
 
 /// Paragraph text with [[...]] cross-reference markup rendered as tappable
 /// links (styled like [issuesLink]). Plain text passes through untouched.
@@ -38,7 +62,8 @@ Widget docText(BuildContext context, String s) {
   var pos = 0;
   for (final m in _docLinkRe.allMatches(s)) {
     if (m.start > pos) spans.add(TextSpan(text: s.substring(pos, m.start)));
-    final tree = m.group(1)!, slug = m.group(2)!, label = m.group(3)!;
+    final tree = m.group(1)!, slug = m.group(2)!;
+    final section = m.group(3), label = m.group(4)!;
     final sub = tree == 'ref' ? refSlugs[slug] : guideSlugs[slug];
     spans.add(sub == null
         ? TextSpan(text: label)
@@ -46,8 +71,10 @@ Widget docText(BuildContext context, String s) {
             text: label,
             style: linkStyle,
             recognizer: TapGestureRecognizer()
-              ..onTap = () => docLinkRequest.value =
-                  DocLink(tree == 'ref' ? 1 : 2, sub)));
+              ..onTap = () => docLinkRequest.value = DocLink(
+                  tree == 'ref' ? 1 : 2,
+                  sub,
+                  section == null ? null : '$tree/$slug#$section')));
     pos = m.end;
   }
   if (pos < s.length) spans.add(TextSpan(text: s.substring(pos)));
@@ -92,6 +119,7 @@ class _ReferenceTabState extends State<ReferenceTab>
     if (req == null || req.tab != 1 || !mounted) return;
     _tabs.animateTo(req.sub);
     docLinkRequest.value = null;
+    if (req.anchor != null) scrollToAnchor(req.anchor!);
   }
 
   @override
@@ -158,8 +186,13 @@ class _ReferenceTabState extends State<ReferenceTab>
           ]),
         );
 
-    Widget page(List<Widget> children) =>
-        ListView(padding: const EdgeInsets.all(12), children: [...children, footer()]);
+    // Non-lazy scroll view (not ListView) so #section anchor targets always
+    // have a build context for Scrollable.ensureVisible.
+    Widget page(List<Widget> children) => SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [...children, footer()]));
 
     final pillXp = d['pill_xp'] as Map<String, dynamic>;
     final vaseCost = d['vase_energy_cost'] as Map<String, dynamic>? ?? {};
@@ -336,7 +369,8 @@ class _ReferenceTabState extends State<ReferenceTab>
       Text('Getting EXP elixirs', style: h3),
       para('In normal play EXP elixirs only trickle in — small amounts, often '
           'priced in Fateum, which F2P players should generally spend on the '
-          'garden first — it feeds the law system that starts at Voidbreak '
+          '[[ref:systems#garden|garden]] first — it feeds the law system that '
+          'starts at Voidbreak '
           '(see [[guide:voidbreak|Guide → Voidbreak+]]). The exception: breaking through to a new realm offers '
           'three real-money elixir packs, among the best value in the game for '
           'anyone optimizing money spent — the 150%/120% early tolerance tiers '
@@ -748,11 +782,13 @@ class _ReferenceTabState extends State<ReferenceTab>
           'Shop) and Citrine + Sect Contribution (Sect Library) — see the '
           'shop guide below.'),
       para('Spending guidance: Fateum is the scarce one for F2P — prioritize '
-          'the garden (law fruits) once laws unlock at Voidbreak, ahead of '
-          'elixirs and convenience refreshes. Payers get the most per unit '
-          'from artifact daily charges and the realm-breakthrough elixir '
-          'packs.'),
-      Text('Shop-by-shop buying guide', style: h3),
+          'the [[ref:systems#garden|garden (law fruits)]] once laws unlock at '
+          'Voidbreak, ahead of elixirs and convenience refreshes. Payers get '
+          'the most per unit from artifact daily charges and the '
+          'realm-breakthrough elixir packs — the full what\'s-worth-it list '
+          'is on [[guide:spending|Guide → Spending]].'),
+      Text('Shop-by-shop buying guide',
+          key: anchorKey('ref/systems#shops'), style: h3),
       para('Community-consensus priorities (from circulating player guides — '
           'sanity-checked but not client data):\n'
           '• Market (Spiritium): Demonroot (pet skills), Kunlun Jade '
@@ -780,7 +816,8 @@ class _ReferenceTabState extends State<ReferenceTab>
           'Construct (first free, second 50) are both efficient. Refreshing '
           'unclaimed Bounty Quests below Rare and Sect Tasks below C-rating '
           'once a day upgrades them guaranteed.'),
-      Text('Garden & Elemental Laws', style: h3),
+      Text('Garden & Elemental Laws',
+          key: anchorKey('ref/systems#garden'), style: h3),
       para('The garden grows seeds into rewards: each seed takes plot slots '
           'and matures over time; you get limited daily watering attempts to '
           'speed growth (the first is free each day — don\'t miss it), and '
@@ -840,7 +877,7 @@ class _ReferenceTabState extends State<ReferenceTab>
           'you care about the PvP sect events, aim for a stronger active '
           'sect, but that\'s personal preference. Just don\'t sit sectless: '
           'the library and salary alone are worth it.'),
-      Text('Demon Spire', style: h3),
+      Text('Demon Spire', key: anchorKey('ref/systems#spire'), style: h3),
       para('A floor-climbing combat tower. Your current floor pays '
           'continuous hourly income — Ability Knowledge (levels your '
           'Abilities) and a bonus to Spiritium production in Realms — so '
@@ -952,6 +989,7 @@ class _GuideTabState extends State<GuideTab>
     if (req == null || req.tab != 2 || !mounted) return;
     _tabs.animateTo(req.sub);
     docLinkRequest.value = null;
+    if (req.anchor != null) scrollToAnchor(req.anchor!);
   }
 
   @override
@@ -982,9 +1020,13 @@ class _GuideTabState extends State<GuideTab>
           ]),
         );
 
-    Widget page(List<Widget> children) => ListView(
+    // Non-lazy scroll view (not ListView) so #section anchor targets always
+    // have a build context for Scrollable.ensureVisible.
+    Widget page(List<Widget> children) => SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        children: [...children, footer()]);
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [...children, footer()]));
 
     // Path meta from a circulating community guide (2026) plus the
     // maintainer's read of Discord consensus — opinion, not client data.
@@ -1020,7 +1062,8 @@ class _GuideTabState extends State<GuideTab>
       para('Relic-reliant paths (Swordia, Ghostia) care more about relic '
           'income and forging; ability-focused paths (Corporia, Magicka, '
           'Literatia) lean on ability levels — which come from Demon Spire '
-          'climbing ([[ref:systems|Reference → World Systems]]).'),
+          'climbing ([[ref:systems#spire|Reference → World Systems → Demon '
+          'Spire]]).'),
     ]);
 
     final routine = page([
@@ -1039,7 +1082,8 @@ class _GuideTabState extends State<GuideTab>
           '• Claim your Aura Gem before its storage caps (18–32 h by rarity) '
           '— once full it stops accruing.\n'
           '• Check the market for Demonroot (pet skills) and similar limited '
-          'stock.\n'
+          'stock (buying priorities: [[ref:systems#shops|Reference → World '
+          'Systems → Shop guide]]).\n'
           '• Take stat pills and elixirs as they arrive — there\'s no timing '
           'play on either ([[ref:elixirs|Reference → Elixirs & Stat Pills]]).\n'
           '• Myrimon runs: during the event\'s first week they don\'t '
@@ -1055,7 +1099,9 @@ class _GuideTabState extends State<GuideTab>
           '• Eat the fruit stockpile — the extractor resets to Common on a '
           'main-Stage breakthrough and auto-consumes leftovers at pre-upgrade '
           'rates.\n'
-          '• Spend Fatevillion shop tokens — that shop resets too.\n'
+          '• Spend Fatevillion shop tokens — that shop resets too (what to '
+          'buy there: [[ref:systems#shops|Reference → World Systems → Shop '
+          'guide]]).\n'
           '• Don\'t claim pill bags until after the ascension.\n'
           '• If you spend money: the three elixir packs offered on reaching '
           'the new realm are among the best value in the game '
@@ -1258,7 +1304,9 @@ class _GuideTabState extends State<GuideTab>
       Text('Spending (if you pay at all)', style: h3),
       para('None of this is a recommendation to spend — it\'s the '
           'community\'s answer to "if I do, what\'s actually worth it?" '
-          'All of it is consensus opinion.'),
+          'All of it is consensus opinion. For what to buy with in-game '
+          'currencies, see the [[ref:systems#shops|shop-by-shop guide '
+          '(Reference → World Systems)]].'),
       Text('Priorities', style: h3),
       para('• Permanent one-time buys first: the watering curio set and the '
           'permanent passes beat any consumable pack — you buy them once '

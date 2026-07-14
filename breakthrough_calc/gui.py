@@ -524,8 +524,10 @@ class MainWindow(QMainWindow):
         self.resize(1180, 680)
 
     # Internal link scheme for Reference/Guide cross-references:
-    # app://ref/<slug> and app://guide/<slug>. Slug order must match the
-    # addTab order in _build_info_tab / _build_guide_tab.
+    # app://ref/<slug> and app://guide/<slug>, with an optional #section
+    # fragment that scrolls to a matching <a name='section'> anchor in the
+    # page HTML. Slug order must match the addTab order in _build_info_tab
+    # / _build_guide_tab.
     _REF_SLUGS = {"basics": 0, "pills": 1, "elixirs": 2, "myrimon": 3,
                   "artifacts": 4, "combat": 5, "systems": 6, "advanced": 7}
     _GUIDE_SLUGS = {"paths": 0, "routine": 1, "novice": 2, "virtuoso": 3,
@@ -539,10 +541,18 @@ class MainWindow(QMainWindow):
         tree, slug = url.host(), url.path().strip("/")
         if tree == "ref" and slug in self._REF_SLUGS:
             self._tabs.setCurrentIndex(1)
-            self._ref_tabs.setCurrentIndex(self._REF_SLUGS[slug])
+            sub, idx = self._ref_tabs, self._REF_SLUGS[slug]
         elif tree == "guide" and slug in self._GUIDE_SLUGS:
             self._tabs.setCurrentIndex(2)
-            self._guide_tabs.setCurrentIndex(self._GUIDE_SLUGS[slug])
+            sub, idx = self._guide_tabs, self._GUIDE_SLUGS[slug]
+        else:
+            return
+        sub.setCurrentIndex(idx)
+        frag = url.fragment()
+        if frag:
+            browser = sub.widget(idx)
+            if isinstance(browser, QTextBrowser):
+                browser.scrollToAnchor(frag)
 
     def _build_info_tab(self) -> QWidget:
         """Read-only reference, split into topic sub-tabs. Tables render from
@@ -851,7 +861,8 @@ class MainWindow(QMainWindow):
             "<h3>Getting EXP elixirs</h3>"
             "<p>In normal play, EXP elixirs only trickle in — small amounts from "
             "various sources, often priced in Fateum, which is scarce enough that "
-            "an F2P player should generally prioritize spending it on the garden "
+            "an F2P player should generally prioritize spending it on the "
+            "<a href='app://ref/systems#garden'>garden</a> "
             "first — it feeds the law system that starts at Voidbreak (see "
             "<a href='app://guide/voidbreak'>Guide → Voidbreak+</a>). The exception: <b>breaking through to a new realm offers three "
             "real-money elixir packs</b>, and for anyone optimizing money spent "
@@ -1075,12 +1086,14 @@ class MainWindow(QMainWindow):
             "(Seeker Shop) and <b>Citrine</b> + <b>Sect Contribution</b> "
             "(Sect Library) — see the shop guide below.</p>"
             "<p><b>Spending guidance:</b> Fateum is the scarce one for F2P — "
-            "prioritize the garden (law fruits) once laws unlock at Voidbreak, "
-            "ahead of elixirs and convenience refreshes. Payers get the most "
-            "per unit from artifact daily charges and the realm-breakthrough "
-            "elixir packs.</p>"
+            "prioritize the <a href='app://ref/systems#garden'>garden (law "
+            "fruits)</a> once laws unlock at Voidbreak, ahead of elixirs and "
+            "convenience refreshes. Payers get the most per unit from artifact "
+            "daily charges and the realm-breakthrough elixir packs — the full "
+            "what's-worth-it list is on "
+            "<a href='app://guide/spending'>Guide → Spending</a>.</p>"
 
-            "<h3>Shop-by-shop buying guide</h3>"
+            "<a name='shops'></a><h3>Shop-by-shop buying guide</h3>"
             "<p>Community-consensus priorities (from circulating player "
             "guides — sanity-checked but not client data):</p>"
             "<ul>"
@@ -1114,7 +1127,7 @@ class MainWindow(QMainWindow):
             "Rare and Sect Tasks below C-rating once a day upgrades them "
             "guaranteed.</p>"
 
-            "<h3>Garden &amp; Elemental Laws</h3>"
+            "<a name='garden'></a><h3>Garden &amp; Elemental Laws</h3>"
             "<p>The <b>garden</b> grows seeds into rewards: each seed takes up "
             "plot slots and matures over time; you get a limited number of "
             "daily <b>watering</b> attempts to speed growth (the first is free "
@@ -1182,7 +1195,7 @@ class MainWindow(QMainWindow):
             "don't sit sectless: the library and salary alone are worth "
             "it.</p>"
 
-            "<h3>Demon Spire</h3>"
+            "<a name='spire'></a><h3>Demon Spire</h3>"
             "<p>A floor-climbing combat tower. Your current floor pays "
             "<b>continuous hourly income</b> — Ability Knowledge (which "
             "levels your Abilities) and a bonus to Spiritium production in "
@@ -1540,8 +1553,8 @@ class MainWindow(QMainWindow):
             "<p>Note that relic-reliant paths (Swordia, Ghostia) care more "
             "about relic income and forging; ability-focused paths "
             "(Corporia, Magicka, Literatia) lean on ability levels — which "
-            "come from Demon Spire climbing (<a href='app://ref/systems'>"
-            "Reference → World Systems</a>).</p>")
+            "come from Demon Spire climbing (<a href='app://ref/systems#spire'>"
+            "Reference → World Systems → Demon Spire</a>).</p>")
 
         routine = (
             "<h2>Your daily loop</h2>"
@@ -1562,7 +1575,9 @@ class MainWindow(QMainWindow):
             "hours depending on rarity) — once it's full it stops "
             "accruing.</li>"
             "<li><b>Check the market</b> for Demonroot (pet skills) and "
-            "similar limited stock.</li>"
+            "similar limited stock (buying priorities: "
+            "<a href='app://ref/systems#shops'>Reference → World Systems → "
+            "Shop guide</a>).</li>"
             "<li><b>Take stat pills and elixirs as they arrive</b> — there's "
             "no timing play on either (<a href='app://ref/elixirs'>"
             "Reference → Elixirs &amp; Stat Pills</a>).</li>"
@@ -1584,7 +1599,8 @@ class MainWindow(QMainWindow):
             "Common on a main-Stage breakthrough and auto-consumes leftovers "
             "at pre-upgrade rates.</li>"
             "<li><b>Spend Fatevillion shop tokens</b> — that shop resets "
-            "too.</li>"
+            "too (what to buy there: <a href='app://ref/systems#shops'>"
+            "Reference → World Systems → Shop guide</a>).</li>"
             "<li><b>Don't claim pill bags</b> until after the ascension — "
             "claimed bags count against the old realm.</li>"
             "<li>If you spend money: the <b>three elixir packs</b> offered on "
@@ -1809,7 +1825,9 @@ class MainWindow(QMainWindow):
             "<h2>Spending (if you pay at all)</h2>"
             "<p>None of this is a recommendation to spend — it's the "
             "community's answer to \"if I do, what's actually worth it?\" "
-            "All of it is consensus opinion.</p>"
+            "All of it is consensus opinion. For what to buy with in-game "
+            "currencies, see the <a href='app://ref/systems#shops'>"
+            "shop-by-shop guide (Reference → World Systems)</a>.</p>"
             "<h3>Priorities</h3><ul>"
             "<li><b>Permanent one-time buys first</b>: the watering curio "
             "set and the permanent passes beat any consumable pack — you "
