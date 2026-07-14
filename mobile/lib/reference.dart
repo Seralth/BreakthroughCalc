@@ -26,6 +26,45 @@ class DocLink {
 /// if its TabBarView page wasn't alive when the link was tapped.
 final ValueNotifier<DocLink?> docLinkRequest = ValueNotifier(null);
 
+/// Back-navigation for cross-reference jumps. The reader's location is
+/// tracked by the main scaffold (top tab) and the Reference/Guide tab states
+/// (sub tab); tapping a link pushes it, the arrow next to the tab bar pops it.
+int currentTopTab = 0;
+int currentRefSub = 0;
+int currentGuideSub = 0;
+final ValueNotifier<List<DocLink>> docBackStack = ValueNotifier(const []);
+
+DocLink? _currentDocLocation() => currentTopTab == 1
+    ? DocLink(1, currentRefSub)
+    : currentTopTab == 2
+        ? DocLink(2, currentGuideSub)
+        : null;
+
+void openDocLink(DocLink target) {
+  final here = _currentDocLocation();
+  if (here != null) docBackStack.value = [...docBackStack.value, here];
+  docLinkRequest.value = target;
+}
+
+void docGoBack() {
+  final stack = docBackStack.value;
+  if (stack.isEmpty) return;
+  docBackStack.value = stack.sublist(0, stack.length - 1);
+  docLinkRequest.value = stack.last;
+}
+
+/// Back arrow shown while the cross-reference back stack is non-empty.
+Widget docBackButton() => ValueListenableBuilder<List<DocLink>>(
+      valueListenable: docBackStack,
+      builder: (_, stack, __) => stack.isEmpty
+          ? const SizedBox.shrink()
+          : const IconButton(
+              icon: Icon(Icons.arrow_back),
+              tooltip: 'Back to where you were reading',
+              onPressed: docGoBack,
+            ),
+    );
+
 final _docLinkRe = RegExp(r'\[\[(ref|guide):([a-z]+)\|([^\]]+)\]\]');
 
 /// Paragraph text with [[...]] cross-reference markup rendered as tappable
@@ -47,8 +86,7 @@ Widget docText(BuildContext context, String s) {
             text: label,
             style: linkStyle,
             recognizer: TapGestureRecognizer()
-              ..onTap = () => docLinkRequest.value =
-                  DocLink(tree == 'ref' ? 1 : 2, sub)));
+              ..onTap = () => openDocLink(DocLink(tree == 'ref' ? 1 : 2, sub))));
     pos = m.end;
   }
   if (pos < s.length) spans.add(TextSpan(text: s.substring(pos)));
@@ -84,6 +122,7 @@ class _ReferenceTabState extends State<ReferenceTab>
   @override
   void initState() {
     super.initState();
+    _tabs.addListener(() => currentRefSub = _tabs.index);
     docLinkRequest.addListener(_onDocLink);
     WidgetsBinding.instance.addPostFrameCallback((_) => _onDocLink());
   }
@@ -975,7 +1014,10 @@ class _ReferenceTabState extends State<ReferenceTab>
     ]);
 
     return Column(children: [
-        TabBar(
+        Row(children: [
+          docBackButton(),
+          Expanded(
+              child: TabBar(
           controller: _tabs,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
@@ -990,7 +1032,8 @@ class _ReferenceTabState extends State<ReferenceTab>
             Tab(text: 'World Systems'),
             Tab(text: 'Advanced'),
           ],
-        ),
+        )),
+        ]),
         Expanded(
           child: TabBarView(controller: _tabs, children: [
             basics,
@@ -1023,6 +1066,7 @@ class _GuideTabState extends State<GuideTab>
   @override
   void initState() {
     super.initState();
+    _tabs.addListener(() => currentGuideSub = _tabs.index);
     docLinkRequest.addListener(_onDocLink);
     WidgetsBinding.instance.addPostFrameCallback((_) => _onDocLink());
   }
@@ -1362,7 +1406,10 @@ class _GuideTabState extends State<GuideTab>
     ]);
 
     return Column(children: [
-        TabBar(
+        Row(children: [
+          docBackButton(),
+          Expanded(
+              child: TabBar(
           controller: _tabs,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
@@ -1378,7 +1425,8 @@ class _GuideTabState extends State<GuideTab>
             Tab(text: 'Aux Paths'),
             Tab(text: 'Spending'),
           ],
-        ),
+        )),
+        ]),
         Expanded(
           child: TabBarView(controller: _tabs, children: [
             choosing,

@@ -178,6 +178,7 @@ class _CalculatorPageState extends State<CalculatorPage>
   @override
   void initState() {
     super.initState();
+    _topTabs.addListener(() => currentTopTab = _topTabs.index);
     docLinkRequest.addListener(_onDocLink);
     final stages = engine.stages();
     inp.stage = stages.first;
