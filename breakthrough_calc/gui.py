@@ -527,7 +527,8 @@ class MainWindow(QMainWindow):
     # app://ref/<slug> and app://guide/<slug>. Slug order must match the
     # addTab order in _build_info_tab / _build_guide_tab.
     _REF_SLUGS = {"basics": 0, "pills": 1, "elixirs": 2, "myrimon": 3,
-                  "artifacts": 4, "combat": 5, "systems": 6, "advanced": 7}
+                  "artifacts": 4, "combat": 5, "affixes": 6, "systems": 7,
+                  "advanced": 8}
     _GUIDE_SLUGS = {"paths": 0, "routine": 1, "novice": 2, "virtuoso": 3,
                     "nascent": 4, "incarnation": 5, "voidbreak": 6,
                     "pets": 7, "aux": 8, "spending": 9}
@@ -1007,42 +1008,11 @@ class MainWindow(QMainWindow):
             "Its stats grow in 2-level steps, with a Crit DMG boost every 20th "
             "level.</p>"
 
-            "<h3>Affix priorities (community tier list)</h3>"
-            "<p>Which gear/relic affix lines to chase, per a widely "
-            "circulated community tier list (opinion, but consistent with "
-            "the mechanics above). Stat caps drive a lot of it: Crit is "
-            "hard-capped at 50%, Hit/EVA at 99% — capped stats are dead "
-            "value past the cap.</p>"
-            "<ul>"
-            "<li><b>T0 — always chase</b>: base-stat % multipliers (Wonder "
-            "+30–46% everything; Blade Rage / Spellforge +20–28% "
-            "P.ATK/M.ATK), relic cast speed (Spirit, +9–21% cooldown), "
-            "ultimate attack % (Ulti Sharp / Ulti Occult +15–21%), attack "
-            "frequency (Bladeglow +11–15.4% on swords), and relic limit "
-            "breakers (Ether Veil / Infinite Edge +15–25.2% shield/damage "
-            "limit). Cast speed and limit breakers matter most from "
-            "Voidbreak on, where raw damage caps easily.</li>"
-            "<li><b>T1 — good</b>: crit multiplier/damage (Annihilation, "
-            "Pursuit), crit chance (Fatal — dead past the 50% cap), flat "
-            "attack (Sharp / Occult — match the physical/magical line to "
-            "your path or it's wasted), Physique/Manipulation (+4 ATK +2 "
-            "DEF per point, same path-matching rule), Agility (+3 Hit and "
-            "EVA per point), flat HP/MP.</li>"
-            "<li><b>T2 — situational</b>: flat Hit/EVA lines, P.DEF/M.DEF "
-            "(weak because Penetration strips up to 50% of defense when "
-            "the attacker wins the contested check — see the Advanced "
-            "tab), Crit Resist, and the paralysis quartet (chance/duration, "
-            "boost/resist — duration generally beats chance).</li>"
-            "<li><b>T3 — avoid</b>: HP/MP regen (only ticks out of combat, "
-            "which never happens in duels or the Voidgate) and Bladesoul "
-            "(sword-control resist).</li>"
-            "</ul>"
-            "<p>Paralysis math, corrected against client data: boost and "
-            "resist cancel 1:1; each leftover point shifts proc chance by "
-            "0.2% (enhance capped at +100%, resist at −50%) and duration "
-            "by 0.5% — but the duration <i>boost</i> caps at <b>+25%</b> "
-            "(only the resist side reaches −50%), so duration-boost lines "
-            "saturate at 50 points of advantage.</p>"
+            "<h3>Affix priorities</h3>"
+            "<p>Which rolled bonus lines to chase on gear and relics has "
+            "its own page now — see the <a href='app://ref/affixes'>"
+            "Affixes tab</a> for the full tier list, the named rolls and "
+            "their ranges, and the verified paralysis/penetration math.</p>"
 
             "<h3>About the missing numbers</h3>"
             "<p>The rules and thresholds above are confirmed from game data. The "
@@ -1051,6 +1021,110 @@ class MainWindow(QMainWindow):
             "page doesn't guess at them. Where a number isn't listed, read it as "
             "\"unknown\", not \"zero\". For the exact per-point math the game does "
             "expose, see the <a href='app://ref/advanced'>Advanced tab</a>.</p>")
+
+        # ---- Affixes ---------------------------------------------------------
+        # Tier ranking is a widely circulated community list (opinion);
+        # per-point math and caps are verified from the decompiled client
+        # configs — see docs/knowledge/combat-mechanics.md for sources.
+        affixes = "<h2>Gear &amp; Relic Affixes</h2>"
+        affixes += (
+            "<p>Affixes are the rolled bonus lines on forged gear and "
+            "relics. Which item drops is luck; which <i>lines</i> it rolls "
+            "is what separates a keeper from forge fodder. The tier "
+            "ranking below is the community consensus list; the caps and "
+            "per-point math are confirmed from game data.</p>"
+            "<p>Two caps drive most of the ranking: <b>crit rate is "
+            "hard-capped at 50%</b> and <b>hit is capped at 99%</b> (with "
+            "a 25% floor — nobody can be evade-tanked below a 1-in-4 "
+            "chance to hit). Capped stats are dead value past the cap.</p>"
+
+            "<h3>T0 — always chase</h3>")
+        affixes += table(
+            "T0 affixes",
+            ["Affix", "Effect", "Appears on"],
+            [("Wonder", "+30–46% ALL base stats", "gear"),
+             ("Blade Rage", "+20–28% P.ATK", "swords, bracelets"),
+             ("Spellforge", "+20–28% M.ATK", "fans, pendants"),
+             ("Spirit", "+9–21% relic cooldown", "relics"),
+             ("Ulti Sharp / Ulti Occult", "+15–21% P./M. ATK bonus on "
+              "ultimates", "gear"),
+             ("Bladeglow", "+11–15.4% flying-sword attack frequency",
+              "longswords, greatswords"),
+             ("Ether Veil", "+15–25.2% relic shield limit",
+              "trigrams, pearls"),
+             ("Infinite Edge", "+15–25.2% relic damage limit",
+              "damaging relics")])
+        affixes += (
+            "<p>Base-stat % multipliers are the strongest lines in the "
+            "game. Cast speed and the limit breakers matter most from "
+            "Voidbreak on, where relic damage and shields cap easily.</p>"
+
+            "<h3>T1 — good</h3>")
+        affixes += table(
+            "T1 affixes",
+            ["Affix", "Effect", "Appears on"],
+            [("Annihilation", "+7.2–16.8% crit multiplier (gear); "
+              "+18–42% relic crit multiplier (relics)", "gear, relics"),
+             ("Pursuit", "flat crit damage (stage-scaled; higher roll on "
+              "relics)", "gear, relics"),
+             ("Fatal", "flat crit chance (relic roll ≈4× the gear roll); "
+              "dead value past the 50% cap", "gear, relics"),
+             ("Sharp / Occult", "flat P./M. ATK on gear, flat P./M. DMG "
+              "on relics", "gear, relics"),
+             ("Corporia / Magicka", "flat Physique / Manipulation "
+              "(+4 ATK, +2 DEF per point)", "gear"),
+             ("Nimble", "flat Agility (+3 Hit and +3 EVA, both damage "
+              "types, per point)", "gear"),
+             ("Longevity / Vitality", "flat HP / MP", "gear")])
+        affixes += (
+            "<p><b>Match the line to your path.</b> Sharp on a magical "
+            "path — or Occult on a physical one — is trash <i>on gear</i>; "
+            "on relics the mismatch penalty doesn't apply. Corporia and "
+            "Magicka follow the same rule.</p>"
+
+            "<h3>T2 — situational</h3>")
+        affixes += table(
+            "T2 affixes",
+            ["Affix", "Effect", "Appears on"],
+            [("Conflict", "+9–21% relic status duration (T3 on relics "
+              "with no status to extend)", "relics"),
+             ("Precise / Focus", "flat P./M. Hit (relic roll ≈4× the "
+              "gear roll)", "gear, relics"),
+             ("Insight / Agile", "flat P./M. EVA", "gear"),
+             ("Stalwart / Refuge", "flat P./M. DEF", "gear"),
+             ("Guardian", "flat crit resistance", "gear"),
+             ("Soulclaim / Gloom", "paralysis chance / duration boost",
+              "weapons"),
+             ("Tranquil / Serene", "paralysis chance / duration resist",
+              "armor")])
+        affixes += (
+            "<p>Defense lines are weak because Penetration strips up to "
+            "50% of defense when the attacker wins the contested check — "
+            "see the <a href='app://ref/advanced'>Advanced tab</a>.</p>"
+            "<p><b>Paralysis math, corrected against client data:</b> "
+            "boost and resist cancel 1:1; each leftover point shifts proc "
+            "chance by 0.2% (enhance capped at +100%, resist at −50%) and "
+            "duration by 0.5% — but the duration <i>boost</i> caps at "
+            "<b>+25%</b> (only the resist side reaches −50%), so "
+            "duration-boost lines saturate at 50 points of advantage.</p>"
+
+            "<h3>T3 — avoid</h3>")
+        affixes += table(
+            "T3 affixes",
+            ["Affix", "Effect", "Appears on"],
+            [("Bone / Tolerate", "% HP / MP regen — only ticks out of "
+              "combat, which never happens in duels or the Voidgate",
+              "gear"),
+             ("Bladesoul", "+11–15.4% chance to keep flying swords when "
+              "controlled — resummoning is near-instant anyway",
+              "longswords, greatswords")])
+        affixes += (
+            "<h3>Practical takeaway</h3>"
+            "<p>Prioritize T0/T1 lines on weapons and pendants first. "
+            "Reroll toward base-stat % (Wonder / Blade Rage / Spellforge) "
+            "and relic cast speed — those two families define endgame "
+            "power. Tier placement is community opinion; the numbers and "
+            "caps quoted are from game data.</p>")
 
         # ---- World Systems ---------------------------------------------------
         # System explainers assembled from the client's own tooltip/description
@@ -1483,6 +1557,7 @@ class MainWindow(QMainWindow):
                             ("Myrimon & Extractor", myrimon),
                             ("Artifacts & Gems", artifacts),
                             ("Combat & Gear", combat),
+                            ("Affixes", affixes),
                             ("World Systems", systems),
                             ("Advanced", advanced)):
             # Escape & so QTabWidget doesn't eat it as a mnemonic marker
