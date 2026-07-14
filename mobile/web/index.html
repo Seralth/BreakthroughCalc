@@ -41,6 +41,28 @@
     // home-screen installs. Instead: tell a waiting worker to take over
     // (Flutter's worker handles the 'skipWaiting' message) and reload once
     // when it does.
+    // Nuclear refresh for when the auto-update path wedges (seen on iOS:
+    // stale cache survives until the user manually clears site data).
+    // Unregisters every service worker, wipes CacheStorage, and reloads
+    // with a cache-busting query so the network copy is fetched fresh.
+    // Called from the in-app "Force refresh" menu item.
+    window.forceRefresh = function () {
+      const unregister = ('serviceWorker' in navigator)
+          ? navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (r) { return r.unregister(); }));
+            }).catch(function () {})
+          : Promise.resolve();
+      const clearCaches = (typeof caches !== 'undefined')
+          ? caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            }).catch(function () {})
+          : Promise.resolve();
+      Promise.all([unregister, clearCaches]).then(function () {
+        window.location.replace(
+            window.location.pathname + '?fresh=' + Date.now());
+      });
+    };
+
     if ('serviceWorker' in navigator) {
       let reloading = false;
       navigator.serviceWorker.addEventListener('controllerchange', function () {
