@@ -6,6 +6,8 @@ import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'engine.dart';
+import 'force_refresh_stub.dart'
+    if (dart.library.js_interop) 'force_refresh_web.dart';
 import 'i18n.dart';
 import 'reference.dart';
 import 'update_check.dart';
@@ -13,7 +15,7 @@ import 'update_check.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.9';
+const appVersion = '2.11';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -248,6 +250,35 @@ class _CalculatorPageState extends State<CalculatorPage>
       'https://www.seagm.com/en-us/overmortal-vouchers-global';
   static const _donateRid = '28953_U1C466A474D1A0000';
 
+  /// Escape hatch for a wedged PWA cache (the auto-update in index.html is
+  /// not foolproof, notably on iOS): confirm, then unregister service
+  /// workers, wipe caches, and reload fresh from the network.
+  void _confirmForceRefresh() {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Force refresh?')),
+        content: Text(tr(
+            'Reloads the app fresh from the server, clearing the offline '
+            'cache. Use this if an update seems stuck. Your inputs are '
+            'saved and will survive.')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(tr('Cancel')),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              forceRefresh();
+            },
+            child: Text(tr('Refresh')),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showDonateDialog() {
     showDialog<void>(
       context: context,
@@ -447,6 +478,12 @@ class _CalculatorPageState extends State<CalculatorPage>
                   PopupMenuItem(value: e.key, child: Text(e.value)),
               ],
             ),
+            if (kIsWeb)
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: tr('Force refresh'),
+                onPressed: _confirmForceRefresh,
+              ),
             if (!kIsWeb)
               PopupMenuButton<String>(
                 tooltip: tr('More'),
