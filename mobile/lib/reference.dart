@@ -9,7 +9,8 @@ const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
 /// In-text cross-reference markup: `[[ref:slug|label]]` / `[[guide:slug|label]]`.
 /// Slug order must match the Tab order in ReferenceTab / GuideTab below.
 const refSlugs = {'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3,
-                  'artifacts': 4, 'combat': 5, 'systems': 6, 'advanced': 7};
+                  'artifacts': 4, 'combat': 5, 'affixes': 6, 'systems': 7,
+                  'advanced': 8};
 const guideSlugs = {'paths': 0, 'routine': 1, 'novice': 2, 'virtuoso': 3,
                     'nascent': 4, 'incarnation': 5, 'voidbreak': 6,
                     'pets': 7, 'aux': 8, 'spending': 9};
@@ -78,7 +79,7 @@ class ReferenceTab extends StatefulWidget {
 
 class _ReferenceTabState extends State<ReferenceTab>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabs = TabController(length: 8, vsync: this);
+  late final TabController _tabs = TabController(length: 9, vsync: this);
 
   @override
   void initState() {
@@ -511,37 +512,11 @@ class _ReferenceTabState extends State<ReferenceTab>
       para('A separate side-track of equipment with its own levels and stars. '
           'Its stats grow in 2-level steps, with a Crit DMG boost every 20th '
           'level.'),
-      Text('Affix priorities (community tier list)', style: h3),
-      para('Which gear/relic affix lines to chase, per a widely circulated '
-          'community tier list (opinion, but consistent with the mechanics '
-          'above). Stat caps drive a lot of it: Crit hard-caps at 50%, '
-          'Hit/EVA at 99% — capped stats are dead value past the cap.\n'
-          '• T0 — always chase: base-stat % (Wonder +30–46% everything; '
-          'Blade Rage / Spellforge +20–28% P.ATK/M.ATK), relic cast speed '
-          '(Spirit +9–21%), ultimate attack % (Ulti Sharp/Occult +15–21%), '
-          'attack frequency (Bladeglow +11–15.4% on swords), relic limit '
-          'breakers (Ether Veil / Infinite Edge +15–25.2%). Cast speed and '
-          'limit breakers matter most from Voidbreak on, where raw damage '
-          'caps easily.\n'
-          '• T1 — good: crit multiplier/damage (Annihilation, Pursuit), '
-          'crit chance (Fatal — dead past the 50% cap), flat attack '
-          '(Sharp/Occult — match physical/magical to your path or it\'s '
-          'wasted), Physique/Manipulation (+4 ATK +2 DEF per point, same '
-          'path-matching rule), Agility (+3 Hit and EVA per point), flat '
-          'HP/MP.\n'
-          '• T2 — situational: flat Hit/EVA lines, P.DEF/M.DEF (weak — '
-          'Penetration strips up to 50% of defense when the attacker wins '
-          'the contested check; see the Advanced tab), Crit Resist, the '
-          'paralysis quartet (duration generally beats chance).\n'
-          '• T3 — avoid: HP/MP regen (only ticks out of combat, which '
-          'never happens in duels or the Voidgate) and Bladesoul '
-          '(sword-control resist).'),
-      para('Paralysis math, corrected against client data: boost and resist '
-          'cancel 1:1; each leftover point shifts proc chance by 0.2% '
-          '(enhance capped at +100%, resist at −50%) and duration by 0.5% — '
-          'but the duration boost caps at +25% (only the resist side reaches '
-          '−50%), so duration-boost lines saturate at 50 points of '
-          'advantage.'),
+      Text('Affix priorities', style: h3),
+      para('Which rolled bonus lines to chase on gear and relics has its '
+          'own page now — see the [[ref:affixes|Affixes tab]] for the full '
+          'tier list, the named rolls and their ranges, and the verified '
+          'paralysis/penetration math.'),
       Text('About the missing numbers', style: h3),
       para('The rules and thresholds above are confirmed from game data. The '
           'exact values — what a given 10-level bonus or resonance rank grants — '
@@ -549,6 +524,105 @@ class _ReferenceTabState extends State<ReferenceTab>
           'doesn\'t guess at them. Where a number isn\'t listed, read it as '
           '"unknown", not "zero". For the exact per-point math the game does '
           'expose, see the [[ref:advanced|Advanced tab]].'),
+    ]);
+
+    // Affix tier ranking is community consensus (opinion); per-point math
+    // and caps are verified from the decompiled client configs — see
+    // docs/knowledge/combat-mechanics.md for sources.
+    final affixes = page([
+      Text('Gear & Relic Affixes', style: t.textTheme.titleLarge),
+      para('Affixes are the rolled bonus lines on forged gear and relics. '
+          'Which item drops is luck; which lines it rolls is what separates '
+          'a keeper from forge fodder. The tier ranking below is the '
+          'community consensus list; the caps and per-point math are '
+          'confirmed from game data.'),
+      para('Two caps drive most of the ranking: crit rate is hard-capped at '
+          '50% and hit is capped at 99% (with a 25% floor — nobody can be '
+          'evade-tanked below a 1-in-4 chance to hit). Capped stats are '
+          'dead value past the cap.'),
+      Text('T0 — always chase', style: h3),
+      table('T0 affixes', ['Affix', 'Effect', 'Appears on'], [
+        ['Wonder', '+30–46% ALL base stats', 'gear'],
+        ['Blade Rage', '+20–28% P.ATK', 'swords, bracelets'],
+        ['Spellforge', '+20–28% M.ATK', 'fans, pendants'],
+        ['Spirit', '+9–21% relic cooldown', 'relics'],
+        ['Ulti Sharp / Ulti Occult', '+15–21% P./M. ATK bonus on ultimates',
+         'gear'],
+        ['Bladeglow', '+11–15.4% flying-sword attack frequency',
+         'longswords, greatswords'],
+        ['Ether Veil', '+15–25.2% relic shield limit', 'trigrams, pearls'],
+        ['Infinite Edge', '+15–25.2% relic damage limit', 'damaging relics'],
+      ]),
+      para('Base-stat % multipliers are the strongest lines in the game. '
+          'Cast speed and the limit breakers matter most from Voidbreak on, '
+          'where relic damage and shields cap easily.'),
+      Text('T1 — good', style: h3),
+      table('T1 affixes', ['Affix', 'Effect', 'Appears on'], [
+        ['Annihilation',
+         '+7.2–16.8% crit multiplier (gear); +18–42% relic crit multiplier '
+             '(relics)',
+         'gear, relics'],
+        ['Pursuit', 'flat crit damage (stage-scaled; higher roll on relics)',
+         'gear, relics'],
+        ['Fatal',
+         'flat crit chance (relic roll ≈4× the gear roll); dead value past '
+             'the 50% cap',
+         'gear, relics'],
+        ['Sharp / Occult',
+         'flat P./M. ATK on gear, flat P./M. DMG on relics', 'gear, relics'],
+        ['Corporia / Magicka',
+         'flat Physique / Manipulation (+4 ATK, +2 DEF per point)', 'gear'],
+        ['Nimble',
+         'flat Agility (+3 Hit and +3 EVA, both damage types, per point)',
+         'gear'],
+        ['Longevity / Vitality', 'flat HP / MP', 'gear'],
+      ]),
+      para('Match the line to your path. Sharp on a magical path — or '
+          'Occult on a physical one — is trash on gear; on relics the '
+          'mismatch penalty doesn\'t apply. Corporia and Magicka follow the '
+          'same rule.'),
+      Text('T2 — situational', style: h3),
+      table('T2 affixes', ['Affix', 'Effect', 'Appears on'], [
+        ['Conflict',
+         '+9–21% relic status duration (T3 on relics with no status to '
+             'extend)',
+         'relics'],
+        ['Precise / Focus', 'flat P./M. Hit (relic roll ≈4× the gear roll)',
+         'gear, relics'],
+        ['Insight / Agile', 'flat P./M. EVA', 'gear'],
+        ['Stalwart / Refuge', 'flat P./M. DEF', 'gear'],
+        ['Guardian', 'flat crit resistance', 'gear'],
+        ['Soulclaim / Gloom', 'paralysis chance / duration boost',
+         'weapons'],
+        ['Tranquil / Serene', 'paralysis chance / duration resist',
+         'armor'],
+      ]),
+      para('Defense lines are weak because Penetration strips up to 50% of '
+          'defense when the attacker wins the contested check — see the '
+          '[[ref:advanced|Advanced tab]].'),
+      para('Paralysis math, corrected against client data: boost and resist '
+          'cancel 1:1; each leftover point shifts proc chance by 0.2% '
+          '(enhance capped at +100%, resist at −50%) and duration by 0.5% — '
+          'but the duration boost caps at +25% (only the resist side '
+          'reaches −50%), so duration-boost lines saturate at 50 points of '
+          'advantage.'),
+      Text('T3 — avoid', style: h3),
+      table('T3 affixes', ['Affix', 'Effect', 'Appears on'], [
+        ['Bone / Tolerate',
+         '% HP / MP regen — only ticks out of combat, which never happens '
+             'in duels or the Voidgate',
+         'gear'],
+        ['Bladesoul',
+         '+11–15.4% chance to keep flying swords when controlled — '
+             'resummoning is near-instant anyway',
+         'longswords, greatswords'],
+      ]),
+      Text('Practical takeaway', style: h3),
+      para('Prioritize T0/T1 lines on weapons and pendants first. Reroll '
+          'toward base-stat % (Wonder / Blade Rage / Spellforge) and relic '
+          'cast speed — those two families define endgame power. Tier '
+          'placement is community opinion; the numbers and caps quoted are '
+          'from game data.'),
     ]);
 
     // Expert-level internals; only client-stated mechanics carry numbers.
@@ -912,6 +986,7 @@ class _ReferenceTabState extends State<ReferenceTab>
             Tab(text: 'Myrimon & Extractor'),
             Tab(text: 'Artifacts & Gems'),
             Tab(text: 'Combat & Gear'),
+            Tab(text: 'Affixes'),
             Tab(text: 'World Systems'),
             Tab(text: 'Advanced'),
           ],
@@ -924,6 +999,7 @@ class _ReferenceTabState extends State<ReferenceTab>
             myrimon,
             artifacts,
             combat,
+            affixes,
             systems,
             advanced,
           ]),
