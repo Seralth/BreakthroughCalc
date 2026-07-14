@@ -530,14 +530,18 @@ class _ReferenceTabState extends State<ReferenceTab>
           'path-matching rule), Agility (+3 Hit and EVA per point), flat '
           'HP/MP.\n'
           '• T2 — situational: flat Hit/EVA lines, P.DEF/M.DEF (weak — '
-          'Penetration ignores defense proportionally), Crit Resist, the '
+          'Penetration strips up to 50% of defense when the attacker wins '
+          'the contested check; see the Advanced tab), Crit Resist, the '
           'paralysis quartet (duration generally beats chance).\n'
           '• T3 — avoid: HP/MP regen (only ticks out of combat, which '
           'never happens in duels or the Voidgate) and Bladesoul '
           '(sword-control resist).'),
-      para('Paralysis math from the same source: boost and resist cancel '
-          '1:1; each leftover point shifts proc chance by 0.2% (bounded '
-          '50–100%) and duration by 0.5% (max ±50%).'),
+      para('Paralysis math, corrected against client data: boost and resist '
+          'cancel 1:1; each leftover point shifts proc chance by 0.2% '
+          '(enhance capped at +100%, resist at −50%) and duration by 0.5% — '
+          'but the duration boost caps at +25% (only the resist side reaches '
+          '−50%), so duration-boost lines saturate at 50 points of '
+          'advantage.'),
       Text('About the missing numbers', style: h3),
       para('The rules and thresholds above are confirmed from game data. The '
           'exact values — what a given 10-level bonus or resonance rank grants — '
