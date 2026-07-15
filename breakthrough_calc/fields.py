@@ -35,6 +35,7 @@ class FieldSpec:
     scale: Optional[float] = None       # Inputs value = widget value / scale
     tooltip: Optional[str] = None       # English source string; tr()'d at install
     on_change: Optional[str] = None     # MainWindow handler name (default: recalc)
+    shelf_target: Optional[str] = None  # sources.json target this field can derive from
 
 
 # Shared tooltip strings (one string, several widgets — as before).
@@ -60,11 +61,13 @@ FIELDS: tuple = (
               scale=100.0,
               tooltip="Your Absorption Ratio as a percent (e.g. 27.5). Shown below is the Stage's base for the selected Grade."),
     FieldSpec("bless_pp", "bless_pp", "dspin", inputs_attr="bless_pp",
+              shelf_target="bless_pp",
               scale=100.0,
               tooltip="Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
                       "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
                       "Absorption Ratio above as displayed in-game: it already includes this."),
     FieldSpec("bless_window", "bless_window", "dspin", inputs_attr="bless_window_pp",
+              shelf_target="bless_window_pp",
               scale=100.0,
               tooltip="The conditional blessing tier (+20 percentage points) that the game removes "
                       "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
@@ -93,6 +96,7 @@ FIELDS: tuple = (
                       "Leave blank to hold Strive constant."),
     FieldSpec("pill_rank", "pill_rank", "combo", inputs_attr="pill_rank"),
     FieldSpec("pill_limit", "pill_limit", "dspin", inputs_attr="pill_limit",
+              shelf_target="pill_attempts",
               tooltip="Daily pill-use limit that caps Gold/Purple/Blue usage."),
     FieldSpec("gold_day", "gold_day", "dspin", inputs_attr="gold_per_day"),
     FieldSpec("purple_day", "purple_day", "dspin", inputs_attr="purple_per_day"),
@@ -132,6 +136,7 @@ FIELDS: tuple = (
                       "daily pill/Respira XP (and defers event Respira to the reset), then "
                       "resumes the normal daily routine."),
     FieldSpec("respira_per_day", "respira_per_day", "dspin", inputs_attr="respira_per_day",
+              shelf_target="respira_attempts",
               tooltip="Your daily Respira attempt limit as shown in-game (base + permanent "
                       "bonus attempts). The base limit is 10/day. "
                       "Leave out temporary event attempts."),
@@ -142,6 +147,7 @@ FIELDS: tuple = (
               tooltip="The base (non-crit) Cultivation EXP from one Respira attempt — see the "
                       "note below the field."),
     FieldSpec("respira_books", "respira_books", "dspin",
+              shelf_target="respira_effect",
               tooltip="Your total ACTIVE 'Respira Effect' percent from technique books. Only "
                       "used by the Auto button: Base EXP = Stage base × (1 + this %)."),
     FieldSpec("elixir_per_day", "elixir_per_day", "dspin", inputs_attr="elixir_per_day",

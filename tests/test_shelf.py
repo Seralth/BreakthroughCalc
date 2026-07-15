@@ -74,6 +74,25 @@ class CatalogSchema(unittest.TestCase):
                 self.assertIn(("respira", e["name"]), claimed, e["name"])
 
 
+class FieldRegistryLink(unittest.TestCase):
+    """fields.py's shelf_target column stays consistent with the catalog:
+    every linked target is raw_additive and names the exact field the
+    registry feeds to the engine — the structural half of the
+    double-counting guard."""
+
+    def test_every_shelf_target_is_raw_additive_and_field_matched(self):
+        from breakthrough_calc.fields import FIELDS
+        targets = load_sources()["targets"]
+        linked = [s for s in FIELDS if s.shelf_target]
+        self.assertTrue(linked)
+        for spec in linked:
+            t = targets.get(spec.shelf_target)
+            self.assertIsNotNone(t, spec.key)
+            self.assertEqual(t["mode"], "raw_additive", spec.key)
+            self.assertEqual(t["field"], spec.inputs_attr or spec.key,
+                             spec.key)
+
+
 class Derivation(unittest.TestCase):
     def setUp(self):
         self.cat = load_sources()

@@ -125,6 +125,11 @@ class PillEffectRows(QWidget):
         v = QVBoxLayout(self)
         v.setContentsMargins(0, 0, 0, 0)
         self.rows = []
+        self._auto_rows = []      # (name, level_label, value) from the shelf
+        self._auto_widgets = []
+        self._auto_layout = QVBoxLayout()
+        self._auto_layout.setContentsMargins(0, 0, 0, 0)
+        v.addLayout(self._auto_layout)
         self._rows_layout = QVBoxLayout()
         self._rows_layout.setContentsMargins(0, 0, 0, 0)
         v.addLayout(self._rows_layout)
@@ -175,7 +180,26 @@ class PillEffectRows(QWidget):
         self.changed.emit()
 
     def total(self) -> float:
-        return sum(sp.value() for _, sp, _ in self.rows)
+        return (sum(sp.value() for _, sp, _ in self.rows)
+                + sum(v for _, _, v in self._auto_rows))
+
+    def set_auto_rows(self, contribs):
+        """Read-only rows managed by the Sources Shelf; they join the
+        total but are edited on the Shelf, not here."""
+        for w in self._auto_widgets:
+            w.setParent(None)
+        self._auto_widgets = []
+        self._auto_rows = [(c.name, c.level_label, c.value) for c in contribs]
+        for name, lvl, value in self._auto_rows:
+            row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
+            text = f"{name} ({lvl})" if lvl else name
+            lab = QLabel(text); lab.setEnabled(False)
+            val = QLabel(f"+{value:g} %"); val.setEnabled(False)
+            tag = QLabel(tr("shelf")); tag.setEnabled(False)
+            h.addWidget(lab, 1); h.addWidget(val); h.addWidget(tag)
+            self._auto_layout.addWidget(row)
+            self._auto_widgets.append(row)
+        self.update_total()
 
     def sources(self) -> list:
         """[[label, value], ...] for persistence."""
@@ -196,7 +220,8 @@ class PillEffectRows(QWidget):
     def _sync_menu(self):
         # Hide sources already added so they can't be picked twice; remove them
         # via the row's ✕ button.
-        labels = {le.text() for le, _, _ in self.rows}
+        labels = ({le.text() for le, _, _ in self.rows}
+                  | {name for name, _, _ in self._auto_rows})
         for act in self._menu.actions():
             act.setVisible(act.data()["name"] not in labels)
 
