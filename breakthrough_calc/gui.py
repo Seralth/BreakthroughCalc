@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import json
 import os
 import sys
 
 from PySide6.QtCore import QEvent, QObject, Qt, QUrl
 from PySide6.QtGui import QDesktopServices, QGuiApplication, QWheelEvent
-from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from . import DONATE_RID, DONATE_URL, REPO, __version__
+from . import DONATE_RID, DONATE_URL, __version__
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
@@ -19,19 +17,6 @@ from PySide6.QtWidgets import (
     QTextBrowser, QVBoxLayout,
     QWidget,
 )
-
-
-def _version_tuple(s: str):
-    """'v2.7' -> (2, 7, 0); None if unparseable. Prerelease suffixes ignored."""
-    s = s.strip().lstrip("vV").split("-")[0].split("+")[0]
-    parts = s.split(".")
-    try:
-        nums = [int(p) for p in parts if p != ""]
-    except ValueError:
-        return None
-    if not nums:
-        return None
-    return tuple((nums + [0, 0, 0])[:3])
 
 
 class _WheelGuard(QObject):
@@ -73,47 +58,12 @@ class _WheelGuard(QObject):
 from . import theme, i18n
 from .i18n import tr, tr_duration
 from .engine import Engine, Inputs, fmt_days, load_pill_sources, load_respira_sources
-
-PHASE_LABELS = {"N/A": "N/A", "EARLY": "Early", "MIDDLE": "Middle", "LATE": "Late"}
-PHASE_KEYS = {v: k for k, v in PHASE_LABELS.items()}
-
-# Display-only canonical Stage names; internal data keys stay unchanged.
-# Settings persist the INTERNAL keys; legacy files that stored display names
-# (in any language) are migrated via i18n.reverse + the reverse maps below.
-STAGE_LABELS = {"Nascent": "Nascent Soul"}
-STAGE_KEYS = {v: k for k, v in STAGE_LABELS.items()}
-
-# Vase input pill: internal key -> English display item.
-VASE_INPUT_LABELS = {"Blue": "Blue/White", "Purple": "Purple (Epic)",
-                     "Gold": "Gold (Legendary)"}
-VASE_INPUT_KEYS = {v: k for k, v in VASE_INPUT_LABELS.items()}
-
-
-def stage_disp(key: str) -> str:
-    return tr(STAGE_LABELS.get(key, key))
-
-
-def stage_key(disp: str) -> str:
-    """Displayed (localized) stage name, legacy English display name, or an
-    internal key -> internal key."""
-    return STAGE_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
-
-
-def phase_disp(key: str) -> str:
-    return tr(PHASE_LABELS.get(key, key))
-
-
-def phase_key(disp: str) -> str:
-    return PHASE_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
-
-
-def vase_input_disp(key: str) -> str:
-    return tr(VASE_INPUT_LABELS.get(key, key))
-
-
-def vase_input_key(disp: str) -> str:
-    return VASE_INPUT_KEYS.get(i18n.reverse(disp), i18n.reverse(disp))
-
+from .labels import (
+    VASE_INPUT_LABELS, phase_disp, phase_key, stage_disp, stage_key,
+    vase_input_disp, vase_input_key,
+)
+from .profiles import ProfileStore, settings_path
+from .update_check import UpdateChecker
 
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 
@@ -126,43 +76,13 @@ STRIVE_STAGES = {"Nascent", "Incarnation", "Voidbreak", "Wholeness", "Perfection
                  "Nirvana", "Celestial", "Eternal", "Supreme"}
 
 
-def settings_path() -> str:
-    """Prefer a JSON next to the executable (portable/self-contained); fall back
-    to a per-OS user config location if that directory isn't writable.
-
-    - Linux AppImage: next to the .AppImage (via the APPIMAGE env var).
-    - Windows onefile .exe: next to the .exe, else %APPDATA%\\BreakthroughCalc.
-    - Otherwise: next to a frozen executable, else ~/.config/breakthrough-calc.
-    """
-    # Portable location next to the executable.
-    exe_dir = None
-    appimage = os.environ.get("APPIMAGE")
-    if appimage:
-        exe_dir = os.path.dirname(appimage)
-        name = os.path.basename(appimage) + ".settings.json"
-    elif getattr(sys, "frozen", False):
-        exe_dir = os.path.dirname(os.path.abspath(sys.executable))
-        name = "settings.json"
-    if exe_dir and os.access(exe_dir, os.W_OK):
-        return os.path.join(exe_dir, name)
-
-    # Per-OS user config fallback.
-    if sys.platform == "win32":
-        base = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")),
-                            "BreakthroughCalc")
-    else:
-        base = os.path.join(os.path.expanduser("~"), ".config", "breakthrough-calc")
-    os.makedirs(base, exist_ok=True)
-    return os.path.join(base, "settings.json")
-
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.engine = Engine()
-        self._settings_file = settings_path()
+        self._store = ProfileStore(settings_path())
         self._loading = True
-        store = self._read_store()
+        store = self._store.read()
         self._theme = store.get("theme", "Seralth")
         if self._theme not in theme.THEMES:  # unknown persisted name -> default
             self._theme = "Seralth"
@@ -175,8 +95,9 @@ class MainWindow(QMainWindow):
         self._load_settings()
         self._loading = False
         self.recalc()
-        self._nam = QNetworkAccessManager(self)
-        self._check_updates()  # async; silent no-op offline
+        self._updates = UpdateChecker(self)
+        self._updates.result.connect(self._on_update_result)
+        self._updates.check()  # async; silent no-op offline
 
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
@@ -2256,46 +2177,22 @@ class MainWindow(QMainWindow):
                 pass  # tolerate hand-edited settings with wrong value types
         self._loading = prev
 
-    # ---- profile store (JSON: {version, current, profiles: {name: state}}) ----
-    def _read_store(self) -> dict:
-        try:
-            with open(self._settings_file) as f:
-                obj = json.load(f)
-        except (OSError, ValueError):
-            obj = None
-        if isinstance(obj, dict) and "profiles" in obj:
-            return obj
-        # migrate a flat v1 settings dict into a single "Default" profile
-        flat = obj if isinstance(obj, dict) else {}
-        return {"version": 2, "current": "Default", "profiles": {"Default": flat}}
-
-    def _write_store(self, obj: dict):
-        try:
-            with open(self._settings_file, "w") as f:
-                json.dump(obj, f, indent=1)
-        except OSError:
-            pass
-
+    # ---- profiles (widget<->state bridge over profiles.ProfileStore) ------
     def _save_settings(self):
-        obj = self._read_store()
-        cur = obj.get("current", "Default")
-        obj.setdefault("profiles", {})[cur] = self._collect_state()
-        obj["current"] = cur
-        self._write_store(obj)
+        # save into whatever the file says is current (no first-profile
+        # fallback here — mirrors the store's historical write path)
+        cur = self._store.read().get("current", "Default")
+        self._store.set(cur, self._collect_state())
 
     def _load_settings(self):
-        obj = self._read_store()
-        profs = obj.get("profiles", {})
-        cur = obj.get("current", "Default")
-        if cur not in profs and profs:
-            cur = next(iter(profs))
-        self._apply_state(profs.get(cur, {}))
+        cur = self._store.current
+        self._apply_state(self._store.get(cur))
         self._refresh_profile_combo(cur)
 
     def _refresh_profile_combo(self, current: str):
         self.profile_combo.blockSignals(True)
         self.profile_combo.clear()
-        for name in self._read_store().get("profiles", {}):
+        for name in self._store.names():
             self.profile_combo.addItem(name)
         i = self.profile_combo.findText(current)
         if i >= 0:
@@ -2305,10 +2202,8 @@ class MainWindow(QMainWindow):
     def _switch_profile(self, name: str):
         if self._loading or not name:
             return
-        obj = self._read_store()
-        obj["current"] = name
-        self._write_store(obj)
-        self._apply_state(obj.get("profiles", {}).get(name, {}))
+        self._store.current = name
+        self._apply_state(self._store.get(name))
         self.recalc()
 
     def _new_profile(self):
@@ -2316,22 +2211,14 @@ class MainWindow(QMainWindow):
         name = (name or "").strip()
         if not ok or not name:
             return
-        obj = self._read_store()
-        obj.setdefault("profiles", {})[name] = self._collect_state()
-        obj["current"] = name
-        self._write_store(obj)
+        self._store.set(name, self._collect_state())
         self._refresh_profile_combo(name)
 
     def _delete_profile(self):
-        obj = self._read_store()
-        profs = obj.get("profiles", {})
-        if len(profs) <= 1:
+        newcur = self._store.delete(self._store.read().get("current"))
+        if newcur is None:
             return  # always keep at least one profile
-        profs.pop(obj.get("current"), None)
-        newcur = next(iter(profs))
-        obj["current"] = newcur
-        self._write_store(obj)
-        self._apply_state(profs.get(newcur, {}))
+        self._apply_state(self._store.get(newcur))
         self._refresh_profile_combo(newcur)
         self.recalc()
 
@@ -2359,7 +2246,7 @@ class MainWindow(QMainWindow):
         b = QPushButton(tr("Check for updates"))
         b.setFlat(True)
         b.setToolTip(tr("Installed: v{}. Checks the latest GitHub release.").format(__version__))
-        b.clicked.connect(lambda: self._check_updates(manual=True))
+        b.clicked.connect(lambda: self._updates.check(manual=True))
         bar.addWidget(b)
         d = QPushButton(tr("Donate ♥"))
         d.setFlat(True)
@@ -2389,11 +2276,11 @@ class MainWindow(QMainWindow):
         state = self._collect_state()
         prev, self._loading = self._loading, True
         i18n.set_lang(code)
-        obj = self._read_store(); obj["lang"] = code; self._write_store(obj)
+        obj = self._store.read(); obj["lang"] = code; self._store.write(obj)
         self._build_ui()
         self._wire()
         self._on_stage_changed()
-        self._refresh_profile_combo(self._read_store().get("current", "Default"))
+        self._refresh_profile_combo(self._store.read().get("current", "Default"))
         self._apply_state(state)
         self._loading = prev
         self.recalc()
@@ -2427,36 +2314,10 @@ class MainWindow(QMainWindow):
         v.addWidget(bb)
         dlg.exec()
 
-    # ---- update check ----------------------------------------------------
-    def _check_updates(self, manual: bool = False):
-        req = QNetworkRequest(QUrl(f"https://api.github.com/repos/{REPO}/releases/latest"))
-        req.setHeader(QNetworkRequest.UserAgentHeader, f"BreakthroughCalc/{__version__}")
-        req.setTransferTimeout(5000)
-        reply = self._nam.get(req)
-        reply.finished.connect(lambda: self._on_update_reply(reply, manual))
-
-    def _on_update_reply(self, reply: QNetworkReply, manual: bool):
-        reply.deleteLater()
-        latest, url = None, f"https://github.com/{REPO}/releases/latest"
-        if reply.error() == QNetworkReply.NoError:
-            try:
-                data = json.loads(bytes(reply.readAll()).decode("utf-8"))
-                latest = _version_tuple(data.get("tag_name", ""))
-                url = data.get("html_url") or url
-            except ValueError:
-                latest = None
-        if latest is None:
-            if manual:
-                self.update_label.setText(tr("Update check failed"))
-                self.update_label.setVisible(True)
-            return
-        if latest > _version_tuple(__version__):
-            tag = ".".join(str(x) for x in latest)
-            self.update_label.setText(f'<a href="{url}">{tr("Update available: v{}").format(tag)}</a>')
-            self.update_label.setVisible(True)
-        elif manual:
-            self.update_label.setText(tr("Up to date (v{})").format(__version__))
-            self.update_label.setVisible(True)
+    # ---- update check (logic in update_check.UpdateChecker) ---------------
+    def _on_update_result(self, text: str, visible: bool):
+        self.update_label.setText(text)
+        self.update_label.setVisible(visible)
 
     def _on_theme_changed(self, name: str):
         self._theme = name
@@ -2469,7 +2330,7 @@ class MainWindow(QMainWindow):
         self.o_error.setStyleSheet(f"color: {self._acc['bad']};")
         self._rebuild_info_tab()
         self.recalc()
-        obj = self._read_store(); obj["theme"] = name; self._write_store(obj)
+        obj = self._store.read(); obj["theme"] = name; self._store.write(obj)
 
     def _on_color_scheme_changed(self, *_):
         # Re-apply only when tracking the OS scheme; explicit themes are static.
