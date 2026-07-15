@@ -6,11 +6,13 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_dialogs.dart';
+import 'doc_nav.dart';
 import 'engine.dart';
 import 'form_widgets.dart';
+import 'guide_tab.dart';
 import 'i18n.dart';
 import 'input_store.dart';
-import 'reference.dart';
+import 'reference_tab.dart';
 import 'results_card.dart';
 import 'share_codec.dart';
 import 'source_pickers.dart';
@@ -139,17 +141,18 @@ class _CalculatorPageState extends State<CalculatorPage>
   final _respiraCtrl = TextEditingController();
 
   Engine get engine => widget.engine;
+  final _nav = DocNavigator.instance;
 
   // Cross-reference links ([[ref:...]]) request a top-level tab switch here;
   // the target tab's own controller handles the sub-tab jump.
   void _onDocLink() {
-    final req = docLinkRequest.value;
+    final req = _nav.pendingLink.value;
     if (req != null) _topTabs.animateTo(req.tab);
   }
 
   @override
   void dispose() {
-    docLinkRequest.removeListener(_onDocLink);
+    _nav.pendingLink.removeListener(_onDocLink);
     _topTabs.dispose();
     _speedCtrl.dispose();
     _abodeCtrl.dispose();
@@ -161,8 +164,8 @@ class _CalculatorPageState extends State<CalculatorPage>
   @override
   void initState() {
     super.initState();
-    _topTabs.addListener(() => currentTopTab = _topTabs.index);
-    docLinkRequest.addListener(_onDocLink);
+    _topTabs.addListener(() => _nav.topTab = _topTabs.index);
+    _nav.pendingLink.addListener(_onDocLink);
     final stages = engine.stages();
     inp.stage = stages.first;
     inp.phase = engine.phasesFor(inp.stage).first;
