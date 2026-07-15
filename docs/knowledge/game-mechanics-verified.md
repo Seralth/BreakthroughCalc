@@ -100,11 +100,47 @@ Verified from APK i18n strings (`apk_analysis/i18n_all.json`, en/zh/ru):
   Immortal World (Voidbreak). No other mortal-world stage has it.
 - Grade ladders per dump (matches data/breakthrough.json): Incarnation Early
   G1–G8, Middle G1–G9, Late G1–G15.
-- **Calculator impact: none on the math.** Completed/Perfected is a
-  gate/display state, not an extra XP band — breakthrough.json's Incarnation
-  Late G15 row already covers the XP to reach it. Ascension itself is
-  event/quest-gated ("Path to Ascension is not yet unlocked. Unable to
-  ascend."), which the time calculator deliberately does not model.
+- Completed/Perfected is not an extra XP band — breakthrough.json's
+  Incarnation Late G15 row already covers the XP to reach it. Ascension
+  itself is event/quest-gated ("Path to Ascension is not yet unlocked.
+  Unable to ascend."), which the time calculator does not model.
   UNVERIFIED (server-side): whether cultivation XP keeps accruing/prestocks
   while sitting in Completed awaiting ascension — same open question as the
   overcap accrual rate above.
+
+### Blessing Ranking tied to Completed/Perfected (2026-07-15, in-game tooltip)
+
+Per Seralth's in-game blessing tooltip, corroborated by dump strings
+('Higher cultivation means higher blessing ranking for more rewards. /
+Completing stage to progress forward can increase rewards.' = 圆满后境界精进
+可增加福泽奖励; templates '%s Absorption Ratio + %s%%' and 'Absorption Ratio
+Before %s: + %s%%'; 'Activate the "Cultivation Pill Auto-Transmogrification"
+Privilege.'):
+
+- Tier 1 **Completion** (Incarnation 100% + breakthrough): removes the realm
+  restriction on taking Cultivation Pills; unlocks the Cultivation Pill
+  Auto-Transmogrification privilege; blessing rewards +1.
+- Tier 2 **Perfection (C)** (Tier 1 + Corporia path at Nascent Soul Late):
+  Incarnation (Late) Aura Absorption Ratio +20%; blessing rewards +3.
+- Tier 3 **Perfect Incarnation** (Corporia path at Incarnation Middle):
+  Aura Absorption Ratio +20% applying to stages before Voidbreak (Late)/
+  Middle; blessing rewards +5.
+- Dump also has a rank→reward table (Blessing Ranking 1→6, 2→5, 3→4,
+  4–10→3, 11+→2) and post-ascension privileges granting Absorption Ratio
+  +200% at (mortal? immortal-world) stages plus high-stage pill access.
+- Official absorption formula (dump): Cultivation Speed = Abode Aura ×
+  Absorption Ratio (× Heavenly Power Bonus); Absorption Ratio = Base Stage
+  Absorption Ratio × (1 + Strive Bonus) + Virya Absorption Ratio.
+
+**Calculator impact — REVISED: this CAN affect the time math.** The engine's
+projection cancels the entered absorption ratio (speed(row) = culti_speed ×
+low_row / low_cur, engine.py) — valid only when bonuses scale all rows
+uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
+(Late)") breaks the cancellation: windowed rows are faster than the pure
+base-band progression predicts. Same class of issue for the +200%
+post-ascension privilege and Virya (both additive terms, per the formula).
+UNVERIFIED: whether the blessing "+20%" is +20 percentage points added to
+the ratio (like Virya) or ×1.2 on it — needs an in-game absorption-tooltip
+breakdown screenshot with the blessing active before modeling it. Until
+then the calc under-estimates speed (over-estimates time) for accounts with
+these blessings on pre-Voidbreak rows.
