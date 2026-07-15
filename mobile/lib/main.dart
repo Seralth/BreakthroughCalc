@@ -362,6 +362,15 @@ class _CalculatorPageState extends State<CalculatorPage>
             _speedCtrl.text = fmtNum(inp.cultiSpeed);
             _recalc();
           }),
+          numField(tr('Ascension blessing (%)'), inp.blessPp * 100, (v) {
+            inp.blessPp = v / 100;
+            _recalc();
+          }),
+          numField(tr('Blessing before Voidbreak Middle (%)'),
+              inp.blessWindowPp * 100, (v) {
+            inp.blessWindowPp = v / 100;
+            _recalc();
+          }),
           numCtrlField(tr('Cultivation Speed'), _speedCtrl, (v) {
             inp.cultiSpeed = v;
             if (inp.absorptionRatio > 0) {
@@ -510,6 +519,18 @@ class _CalculatorPageState extends State<CalculatorPage>
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
+          numField(tr('XP elixirs / day'), inp.elixirPerDay, (v) {
+            inp.elixirPerDay = v;
+            _recalc();
+          }),
+          numField(tr('EXP per elixir'), inp.elixirExp, (v) {
+            inp.elixirExp = v;
+            _recalc();
+          }),
+          numField(tr('Elixir effectiveness (%)'), inp.elixirEffect * 100, (v) {
+            inp.elixirEffect = v / 100;
+            _recalc();
+          }),
         ]),
         formGroup(context, tr('Myrimon Fruit'), [
           formDropdown(tr('Fruit rank'), inp.fruitRank, fruitRanks, (v) {

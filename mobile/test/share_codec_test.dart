@@ -79,6 +79,12 @@ const goldenDecoded = {
   'lvl_quality': 9,
   'lvl_gush': 14,
   'extractor_rarity': 'Epic',
+  // New fields decode at their Inputs() defaults for old codes.
+  'bless_pp': 0.0,
+  'bless_window_pp': 0.0,
+  'elixir_per_day': 0.0,
+  'elixir_exp': 0.0,
+  'elixir_effect': 1.0,
   'pe_sources': [
     ['Robe +3', 5.0],
     ['Technique', 2.5],

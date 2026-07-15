@@ -59,6 +59,16 @@ FIELDS: tuple = (
     FieldSpec("absorb", "absorb", "dspin", inputs_attr="absorption_ratio",
               scale=100.0,
               tooltip="Your Absorption Ratio as a percent (e.g. 27.5). Shown below is the Stage's base for the selected Grade."),
+    FieldSpec("bless_pp", "bless_pp", "dspin", inputs_attr="bless_pp",
+              scale=100.0,
+              tooltip="Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
+                      "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+                      "Absorption Ratio above as displayed in-game: it already includes this."),
+    FieldSpec("bless_window", "bless_window", "dspin", inputs_attr="bless_window_pp",
+              scale=100.0,
+              tooltip="The conditional blessing tier (+20 percentage points) that the game removes "
+                      "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
+                      "drop it."),
     FieldSpec("gem", "gem", "combo", inputs_attr="aura_gem",
               to_key=i18n.reverse, to_disp=tr,
               tooltip="Aura Gem rarity. In-game it's claimable storage that accrues gem% of your cultivation speed "
@@ -131,6 +141,13 @@ FIELDS: tuple = (
     FieldSpec("respira_exp", "respira_exp", "dspin", inputs_attr="respira_exp",
               tooltip="The base (non-crit) Cultivation EXP from one Respira attempt — see the "
                       "note below the field."),
+    FieldSpec("elixir_per_day", "elixir_per_day", "dspin", inputs_attr="elixir_per_day",
+              tooltip="XP elixirs consumed per day."),
+    FieldSpec("elixir_exp", "elixir_exp", "dspin", inputs_attr="elixir_exp",
+              tooltip="Cultivation EXP granted by one elixir (item tooltip)."),
+    FieldSpec("elixir_effect", "elixir_effect", "dspin", inputs_attr="elixir_effect",
+              scale=100.0,
+              tooltip="Elixir effectiveness percent after elixir tolerance (100 = full effect)."),
     FieldSpec("pearl_xp10", "pearl_xp10", "dspin", inputs_attr="pearl_xp_per_10",
               tooltip="Timereversal Pearl: EXP granted per 10 energy."),
     FieldSpec("vase_charge", "vase_charge", "check", inputs_attr="vase_charge", tooltip=_CHARGE_TIP),

@@ -163,6 +163,19 @@ class Inputs:
     lvl_gush: int = 0
     extractor_rarity: str = "Common"
 
+    # Ascension Virya blessings: ADDITIVE percentage-point bonuses on the
+    # absorption ratio (community-triple-confirmed additive 2026-07-15; see
+    # docs/knowledge/game-mechanics-verified.md). Fractions of 1 (0.20 = +20pp).
+    # The entered absorption_ratio is the on-screen TOTAL, which already
+    # includes them; the engine strips them to recover the true Strive.
+    bless_pp: float = 0.0           # persistent tiers (e.g. Perfection (C) + Perfect = 0.40)
+    bless_window_pp: float = 0.0    # conditional tier: only before Voidbreak MIDDLE
+
+    # XP elixirs: a flat daily XP stream analogous to Respira (no crit roll).
+    elixir_per_day: float = 0.0     # elixirs consumed per day
+    elixir_exp: float = 0.0         # EXP per elixir (item tooltip)
+    elixir_effect: float = 1.0      # effectiveness after elixir tolerance (1.0 = 100%)
+
 
 @dataclass
 class Results:
@@ -189,6 +202,7 @@ class Results:
     mythic_pills_per_day: float = 0.0
     pearl_xp_per_day: float = 0.0
     respira_xp_per_day: float = 0.0
+    elixir_xp_per_day: float = 0.0
     fruit_xp: float = 0.0
     fruit_days_saved: float = 0.0
     # 90% (P5..P95) time bands from fruit/respira crit variance: (low, high).
@@ -265,6 +279,13 @@ class Engine:
         if low is None or low <= 0:
             return None
         return absorption_ratio / low - 1
+
+    def blessing_applies(self, stage: str, phase: str, grade: str) -> bool:
+        """Whether the conditional (before Voidbreak MIDDLE) blessing tier
+        still applies at a row; True when the boundary is not in the data."""
+        i = self.row_index(stage, phase, grade)
+        vbm = self.target_start_index("Voidbreak", "MIDDLE")
+        return i >= 0 and (vbm < 0 or i < vbm)
 
     def has_strive(self, stage: str) -> bool:
         """Strive Bonus exists from Nascent Soul onward (earlier stages have
@@ -481,17 +502,34 @@ class Engine:
 
         cur = self.rows[idx]
         abode = inp.culti_speed / inp.absorption_ratio
-        # Strive is a MULTIPLIER on each stage's base absorption (game formula:
-        # Absorption = Base x (1 + Strive)), held constant across the projection.
-        # NOTE: because abode = culti_speed/absorption and (1+strive) =
-        # absorption/low_cur, strive/absorption CANCEL out of speed(row) below:
-        # speed(row) = culti_speed * low_row / low_cur. So the entered absorption
-        # (and thus strive) does NOT affect the projected TIME at all — time is
-        # driven purely by culti_speed and the base-band progression. strive is
-        # retained only to expose the implied value for display. This is also
-        # why the "no strive on overcapped XP" restriction and the Nascent-Soul
-        # unlock are immaterial to the time math: strive never scales it.
-        strive = inp.absorption_ratio / cur["low"] - 1 if cur["low"] > 0 else 0.0
+
+        # Ascension blessing pp: the conditional tier applies only to rows
+        # BEFORE Voidbreak MIDDLE ("Absorption Ratio Before Voidbreak (L)
+        # Middle: +20%"); the persistent tiers apply to every row.
+        vbm = self.target_start_index("Voidbreak", "MIDDLE")
+        bless_end = vbm if vbm >= 0 else len(self.rows)
+
+        def bless_at(j: int) -> float:
+            return inp.bless_pp + (inp.bless_window_pp if j < bless_end else 0.0)
+
+        bless_cur = bless_at(idx)
+        if bless_cur > 0 and inp.absorption_ratio <= bless_cur:
+            res.error = "Absorption ratio must exceed the blessing bonus."
+            return res
+
+        # Strive is a MULTIPLIER on each stage's base absorption; blessing pp
+        # are ADDITIVE on top (game formula: Absorption = Base x (1 + Strive)
+        # + blessing). The entered absorption is the on-screen total, so the
+        # current row's blessing is stripped to recover the true Strive.
+        # NOTE: with no blessing, abode = culti_speed/absorption and
+        # (1+strive) = absorption/low_cur make strive/absorption CANCEL out of
+        # speed(row) below: speed(row) = culti_speed * low_row / low_cur —
+        # the entered absorption does not affect the projected time at all.
+        # Blessing pp break that cancellation only by their additive term:
+        # speed(row) = abode * (low_row * (1+strive) + bless(row)), which
+        # still reduces exactly to culti_speed at the current row.
+        strive = ((inp.absorption_ratio - bless_cur) / cur["low"] - 1
+                  if cur["low"] > 0 else 0.0)
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 
         pills = self.pill_math(inp)
@@ -499,7 +537,11 @@ class Engine:
         # attempts are a one-off, credited up front like fruit.
         respira_daily = inp.respira_per_day * inp.respira_exp * _RESPIRA_CRIT_MEAN
         respira_event_xp = inp.respira_event * inp.respira_exp * _RESPIRA_CRIT_MEAN
-        daily_xp = pills.xp_per_day + respira_daily
+        # XP elixirs: flat daily XP, deterministic (no crit roll observed).
+        # Rides daily_xp, so it obeys the dailies_done reset window and is
+        # never gem-multiplied, exactly like pills/Respira.
+        elixir_daily = inp.elixir_per_day * inp.elixir_exp * inp.elixir_effect
+        daily_xp = pills.xp_per_day + respira_daily + elixir_daily
         pill_ratio = (daily_xp / inp.culti_speed) * TICK_SECONDS / 86400.0
         fruit_mean, fruit_var = self.fruit_stats(inp)
         fruit_xp = fruit_mean + respira_event_xp
@@ -513,13 +555,14 @@ class Engine:
 
         strive_of = self._strive_dropoff(inp, idx, strive)
 
-        def speed(row) -> float:
+        def speed(j: int) -> float:
+            row = self.rows[j]
             s = strive_of(row) if strive_of else strive
-            return max(1e-12, abode * row["low"] * (1 + s))
+            return max(1e-12, abode * (row["low"] * (1 + s) + bless_at(j)))
 
-        def row_rate(row) -> float:
-            # XP/sec while cultivating `row`, before daily flat XP.
-            return speed(row) * (1 + gem) / TICK_SECONDS
+        def row_rate(j: int) -> float:
+            # XP/sec while cultivating row j, before daily flat XP.
+            return speed(j) * (1 + gem) / TICK_SECONDS
 
         # Per-row wall-clock integration. Gem multiplies cultivation speed
         # (claimable storage of gem% x speed — treated as continuous, i.e.
@@ -551,7 +594,7 @@ class Engine:
                 take = min(credit, xp)
                 credit -= take
                 left = xp - take
-                base_rate = row_rate(self.rows[j])
+                base_rate = row_rate(j)
                 if window_left > 0.0 and left > 0.0:
                     sec_np = left / base_rate
                     if sec_np <= window_left:
@@ -622,7 +665,13 @@ class Engine:
                     # Prestock scenario: a timegate parks you at the Stage cap,
                     # where excess EXP accrues at the CAPPED row's rate (no
                     # future-row speed scaling; pills/Respira stay flat).
-                    cap_rate = row_rate(self.rows[send]) + daily_rate
+                    # Overcap accrual runs WITHOUT the Strive Bonus (player-
+                    # confirmed 2026-07-15, see game-mechanics-verified.md),
+                    # so the aura component is de-strived: abode x base low.
+                    # Blessing pp are an absorption-band bonus, not Strive,
+                    # and are assumed to still apply (unverified).
+                    cap_speed = abode * (self.rows[send]["low"] + bless_at(send))
+                    cap_rate = cap_speed * (1 + gem) / TICK_SECONDS + daily_rate
                     overflow_xp = xp_ahead(tstart - 1) - xp_ahead(send)
                     res.prestock_days = days(
                         real_seconds(send) + overflow_xp / cap_rate)
@@ -655,6 +704,7 @@ class Engine:
         res.mythic_pills_per_day = pills.mythic_per_day
         res.pearl_xp_per_day = pills.pearl_xp_per_day
         res.respira_xp_per_day = respira_daily
+        res.elixir_xp_per_day = elixir_daily
         res.fruit_xp = fruit_xp
         # Matches Donk's sheet (myrfruits B45/B46): fruit XP / current speed, no gem/pill divisor.
         res.fruit_days_saved = fruit_secs / 86400.0
