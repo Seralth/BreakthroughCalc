@@ -76,3 +76,55 @@ have NO pill-effect lines — their absence from data/pill_effect_sources.json
 is complete coverage, not missing data. Books' Base Abode Aura bonuses are
 deliberately NOT cataloged (they're already inside the player's entered
 Abode Aura reading; adding them would double-count).
+
+## Respira base XP is FIXED per major Stage (verified 2026-07-15)
+
+Community "Respira has a fixed value" claims are correct, with a precise
+meaning: the base cultivation XP per Respira attempt is one constant for the
+entire major Stage — it does not scale with phase or grade.
+
+- **Verified (Seralth in-game readings, 2026-07-15, no Respira EXP % buffs,
+  overcapped)**: Nascent Soul G6 and Nascent MIDDLE G7 both show **4041** XP
+  per attempt. Same value across phases/grades ⇒ fixed per Stage.
+- **Client dump sweep (verified)**: no base-XP table or constant exists
+  client-side. Respira's internal key is `yunqi` (吐纳). The client ships only:
+  crit table `yunqi_crit` = weights/multipliers {600,×1},{300,×2},{80,×5},
+  {20,×10} with expected multiplier `yunqi_exp_crit = 1.8`; round size
+  `yunqi_round = {20, 2}`; per-level daily attempt caps (`yunqi_limit`, 2 at
+  lv1 → 10 default, std_level_calc.lua) plus `extra_times_yunqi` buffs;
+  and percent-scale modifiers `extra_base_yunqi`/`extra_exp_yunqi`/
+  `extra_crit_yunqi` (cfg_us_attrib.lua / cfg_us_affix.lua). The base amount
+  is server-authoritative (consistent with all balance tables).
+- **REFUTED (2026-07-15, issue #27)**: the hypothesis that the per-Stage
+  constant equals 2.2% of the Stage's Early G1 grade_xp (Nascent:
+  183,679 × 0.022 = 4,040.9 → 4041, match to 0.002% — but coincidence).
+  Incarnation reading came in at **8,173** vs the rule's prediction of
+  17,372 (Early G1) / 32,626 (Late G1); no grade_xp row in
+  breakthrough.json yields 8,173 at 2.2% under any books assumption.
+  Measured per-Stage constants so far (non-crit on-screen values):
+  **Nascent 4,041 · Incarnation 8,173** (ratio 2.022 — near ×2 per Stage,
+  but that is one ratio, not a verified law; a Voidbreak reading near
+  16,3xx would support it). Formula unknown; treat the constants as a
+  lookup of measured values.
+- Technique-book Respira lines (screenshot-verified 2026-07-15, Incarnation
+  char; cataloged in data/respira_sources.json): activated total **+28%
+  Respira Effect** (Energy Unification 1, Cosmic Power 3, Golden Core 1,
+  Astrology 3, Taiyin Meridian 3, Yin's Grasp 5, Floral Essence 3,
+  Purify & Cleanse 4, Great Yang Manual 5) and **+2 attempts** (Cosmic Power,
+  Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
+  Cauldron Refinement T3 +3%, Moon Meru T12 +10%, Chroma T3 +1 attempt.
+  "Respira Effect" = `extra_exp_yunqi`.
+- Incarnation reading (2026-07-15, exact, resolves the pending cross-check):
+  common non-crit value **8,173** with **16,3xx** crit procs observed in the
+  same session. The earlier "low 18000s"/"22.2k sounds more correct" recall
+  was wrong — a caution against recall-based confirmation. The ~×2 procs are
+  consistent with the client crit table's ×1.8 *expected* value being the
+  mean of a distribution that includes ×2 rolls. OPEN: whether the on-screen
+  base already includes the +28% technique books (if so, unbuffed base is
+  ~6,385) — needs a reading with a book newly toggled to compare.
+- Guide corroboration: "do respira for Incarnation before breaking through,
+  these will reset" (2026 community guide) — value is keyed to current Stage.
+
+Engine note: no derivable formula — the Respira input stays user-entered.
+A per-Stage lookup of measured constants (Nascent 4,041 / Incarnation 8,173)
+could pre-fill the field as a suggestion once more Stages are recorded.

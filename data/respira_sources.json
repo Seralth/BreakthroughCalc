@@ -46,5 +46,101 @@
   "kind": "pill_attempt",
   "value": 1,
   "note": "+1 daily PILL attempt at Tier 12 - raise the Daily pill limit input, not Respira (screenshot-verified 2026-07-15)."
+ },
+ {
+  "name": "Energy Unification (technique book)",
+  "kind": "exp_pct",
+  "value": 1,
+  "note": "Respira Effect +1% on activation. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Cosmic Power (technique book)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Cosmic Power (technique book)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "Respira Effect +3%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Golden Core (technique book)",
+  "kind": "exp_pct",
+  "value": 1,
+  "note": "Respira Effect +1%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Astrology (technique book)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "Respira Effect +3%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Taiyin Meridian (technique book)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "Respira Effect +3%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Yin's Grasp (technique book)",
+  "kind": "exp_pct",
+  "value": 5,
+  "note": "Respira Effect +5%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Floral Essence (technique book)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "Respira Effect +3%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Purify & Cleanse (technique book)",
+  "kind": "exp_pct",
+  "value": 4,
+  "note": "Respira Effect +4% on activation; also Complete-all-Respira-instantly QoL. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Purify & Cleanse (technique book, Tier 9)",
+  "kind": "exp_pct",
+  "value": 7,
+  "note": "Additional Respira Effect +7% unlocked at Tier 9. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Purify & Cleanse (technique book)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Great Yang Manual (technique book)",
+  "kind": "exp_pct",
+  "value": 5,
+  "note": "Respira Effect +5%. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Lion's Roar (technique book)",
+  "kind": "exp_pct",
+  "value": 1,
+  "note": "Respira Effect +1% on learning (R6, needs Blazelion pet to learn). Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Cauldron Refinement (R8 book, Tier 3)",
+  "kind": "exp_pct",
+  "value": 3,
+  "note": "Respira Effect +3% at Tier 3. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Moon Meru (R8 book, Tier 12)",
+  "kind": "exp_pct",
+  "value": 10,
+  "note": "Respira Effect +10% at Tier 12. Screenshot-verified 2026-07-15 (Incarnation char)."
+ },
+ {
+  "name": "Chroma (R8 book, Tier 3)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt at Tier 3. Screenshot-verified 2026-07-15 (Incarnation char)."
  }
 ]
