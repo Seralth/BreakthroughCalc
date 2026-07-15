@@ -78,6 +78,31 @@ class CallSiteCoverage(unittest.TestCase):
                                  "whitelisted string IS translated — remove it")
 
 
+class LabelMapCoverage(unittest.TestCase):
+    """Display strings routed through labels.LabelMap reach tr() as
+    NON-literal arguments, so the AST scan above cannot see them — cover the
+    label tables explicitly (plus the engine data keys they fall back to)."""
+
+    def test_label_display_strings_are_translated(self):
+        from breakthrough_calc import labels
+        # Values displayed via disp(): mapped display names, plus raw keys
+        # that fall through .get(key, key) for stages without a mapping.
+        from breakthrough_calc.engine import Engine
+        e = Engine()
+        display_strings = set(labels.STAGE_LABELS.values()) \
+            | set(labels.PHASE_LABELS.values()) \
+            | set(labels.VASE_INPUT_LABELS.values()) \
+            | {s for s in e.stages() if s not in labels.STAGE_LABELS} \
+            | set(e.data["rarity_names"]) | {"None"}
+        untranslated_ok = {"N/A"}  # displayed as-is in every language
+        missing = {}
+        for lang in NON_EN_LANGS:
+            for s in sorted(display_strings - untranslated_ok):
+                if s not in i18n.TRANSLATIONS[lang]:
+                    missing.setdefault(s, []).append(lang)
+        self.assertFalse(missing, f"label display strings untranslated: {missing}")
+
+
 class RoundTrip(unittest.TestCase):
     """Display-string -> English reverse mapping for values that persist to
     settings (combo items go through i18n.reverse on save/load)."""

@@ -69,8 +69,17 @@ void main() {
         if (!_close(ev.toDouble(), (gv as num).toDouble())) {
           diffs.add('$k: py=$ev dart=$gv');
         }
+      } else {
+        // null / object / anything the branches above don't handle: loud
+        // failure — a silently uncompared field is fake coverage.
+        diffs.add('$k: uncomparable expected type ${ev.runtimeType} (py=$ev)');
       }
     });
+    for (final k in got.keys) {
+      if (!exp.containsKey(k)) {
+        diffs.add('$k: present in Dart got-map but missing from expected.json');
+      }
+    }
     if (diffs.isEmpty) {
       print('scenario $i: OK');
     } else {
