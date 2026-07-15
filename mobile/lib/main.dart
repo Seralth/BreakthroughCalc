@@ -15,7 +15,7 @@ import 'update_check.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.12';
+const appVersion = '2.13';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -192,11 +192,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     inp.grade = engine.gradesFor(inp.stage, inp.phase).first;
     inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
     _restoreInputs();
-    _abode = inp.absorptionRatio > 0 ? inp.cultiSpeed / inp.absorptionRatio : 0;
-    _speedCtrl.text = _fmtNum(inp.cultiSpeed);
-    _abodeCtrl.text = _fmtNum(_abode);
-    _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
-    _respiraCtrl.text = _fmtNum(inp.respiraPerDay);
+    _syncControllers();
     _recalc();
     if (!kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates());
@@ -364,33 +360,117 @@ class _CalculatorPageState extends State<CalculatorPage>
     final raw = widget.prefs.getString('inputs_v1');
     if (raw == null) return;
     try {
-      final m = jsonDecode(raw) as Map<String, dynamic>;
-      final restored = Inputs.fromMap(m);
-      // Sanity-check the cascading dropdowns against the engine's data.
-      if (!engine.stages().contains(restored.stage)) return;
-      if (!engine.phasesFor(restored.stage).contains(restored.phase)) {
-        restored.phase = engine.phasesFor(restored.stage).first;
-      }
-      if (!engine.gradesFor(restored.stage, restored.phase).contains(restored.grade)) {
-        restored.grade = engine.gradesFor(restored.stage, restored.phase).first;
-      }
-      inp = restored;
-      _peSources
-        ..clear()
-        ..addAll([
-          for (final s in (m['pe_sources'] as List? ?? []))
-            [(s as List)[0] as String, (s[1] as num).toDouble()]
-        ]);
-      _respiraSources
-        ..clear()
-        ..addAll((m['respira_sources'] as List? ?? []).cast<String>());
+      _applyInputsMap(jsonDecode(raw) as Map<String, dynamic>);
     } catch (_) {
       // Corrupt saved state — keep defaults.
     }
   }
 
-  void _saveInputs() {
-    widget.prefs.setString('inputs_v1', jsonEncode({
+  bool _applyInputsMap(Map<String, dynamic> m) {
+    final restored = Inputs.fromMap(m);
+    // Sanity-check the cascading dropdowns against the engine's data.
+    if (!engine.stages().contains(restored.stage)) return false;
+    if (!engine.phasesFor(restored.stage).contains(restored.phase)) {
+      restored.phase = engine.phasesFor(restored.stage).first;
+    }
+    if (!engine.gradesFor(restored.stage, restored.phase).contains(restored.grade)) {
+      restored.grade = engine.gradesFor(restored.stage, restored.phase).first;
+    }
+    inp = restored;
+    _peSources
+      ..clear()
+      ..addAll([
+        for (final s in (m['pe_sources'] as List? ?? []))
+          [(s as List)[0] as String, (s[1] as num).toDouble()]
+      ]);
+    _respiraSources
+      ..clear()
+      ..addAll((m['respira_sources'] as List? ?? []).cast<String>());
+    return true;
+  }
+
+  void _syncControllers() {
+    _abode = inp.absorptionRatio > 0 ? inp.cultiSpeed / inp.absorptionRatio : 0;
+    _speedCtrl.text = _fmtNum(inp.cultiSpeed);
+    _abodeCtrl.text = _fmtNum(_abode);
+    _absorbCtrl.text = _fmtNum(inp.absorptionRatio * 100);
+    _respiraCtrl.text = _fmtNum(inp.respiraPerDay);
+  }
+
+  // ---- shareable build string -------------------------------------------
+  // Compact copy-paste export of every input, so users can share their
+  // setup for troubleshooting. Format: 'OMV1.' + base64url(JSON of the
+  // same map that is persisted to prefs).
+  String _exportString() =>
+      'OMV1.${base64UrlEncode(utf8.encode(jsonEncode(_inputsMap())))}';
+
+  bool _importString(String s) {
+    var body = s.trim();
+    if (body.startsWith('OMV1.')) body = body.substring(5);
+    try {
+      final m = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(body))))
+          as Map<String, dynamic>;
+      if (!_applyInputsMap(m)) return false;
+      _syncControllers();
+      _recalc();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _showShareDialog() {
+    final importCtrl = TextEditingController();
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(tr('Share build')),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(tr(
+              'Export copies a text code of ALL your inputs to the clipboard '
+              '— send it to someone and they can import it to see exactly '
+              'what you entered.')),
+          const SizedBox(height: 12),
+          TextField(
+            controller: importCtrl,
+            decoration: InputDecoration(
+              labelText: tr('Paste a build code to import'),
+              border: const OutlineInputBorder(),
+            ),
+            maxLines: 3,
+            minLines: 1,
+          ),
+        ]),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(tr('Cancel')),
+          ),
+          TextButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: _exportString()));
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(tr('Build code copied'))));
+            },
+            child: Text(tr('Export')),
+          ),
+          FilledButton(
+            onPressed: () {
+              final ok = _importString(importCtrl.text);
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      ok ? tr('Build imported') : tr('Invalid build code'))));
+            },
+            child: Text(tr('Import')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, dynamic> _inputsMap() => {
       'stage': inp.stage,
       'phase': inp.phase,
       'grade': inp.grade,
@@ -441,7 +521,10 @@ class _CalculatorPageState extends State<CalculatorPage>
       'extractor_rarity': inp.extractorRarity,
       'pe_sources': _peSources,
       'respira_sources': _respiraSources.toList(),
-    }));
+    };
+
+  void _saveInputs() {
+    widget.prefs.setString('inputs_v1', jsonEncode(_inputsMap()));
   }
 
   void _recalc() {
@@ -485,6 +568,11 @@ class _CalculatorPageState extends State<CalculatorPage>
                 for (final e in langs.entries)
                   PopupMenuItem(value: e.key, child: Text(e.value)),
               ],
+            ),
+            IconButton(
+              icon: const Icon(Icons.ios_share),
+              tooltip: tr('Share build'),
+              onPressed: _showShareDialog,
             ),
             if (kIsWeb)
               IconButton(
