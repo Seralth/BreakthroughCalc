@@ -76,3 +76,32 @@ have NO pill-effect lines — their absence from data/pill_effect_sources.json
 is complete coverage, not missing data. Books' Base Abode Aura bonuses are
 deliberately NOT cataloged (they're already inside the player's entered
 Abode Aura reading; adding them would double-count).
+
+## Respira base XP is FIXED per major Stage (verified 2026-07-15)
+
+Community "Respira has a fixed value" claims are correct, with a precise
+meaning: the base cultivation XP per Respira attempt is one constant for the
+entire major Stage — it does not scale with phase or grade.
+
+- **Verified (Seralth in-game readings, 2026-07-15, no Respira EXP % buffs,
+  overcapped)**: Nascent Soul G6 and Nascent MIDDLE G7 both show **4041** XP
+  per attempt. Same value across phases/grades ⇒ fixed per Stage.
+- **Client dump sweep (verified)**: no base-XP table or constant exists
+  client-side. Respira's internal key is `yunqi` (吐纳). The client ships only:
+  crit table `yunqi_crit` = weights/multipliers {600,×1},{300,×2},{80,×5},
+  {20,×10} with expected multiplier `yunqi_exp_crit = 1.8`; round size
+  `yunqi_round = {20, 2}`; per-level daily attempt caps (`yunqi_limit`, 2 at
+  lv1 → 10 default, std_level_calc.lua) plus `extra_times_yunqi` buffs;
+  and percent-scale modifiers `extra_base_yunqi`/`extra_exp_yunqi`/
+  `extra_crit_yunqi` (cfg_us_attrib.lua / cfg_us_affix.lua). The base amount
+  is server-authoritative (consistent with all balance tables).
+- **PLAUSIBLE INFERENCE (single-stage evidence, NOT yet verified)**: the
+  per-Stage constant equals **2.2% of the Stage's EARLY G1 grade_xp**
+  (Nascent: 183,679 × 0.022 = 4,040.9 → 4041; match to 0.002%).
+  Predictions to confirm/refute with one reading at any other Stage:
+  Foundation 253, Virtuoso 867, Incarnation 17,372, Voidbreak 22,445.
+- Guide corroboration: "do respira for Incarnation before breaking through,
+  these will reset" (2026 community guide) — value is keyed to current Stage.
+
+Engine note: once the 2.2% rule is confirmed at a second Stage, the Respira
+input could be auto-filled per Stage instead of user-entered.
