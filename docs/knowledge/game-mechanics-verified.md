@@ -4,7 +4,21 @@
 Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle G1, Mortal World Epic extractor, tracks Culti 20 / Quality 15 / Gush 14). Engine implements these since the model-overhaul commit after v2.6.1:
 
 - **Pills/Respira are flat daily XP** (pill panel shows absolute XP and % of grade XP; 112.7K/1,412,392 = the displayed 7.98%). Modeled per-row: rate = speed(row)×(1+gem)/8s + daily_xp/86400.
-- **Aura Gem** = claimable storage accruing gem% × cultivation speed (16/20/24% = Rare/Epic/Legendary, 18–32h cap per claim). Multiplies cultivation speed only, NOT pills/Respira. Donk's sheet's time/(1+gem)/(1+pills) was wrong on both counts.
+- **Aura Gem** = claimable storage accruing gem% × cultivation speed (16/20/24% = Rare/Epic/Legendary, 18–32h cap per claim). Multiplies cultivation speed only, NOT pills/Respira. Donk's sheet's time/(1+gem)/(1+pills) was wrong on both counts. NUMERIC PIN (Seralth 2026-07-15): at culti speed 103.012/8s (=1.1125M/day), Legendary gem storage caps at exactly 356.01k = 24% × speed × 32h — confirms both the 24% rate and the 32h cap to the point. The continuous-income approximation is exact iff claimed ≥ every 32h. Claimed XP is a transferable flat stream: PLAYER-CONFIRMED (Seralth
+  2026-07-15) the gem accrues off the HIGHEST path's speed regardless of
+  settings, and the claim lands on whichever path is set as "cultivating" —
+  swap-to-aux → claim → swap-back transfers the full amount at zero loss.
+- **Passive aura generation follows the "cultivating" toggle** (Seralth
+  2026-07-15): whichever path is set as cultivating receives the passive
+  aura income. Absorption ratio keys off the HIGHEST stage (dump: "Higher
+  Stage Phase grants higher Absorption Ratio" 最高境界等级越高), so
+  cultivating a lower aux path still absorbs at the main stage's band —
+  the full main-rate stream is transferable 1:1 to the aux.
+- **Pills redeem to the "cultivating" path too** (Seralth 2026-07-15):
+  swap to the target path, redeem, swap back — passive generation then
+  resumes on the chosen path. The daily pill attempt limit is SHARED
+  across paths (Seralth-confirmed), so diverted pills cost the main path
+  their XP 1:1; the swap itself loses nothing.
 - **Gush**: data `gush_chance` = RANDOM trigger rate; the ×6 pity is a **SOFT pity** — any gush (random or guaranteed) resets the "guaranteed in x6" counter (observed 2026-07-10: random gush on 5th fruit reset counter to 6; issue #9). So a gush is guaranteed within 6 of the LAST gush, not every literal 6th. Engine models it as a 6-state Markov moment recursion (exact mean+variance). `gush_xp` is the total multiplier (1.5 base = "150%", 2.06 at Gush lvl 14 = "+206%"), keyed by the **Gush track level** (Donk keyed it by Culti level — wrong).
 - **Orb quality**: residual-fill model confirmed exactly (Quality 15 + Epic → Blue 70/Purple 30). The +20% orb EXP boosts are gated on **extractor rarity rank** (Uncommon rank→Uncommon orbs, cumulative to Mythic; no Common line), not culti-level thresholds.
 - **culti_xp is 4%/level** (80% at Lv20, "+4%" per level shown in-game). The data table originally had 2%/level — fixed ×2.
@@ -41,10 +55,13 @@ applied after the (still manual) breakthrough.
     WN EARLY total = **404%** exactly.
   - The double match also independently validates the Incarnation–Wholeness
     grade_xp table.
-- Accrual rate while overcapped: pending sources; assumed normal current-row
-  rate (speed×(1+gem) + flat pills/Respira) — you stay parked on the capped
-  row, so NO future-row speed scaling applies. A prestock projection must
-  divide the whole XP distance by the CURRENT rate (the normal target
+- Accrual rate while overcapped: PLAYER-CONFIRMED (Seralth 2026-07-15) —
+  same as the normal capped-row rate, EXCEPT the Strive Bonus does not apply
+  to overcapped accrual. (Consistent with the engine note that strive
+  cancels out of time projections anyway; for a rank-No.1 player strive is 0
+  and the rates are literally identical.) You stay parked on the capped row,
+  so NO future-row speed scaling applies. A prestock projection must divide
+  the whole XP distance by the CURRENT rate minus strive (the normal target
   projection would be optimistic).
 - Timegate context (2026 guide): Voidbreak gate ≈ day 35–38 of a server;
   Myrimon fruits "lose 50% of their XP" once the next realm's timegate passes —
@@ -61,8 +78,8 @@ applied after the (still manual) breakthrough.
   stocked EXP anecdotally supported ("Middle Voidbreak in one go" videos).
   The 440%/overcap display convention exists nowhere on the indexed web —
   our arithmetic reproduction is the only public cross-check. Accrual rate
-  while overcapped remains UNVERIFIED (assumed normal capped-row rate);
-  verify against the in-game % once capped.
+  while overcapped: player-confirmed same as capped-row rate minus Strive
+  (see above).
 
 ## R8 technique books — pill-effect coverage complete (2026-07-15)
 
@@ -77,6 +94,110 @@ is complete coverage, not missing data. Books' Base Abode Aura bonuses are
 deliberately NOT cataloged (they're already inside the player's entered
 Abode Aura reading; adding them would double-count).
 
+## Stage sub-rank suffixes: (M)/(C)/(P) tracks and "Incarnation Completed" (2026-07-15)
+
+Verified from APK i18n strings (`apk_analysis/i18n_all.json`, en/zh/ru):
+
+- Stage names carry a **track suffix**, they are parallel ladders, not extra
+  ranks on the Magicka ladder:
+  - **(M) = Magicka** (main cultivation) — zh classics: Foundation (M) 筑基,
+    Virtuoso (M) 结丹, Nascent Soul (M) 元婴, Incarnation 化神, Voidbreak (M)
+    返虚, Wholeness 合体, Perfection (M) 大乘, Nirvana (M) 渡劫.
+  - **(C) = Corporia** (body cultivation) — zh: Foundation (C) 锻骨 "forge
+    bone", Incarnation (C) 神力, Voidbreak (C) 破虚, etc. Confirmed by item
+    text: "A Fateum Bag for the Coporia Incarnation Stage" = 'Incarnation (C)
+    Fateum Pack'.
+  - **(P) = Pet** cultivation — zh: Connection (P) 通智 "gain sentience",
+    Virtuoso (P) 妖丹 "demon core", Celestial (P) 仙兽 "immortal beast".
+    NOT "Perfected".
+- **"Incarnation (Perfected)" (live-game wording) = 化神圆满/神力圆满**, in
+  our dump translated 'Incarnation (M) Completed' / 'Incarnation (C)
+  Completed'. It is the ONLY stage with a Completed/圆满 state — the terminal
+  sub-rank after maxing Incarnation (Late) G15 while waiting to ascend to the
+  Immortal World (Voidbreak). No other mortal-world stage has it.
+- Grade ladders per dump (matches data/breakthrough.json): Incarnation Early
+  G1–G8, Middle G1–G9, Late G1–G15.
+- Completed/Perfected is not an extra XP band — breakthrough.json's
+  Incarnation Late G15 row already covers the XP to reach it. Ascension
+  itself is event/quest-gated ("Path to Ascension is not yet unlocked.
+  Unable to ascend."), which the time calculator does not model.
+  UNVERIFIED (server-side): whether cultivation XP keeps accruing/prestocks
+  while sitting in Completed awaiting ascension — same open question as the
+  overcap accrual rate above.
+
+### Ascension Virya blessings tied to Completed/Perfected (2026-07-15, screenshots)
+
+SCREENSHOT-VERIFIED (2026-07-15, ~/Pictures/respira-books-2026-07-15/
+Screenshot_20260715-0333*.png — "Ascension Virya" screen, player at
+Incarnation (L) Late G12, blessing ranking No.1 → 6 reward vases). Dump
+strings corroborate (圆满后境界精进可增加福泽奖励; templates '%s Absorption
+Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
+
+- Tier **Completion** (req: "Reach Incarnation (L) Late 100% and break
+  through"): "Remove Realm Restrictions for Taking Cultivation Pills";
+  "Activate the Cultivation Pill Auto-Transmogrification Privilege";
+  Blessing Rewards +1; privilege "First Esotability". The restriction
+  removal is what lets higher-stage Cultivation Pills be fed to the LOWER
+  secondary path to catch it up (community-explained use).
+- Tier **Perfection (C)** (reqs: primary at Incarnation (L) Completion;
+  secondary at Nascent Soul (L) Late; clear Outer Realm Mighty Monster
+  Amethyst Fiend in Myrimon Wonder): "Incarnation (L) Aura Absorption Ratio
+  +20%"; Blessing Rewards +3.
+- Tier **Perfect ...** (gold; reqs: secondary at Incarnation (L) Middle;
+  clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
+  Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
+  +20%"; Blessing Rewards +5; "Second Esotability".
+- COMMUNITY MODEL of the stacking (TWO independent player confirmations via
+  Seralth 2026-07-15 — an older player self-rated ~90% sure, plus a second
+  player confirming +60% total while in Incarnation, dropping to +40% after
+  Voidbreak Middle removes the conditional +20%; supersedes the narrower
+  window reading where they conflict): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
+  Absorption Ratio" add flat to +40%, and that +40% PERSISTS past
+  Incarnation (it is named for the tier, not windowed to the stage). The
+  "Before Voidbreak (L) Middle +20%" is the conditional one on top: +60%
+  total until passing Voidbreak Middle, then back to +40% permanently.
+  Meta consequence: players park in Voidbreak (Early) — +60% plus VB's
+  higher base band (0.50 vs Incarnation Late 0.40) — and prestock until
+  they can clear Middle into Late in one push.
+- The "Double" label between the tier circles is NOT a tier (unclickable,
+  per Seralth). PLAUSIBLE INFERENCE: it is the active-Virya status badge
+  (dump: 'Double' = 双; template ">Within {1} hours, receive {3}x {2}
+  Cosmoapsis gains.") — i.e. the Ascension Virya session grants ×2
+  cultivation gains per Cosmoapsis while its countdown (02:26:31 in the
+  screenshot) runs. Verify by comparing the /Cosmoapsis speed readout
+  during vs after the timer.
+- Blessing tiers/bonuses are per-path — the screen and status bar use path
+  suffix (L) (player's primary), confirming path letters beyond M/C/P
+  (cf. elixir notes' L/G/M/C/S).
+- Cross-check: the screen's Late G12 XP denominator 5,623,090 exactly
+  matches data/breakthrough.json Incarnation Late G12 grade_xp — independent
+  confirmation of our XP table.
+- Dump also has a rank→reward table (Blessing Ranking 1→6, 2→5, 3→4,
+  4–10→3, 11+→2 — matches No.1 ⇒ 6 vases on screen) and post-ascension
+  privileges granting Absorption Ratio +200% plus high-stage pill access.
+- Official absorption formula (dump): Cultivation Speed = Abode Aura ×
+  Absorption Ratio (× Heavenly Power Bonus); Absorption Ratio = Base Stage
+  Absorption Ratio × (1 + Strive Bonus) + Virya Absorption Ratio.
+
+**Calculator impact — REVISED: this CAN affect the time math.** The engine's
+projection cancels the entered absorption ratio (speed(row) = culti_speed ×
+low_row / low_cur, engine.py) — valid only when bonuses scale all rows
+uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
+(Late)") breaks the cancellation: windowed rows are faster than the pure
+base-band progression predicts. Same class of issue for the +200%
+post-ascension privilege and Virya (both additive terms, per the formula).
+Per the community model above, the effective bonus is +40% persistent
+(+60% before Voidbreak Middle) — and since it persists past Incarnation,
+it is a permanent absorption modifier, not just a window. Separately, the pills-on-secondary-path use means a
+secondary-path projection would see BOTH a bigger flat daily-XP term (better
+pills) and the windowed absorption bonus. ADDITIVE per community consensus (third independent player confirmation
+via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
+absorption ratio (like Virya in the official formula), not ×1.2. Still
+pending one in-game absorption-tooltip reading with a tier active for
+screenshot-grade verification (a 40%-band player with +20% should read
+60%, not 48%). Until then the calc under-estimates
+speed (over-estimates time) for accounts with these blessings on
+pre-Voidbreak rows.
 ## Respira base XP is FIXED per major Stage (verified 2026-07-15)
 
 Community "Respira has a fixed value" claims are correct, with a precise
