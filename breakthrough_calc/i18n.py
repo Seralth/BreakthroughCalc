@@ -298,6 +298,35 @@ TRANSLATIONS = {
   "Absorption ratio must exceed the blessing bonus.":
       "Коэффициент поглощения должен превышать бонус благословения.",
   "Auto": "Авто",
+  "Sources": "Источники",
+  "auto": "авто",
+  "shelf": "полка",
+  "Click to let the shelf fill this field.":
+      "Нажмите, чтобы полка заполняла это поле.",
+  "Shelf-managed. Click to edit manually.":
+      "Заполняется полкой. Нажмите, чтобы редактировать вручную.",
+  "Some owned sources have unrecorded amounts.":
+      "У некоторых источников величина ещё не записана.",
+  "Record what you own once; fields with a shelf chip can then fill "
+  "themselves. Entries marked * carry amounts that are not "
+  "exactly established.":
+      "Отметьте один раз, чем вы владеете; поля с меткой полки смогут заполняться сами. "
+      "Записи со * содержат не до конца установленные величины.",
+  "Base values (before sources)": "Базовые значения (без источников)",
+  "Daily Respira attempts before any owned source. The game "
+  "grants 10 by default.":
+      "Дневные попытки дыхания ци без учёта источников. По умолчанию игра даёт 10.",
+  "Daily pill limit before any owned source.":
+      "Дневной лимит пилюль без учёта источников.",
+  "Respira attempts / day": "Попытки дыхания ци / день",
+  "Daily pill limit": "Дневной лимит пилюль",
+  "Tier ": "Уровень ",
+  "Maxed": "Максимум",
+  "Amounts not exactly established.": "Величины не до конца установлены.",
+  "Technique books": "Книги техник",
+  "Immortal friends": "Бессмертные друзья",
+  "Ascension blessings": "Благословения вознесения",
+  "Curios": "Диковинки",
   "Respira Effect books": "Книги эффекта дыхания ци",
   "Fill Base EXP from your Stage's Respira base (measured for "
   "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
@@ -634,6 +663,35 @@ TRANSLATIONS = {
       "Die Absorptionsrate muss den Segensbonus übersteigen.",
   "Auto": "Auto",
   "Respira Effect books": "Atmungseffekt-Bücher",
+  "Sources": "Quellen",
+  "auto": "auto",
+  "shelf": "Regal",
+  "Click to let the shelf fill this field.":
+      "Klicken, damit das Regal dieses Feld füllt.",
+  "Shelf-managed. Click to edit manually.":
+      "Vom Regal verwaltet. Klicken, um manuell zu bearbeiten.",
+  "Some owned sources have unrecorded amounts.":
+      "Bei einigen Quellen ist die Höhe noch nicht erfasst.",
+  "Record what you own once; fields with a shelf chip can then fill "
+  "themselves. Entries marked * carry amounts that are not "
+  "exactly established.":
+      "Einmal eintragen, was Sie besitzen; Felder mit Regal-Chip füllen sich dann selbst. "
+      "Mit * markierte Einträge haben nicht exakt belegte Werte.",
+  "Base values (before sources)": "Basiswerte (vor Quellen)",
+  "Daily Respira attempts before any owned source. The game "
+  "grants 10 by default.":
+      "Tägliche Atmungsversuche ohne Quellen. Das Spiel gewährt standardmäßig 10.",
+  "Daily pill limit before any owned source.":
+      "Tägliches Pillenlimit ohne Quellen.",
+  "Respira attempts / day": "Atmungsversuche / Tag",
+  "Daily pill limit": "Tägliches Pillenlimit",
+  "Tier ": "Stufe ",
+  "Maxed": "Maximiert",
+  "Amounts not exactly established.": "Werte nicht exakt belegt.",
+  "Technique books": "Technikbücher",
+  "Immortal friends": "Unsterbliche Freunde",
+  "Ascension blessings": "Aufstiegssegen",
+  "Curios": "Kuriositäten",
   "Fill Base EXP from your Stage's Respira base (measured for "
   "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
   "elsewhere) times (1 + Respira Effect books %).":
@@ -973,6 +1031,35 @@ TRANSLATIONS = {
       "El índice de absorción debe superar el bono de la bendición.",
   "Auto": "Auto",
   "Respira Effect books": "Libros de efecto de Inhala",
+  "Sources": "Fuentes",
+  "auto": "auto",
+  "shelf": "estante",
+  "Click to let the shelf fill this field.":
+      "Haz clic para que el estante rellene este campo.",
+  "Shelf-managed. Click to edit manually.":
+      "Gestionado por el estante. Haz clic para editarlo a mano.",
+  "Some owned sources have unrecorded amounts.":
+      "Algunas fuentes que posees tienen cantidades sin registrar.",
+  "Record what you own once; fields with a shelf chip can then fill "
+  "themselves. Entries marked * carry amounts that are not "
+  "exactly established.":
+      "Registra una vez lo que posees; los campos con chip del estante podrán rellenarse solos. "
+      "Las entradas con * tienen cantidades no establecidas con exactitud.",
+  "Base values (before sources)": "Valores base (antes de fuentes)",
+  "Daily Respira attempts before any owned source. The game "
+  "grants 10 by default.":
+      "Intentos diarios de Inhala sin fuentes. El juego concede 10 por defecto.",
+  "Daily pill limit before any owned source.":
+      "Límite diario de píldoras sin fuentes.",
+  "Respira attempts / day": "Intentos de Inhala / día",
+  "Daily pill limit": "Límite diario de píldoras",
+  "Tier ": "Nivel ",
+  "Maxed": "Al máximo",
+  "Amounts not exactly established.": "Cantidades no establecidas con exactitud.",
+  "Technique books": "Libros de técnica",
+  "Immortal friends": "Amigos inmortales",
+  "Ascension blessings": "Bendiciones de ascensión",
+  "Curios": "Curiosidades",
   "Fill Base EXP from your Stage's Respira base (measured for "
   "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
   "elsewhere) times (1 + Respira Effect books %).":
@@ -1280,6 +1367,35 @@ TRANSLATIONS = {
   "Absorption ratio must exceed the blessing bonus.":
       "吸收率必须高于福泽加成。",
   "Auto": "自动",
+  "Sources": "来源",
+  "auto": "自动",
+  "shelf": "书架",
+  "Click to let the shelf fill this field.":
+      "点击后由书架自动填写此栏。",
+  "Shelf-managed. Click to edit manually.":
+      "由书架管理。点击改为手动编辑。",
+  "Some owned sources have unrecorded amounts.":
+      "部分已拥有的来源数值尚未记录。",
+  "Record what you own once; fields with a shelf chip can then fill "
+  "themselves. Entries marked * carry amounts that are not "
+  "exactly established.":
+      "只需登记一次你拥有的内容；带书架标记的输入栏即可自动填写。"
+      "带 * 的条目数值尚未完全确定。",
+  "Base values (before sources)": "基础值（不含来源）",
+  "Daily Respira attempts before any owned source. The game "
+  "grants 10 by default.":
+      "不含任何来源的每日吐纳次数。游戏默认给予 10 次。",
+  "Daily pill limit before any owned source.":
+      "不含任何来源的每日丹药上限。",
+  "Respira attempts / day": "每日吐纳次数",
+  "Daily pill limit": "每日丹药上限",
+  "Tier ": "第",
+  "Maxed": "已满级",
+  "Amounts not exactly established.": "数值尚未完全确定。",
+  "Technique books": "功法典籍",
+  "Immortal friends": "仙友",
+  "Ascension blessings": "飞升福泽",
+  "Curios": "珍宝",
   "Respira Effect books": "吐纳效果典籍",
   "Fill Base EXP from your Stage's Respira base (measured for "
   "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "

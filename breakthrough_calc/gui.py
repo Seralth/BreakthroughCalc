@@ -30,6 +30,8 @@ from .labels import (
     vase_input_disp,
 )
 from .profiles import ProfileStore, settings_path
+from .shelf import derive as shelf_derive, load_sources, migrate_legacy
+from .shelf_ui import ProvenanceChip, ShelfPage
 from .update_check import UpdateChecker
 from .widgets import (
     DonateDialog, PillEffectRows, WheelGuard, clear_accents, link_enabled,
@@ -75,6 +77,8 @@ class MainWindow(QMainWindow):
         # language-switch full rebuild; _doc_history is cleared by _build_ui
         # together with the doc widgets it indexes.
         self._respira_checked = set()
+        self._shelf_catalog = load_sources()
+        self._shelf = {"owned": {}, "bases": {}, "auto": []}
         self._doc_history = []
         store = self._store.read()
         self._theme = store.get("theme", "Seralth")
@@ -97,6 +101,7 @@ class MainWindow(QMainWindow):
     def _build_ui(self):
         self.setWindowTitle(tr("Breakthrough Calculator"))
         clear_accents()  # full rebuild: drop stale accent-label registrations
+        self._chips = {}
         central = QWidget()
         root = QVBoxLayout(central)
         root.addLayout(self._build_toolbar())
@@ -133,6 +138,7 @@ class MainWindow(QMainWindow):
 
         tabs = QTabWidget()
         tabs.addTab(central, tr("Calculator"))
+        tabs.addTab(self._build_shelf_tab(), tr("Sources"))
         self._tabs = tabs
         # doc history points into the doc tabs rebuilt below — start it fresh
         self._doc_history.clear()
@@ -178,8 +184,10 @@ class MainWindow(QMainWindow):
         self.bless_pp.setDecimals(1); self.bless_pp.setSuffix(" %")
         self.bless_window = QDoubleSpinBox(); self.bless_window.setRange(0, 1000)
         self.bless_window.setDecimals(1); self.bless_window.setSuffix(" %")
-        f.addRow(tr("Ascension blessing"), self.bless_pp)
-        f.addRow(tr("Blessing before Voidbreak Middle"), self.bless_window)
+        f.addRow(tr("Ascension blessing"),
+                 self._with_chip(self.bless_pp, "bless_pp"))
+        f.addRow(tr("Blessing before Voidbreak Middle"),
+                 self._with_chip(self.bless_window, "bless_window"))
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         style_accent(self.array_out, "muted", self._acc)
         f.addRow("", self.array_out)
@@ -217,7 +225,8 @@ class MainWindow(QMainWindow):
         self.pe_rows.changed.connect(self.recalc)
         f.addRow(tr("Cultivation pill effect"), self.pe_rows)
 
-        f.addRow(tr("Daily pill attempts (shared)"), self.pill_limit)
+        f.addRow(tr("Daily pill attempts (shared)"),
+                 self._with_chip(self.pill_limit, "pill_limit"))
         f.addRow(tr("Legendary (Gold) used / day"), self.gold_day)
         f.addRow(tr("Epic (Purple) used / day"), self.purple_day)
         f.addRow(tr("Rare (Blue) used / day"), self.blue_day)
@@ -301,9 +310,11 @@ class MainWindow(QMainWindow):
                 on_sync=self._sync_respira_menu,
                 on_triggered=self._toggle_respira_source)
             rp_h.addWidget(rsp_btn)
+            rp_h.addWidget(self._shelf_chip("respira_per_day"))
             rf.addRow(tr("Attempts / day"), rp_wrap)
         else:
-            rf.addRow(tr("Attempts / day"), self.respira_per_day)
+            rf.addRow(tr("Attempts / day"),
+                      self._with_chip(self.respira_per_day, "respira_per_day"))
         rf.addRow(tr("Extra attempts today"), self.respira_event)
         self.respira_books = QDoubleSpinBox(); self.respira_books.setRange(0, 1000)
         self.respira_books.setDecimals(1); self.respira_books.setSuffix(" %")
@@ -317,7 +328,8 @@ class MainWindow(QMainWindow):
         rx_btn.clicked.connect(self._autofill_respira_exp)
         rx_h.addWidget(rx_btn)
         rf.addRow(tr("Base EXP / attempt"), rx_wrap)
-        rf.addRow(tr("Respira Effect books"), self.respira_books)
+        rf.addRow(tr("Respira Effect books"),
+                  self._with_chip(self.respira_books, "respira_books"))
         respira_hint = QLabel(tr(
             "Do a few Respira: most give the same small EXP (the base — enter that); "
             "some give 2×/5×/10× (crits — ignore, handled automatically)."))
@@ -641,10 +653,17 @@ class MainWindow(QMainWindow):
                 vals[spec.key] = w.value()
         vals["pill_sources"] = self.pe_rows.sources()
         vals["respira_sources"] = sorted(self._respira_checked)
+        vals["shelf"] = {"owned": dict(self._shelf.get("owned", {})),
+                         "bases": dict(self._shelf.get("bases", {})),
+                         "auto": list(self._shelf.get("auto", []))}
         return vals
 
     def _apply_state(self, vals: dict):
         prev, self._loading = self._loading, True
+        # Read the shelf BEFORE the defaults merge below injects the (empty)
+        # construction default — a missing key here means a legacy profile
+        # that needs the one-time migration.
+        shelf_state = vals.get("shelf")
         # pill-effect sources (migrate old single "pill_effect_pct" to one row)
         srcs = vals.get("pill_sources")
         if srcs is None and "pill_effect_pct" in vals:
@@ -678,6 +697,43 @@ class MainWindow(QMainWindow):
                     w.setValue(v)
             except (TypeError, ValueError):
                 pass  # tolerate hand-edited settings with wrong value types
+        sh = shelf_state
+        if sh is not None:
+            self._shelf = {"owned": dict(sh.get("owned", {})),
+                           "bases": dict(sh.get("bases", {})),
+                           "auto": list(sh.get("auto", []))}
+        else:
+            # One-time migration: fold the old catalogs' checked entries into
+            # shelf ownership. Matched pill-effect rows become read-only auto
+            # rows (same values, so the total is unchanged); attempt sources
+            # rebase into "base + shelf" with identical field values.
+            owned, _custom, _notes = migrate_legacy(
+                self.pe_rows.sources(), sorted(self._respira_checked),
+                self._shelf_catalog)
+            migrated_pe = {a["name"]
+                           for src in self._shelf_catalog.get("sources", [])
+                           for a in src.get("legacy", [])
+                           if a["catalog"] == "pe" and not a.get("parametric")
+                           and src["id"] in owned}
+            if migrated_pe:
+                self.pe_rows.set_sources(
+                    [[l, v] for l, v in self.pe_rows.sources()
+                     if l not in migrated_pe])
+            self._shelf = {"owned": owned, "bases": {}, "auto": []}
+            d = shelf_derive(self._shelf_catalog, self._shelf)
+            ra = d.get("respira_attempts")
+            pa = d.get("pill_attempts")
+            self._shelf["bases"] = {
+                "respira_attempts": max(0.0, self.respira_per_day.value()
+                                        - (ra.total if ra else 0.0)),
+                "pill_attempts": max(0.0, self.pill_limit.value()
+                                     - (pa.total if pa else 0.0)),
+            }
+            if owned:
+                self._shelf["auto"] = ["pill_limit", "respira_per_day"]
+        self.shelf_page.set_state(self._shelf.get("owned", {}),
+                                  self._shelf.get("bases", {}))
+        self._apply_shelf(recalc=False)
         self._loading = prev
 
     # ---- profiles (widget<->state bridge over profiles.ProfileStore) ------
@@ -909,6 +965,74 @@ class MainWindow(QMainWindow):
             return
         self.respira_exp.setValue(
             round(base * (1 + self.respira_books.value() / 100.0)))
+
+    # ---- Sources Shelf -----------------------------------------------------
+    def _build_shelf_tab(self) -> QWidget:
+        self.shelf_page = ShelfPage(self._shelf_catalog)
+        self.shelf_page.set_state(self._shelf.get("owned", {}),
+                                  self._shelf.get("bases", {}))
+        self.shelf_page.changed.connect(self._on_shelf_changed)
+        scroll = QScrollArea(); scroll.setWidgetResizable(True)
+        scroll.setWidget(self.shelf_page)
+        return scroll
+
+    def _shelf_chip(self, field_key: str) -> ProvenanceChip:
+        chip = ProvenanceChip()
+        chip.toggled_auto.connect(
+            lambda auto, k=field_key: self._set_shelf_auto(k, auto))
+        self._chips[field_key] = chip
+        return chip
+
+    def _with_chip(self, widget, field_key: str) -> QWidget:
+        wrap = QWidget(); h = QHBoxLayout(wrap); h.setContentsMargins(0, 0, 0, 0)
+        h.addWidget(widget, 1)
+        h.addWidget(self._shelf_chip(field_key))
+        return wrap
+
+    def _on_shelf_changed(self, *_):
+        self._shelf["owned"] = self.shelf_page.owned()
+        self._shelf["bases"] = self.shelf_page.bases()
+        self._apply_shelf()
+
+    def _set_shelf_auto(self, field_key: str, auto: bool):
+        cur = set(self._shelf.get("auto", []))
+        (cur.add if auto else cur.discard)(field_key)
+        self._shelf["auto"] = sorted(cur)
+        self._apply_shelf()
+
+    def _apply_shelf(self, recalc: bool = True):
+        """Push shelf-derived values into the input widgets: auto fields are
+        written and locked; manual fields keep the user's value while their
+        chip previews the shelf total. Pill effect renders as read-only auto
+        rows inside the existing rows widget."""
+        derived = shelf_derive(self._shelf_catalog, self._shelf)
+        targets = self._shelf_catalog.get("targets", {})
+        auto = set(self._shelf.get("auto", []))
+        bases = self._shelf.get("bases", {})
+        prev, self._loading = self._loading, True
+        for spec in FIELDS:
+            t = spec.shelf_target
+            if t is None:
+                continue
+            d = derived.get(t)
+            tinfo = targets.get(t, {})
+            total = d.total if d else 0.0
+            if tinfo.get("unit") == "fraction_pp" and spec.scale:
+                total *= spec.scale
+            base = bases.get(t, 0.0) if tinfo.get("base") == "user" else 0.0
+            w = getattr(self, spec.widget_attr)
+            is_auto = spec.key in auto
+            if is_auto:
+                w.setValue(base + total)
+            w.setReadOnly(is_auto)
+            chip = self._chips.get(spec.key)
+            if chip is not None:
+                chip.update_view(d, is_auto, display_total=total)
+        pe = derived.get("pill_effect")
+        self.pe_rows.set_auto_rows(pe.contributions if pe else ())
+        self._loading = prev
+        if recalc and not self._loading:
+            self.recalc()
 
     def _update_absorb_base(self, res):
         """Show the selected Grade's base Absorption Ratio, and warn on under-entry."""
