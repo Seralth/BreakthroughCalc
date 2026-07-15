@@ -76,3 +76,35 @@ have NO pill-effect lines — their absence from data/pill_effect_sources.json
 is complete coverage, not missing data. Books' Base Abode Aura bonuses are
 deliberately NOT cataloged (they're already inside the player's entered
 Abode Aura reading; adding them would double-count).
+
+## Stage sub-rank suffixes: (M)/(C)/(P) tracks and "Incarnation Completed" (2026-07-15)
+
+Verified from APK i18n strings (`apk_analysis/i18n_all.json`, en/zh/ru):
+
+- Stage names carry a **track suffix**, they are parallel ladders, not extra
+  ranks on the Magicka ladder:
+  - **(M) = Magicka** (main cultivation) — zh classics: Foundation (M) 筑基,
+    Virtuoso (M) 结丹, Nascent Soul (M) 元婴, Incarnation 化神, Voidbreak (M)
+    返虚, Wholeness 合体, Perfection (M) 大乘, Nirvana (M) 渡劫.
+  - **(C) = Corporia** (body cultivation) — zh: Foundation (C) 锻骨 "forge
+    bone", Incarnation (C) 神力, Voidbreak (C) 破虚, etc. Confirmed by item
+    text: "A Fateum Bag for the Coporia Incarnation Stage" = 'Incarnation (C)
+    Fateum Pack'.
+  - **(P) = Pet** cultivation — zh: Connection (P) 通智 "gain sentience",
+    Virtuoso (P) 妖丹 "demon core", Celestial (P) 仙兽 "immortal beast".
+    NOT "Perfected".
+- **"Incarnation (Perfected)" (live-game wording) = 化神圆满/神力圆满**, in
+  our dump translated 'Incarnation (M) Completed' / 'Incarnation (C)
+  Completed'. It is the ONLY stage with a Completed/圆满 state — the terminal
+  sub-rank after maxing Incarnation (Late) G15 while waiting to ascend to the
+  Immortal World (Voidbreak). No other mortal-world stage has it.
+- Grade ladders per dump (matches data/breakthrough.json): Incarnation Early
+  G1–G8, Middle G1–G9, Late G1–G15.
+- **Calculator impact: none on the math.** Completed/Perfected is a
+  gate/display state, not an extra XP band — breakthrough.json's Incarnation
+  Late G15 row already covers the XP to reach it. Ascension itself is
+  event/quest-gated ("Path to Ascension is not yet unlocked. Unable to
+  ascend."), which the time calculator deliberately does not model.
+  UNVERIFIED (server-side): whether cultivation XP keeps accruing/prestocks
+  while sitting in Completed awaiting ascension — same open question as the
+  overcap accrual rate above.
