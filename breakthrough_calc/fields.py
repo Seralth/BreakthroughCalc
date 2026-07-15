@@ -133,8 +133,8 @@ FIELDS: tuple = (
                       "resumes the normal daily routine."),
     FieldSpec("respira_per_day", "respira_per_day", "dspin", inputs_attr="respira_per_day",
               tooltip="Your daily Respira attempt limit as shown in-game (base + permanent "
-                      "bonus attempts). The base limit is 10/day (confirmed from game "
-                      "data). Leave out temporary event attempts."),
+                      "bonus attempts). The base limit is 10/day. "
+                      "Leave out temporary event attempts."),
     FieldSpec("respira_event", "respira_event", "dspin", inputs_attr="respira_event",
               tooltip="One-off extra Respira attempts available today only (event/item). "
                       "Credited once, not as a daily rate."),

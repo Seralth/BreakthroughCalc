@@ -219,10 +219,10 @@ TRANSLATIONS = {
   "Extra attempts today": "Доп. попытки сегодня",
   "Base EXP / attempt": "Базовый опыт за попытку",
   "Your daily Respira attempt limit as shown in-game (base + permanent "
-  "bonus attempts). The base limit is 10/day (confirmed from game data). "
+  "bonus attempts). The base limit is 10/day. "
   "Leave out temporary event attempts.":
       "Ваш дневной лимит попыток дыхания ци, как показано в игре (базовые + постоянные "
-      "бонусные попытки). Базовый лимит — 10 в день (подтверждено данными игры). Временные событийные попытки не учитывайте.",
+      "бонусные попытки). Базовый лимит — 10 в день. Временные событийные попытки не учитывайте.",
   "One-off extra Respira attempts available today only (event/item). "
   "Credited once, not as a daily rate.":
       "Разовые дополнительные попытки дыхания ци только на сегодня (событие/предмет). "
@@ -556,10 +556,10 @@ TRANSLATIONS = {
   "Extra attempts today": "Zusätzliche Versuche heute",
   "Base EXP / attempt": "Basis-EXP / Versuch",
   "Your daily Respira attempt limit as shown in-game (base + permanent "
-  "bonus attempts). The base limit is 10/day (confirmed from game data). "
+  "bonus attempts). The base limit is 10/day. "
   "Leave out temporary event attempts.":
       "Dein tägliches Atmungs-Versuchslimit wie im Spiel angezeigt (Basis + permanente "
-      "Bonusversuche). Das Basislimit beträgt 10/Tag (aus den Spieldaten bestätigt). Temporäre Event-Versuche weglassen.",
+      "Bonusversuche). Das Basislimit beträgt 10/Tag. Temporäre Event-Versuche weglassen.",
   "One-off extra Respira attempts available today only (event/item). "
   "Credited once, not as a daily rate.":
       "Einmalige zusätzliche Atmungsversuche nur für heute (Event/Gegenstand). "
@@ -893,10 +893,10 @@ TRANSLATIONS = {
   "Extra attempts today": "Intentos extra hoy",
   "Base EXP / attempt": "EXP base / intento",
   "Your daily Respira attempt limit as shown in-game (base + permanent "
-  "bonus attempts). The base limit is 10/day (confirmed from game data). "
+  "bonus attempts). The base limit is 10/day. "
   "Leave out temporary event attempts.":
       "Tu límite diario de intentos de Inhala como aparece en el juego (base + intentos "
-      "extra permanentes). El límite base es 10/día (confirmado con datos del juego). No incluyas los intentos temporales de evento.",
+      "extra permanentes). El límite base es 10/día. No incluyas los intentos temporales de evento.",
   "One-off extra Respira attempts available today only (event/item). "
   "Credited once, not as a daily rate.":
       "Intentos extra de Inhala de una sola vez, solo para hoy (evento/objeto). "
@@ -1213,9 +1213,9 @@ TRANSLATIONS = {
   "Extra attempts today": "今日额外次数",
   "Base EXP / attempt": "每次基础修为",
   "Your daily Respira attempt limit as shown in-game (base + permanent "
-  "bonus attempts). The base limit is 10/day (confirmed from game data). "
+  "bonus attempts). The base limit is 10/day. "
   "Leave out temporary event attempts.":
-      "游戏内显示的每日吐纳次数上限（基础+永久加成次数）。基础上限为每天10次（已通过游戏数据确认）。不含临时活动次数。",
+      "游戏内显示的每日吐纳次数上限（基础+永久加成次数）。基础上限为每天10次。不含临时活动次数。",
   "One-off extra Respira attempts available today only (event/item). "
   "Credited once, not as a daily rate.":
       "仅限今日的一次性额外吐纳次数（活动/道具）。只计一次，不按每日计算。",

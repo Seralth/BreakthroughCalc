@@ -39,9 +39,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
     footer = _footer(muted, (
         "Spotted an error, or have data for a "
         "\"?\" in a table (a screenshot of a tier you've crossed, an endgame "
-        "number)? Much of this page is reconstructed from player screenshots, "
-        "and single data points regularly fill real gaps — please report it "
-        "at "))
+        "number)? Please report it at "))
 
     # ---- Basics --------------------------------------------------------
     basics = "<h2>Basics</h2>"
@@ -119,7 +117,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         ["Rank", "Rare (Blue)", "Epic (Purple)", "Legendary (Gold)", "Mythic (Red)"],
         [[rk, f"{b:,}", f"{p:,}", f"{g:,}", f"{m:,}"]
          for rk, (g, p, b, m) in d["pill_xp"].items()],
-        "Base values before bonuses; confirmed against in-game tooltips (tooltip shows "
+        "Base values before bonuses (the in-game tooltip shows "
         "total with the bonus in parentheses: base = total − bonus). All pill-effect "
         "bonuses add as percentage points and multiply the base once.")
     pills += table(
@@ -190,7 +188,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>Respira (the daily cultivation exercise) grants a burst of Cultivation "
         "EXP from a limited number of daily attempts, resetting on Stage/half-step "
         "breakthrough. Each attempt rolls a crit multiplier — <b>×1 / ×2 / ×5 / ×10</b> "
-        "at 60% / 30% / 8% / 2% — averaging <b>×1.8</b> (from the client config). Enter "
+        "at 60% / 30% / 8% / 2% — averaging <b>×1.8</b>. Enter "
         "your daily attempt limit and the base (non-crit) EXP per attempt; the ×1.8 "
         "average is applied for you, so daily Respira EXP ≈ attempts × base × 1.8. "
         "Temporary event attempts go in the separate one-off field.</p>"
@@ -299,9 +297,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
          ["80%", "50", "—", "—"],
          ["70%", "?", "60", "?"],
          ["50% / 30% / 20%", "?", "?", "?"]],
-        "Verified against 18 observed items, whose lifetime totals all "
-        "reproduce exactly from these widths (each tier contributes "
-        "uses × base × ratio). \"?\" marks tiers no character has crossed "
+        "\"?\" marks tiers whose exact widths aren't known "
         "yet; the in-game tooltip says the ladder continues 70 → 50 → 30 → "
         "20% before the hard cap. Cultivation-EXP elixirs use different "
         "(wider) tiers — their first tier is 20 uses, not 10.")
@@ -348,7 +344,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "fruit eaten early forfeits the better quality/EXP multipliers it would have "
         "received at higher extractor tiers — the same hoard is worth substantially "
         "more processed at max rarity. Note also that the extractor resets on a main-Stage "
-        "breakthrough (see Verified mechanics below), so burn the stockpile before "
+        "breakthrough (see Mechanics notes below), so burn the stockpile before "
         "breaking through, and only after the extractor is upgraded.</p>"
         "<p>Fruits also lose 50% of their EXP once the realm's <b>timegate</b> passes — "
         "eat the stockpile before the timegate, not merely before your own breakthrough. "
@@ -358,7 +354,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "fruit/extractor tier, and each major realm afterwards gets its own. Myrimon "
         "uses stack (after the first week's event) — save them for Sunday or until you "
         "cross the next BR requirement.</p>"
-        "<a name='verified'></a><h3>Verified mechanics (v2.7)</h3><ul>"
+        "<a name='verified'></a><h3>Mechanics notes</h3><ul>"
         "<li><b>Fruit ranks map to realm bands</b> (R3 covers Nascent-Voidbreak; R6 "
         "starts the Spiritual world; R12 the Immortal world) — R4/R5 don't exist.</li>"
         "<li><b>Extractor tracks</b>: Quality raises the quality-roll odds, the "
@@ -414,7 +410,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "crit stat in-game: its tooltip shows your current crit rate for your "
         "realm. (The exact conversion curve lives on the server, so no formula "
         "here — the tooltip is the source of truth.)</p>"
-        "<p>The rest of the crit family, confirmed from game data:</p>"
+        "<p>The rest of the crit family:</p>"
         "<ul>"
         "<li><b>Crit DMG</b>: a crit deals <b>150%</b> damage baseline "
         "(rounded down); Crit DMG bonuses raise that multiplier.</li>"
@@ -478,11 +474,11 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>Which rolled bonus lines to chase on gear and relics has "
         "its own page now — see the <a href='app://ref/affixes'>"
         "Affixes tab</a> for the full tier list, the named rolls and "
-        "their ranges, and the verified paralysis/penetration math.</p>"
+        "their ranges, and the paralysis/penetration math.</p>"
 
         "<h3>About the missing numbers</h3>"
-        "<p>The rules and thresholds above are confirmed from game data. The "
-        "exact <i>values</i> — what a given 10-level bonus or resonance rank "
+        "<p>The rules and thresholds above are exact. The "
+        "<i>values</i> — what a given 10-level bonus or resonance rank "
         "grants — are decided server-side and vary by item and realm, so this "
         "page doesn't guess at them. Where a number isn't listed, read it as "
         "\"unknown\", not \"zero\". For the exact per-point math the game does "
@@ -497,8 +493,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>Affixes are the rolled bonus lines on forged gear and "
         "relics. Which item drops is luck; which <i>lines</i> it rolls "
         "is what separates a keeper from forge fodder. The tier "
-        "ranking below is the community consensus list; the caps and "
-        "per-point math are confirmed from game data.</p>"
+        "ranking below is subjective; the caps and "
+        "per-point math are exact.</p>"
         "<p>Two caps drive most of the ranking: <b>crit rate is "
         "hard-capped at 50%</b> and <b>hit is capped at 99%</b> (with "
         "a 25% floor — nobody can be evade-tanked below a 1-in-4 "
@@ -567,7 +563,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>Defense lines are weak because Penetration strips up to "
         "50% of defense when the attacker wins the contested check — "
         "see the <a href='app://ref/advanced#penblock'>Advanced tab</a>.</p>"
-        "<p><b>Paralysis math, corrected against client data:</b> "
+        "<p><b>Paralysis math:</b> "
         "boost and resist cancel 1:1; each leftover point shifts proc "
         "chance by 0.2% (enhance capped at +100%, resist at −50%) and "
         "duration by 0.5% — but the duration <i>boost</i> caps at "
@@ -589,8 +585,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>Prioritize T0/T1 lines on weapons and pendants first. "
         "Reroll toward base-stat % (Wonder / Blade Rage / Spellforge) "
         "and relic cast speed — those two families define endgame "
-        "power. Tier placement is community opinion; the numbers and "
-        "caps quoted are from game data.</p>")
+        "power. Tier placement is subjective; the numbers and "
+        "caps quoted are exact.</p>")
 
     # ---- World Systems ---------------------------------------------------
     # System explainers assembled from the client's own tooltip/description
@@ -599,8 +595,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
     systems = "<h2>World Systems</h2>"
     systems += (
         "<p>Short explainers for the systems the rest of this app keeps "
-        "mentioning. Everything quoted is from the game's own text; where "
-        "a number is server-side, it's omitted rather than guessed.</p>"
+        "mentioning. Where a number is server-side, it's omitted rather "
+        "than guessed.</p>"
 
         "<h3>Currencies</h3>"
         "<ul>"
@@ -625,8 +621,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "elixir packs.</p>"
 
         "<h3>Shop-by-shop buying guide</h3>"
-        "<p>Community-consensus priorities (from circulating player "
-        "guides — sanity-checked but not client data):</p>"
+        "<p>Widely recommended priorities:</p>"
         "<ul>"
         "<li><b>Market</b> (Spiritium): Demonroot (pet skills), Kunlun "
         "Jade (backpack space), Monster Core, Rare+ cultivation pills, "
@@ -677,8 +672,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "extra fruit. This is why the guide says to bank pet speed-ups "
         "and Fateum for the garden before Voidbreak: law levels are a "
         "time-integral, so starting earlier compounds.</p>"
-        "<p><b>Community practice</b> (consistent advice, unverified "
-        "numbers): have <b>24 garden slots by Voidbreak</b>; on ascension "
+        "<p><b>Common practice</b>: have <b>24 garden slots by "
+        "Voidbreak</b>; on ascension "
         "day unlock laws immediately and get fruits planted. Blitz has a "
         "daily budget (~120 hours' worth) — ideally spend all of it every "
         "day. Law fruits range Uncommon → Legendary; early on, harvesting "
@@ -755,24 +750,24 @@ def build_reference_pages(acc: dict, engine_data: dict,
 
         # Community-guide material (2026) from here down — priorities
         # and tier lists are consensus, not client data.
-        "<h3>Technique roadmap (community priorities)</h3>"
-        "<p>The consensus per-rank picks, tier breakpoints first:</p><ul>"
+        "<h3>Technique roadmap (recommended priorities)</h3>"
+        "<p>Per-rank picks, tier breakpoints first:</p><ul>"
         "<li><b>R4</b>: Golden Core (+5% pill effect at completion) and "
         "Astrology to Tier 7.</li>"
         "<li><b>R5</b>: Ninefall and Bloodization to Tier 7.</li>"
         "<li><b>R6</b>: Dragon's Flight or Yin's Grasp to Tier 10.</li>"
-        "<li><b>R7</b> (from the app's own source data): Floral Essence "
+        "<li><b>R7</b>: Floral Essence "
         "— +3% pill effect at Tier 6, +1 daily pill attempt at Tier 9; "
         "Great Yang Manual — +4% pill effect at Tier 9.</li>"
         "<li><b>R10</b>: Immortal Ascension to Tier 13.</li>"
         "</ul>"
-        "<p>The community list for R8–R9 wasn't preserved — if you have "
-        "it, please report it via the footer link. For Technique Points, "
-        "the consensus <b>Spirit World</b> strategy is three passes: "
+        "<p>No R8–R9 picks are listed yet — if you have "
+        "them, please report them via the footer link. For Technique Points, "
+        "the recommended <b>Spirit World</b> strategy is three passes: "
         "clear what you can, come back stronger, finish later — rather "
         "than grinding one full clear early.</p>"
 
-        "<h3>Curio priorities (community)</h3>"
+        "<h3>Curio priorities</h3>"
         "<ul><li>Value order: <b>abode/pill-bonus curios &gt; main-path "
         "ATK &gt; HP/MP</b>.</li>"
         "<li>Star up <b>Pen &amp; Block equally</b> — a Pen roughly "
@@ -782,15 +777,15 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<li>Daemonfae, Field and Reincarnation curios have their own "
         "niches — hold them rather than feeding them away.</li></ul>"
 
-        "<h3>Fields (Perfection, community)</h3>"
-        "<p>At Perfection you pick a Field; the consensus mapping:</p>"
+        "<h3>Fields (Perfection)</h3>"
+        "<p>At Perfection you pick a Field; the usual mapping:</p>"
         "<ul><li><b>Solarium</b> — PvE-leaning and the usual F2P "
         "pick.</li>"
         "<li><b>Swordium</b> — the general-purpose choice.</li>"
         "<li><b>Darkmyth</b> — team-oriented; pick it with your sect, "
         "not solo.</li></ul>"
         "<p>Fields level and enlighten separately and have their own "
-        "field-soul structure — details not yet captured here.</p>")
+        "field-soul structure — details not covered here yet.</p>")
 
     # ---- Combat & Gear: Advanced ---------------------------------------
     # Expert-level internals recovered from the client's own stat
@@ -802,7 +797,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "want to check the math.</p>"
         "<h3>Respira crit distribution</h3>")
     advanced += table(
-        "Per-attempt crit roll (from client config)",
+        "Per-attempt crit roll",
         ["Multiplier", "Chance"],
         [("×1", "60%"), ("×2", "30%"), ("×5", "8%"), ("×10", "2%")],
         "Mean multiplier 1.8 (the calculator's expected value), variance 2.56 "
@@ -812,11 +807,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<h3>Fruit gush pity</h3>"
         "<p>The extractor's \"Gush guaranteed in Aura Orb x6\" counter is a "
         "<b>soft pity</b>: any gush — random or guaranteed — resets it. "
-        "Verified in-game 2026-07-10 with a counted 12-fruit batch at Gush "
-        "level 0: a random gush on the 5th fruit reset the counter to 6, "
-        "the pity then forced a gush exactly on the 6th fruit after that "
-        "reset, and the observed random rate (1 in 11 free rolls) matched "
-        "the displayed 10% chance. So a gush is guaranteed within 6 fruits "
+        "A gush is guaranteed within 6 fruits "
         "of the last one, not on every literal 6th, and the displayed gush "
         "chance is the per-fruit random rate with the pity layered on top. "
         "The calculator models this as "
@@ -826,7 +817,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "both raises the expected fruit XP at low Gush levels and narrows "
         "the fruit side of the band.</p>"
         "<h3>Strive tier tables</h3>"
-        "<p>Recovered from client config; the live value is recomputed "
+        "<p>The live value is recomputed "
         "hourly on the server, so the calculator uses these only for the "
         "<i>shape</i> of the drop-off, anchored to your real Strive.</p>"
         "<ul>"
@@ -849,9 +840,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "short projections and tightens as the horizon grows.</p>"
 
         "<h2>Combat Internals (Advanced)</h2>"
-        "<p>Exact mechanics recovered from the game's own stat definitions "
-        "and tooltip text. Everything numbered here is stated by the client; "
-        "damage resolution itself runs on the server, so treat this as the "
+        "<p>Exact combat mechanics. "
+        "Damage resolution itself runs on the server, so treat this as the "
         "rulebook rather than a full damage calculator.</p>"
 
         "<h3>Flat stats and realm normalization</h3>"
@@ -864,7 +854,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "server-side; the in-game tooltip is the only exact readout.</p>"
 
         "<a name='perpoint'></a>"
-        "<h3>Per-point mechanics (client-stated)</h3>")
+        "<h3>Per-point mechanics</h3>")
     advanced += table(
         "Per-point coefficients and caps",
         ["Stat", "Effect per point", "Cap"],
@@ -1002,8 +992,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "applies once your realm meets the item's requirement — an "
         "under-realm Relic shows its uncorrected, lower BR).</li>"
         "</ul>"
-        "<p>The exact weight constants exist in client data but the "
-        "server's final assembly (level factors, rounding) isn't visible, "
+        "<p>The exact weight constants are known, but the "
+        "server's final assembly (level factors, rounding) isn't, "
         "so per-stat BR predictions from these weights are approximate.</p>"
         "<p>One BR formula <i>is</i> fully client-side — standard monster "
         "BR:</p>"
@@ -1035,8 +1025,7 @@ def build_guide_pages(acc: dict) -> list:
     accepted for symmetry with build_reference_pages; the guide's prose and
     footer use no theme accents today."""
     footer = _footer("gray", (
-        "Spotted an error or something missing? "
-        "Much of this guide comes from player observations — please report "
+        "Spotted an error or something missing? Please report "
         "corrections and new data at "))
 
     # Path meta assembled from a circulating community guide (2026) plus
@@ -1047,7 +1036,7 @@ def build_guide_pages(acc: dict) -> list:
         "looks — Path Switch exists from Foundation (7-day cooldown, "
         "rising Fateum cost) — but your path shapes combat style, gear "
         "priorities, and which elixirs/pets/aux picks fit. This summary "
-        "is <i>community consensus</i>, and the consensus is genuinely "
+        "is <i>subjective</i>, and opinion is genuinely "
         "mixed — treat it as orientation, not law.</p>"
         "<h3>The five paths</h3>"
         "<ul>"
@@ -1260,7 +1249,7 @@ def build_guide_pages(acc: dict) -> list:
         # Community-guide material (2026): friend levels/payoffs are the
         # circulating consensus list, cross-checked against the app's own
         # pill/Respira source data where the two overlap.
-        "<h3>Ascension day (community checklist)</h3>"
+        "<h3>Ascension day checklist</h3>"
         "<p>The order of operations for the day you break through to "
         "Voidbreak:</p><ul>"
         "<li><b>Before</b> the breakthrough: don't claim dailies or pill "
@@ -1273,9 +1262,9 @@ def build_guide_pages(acc: dict) -> list:
         "<li>Claim the <b>treasure trove</b> at Voidbreak, not at "
         "Incarnation — it scales with the realm you claim it in.</li>"
         "</ul>"
-        "<h3>Immortal Friends (community priorities)</h3>"
+        "<h3>Immortal Friends (recommended priorities)</h3>"
         "<p>Friends' levels pay off in cultivation terms at specific "
-        "breakpoints. The consensus unlock/level priorities:</p><ul>"
+        "breakpoints. The recommended unlock/level priorities:</p><ul>"
         "<li><b>Crane Boy</b> to max — <b>+1 daily pill attempt</b>.</li>"
         "<li><b>Iron Fan</b> 36, <b>Daji</b> 73, <b>Shen Gongbao</b> 117 "
         "— <b>+1 daily Respira attempt</b> each.</li>"
@@ -1283,8 +1272,8 @@ def build_guide_pages(acc: dict) -> list:
         "effect</b> each.</li>"
         "<li><b>Macaque</b> 17 — +3% Respira EXP (already included in "
         "your in-game Respira tooltip).</li>"
-        "<li>Also on the community priority list (payoff not recorded "
-        "yet): <b>White Astra</b> 31, <b>Princess Adalinda</b> 81, "
+        "<li>Also on the priority list (payoff "
+        "unknown): <b>White Astra</b> 31, <b>Princess Adalinda</b> 81, "
         "<b>Leizhenzi</b> 129.</li>"
         "</ul>"
         "<p>These attempt/effect bonuses are exactly what the "
@@ -1345,9 +1334,9 @@ def build_guide_pages(acc: dict) -> list:
     # BR figures are era-specific estimates, not client data.
     spending = (
         "<h2>Spending (if you pay at all)</h2>"
-        "<p>None of this is a recommendation to spend — it's the "
-        "community's answer to \"if I do, what's actually worth it?\" "
-        "All of it is consensus opinion.</p>"
+        "<p>None of this is a recommendation to spend — it's an "
+        "answer to \"if I do, what's actually worth it?\" "
+        "All of it is subjective.</p>"
         "<h3>Priorities</h3><ul>"
         "<li><b>Permanent one-time buys first</b>: the watering curio "
         "set and the permanent passes beat any consumable pack — you "
@@ -1363,8 +1352,8 @@ def build_guide_pages(acc: dict) -> list:
         "<li>Heavy <b>pet</b> investment is whale territory "
         "(<a href='app://guide/pets'>Guide → Pets</a>).</li>"
         "</ul>"
-        "<h3>Timegate BR targets (era-specific community estimates)</h3>"
-        "<p>Rough battle-rating bands players report aiming for at each "
+        "<h3>Timegate BR targets (era-specific estimates)</h3>"
+        "<p>Rough battle-rating bands players aim for at each "
         "realm's timegate content, by spending tier (F2P → heavy). "
         "These drift with every era — treat as orientation only:</p>"
         "<ul><li><b>Incarnation</b>: 800m – 2b+</li>"
