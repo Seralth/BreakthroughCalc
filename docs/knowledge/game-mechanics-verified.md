@@ -190,9 +190,11 @@ Per the community model above, the effective bonus is +40% persistent
 (+60% before Voidbreak Middle) — and since it persists past Incarnation,
 it is a permanent absorption modifier, not just a window. Separately, the pills-on-secondary-path use means a
 secondary-path projection would see BOTH a bigger flat daily-XP term (better
-pills) and the windowed absorption bonus. UNVERIFIED: whether the blessing
-"+20%" is +20 percentage points added to the ratio (like Virya) or ×1.2 on
-it — needs an in-game absorption-tooltip breakdown screenshot with the
-blessing active before modeling it. Until then the calc under-estimates
+pills) and the windowed absorption bonus. ADDITIVE per community consensus (third independent player confirmation
+via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
+absorption ratio (like Virya in the official formula), not ×1.2. Still
+pending one in-game absorption-tooltip reading with a tier active for
+screenshot-grade verification (a 40%-band player with +20% should read
+60%, not 48%). Until then the calc under-estimates
 speed (over-estimates time) for accounts with these blessings on
 pre-Voidbreak rows.
