@@ -202,6 +202,9 @@ class MainWindow(QMainWindow):
         self.absorb = QDoubleSpinBox(); self.absorb.setRange(0, 10000); self.absorb.setDecimals(3); self.absorb.setSuffix(" %")
         self.gem = QComboBox(); self.gem.addItems([tr(k) for k in self.engine.data["gem_bonus"]])
         self.target = QComboBox(); self.target.addItem(""); self.target.addItems([stage_disp(s) for s in self.engine.stages()])
+        self.target_phase = QComboBox(); self.target_phase.addItem("")
+        self.target_grade = QComboBox(); self.target_grade.addItem("")
+        self.timegate = QDoubleSpinBox(); self.timegate.setRange(0, 1000); self.timegate.setDecimals(1); self.timegate.setSuffix(tr(" days"))
         f.addRow(tr("Stage"), self.stage)
         f.addRow(tr("Half-step"), self.phase)
         f.addRow(tr("Grade"), self.grade)
@@ -229,6 +232,9 @@ class MainWindow(QMainWindow):
         f.addRow(tr("Cultivation Speed (XP / Cosmoapsis)"), self.speed)
         f.addRow(tr("Aura Gem"), self.gem)
         f.addRow(tr("Target Stage"), self.target)
+        f.addRow(tr("Target half-step"), self.target_phase)
+        f.addRow(tr("Target grade"), self.target_grade)
+        f.addRow(tr("Timegate lifts in"), self.timegate)
         self.top_stage = QComboBox(); self.top_stage.addItem("")
         self.top_stage.addItems([stage_disp(s) for s in self.engine.stages()])
         self.top_stage.setToolTip(tr(
@@ -269,18 +275,17 @@ class MainWindow(QMainWindow):
         self.pe_catalog = load_pill_sources()
         if self.pe_catalog:
             cat_btn = QPushButton(tr("＋ From catalog"))
-            cat_btn.setToolTip(tr("Known pill-effect sources from the game data. Check to add "
-                                  "(prefilled, editable), uncheck to remove."))
+            cat_btn.setToolTip(tr("Known pill-effect sources from the game data. Click to add "
+                                  "(prefilled, editable); already-added sources are hidden."))
             cat_menu = QMenu(cat_btn)
             cat_menu.setToolTipsVisible(True)
             for src in self.pe_catalog:
                 pct = f'{src["percent"]:g}%' if src.get("percent") else tr("varies")
                 act = cat_menu.addAction(f'{src["name"]}  ({pct})')
-                act.setCheckable(True)
                 act.setToolTip(src.get("note", ""))
                 act.setData(src)
             cat_menu.aboutToShow.connect(self._sync_catalog_menu)
-            cat_menu.triggered.connect(self._toggle_catalog_source)
+            cat_menu.triggered.connect(self._add_catalog_source)
             cat_btn.setMenu(cat_menu)
             self._cat_menu = cat_menu
             pe_bottom.addWidget(cat_btn)
@@ -462,6 +467,8 @@ class MainWindow(QMainWindow):
             ("Half-step breakthrough in", "o_phase"),
             ("Stage breakthrough in", "o_stage"),
             ("Target Stage reached in", "o_target"),
+            ("Prestock for target (overcap)", "o_prestock"),
+            ("At timegate", "o_gate"),
             ("Abode Aura (implied)", "o_abode"),
             ("Cultivation XP / day", "o_basexp"),
             ("Effective XP / day", "o_effxp"),
@@ -1995,13 +2002,16 @@ class MainWindow(QMainWindow):
     def _wire(self):
         self.stage.currentTextChanged.connect(self._on_stage_changed)
         self.phase.currentTextChanged.connect(self._on_phase_changed)
-        for w in (self.grade, self.gem, self.target, self.top_stage, self.pill_rank, self.vase_star,
+        self.target.currentTextChanged.connect(self._on_target_stage_changed)
+        self.target_phase.currentTextChanged.connect(self._on_target_phase_changed)
+        for w in (self.grade, self.gem, self.target_grade, self.top_stage, self.pill_rank, self.vase_star,
                   self.vase_input, self.mirror_star, self.pearl_star, self.fruit_rank, self.extractor):
             w.currentTextChanged.connect(self.recalc)
         for w in (self.completion, self.speed, self.absorb, self.pill_limit,
                   self.gold_day, self.purple_day, self.blue_day, self.mark_blue,
                   self.mark_purple, self.mark_gold, self.pearl_xp10,
-                  self.respira_per_day, self.respira_event, self.respira_exp, self.fruit_count, self.reset_in):
+                  self.respira_per_day, self.respira_event, self.respira_exp, self.fruit_count, self.reset_in,
+                  self.timegate):
             w.valueChanged.connect(self.recalc)
         for w in (self.lvl_culti, self.lvl_quality, self.lvl_gush, self.abode_aura):
             w.valueChanged.connect(self.recalc)
@@ -2031,6 +2041,16 @@ class MainWindow(QMainWindow):
                       "(up to 18-32h per claim); modeled as a continuous speed multiplier on cultivation only — "
                       "pills/Respira are flat XP and are NOT boosted by the gem.",
             self.target: "Optional: a future Stage to time your arrival at.",
+            self.target_phase: "Optional: a half-step within the target Stage. Blank = start of the Stage.",
+            self.target_grade: "Optional: a grade within the target half-step. Blank = start of the half-step.",
+            self.timegate: "Optional: days until the world-level timegate lifts (shown in-game once someone "
+                           "reaches the last half-step). Compared against the prestock time. Reminder: use "
+                           "Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.",
+            self.o_prestock: "Overcap needed for the target, in the game's own display convention (XP since the "
+                             "start of the final half-step ÷ that half-step's total), and the time to stock it. "
+                             "While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT "
+                             "speed — no future-grade speedups. Slower than the ungated 'Target reached in'.",
+            self.o_gate: "Whether your stocked XP reaches the target before the timegate lifts.",
             self.pill_limit: "Daily pill-use limit that caps Gold/Purple/Blue usage.",
             self.pearl_xp10: "Timereversal Pearl: EXP granted per 10 energy.",
             self.fruit_count: "Number of Myrimon Fruits processed through the Aura Extractor.",
@@ -2044,9 +2064,9 @@ class MainWindow(QMainWindow):
         self.phase.clear()
         self.phase.addItems([phase_disp(p) for p in self.engine.phases_for(stage)])
         self.phase.blockSignals(False)
-        # Target dropdown: only Stages strictly after the current one.
+        # Target dropdown: current Stage (for later half-steps/grades) onward.
         stages = self.engine.stages()
-        future = stages[stages.index(stage) + 1:] if stage in stages else []
+        future = stages[stages.index(stage):] if stage in stages else []
         prev = self.target.currentText()
         self.target.blockSignals(True)
         self.target.clear()
@@ -2055,7 +2075,38 @@ class MainWindow(QMainWindow):
         i = self.target.findText(prev)
         self.target.setCurrentIndex(i if i >= 0 else 0)
         self.target.blockSignals(False)
+        if i < 0:
+            self._on_target_stage_changed()
         self._on_phase_changed()
+
+    def _on_target_stage_changed(self):
+        # Repopulate the optional half-step (and grade) combos; blank means
+        # "start of the stage / half-step".
+        tstage = stage_key(self.target.currentText())
+        prev = self.target_phase.currentText()
+        self.target_phase.blockSignals(True)
+        self.target_phase.clear()
+        self.target_phase.addItem("")
+        if tstage:
+            self.target_phase.addItems([phase_disp(p) for p in self.engine.phases_for(tstage)])
+        i = self.target_phase.findText(prev)
+        self.target_phase.setCurrentIndex(i if i >= 0 else 0)
+        self.target_phase.blockSignals(False)
+        self._on_target_phase_changed()
+
+    def _on_target_phase_changed(self):
+        tstage = stage_key(self.target.currentText())
+        tphase = phase_key(self.target_phase.currentText())
+        prev = self.target_grade.currentText()
+        self.target_grade.blockSignals(True)
+        self.target_grade.clear()
+        self.target_grade.addItem("")
+        if tstage and tphase:
+            self.target_grade.addItems(self.engine.grades_for(tstage, tphase))
+        i = self.target_grade.findText(prev)
+        self.target_grade.setCurrentIndex(i if i >= 0 else 0)
+        self.target_grade.blockSignals(False)
+        self.recalc()
 
     def _on_phase_changed(self):
         stage, phase = stage_key(self.stage.currentText()), phase_key(self.phase.currentText())
@@ -2072,6 +2123,9 @@ class MainWindow(QMainWindow):
             grade=self.grade.currentText(), grade_completion=self.completion.value() / 100.0,
             culti_speed=self.speed.value(), absorption_ratio=self.absorb.value() / 100.0,
             aura_gem=i18n.reverse(self.gem.currentText()), target_stage=stage_key(self.target.currentText()),
+            target_phase=phase_key(self.target_phase.currentText()),
+            target_grade=self.target_grade.currentText(),
+            timegate_days=self.timegate.value(),
             top_stage=stage_key(self.top_stage.currentText()),
             pill_rank=self.pill_rank.currentText(), pill_effect=self._pill_effect_total() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
@@ -2106,7 +2160,10 @@ class MainWindow(QMainWindow):
         return {
             "stage": self.stage, "phase": self.phase, "grade": self.grade,
             "completion": self.completion, "speed": self.speed, "absorb": self.absorb,
-            "gem": self.gem, "target": self.target, "top_stage": self.top_stage,
+            "gem": self.gem, "target": self.target,
+            "target_phase": self.target_phase, "target_grade": self.target_grade,
+            "timegate_days": self.timegate,
+            "top_stage": self.top_stage,
             "pill_rank": self.pill_rank,
             "pill_limit": self.pill_limit, "gold_day": self.gold_day,
             "purple_day": self.purple_day, "blue_day": self.blue_day,
@@ -2135,12 +2192,14 @@ class MainWindow(QMainWindow):
     # these two maps convert display text <-> internal key per widget key.
     _COMBO_TO_KEY = {
         "stage": stage_key, "target": stage_key, "top_stage": stage_key,
-        "phase": phase_key, "gem": i18n.reverse, "extractor": i18n.reverse,
+        "phase": phase_key, "target_phase": phase_key,
+        "gem": i18n.reverse, "extractor": i18n.reverse,
         "vase_input": vase_input_key,
     }
     _KEY_TO_COMBO = {
         "stage": stage_disp, "target": stage_disp, "top_stage": stage_disp,
-        "phase": phase_disp, "gem": tr, "extractor": tr,
+        "phase": phase_disp, "target_phase": phase_disp,
+        "gem": tr, "extractor": tr,
         "vase_input": vase_input_disp,
     }
 
@@ -2465,30 +2524,29 @@ class MainWindow(QMainWindow):
         self.recalc()
 
     def _sync_catalog_menu(self):
+        # Hide sources already added so they can't be picked twice; remove them
+        # via the row's ✕ button.
         labels = {le.text() for le, _, _ in self.pe_rows}
         for act in self._cat_menu.actions():
-            act.setChecked(act.data()["name"] in labels)
+            act.setVisible(act.data()["name"] not in labels)
 
-    def _toggle_catalog_source(self, act):
+    def _add_catalog_source(self, act):
         src = act.data()
-        existing = [e for e in self.pe_rows if e[0].text() == src["name"]]
-        if existing:
-            for e in existing:
-                self._remove_pe_row(e)
+        if any(e[0].text() == src["name"] for e in self.pe_rows):
+            return
+        if src.get("prompt", {}).get("kind") == "star_upgrade":
+            picked = self._ask_star_upgrade(src)
+            if picked is None:        # user cancelled
+                return
+            value = picked
         else:
-            if src.get("prompt", {}).get("kind") == "star_upgrade":
-                picked = self._ask_star_upgrade(src)
-                if picked is None:        # user cancelled
-                    return
-                value = picked
-            else:
-                value = float(src["percent"]) if src.get("percent") else 0.0
-            # drop a leftover blank placeholder row
-            blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
-            self._add_pe_row(src["name"], value)
-            for e in blanks:
-                self._remove_pe_row(e)
-            self.recalc()
+            value = float(src["percent"]) if src.get("percent") else 0.0
+        # drop a leftover blank placeholder row
+        blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
+        self._add_pe_row(src["name"], value)
+        for e in blanks:
+            self._remove_pe_row(e)
+        self.recalc()
 
     def _sync_respira_menu(self):
         for act in self._respira_menu.actions():
@@ -2666,6 +2724,26 @@ class MainWindow(QMainWindow):
         self.o_stage.setText(self._fmt_band(res.stage_days, res.stage_band))
         self.o_target.setText(self._fmt_band(res.target_days, res.target_band)
                               if res.target_valid else "—")
+        if res.prestock_valid:
+            self.o_prestock.setText(
+                f"{res.prestock_pct:,.0f}%  — "
+                + self._fmt_band(res.prestock_days, res.prestock_band))
+            gate = self.timegate.value()
+            if gate > 0:
+                margin = gate - res.prestock_days
+                if margin >= 0:
+                    self.o_gate.setText(
+                        "✓ " + tr("stocked {} early").format(
+                            tr_duration(fmt_days(margin))))
+                else:
+                    self.o_gate.setText(
+                        "✗ " + tr("short by {}").format(
+                            tr_duration(fmt_days(-margin))))
+            else:
+                self.o_gate.setText("—")
+        else:
+            self.o_prestock.setText("—")
+            self.o_gate.setText("—")
         self.o_abode.setText(f"{res.abode_aura:,.1f}")
         self.o_basexp.setText(f"{res.base_xp_per_day:,.0f}")
         self.o_effxp.setText(f"{res.effective_xp_per_day:,.0f}")

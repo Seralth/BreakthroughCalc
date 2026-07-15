@@ -70,6 +70,9 @@ class Inputs {
   double absorptionRatio;
   String auraGem;
   String targetStage;
+  String targetPhase;
+  String targetGrade;
+  double timegateDays;
   String topStage;
   bool matureServer;
   bool dailiesDone;
@@ -121,6 +124,9 @@ class Inputs {
     this.absorptionRatio = 0.0,
     this.auraGem = 'None',
     this.targetStage = '',
+    this.targetPhase = '',
+    this.targetGrade = '',
+    this.timegateDays = 0.0,
     this.topStage = '',
     this.matureServer = true,
     this.dailiesDone = false,
@@ -176,6 +182,9 @@ class Inputs {
       absorptionRatio: d('absorption_ratio', 0.0),
       auraGem: s('aura_gem', 'None'),
       targetStage: s('target_stage', ''),
+      targetPhase: s('target_phase', ''),
+      targetGrade: s('target_grade', ''),
+      timegateDays: d('timegate_days', 0.0),
       topStage: s('top_stage', ''),
       matureServer: b('mature_server', true),
       dailiesDone: b('dailies_done', false),
@@ -224,6 +233,10 @@ class Results {
   double stageDays = 0.0;
   double targetDays = 0.0;
   bool targetValid = false;
+  bool prestockValid = false;
+  double prestockPct = 0.0;
+  double prestockDays = 0.0;
+  List<double> prestockBand = [0.0, 0.0];
   double abodeAura = 0.0;
   double strive = 0.0;
   double baseXpPerDay = 0.0;
@@ -288,6 +301,19 @@ class Engine {
       if (rows[i]['stage'] == stage) return i;
     }
     return -1;
+  }
+
+  /// Row index where the target begins: start of the stage, of a half-step
+  /// within it, or of a specific grade.
+  int targetStartIndex(String stage, String phase, String grade) {
+    if (phase.isEmpty) return stageStartIndex(stage);
+    if (grade.isEmpty) {
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i]['stage'] == stage && rows[i]['phase'] == phase) return i;
+      }
+      return -1;
+    }
+    return rowIndex(stage, phase, grade);
   }
 
   List<double> _starRow(String key) {
@@ -584,14 +610,43 @@ class Engine {
     res.phaseBand = band(res.phaseDays, pend);
     res.stageBand = band(res.stageDays, send);
 
-    if (inp.targetStage.isNotEmpty && inp.targetStage != inp.stage) {
-      final tstart = stageStartIndex(inp.targetStage);
+    if (inp.targetStage.isNotEmpty) {
+      final tstart =
+          targetStartIndex(inp.targetStage, inp.targetPhase, inp.targetGrade);
       if (tstart > idx) {
         res.targetDays = days(realSeconds(tstart - 1));
         res.targetBand = band(res.targetDays, tstart - 1);
         res.targetValid = true;
+        if (tstart > send + 1) {
+          // Prestock scenario: a timegate parks you at the Stage cap, where
+          // excess EXP accrues at the CAPPED row's rate (no future-row speed
+          // scaling; pills/Respira stay flat).
+          final capRate =
+              speed(rows[send]) * (1 + gem) / tickSeconds + dailyRate;
+          final overflowXp = xpAhead(tstart - 1) - xpAhead(send);
+          res.prestockDays = days(realSeconds(send) + overflowXp / capRate);
+          res.prestockBand = band(res.prestockDays, tstart - 1);
+          // Overcap % in the game's display convention (verified 2026-07-15):
+          // cumulative XP since the start of the Stage's final half-step ÷
+          // that half-step's total.
+          final capPhase = rows[send]['phase'];
+          var hsTotal = 0.0;
+          for (final r in rows) {
+            if (r['stage'] == inp.stage && r['phase'] == capPhase) {
+              hsTotal += (r['grade_xp'] as num).toDouble();
+            }
+          }
+          var beyond = 0.0;
+          for (var j = send + 1; j < tstart; j++) {
+            beyond += (rows[j]['grade_xp'] as num).toDouble();
+          }
+          if (hsTotal > 0) {
+            res.prestockPct = (hsTotal + beyond) / hsTotal * 100.0;
+            res.prestockValid = true;
+          }
+        }
       } else if (tstart >= 0) {
-        res.error = 'Target stage precedes current stage.';
+        res.error = 'Target must be after your current grade.';
       }
     }
 
