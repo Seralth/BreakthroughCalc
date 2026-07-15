@@ -155,6 +155,17 @@ class _CalculatorPageState extends State<CalculatorPage>
   Inputs inp = Inputs();
   late Results res;
   final _peSources = <List<dynamic>>[]; // [name, percent]
+  // Stable identity per _peSources row (parallel list, NOT persisted): the
+  // row widgets are initialValue-driven TextFormFields, so without a stable
+  // key, deleting row 0 of 2 would leave the survivor displaying the deleted
+  // row's text while editing the other entry's data.
+  final _peIds = <int>[];
+  int _peNextId = 0;
+  // Bumped whenever inputs are bulk-replaced (prefs restore / build-code
+  // import) and used as the form ListView's key, remounting every
+  // initialValue-driven field so it re-reads the new inputs. The four
+  // controller-backed fields are covered by _syncControllers instead.
+  int _formGeneration = 0;
   final _respiraSources = <String>{}; // selected 'attempt' catalog entries
   double _abode = 0; // Abode Aura, the primary input; speed = abode * absorption
   final _speedCtrl = TextEditingController();
@@ -384,10 +395,24 @@ class _CalculatorPageState extends State<CalculatorPage>
         for (final s in (m['pe_sources'] as List? ?? []))
           [(s as List)[0] as String, (s[1] as num).toDouble()]
       ]);
+    _peIds
+      ..clear()
+      ..addAll([for (final _ in _peSources) _peNextId++]);
     _respiraSources
       ..clear()
       ..addAll((m['respira_sources'] as List? ?? []).cast<String>());
+    _formGeneration++;
     return true;
+  }
+
+  void _addPeSource(String name, double percent) {
+    _peSources.add([name, percent]);
+    _peIds.add(_peNextId++);
+  }
+
+  void _removePeSource(int i) {
+    _peSources.removeAt(i);
+    _peIds.removeAt(i);
   }
 
   void _syncControllers() {
@@ -554,6 +579,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     final stages = engine.stages();
 
     return ListView(
+      key: ValueKey(_formGeneration),
       padding: const EdgeInsets.all(12),
       children: [
         _resultsCard(),
@@ -1038,6 +1064,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       for (var i = 0; i < _peSources.length; i++)
         Padding(
+          key: ValueKey(_peIds[i]),
           padding: const EdgeInsets.symmetric(vertical: 3),
           child: Row(children: [
             Expanded(
@@ -1059,7 +1086,7 @@ class _CalculatorPageState extends State<CalculatorPage>
             ),
             IconButton(
               icon: const Icon(Icons.close),
-              onPressed: () { setState(() => _peSources.removeAt(i)); _recalc(); },
+              onPressed: () { setState(() => _removePeSource(i)); _recalc(); },
             ),
           ]),
         ),
@@ -1069,7 +1096,7 @@ class _CalculatorPageState extends State<CalculatorPage>
         TextButton.icon(
           icon: const Icon(Icons.add),
           label: Text(tr('Add')),
-          onPressed: () { setState(() => _peSources.add(['', 0.0])); },
+          onPressed: () { setState(() => _addPeSource('', 0.0)); },
         ),
         TextButton.icon(
           icon: const Icon(Icons.list),
@@ -1157,7 +1184,7 @@ class _CalculatorPageState extends State<CalculatorPage>
       } else {
         value = ((choice['percent'] as num?) ?? 0).toDouble();
       }
-      setState(() => _peSources.add([choice['name'], value]));
+      setState(() => _addPeSource(choice['name'] as String, value!));
       _recalc();
     }
   }
