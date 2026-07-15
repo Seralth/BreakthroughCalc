@@ -10,12 +10,13 @@ import 'force_refresh_stub.dart'
     if (dart.library.js_interop) 'force_refresh_web.dart';
 import 'i18n.dart';
 import 'reference.dart';
+import 'share_codec.dart';
 import 'update_check.dart';
 
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.13';
+const appVersion = '2.14';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -399,24 +400,15 @@ class _CalculatorPageState extends State<CalculatorPage>
 
   // ---- shareable build string -------------------------------------------
   // Compact copy-paste export of every input, so users can share their
-  // setup for troubleshooting. Format: 'OMV1.' + base64url(JSON of the
-  // same map that is persisted to prefs).
-  String _exportString() =>
-      'OMV1.${base64UrlEncode(utf8.encode(jsonEncode(_inputsMap())))}';
+  // setup for troubleshooting. See share_codec.dart for the format.
+  String _exportString() => encodeBuildCode(engine, inp, _peSources, _respiraSources);
 
   bool _importString(String s) {
-    var body = s.trim();
-    if (body.startsWith('OMV1.')) body = body.substring(5);
-    try {
-      final m = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(body))))
-          as Map<String, dynamic>;
-      if (!_applyInputsMap(m)) return false;
-      _syncControllers();
-      _recalc();
-      return true;
-    } catch (_) {
-      return false;
-    }
+    final m = decodeBuildCode(engine, s);
+    if (m == null || !_applyInputsMap(m)) return false;
+    _syncControllers();
+    _recalc();
+    return true;
   }
 
   void _showShareDialog() {
