@@ -33,7 +33,7 @@ jobs:
           python3 test/gen_expected.py
           dart run test/parity.dart
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release --dart-define=BUILD_STAMP="${GITHUB_SHA:0:7} · $(date -u +%Y-%m-%d)"
       - name: Rename APK
         run: mv build/app/outputs/flutter-apk/app-release.apk BreakthroughCalculator.apk
       - uses: actions/upload-artifact@v4

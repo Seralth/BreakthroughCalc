@@ -32,7 +32,7 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
       - name: Build web release
-        run: flutter build web --release --base-href /
+        run: flutter build web --release --base-href / --dart-define=BUILD_STAMP="${GITHUB_SHA:0:7} · $(date -u +%Y-%m-%d)"
       - name: Add custom-domain CNAME
         run: echo omvault.app > build/web/CNAME
       - name: Cache-bust the app entrypoint
