@@ -41,10 +41,13 @@ applied after the (still manual) breakthrough.
     WN EARLY total = **404%** exactly.
   - The double match also independently validates the Incarnation–Wholeness
     grade_xp table.
-- Accrual rate while overcapped: pending sources; assumed normal current-row
-  rate (speed×(1+gem) + flat pills/Respira) — you stay parked on the capped
-  row, so NO future-row speed scaling applies. A prestock projection must
-  divide the whole XP distance by the CURRENT rate (the normal target
+- Accrual rate while overcapped: PLAYER-CONFIRMED (Seralth 2026-07-15) —
+  same as the normal capped-row rate, EXCEPT the Strive Bonus does not apply
+  to overcapped accrual. (Consistent with the engine note that strive
+  cancels out of time projections anyway; for a rank-No.1 player strive is 0
+  and the rates are literally identical.) You stay parked on the capped row,
+  so NO future-row speed scaling applies. A prestock projection must divide
+  the whole XP distance by the CURRENT rate minus strive (the normal target
   projection would be optimistic).
 - Timegate context (2026 guide): Voidbreak gate ≈ day 35–38 of a server;
   Myrimon fruits "lose 50% of their XP" once the next realm's timegate passes —
@@ -61,8 +64,8 @@ applied after the (still manual) breakthrough.
   stocked EXP anecdotally supported ("Middle Voidbreak in one go" videos).
   The 440%/overcap display convention exists nowhere on the indexed web —
   our arithmetic reproduction is the only public cross-check. Accrual rate
-  while overcapped remains UNVERIFIED (assumed normal capped-row rate);
-  verify against the in-game % once capped.
+  while overcapped: player-confirmed same as capped-row rate minus Strive
+  (see above).
 
 ## R8 technique books — pill-effect coverage complete (2026-07-15)
 
