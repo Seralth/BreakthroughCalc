@@ -78,12 +78,13 @@ class ResultsCard extends StatelessWidget {
                 row(tr('Effective XP / day'), res.effectiveXpPerDay.toStringAsFixed(0)),
                 row(tr('Pill XP / day'), res.pillXpPerDay.toStringAsFixed(0)),
                 row(
-                    tr('Daily XP share (pills+Respira / gem)'),
-                    '${res.effectiveXpPerDay > 0 ? ((res.pillXpPerDay + res.respiraXpPerDay) / res.effectiveXpPerDay * 100).toStringAsFixed(1) : '0.0'}%'
+                    tr('Daily XP share (daily flat XP / gem)'),
+                    '${res.effectiveXpPerDay > 0 ? ((res.pillXpPerDay + res.respiraXpPerDay + res.elixirXpPerDay) / res.effectiveXpPerDay * 100).toStringAsFixed(1) : '0.0'}%'
                     ' / +${(res.gemSpeedup * 100).round()}% ${tr('speed')}'),
                 row(tr('Mythic pills / day'), res.mythicPillsPerDay.toStringAsFixed(2)),
                 row(tr('Pearl XP / day'), res.pearlXpPerDay.toStringAsFixed(0)),
                 row(tr('Respira XP / day'), res.respiraXpPerDay.toStringAsFixed(0)),
+                row(tr('Elixir XP / day'), res.elixirXpPerDay.toStringAsFixed(0)),
                 row(tr('XP from fruits'), res.fruitXp.toStringAsFixed(0)),
                 row(tr('Fruit time saved'), trDuration(fmtDays(res.fruitDaysSaved))),
                 ..._absorptionRows(context, row),

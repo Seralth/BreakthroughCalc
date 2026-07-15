@@ -49,10 +49,11 @@ RESULT_ROWS = [
     ("Cultivation XP / day", "o_basexp"),
     ("Effective XP / day", "o_effxp"),
     ("Pill XP / day", "o_pillxp"),
-    ("Daily XP share (pills+Respira / gem)", "o_speedup"),
+    ("Daily XP share (daily flat XP / gem)", "o_speedup"),
     ("Mythic pills / day", "o_mythic"),
     ("Pearl XP / day", "o_pearl"),
     ("Respira XP / day", "o_respira"),
+    ("Elixir XP / day", "o_elixir"),
     ("XP from fruits", "o_fruit"),
     ("Fruit time saved", "o_fruit_days"),
 ]
@@ -173,6 +174,12 @@ class MainWindow(QMainWindow):
         self.absorb_base = QLabel("")
         style_accent(self.absorb_base, "muted", self._acc)
         f.addRow("", self.absorb_base)
+        self.bless_pp = QDoubleSpinBox(); self.bless_pp.setRange(0, 1000)
+        self.bless_pp.setDecimals(1); self.bless_pp.setSuffix(" %")
+        self.bless_window = QDoubleSpinBox(); self.bless_window.setRange(0, 1000)
+        self.bless_window.setDecimals(1); self.bless_window.setSuffix(" %")
+        f.addRow(tr("Ascension blessing"), self.bless_pp)
+        f.addRow(tr("Blessing before Voidbreak Middle"), self.bless_window)
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         style_accent(self.array_out, "muted", self._acc)
         f.addRow("", self.array_out)
@@ -305,6 +312,15 @@ class MainWindow(QMainWindow):
         respira_hint.setWordWrap(True)
         style_accent(respira_hint, "muted", self._acc)
         rf.addRow("", respira_hint)
+        self.elixir_per_day = QDoubleSpinBox(); self.elixir_per_day.setRange(0, 1e5)
+        self.elixir_exp = QDoubleSpinBox(); self.elixir_exp.setRange(0, 1e12)
+        self.elixir_exp.setDecimals(2)
+        self.elixir_effect = QDoubleSpinBox(); self.elixir_effect.setRange(0, 1000)
+        self.elixir_effect.setDecimals(1); self.elixir_effect.setSuffix(" %")
+        self.elixir_effect.setValue(100)
+        rf.addRow(tr("XP elixirs / day"), self.elixir_per_day)
+        rf.addRow(tr("EXP per elixir"), self.elixir_exp)
+        rf.addRow(tr("Elixir effectiveness"), self.elixir_effect)
         return respira
 
     def _build_fruit_group(self) -> QGroupBox:
@@ -884,7 +900,12 @@ class MainWindow(QMainWindow):
             self.absorb_base.setText("")
             return
         base = low * 100
-        entered = self.absorb.value()
+        # Strip the declared Ascension blessing pp so the readout compares
+        # true Strive against the base band (the engine does the same).
+        bless = self.bless_pp.value()
+        if self.engine.blessing_applies(stage, phase, grade):
+            bless += self.bless_window.value()
+        entered = max(0.0, self.absorb.value() - bless)
         warn = False
         if self.engine.has_strive(stage):
             # res.strive is the engine's implied Strive for these same inputs;
@@ -965,19 +986,21 @@ class MainWindow(QMainWindow):
         self.o_basexp.setText(f"{res.base_xp_per_day:,.0f}")
         self.o_effxp.setText(f"{res.effective_xp_per_day:,.0f}")
         self.o_pillxp.setText(f"{res.pill_xp_per_day:,.0f}")
-        flat_share = ((res.pill_xp_per_day + res.respira_xp_per_day)
+        flat_share = ((res.pill_xp_per_day + res.respira_xp_per_day
+                       + res.elixir_xp_per_day)
                       / res.effective_xp_per_day * 100
                       if res.effective_xp_per_day else 0.0)
         self.o_speedup.setText(tr("{}% of daily XP / +{}% speed").format(
             f"{flat_share:.1f}", f"{res.gem_speedup * 100:.0f}"))
         self.o_speedup.setToolTip(tr(
             "Share of your effective daily XP that comes from flat sources "
-            "(pills + Respira), and the Aura Gem's speed bonus on cultivation. "
-            "Flat XP does not scale with grade EXP, so a high share means slower "
-            "progress at higher grades than raw speed suggests."))
+            "(pills + Respira + elixirs), and the Aura Gem's speed bonus on "
+            "cultivation. Flat XP does not scale with grade EXP, so a high share "
+            "means slower progress at higher grades than raw speed suggests."))
         self.o_mythic.setText(f"{res.mythic_pills_per_day:.2f}")
         self.o_pearl.setText(f"{res.pearl_xp_per_day:,.0f}")
         self.o_respira.setText(f"{res.respira_xp_per_day:,.0f}")
+        self.o_elixir.setText(f"{res.elixir_xp_per_day:,.0f}")
         self.o_fruit.setText(f"{res.fruit_xp:,.0f}")
         self.o_fruit_days.setText(tr_duration(fmt_days(res.fruit_days_saved)))
 

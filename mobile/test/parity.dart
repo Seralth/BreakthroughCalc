@@ -42,6 +42,7 @@ void main() {
       'mythic_pills_per_day': r.mythicPillsPerDay,
       'pearl_xp_per_day': r.pearlXpPerDay,
       'respira_xp_per_day': r.respiraXpPerDay,
+      'elixir_xp_per_day': r.elixirXpPerDay,
       'fruit_xp': r.fruitXp,
       'fruit_days_saved': r.fruitDaysSaved,
       'phase_band': r.phaseBand,

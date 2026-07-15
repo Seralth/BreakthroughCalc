@@ -47,6 +47,8 @@ constants — silently remaps every previously shared code. The order pins in
 | fr / fc / fh | fruit_rank / fruit_count / fruit_highest_rank | index into fruit_xp keys + number + 0/1 |
 | lc / lq / lg | lvl_culti / lvl_quality / lvl_gush | int |
 | er | extractor_rarity | index into rarity_names |
+| bp / bw | bless_pp / bless_window_pp | fractions (0.20 = +20pp); added 2026-07-15, absent in older codes (decode to 0.0) |
+| ed / ex / ef | elixir_per_day / elixir_exp / elixir_effect | numbers; added 2026-07-15 — note ef decodes to 1.0 (its default) when absent |
 | P | pe_sources | list of [name, percent] pairs — full strings, so codes survive catalog reordering |
 | R | respira_sources | sorted list of catalog names (same reasoning) |
 

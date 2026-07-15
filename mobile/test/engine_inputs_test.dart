@@ -60,6 +60,11 @@ void main() {
         lvlQuality: 9,
         lvlGush: 14,
         extractorRarity: 'Epic',
+        blessPp: 0.15,
+        blessWindowPp: 0.2,
+        elixirPerDay: 12.0,
+        elixirExp: 4000.0,
+        elixirEffect: 0.75,
       );
       final m = inp.toMap();
       expect(Inputs.fromMap(m).toMap(), equals(m));

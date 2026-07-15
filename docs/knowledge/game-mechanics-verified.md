@@ -57,12 +57,19 @@ applied after the (still manual) breakthrough.
     grade_xp table.
 - Accrual rate while overcapped: PLAYER-CONFIRMED (Seralth 2026-07-15) —
   same as the normal capped-row rate, EXCEPT the Strive Bonus does not apply
-  to overcapped accrual. (Consistent with the engine note that strive
-  cancels out of time projections anyway; for a rank-No.1 player strive is 0
-  and the rates are literally identical.) You stay parked on the capped row,
-  so NO future-row speed scaling applies. A prestock projection must divide
-  the whole XP distance by the CURRENT rate minus strive (the normal target
+  to overcapped accrual. (For a rank-No.1 player strive is 0 and the rates
+  are literally identical.) You stay parked on the capped row, so NO
+  future-row speed scaling applies. A prestock projection must divide the
+  whole XP distance by the CURRENT rate minus strive (the normal target
   projection would be optimistic).
+  MODELED (2026-07-15, issue #25): the engines now de-strive the overcap
+  rate (abode × base low of the capped row); pinned by
+  test_prestock_rate_excludes_strive / test_prestock_slows_as_strive_rises.
+  The overcap leg is also reset-window aware: with dailies_done, no daily
+  XP accrues until the reset and the deferred event-Respira credit lands at
+  the reset.
+  ASSUMED (unverified): blessing pp still apply while overcapped — they are
+  an absorption-band bonus, not Strive.
 - Timegate context (2026 guide): Voidbreak gate ≈ day 35–38 of a server;
   Myrimon fruits "lose 50% of their XP" once the next realm's timegate passes —
   spend fruits before the gate. RECONCILED (2026-07-15, gameplay.tips abode
@@ -195,9 +202,13 @@ via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
 absorption ratio (like Virya in the official formula), not ×1.2. Still
 pending one in-game absorption-tooltip reading with a tier active for
 screenshot-grade verification (a 40%-band player with +20% should read
-60%, not 48%). Until then the calc under-estimates
-speed (over-estimates time) for accounts with these blessings on
-pre-Voidbreak rows.
+60%, not 48%). MODELED (2026-07-15, issue #25): both engines take two
+inputs — a persistent pp bonus (`bless_pp`) and the conditional
+before-Voidbreak-MIDDLE pp bonus (`bless_window_pp`) — applied additively
+per-row (speed(row) = abode × (low_row × (1+strive) + bless(row))). The
+entered absorption ratio is the on-screen TOTAL; the engine strips the
+current row's blessing to recover true Strive, so the implied-Strive
+readout is no longer contaminated for blessed accounts.
 ## Respira base XP is FIXED per major Stage (verified 2026-07-15)
 
 Community "Respira has a fixed value" claims are correct, with a precise

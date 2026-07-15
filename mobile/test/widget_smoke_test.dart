@@ -78,6 +78,11 @@ const inputsV1Keys = [
   'lvl_quality',
   'lvl_gush',
   'extractor_rarity',
+  'bless_pp',
+  'bless_window_pp',
+  'elixir_per_day',
+  'elixir_exp',
+  'elixir_effect',
   'pe_sources',
   'respira_sources',
 ];
