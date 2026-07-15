@@ -742,11 +742,42 @@ class Engine {
           // excess EXP accrues at the CAPPED row's rate (no future-row speed
           // scaling; pills/Respira stay flat). Overcap accrual runs WITHOUT
           // the Strive Bonus (player-confirmed 2026-07-15) — de-strived aura
-          // component; blessing pp still apply (mirrors engine.py).
+          // component; blessing pp still apply. The overcap leg is
+          // reset-window aware (mirrors engine.py — keep in lockstep).
           final capSpeed = abode * (_num(rows[send]['low']) + blessAt(send));
-          final capRate = capSpeed * (1 + gem) / tickSeconds + dailyRate;
-          final overflowXp = xpAhead(tstart - 1) - xpAhead(send);
-          res.prestockDays = days(realSeconds(send) + overflowXp / capRate);
+          final capBase = capSpeed * (1 + gem) / tickSeconds;
+          final pre = realSeconds(send);
+          final windowRem = math.max(0.0, resetWindow - pre);
+          // Credits accounted explicitly: only what was available during
+          // the climb (deferred event XP only if the window closed there)
+          // can spill into the overcap XP; otherwise the deferred credit
+          // lands at the reset inside the overcap leg.
+          var rawToSend =
+              _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
+          for (var j = idx + 1; j <= send; j++) {
+            rawToSend += _num(rows[j]['grade_xp']);
+          }
+          var rawOver = 0.0;
+          for (var j = send + 1; j < tstart; j++) {
+            rawOver += _num(rows[j]['grade_xp']);
+          }
+          final preCredit =
+              startCredit + (windowRem > 0.0 ? 0.0 : deferredCredit);
+          var over =
+              math.max(0.0, rawOver - math.max(0.0, preCredit - rawToSend));
+          var total = pre;
+          if (windowRem > 0.0 && over > 0.0) {
+            final inWin = capBase * windowRem;
+            if (over <= inWin) {
+              total += over / capBase;
+              over = 0.0;
+            } else {
+              over = math.max(0.0, over - inWin - deferredCredit);
+              total += windowRem;
+            }
+          }
+          total += over / (capBase + dailyRate);
+          res.prestockDays = days(total);
           res.prestockBand = band(res.prestockDays, tstart - 1);
           // Overcap % in the game's display convention (verified 2026-07-15):
           // cumulative XP since the start of the Stage's final half-step ÷

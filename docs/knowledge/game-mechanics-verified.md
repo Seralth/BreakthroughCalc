@@ -65,6 +65,9 @@ applied after the (still manual) breakthrough.
   MODELED (2026-07-15, issue #25): the engines now de-strive the overcap
   rate (abode × base low of the capped row); pinned by
   test_prestock_rate_excludes_strive / test_prestock_slows_as_strive_rises.
+  The overcap leg is also reset-window aware: with dailies_done, no daily
+  XP accrues until the reset and the deferred event-Respira credit lands at
+  the reset.
   ASSUMED (unverified): blessing pp still apply while overcapped — they are
   an absorption-band bonus, not Strive.
 - Timegate context (2026 guide): Voidbreak gate ≈ day 35–38 of a server;

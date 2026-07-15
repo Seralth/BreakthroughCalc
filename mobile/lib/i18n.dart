@@ -273,6 +273,12 @@ const Map<String, Map<String, String>> _t = {
     'es': 'Bendición antes de Ruptura del Vacío (Intermedio) (%)',
     'zh': '万象破虚中期前的福泽 (%)',
   },
+  'Absorption ratio must exceed the blessing bonus.': {
+    'ru': 'Коэффициент поглощения должен превышать бонус благословения.',
+    'de': 'Die Absorptionsrate muss den Segensbonus übersteigen.',
+    'es': 'El índice de absorción debe superar el bono de la bendición.',
+    'zh': '吸收率必须高于福泽加成。',
+  },
   'XP elixirs / day': {
     'ru': 'Эликсиров опыта / день',
     'de': 'EXP-Elixiere / Tag',

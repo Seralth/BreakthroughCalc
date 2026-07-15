@@ -671,10 +671,36 @@ class Engine:
                     # Blessing pp are an absorption-band bonus, not Strive,
                     # and are assumed to still apply (unverified).
                     cap_speed = abode * (self.rows[send]["low"] + bless_at(send))
-                    cap_rate = cap_speed * (1 + gem) / TICK_SECONDS + daily_rate
-                    overflow_xp = xp_ahead(tstart - 1) - xp_ahead(send)
-                    res.prestock_days = days(
-                        real_seconds(send) + overflow_xp / cap_rate)
+                    cap_base = cap_speed * (1 + gem) / TICK_SECONDS
+                    pre = real_seconds(send)
+                    # The overcap leg is reset-window aware: if the
+                    # dailies-done window outlasts the climb to the cap,
+                    # overcap accrues WITHOUT the daily XP until the reset,
+                    # and the deferred event-Respira credit lands at the
+                    # reset (real_seconds credits it before the cap only
+                    # when the window closes there, i.e. window_rem == 0).
+                    # Credits are accounted explicitly: only what was
+                    # actually available during the climb can spill into
+                    # the overcap XP.
+                    window_rem = max(0.0, reset_window - pre)
+                    raw_to_send = remaining_cur + sum(
+                        self.rows[j]["grade_xp"] for j in range(idx + 1, send + 1))
+                    raw_over = sum(self.rows[j]["grade_xp"]
+                                   for j in range(send + 1, tstart))
+                    pre_credit = start_credit + (
+                        0.0 if window_rem > 0.0 else deferred_credit)
+                    over = max(0.0, raw_over - max(0.0, pre_credit - raw_to_send))
+                    total = pre
+                    if window_rem > 0.0 and over > 0.0:
+                        in_win = cap_base * window_rem
+                        if over <= in_win:
+                            total += over / cap_base
+                            over = 0.0
+                        else:
+                            over = max(0.0, over - in_win - deferred_credit)
+                            total += window_rem
+                    total += over / (cap_base + daily_rate)
+                    res.prestock_days = days(total)
                     res.prestock_band = band(res.prestock_days, tstart - 1)
                     # Overcap % in the game's display convention (verified
                     # 2026-07-15): cumulative XP since the start of the Stage's

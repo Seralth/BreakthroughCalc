@@ -295,6 +295,8 @@ TRANSLATIONS = {
   "drop it.":
       "Условный уровень благословения (+20 процентных пунктов), который игра убирает на "
       "Преодолении (Средняя). Вводится отдельно, чтобы прогнозы дальше этой точки его не учитывали.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "Коэффициент поглощения должен превышать бонус благословения.",
   "XP elixirs consumed per day.": "Эликсиров опыта, используемых в день.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "Опыт совершенствования за один эликсир (из описания предмета).",
@@ -616,6 +618,8 @@ TRANSLATIONS = {
   "drop it.":
       "Die bedingte Segensstufe (+20 Prozentpunkte), die das Spiel bei Leerenbruch (Mitte) "
       "entfernt. Separat geführt, damit Prognosen über diesen Punkt hinaus sie fallen lassen.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "Die Absorptionsrate muss den Segensbonus übersteigen.",
   "XP elixirs consumed per day.": "Pro Tag verbrauchte EXP-Elixiere.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "Kultivierungs-EXP eines Elixiers (Gegenstands-Tooltip).",
@@ -941,6 +945,8 @@ TRANSLATIONS = {
       "El nivel condicional de la bendición (+20 puntos porcentuales) que el juego retira en "
       "Ruptura del Vacío (Intermedio). Se introduce aparte para que las proyecciones más allá "
       "de ese punto lo descarten.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "El índice de absorción debe superar el bono de la bendición.",
   "XP elixirs consumed per day.": "Elixires de EXP consumidos al día.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "EXP de cultivación de un elixir (descripción del objeto).",
@@ -1235,6 +1241,8 @@ TRANSLATIONS = {
   "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
   "drop it.":
       "条件福泽（+20 个百分点），到万象破虚中期时被移除。单独填写，以便超过该点的预测不再计入。",
+  "Absorption ratio must exceed the blessing bonus.":
+      "吸收率必须高于福泽加成。",
   "XP elixirs consumed per day.": "每日使用的经验灵药数量。",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "单个灵药提供的修为（物品说明）。",
