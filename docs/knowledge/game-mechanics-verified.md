@@ -260,18 +260,19 @@ entire major Stage — it does not scale with phase or grade.
   proc name. 9,515 ≠ Seralth's 8,173 at the same major Stage ⇒ the
   DISPLAYED per-attempt value is per-account (the within-account per-Stage
   constancy stands). Model: display = shared base × (1 + account's Respira
-  Effect books). Friend reports +51% ⇒ implied base 6,301.3; Seralth +28%
-  ⇒ implied base 6,385.2 — 1.3% apart, and BOTH book totals are
-  self-reported as ±a-few-percent (Seralth confirmed his may be off), so
-  the implied-base ranges overlap: the model is consistent with all data
-  within reading error. Best point estimate: base-doubles-per-Stage gives
-  Incarnation base = 2 × (4,041/1.28 = 3,157) = **6,314**, inside both
-  accounts' ranges (predicts Seralth's effective books ≈ +29.4%, friend's
-  ≈ +50.7%). Alternative residual if exact recounts still disagree: a
-  second per-account modifier (dump has extra_base_yunqi separate from
-  extra_exp_yunqi). NEXT to pin exactly: recount ACTIVE Respira Effect
-  lines on either account + a fresh same-day Respira reading; the base
-  then equals reading / (1 + exact books). (Display quirk, player-clarified 2026-07-15:
+  Effect books). RESOLVED (2026-07-15): Seralth confirmed his +28% is
+  EXACT, which anchors integer bases that reproduce both of his displays
+  under rounding: **Nascent base = 3,157** (× 1.28 = 4,040.96 → 4,041) and
+  **Incarnation base = 6,385** (× 1.28 = 8,172.8 → 8,173). The friend's
+  true active books are then +49.0% (9,515 / 6,385 = 1.4902), inside their
+  stated ±few-% uncertainty. The per-Stage ratio is 2.0225 — doubling is
+  only APPROXIMATE; treat the bases as server-side measured lookup values
+  (same epistemic class as the grade_xp table). Prediction for the next
+  Stage reading: a Voidbreak display should imply base ≈ 12.8-12.9k if the
+  ~2.02 ratio persists (unverified).
+  Calculator note: the Respira input asks for the DISPLAYED per-attempt
+  value, which already includes the books — no engine change needed; a
+  per-Stage pre-fill would need base × (1 + user's books %). (Display quirk, player-clarified 2026-07-15:
   the cultivation screen labels cultivation-XP gain floats as "MP +x" —
   passive ticks and Respira procs alike — so these ARE cultivation-XP
   readings, not mana.)
