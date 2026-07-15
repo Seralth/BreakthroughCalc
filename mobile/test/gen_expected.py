@@ -12,8 +12,7 @@ from breakthrough_calc.engine import Engine, Inputs, Results
 
 # Every Results field is parity-checked; a field added to only one engine
 # fails loudly in parity.dart instead of silently escaping coverage.
-# 'breakdown' is a dead Python-only field (never populated; slated for removal).
-FIELDS = [f.name for f in dataclasses.fields(Results) if f.name != "breakdown"]
+FIELDS = [f.name for f in dataclasses.fields(Results)]
 
 e = Engine()
 scenarios = json.load(open(os.path.join(HERE, "scenarios.json")))
