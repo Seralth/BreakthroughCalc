@@ -139,6 +139,9 @@ class _CalculatorPageState extends State<CalculatorPage>
   final _abodeCtrl = TextEditingController();
   final _absorbCtrl = TextEditingController();
   final _respiraCtrl = TextEditingController();
+  final _respiraExpCtrl = TextEditingController();
+  late double _respiraBooksPct =
+      widget.prefs.getDouble('respira_books_pct') ?? 0.0;
 
   Engine get engine => widget.engine;
   final _nav = DocNavigator.instance;
@@ -158,6 +161,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     _abodeCtrl.dispose();
     _absorbCtrl.dispose();
     _respiraCtrl.dispose();
+    _respiraExpCtrl.dispose();
     super.dispose();
   }
 
@@ -217,6 +221,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     _abodeCtrl.text = fmtNum(_abode);
     _absorbCtrl.text = fmtNum(inp.absorptionRatio * 100);
     _respiraCtrl.text = fmtNum(inp.respiraPerDay);
+    _respiraExpCtrl.text = fmtNum(inp.respiraExp);
   }
 
   // ---- shareable build string -------------------------------------------
@@ -506,9 +511,32 @@ class _CalculatorPageState extends State<CalculatorPage>
             inp.respiraEvent = v;
             _recalc();
           }),
-          numField(tr('Base EXP / attempt'), inp.respiraExp, (v) {
-            inp.respiraExp = v;
-            _recalc();
+          Row(children: [
+            Expanded(
+              child: numCtrlField(tr('Base EXP / attempt'), _respiraExpCtrl,
+                  (v) {
+                inp.respiraExp = v;
+                _recalc();
+              }),
+            ),
+            IconButton(
+              icon: const Icon(Icons.auto_fix_high),
+              tooltip: tr('Auto-fill from Stage'),
+              onPressed: () {
+                final base = engine.respiraBaseEstimate(inp.stage);
+                if (base == null) return;
+                setState(() {
+                  inp.respiraExp =
+                      (base * (1 + _respiraBooksPct / 100)).roundToDouble();
+                  _respiraExpCtrl.text = fmtNum(inp.respiraExp);
+                });
+                _recalc();
+              },
+            ),
+          ]),
+          numField(tr('Respira Effect books (%)'), _respiraBooksPct, (v) {
+            _respiraBooksPct = v;
+            widget.prefs.setDouble('respira_books_pct', v);
           }),
           Padding(
             padding: const EdgeInsets.only(top: 4),

@@ -297,6 +297,18 @@ TRANSLATIONS = {
       "Преодолении (Средняя). Вводится отдельно, чтобы прогнозы дальше этой точки его не учитывали.",
   "Absorption ratio must exceed the blessing bonus.":
       "Коэффициент поглощения должен превышать бонус благословения.",
+  "Auto": "Авто",
+  "Respira Effect books": "Книги эффекта дыхания ци",
+  "Fill Base EXP from your Stage's Respira base (measured for "
+  "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
+  "elsewhere) times (1 + Respira Effect books %).":
+      "Заполнить базовый опыт по базе дыхания ци вашей ступени (измерено для Зарождения "
+      "души и Перевоплощения, для остальных экстраполяция ×2,0225 за ступень), умноженной "
+      "на (1 + % книг эффекта дыхания ци).",
+  "Your total ACTIVE 'Respira Effect' percent from technique books. Only "
+  "used by the Auto button: Base EXP = Stage base × (1 + this %).":
+      "Суммарный АКТИВНЫЙ процент «эффекта дыхания ци» из книг техник. Используется только "
+      "кнопкой «Авто»: базовый опыт = база ступени × (1 + этот %).",
   "XP elixirs consumed per day.": "Эликсиров опыта, используемых в день.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "Опыт совершенствования за один эликсир (из описания предмета).",
@@ -620,6 +632,18 @@ TRANSLATIONS = {
       "entfernt. Separat geführt, damit Prognosen über diesen Punkt hinaus sie fallen lassen.",
   "Absorption ratio must exceed the blessing bonus.":
       "Die Absorptionsrate muss den Segensbonus übersteigen.",
+  "Auto": "Auto",
+  "Respira Effect books": "Atmungseffekt-Bücher",
+  "Fill Base EXP from your Stage's Respira base (measured for "
+  "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
+  "elsewhere) times (1 + Respira Effect books %).":
+      "Basis-EXP aus der Atmungs-Basis Ihrer Stufe füllen (gemessen für Werdende Seele "
+      "und Inkarnation, sonst ×2,0225 pro Stufe extrapoliert), multipliziert mit "
+      "(1 + Atmungseffekt-Bücher-%).",
+  "Your total ACTIVE 'Respira Effect' percent from technique books. Only "
+  "used by the Auto button: Base EXP = Stage base × (1 + this %).":
+      "Ihr gesamter AKTIVER 'Atmungseffekt'-Prozentsatz aus Technikbüchern. Nur vom "
+      "Auto-Knopf verwendet: Basis-EXP = Stufenbasis × (1 + dieser %).",
   "XP elixirs consumed per day.": "Pro Tag verbrauchte EXP-Elixiere.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "Kultivierungs-EXP eines Elixiers (Gegenstands-Tooltip).",
@@ -947,6 +971,18 @@ TRANSLATIONS = {
       "de ese punto lo descarten.",
   "Absorption ratio must exceed the blessing bonus.":
       "El índice de absorción debe superar el bono de la bendición.",
+  "Auto": "Auto",
+  "Respira Effect books": "Libros de efecto de Inhala",
+  "Fill Base EXP from your Stage's Respira base (measured for "
+  "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
+  "elsewhere) times (1 + Respira Effect books %).":
+      "Rellena la EXP base con la base de Inhala de tu etapa (medida para Alma Naciente "
+      "e Encarnación, extrapolada ×2,0225 por etapa en el resto) por "
+      "(1 + % de libros de efecto de Inhala).",
+  "Your total ACTIVE 'Respira Effect' percent from technique books. Only "
+  "used by the Auto button: Base EXP = Stage base × (1 + this %).":
+      "Tu porcentaje ACTIVO total de 'efecto de Inhala' de los libros de técnica. Solo "
+      "lo usa el botón Auto: EXP base = base de la etapa × (1 + este %).",
   "XP elixirs consumed per day.": "Elixires de EXP consumidos al día.",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "EXP de cultivación de un elixir (descripción del objeto).",
@@ -1243,6 +1279,17 @@ TRANSLATIONS = {
       "条件福泽（+20 个百分点），到万象破虚中期时被移除。单独填写，以便超过该点的预测不再计入。",
   "Absorption ratio must exceed the blessing bonus.":
       "吸收率必须高于福泽加成。",
+  "Auto": "自动",
+  "Respira Effect books": "吐纳效果典籍",
+  "Fill Base EXP from your Stage's Respira base (measured for "
+  "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
+  "elsewhere) times (1 + Respira Effect books %).":
+      "按当前境界的吐纳基础值填充基础修为（元婴与化神为实测，其余按每境界×2.0225外推），"
+      "再乘以（1 + 吐纳效果典籍%）。",
+  "Your total ACTIVE 'Respira Effect' percent from technique books. Only "
+  "used by the Auto button: Base EXP = Stage base × (1 + this %).":
+      "功法典籍中当前生效的「吐纳效果」总百分比。仅供「自动」按钮使用："
+      "基础修为 = 境界基础值 ×（1 + 该百分比）。",
   "XP elixirs consumed per day.": "每日使用的经验灵药数量。",
   "Cultivation EXP granted by one elixir (item tooltip).":
       "单个灵药提供的修为（物品说明）。",

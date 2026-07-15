@@ -273,6 +273,18 @@ const Map<String, Map<String, String>> _t = {
     'es': 'Bendición antes de Ruptura del Vacío (Intermedio) (%)',
     'zh': '万象破虚中期前的福泽 (%)',
   },
+  'Auto-fill from Stage': {
+    'ru': 'Автозаполнение по ступени',
+    'de': 'Automatisch aus Stufe füllen',
+    'es': 'Autorrellenar según la etapa',
+    'zh': '按境界自动填充',
+  },
+  'Respira Effect books (%)': {
+    'ru': 'Книги эффекта дыхания ци (%)',
+    'de': 'Atmungseffekt-Bücher (%)',
+    'es': 'Libros de efecto de Inhala (%)',
+    'zh': '吐纳效果典籍 (%)',
+  },
   'Absorption ratio must exceed the blessing bonus.': {
     'ru': 'Коэффициент поглощения должен превышать бонус благословения.',
     'de': 'Die Absorptionsrate muss den Segensbonus übersteigen.',
