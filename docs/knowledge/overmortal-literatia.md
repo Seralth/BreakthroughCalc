@@ -196,8 +196,9 @@ Order (Shield First ON; shields 1–3 queue):
 12. **Fire Lotus** — in Scorch, concentrated single-target
 13. **Cosmic Demon Spire** — tail of window (Exorcism useless in PvP -> cast last of the 3)
 14. **Primeval Brush** — Summit yes
-15+. remaining Inkstone casts -> Literal Reality auto-fires at 300 -> monsterforms
-    (monsterforms usually never cast in a 40–55s fight; harmless at the tail)
+15+. remaining Inkstone casts -> Literal Reality auto-fires at 300
+    (monsterforms now UNEQUIPPED — see section 12; they blocked main-track slots
+    in longer fights for the worst per-slot value on the track)
 
 The three 60s-cd curios are once-per-fight -> they take the guaranteed FIRST Scorch
 window; LR recurs 2–3x/fight so it catches later windows.
@@ -219,7 +220,73 @@ window; LR recurs 2–3x/fight so it catches later windows.
   the shield bonus (+0.6% -> ~+1.3M absorb) is noise. It's a strictly worse stand-in for
   Lotus Dreamscape's purify — do NOT delay Lotus for it.
 
-## 12. Decompile pipeline (for future skill/config lookups)
+## 12. Cast-slot economics & Magicka-stun evaluation (2026-07-14 fight report)
+
+Source: fight report vs DeliciousJev (Ghostia, 1.04B vs 1.04B) — **Loss, 1:11 (71s)**,
+Damage + both Defence tabs. In-game observed cast pacing: ~2.5s per main-track cast
+("2–3 mississippi"), so a 71s fight ≈ 28 main-track slots.
+
+### Verified structural facts
+
+- **Pets and Zodiac skills run on their own cast tracks** (secondary units) — they do
+  not consume main-track slots. Monsterforms DO block the main track while casting.
+- **The main track runs fully saturated.** This fight: 6 inkstone + 4 Master's Hand +
+  4 Unleashed Ink + 3 Hidden Hook + 2 Brush + 3 curios + 2 monsterform + ~6 shield
+  casts ≈ 28–30 casts = the entire slot budget. Cooldowns are NOT the constraint —
+  the 5 inkstones could have fired ~15x on their 24s CDs but got 6 (40% utilization).
+  **Every ability swap is a slot-for-slot trade; there is no slack.**
+
+### Per-slot value (this fight, damage dealt or absorbed per cast)
+
+| Cast | Unleashed | Per-slot value |
+|---|---|---|
+| Literal Reality (auto) | 2 | 74.2M |
+| Spiritual Wall | 2 | 66.1M absorbed |
+| Windwalker | 1 | 58.4M absorbed |
+| Word of Kindness | 3 | 32.7M absorbed + 50 gen |
+| Primeval Brush | 2 | 20.7M |
+| Primeval Inkstone | 6 | 19.5M + 25 gen |
+| Hidden Hook | 3 | 11.5M + Scorch |
+| Master's Hand | 4 | 7.9M + 25 gen |
+| Unleashed Ink | 4 | 7.4M + 50 gen |
+| Titan Similitude (monsterform) | 2 | 3.2M |
+
+### Decision: Magicka paralysis skill (85.5% / 2.8s) — REJECTED
+
+Community advice was "2 borrowed shields + the stun on top of class shield" (would
+have replaced Master's Hand). Rejected on this data:
+
+- The stun is 0 damage / 0 Erudition; its value is ~1 denied enemy cast (~2.8s ≈ one
+  2.5s slot). Jev's Primeval Masks average only ~6.5M/cast — so the trade is
+  7.9M + 25 gen given up for ~6.5M denied. Net negative, second-worst slot on the track.
+- Total generation this fight ≈ 550–600 = exactly 2 LRs. Losing Master's Hand's
+  ~100/fight risks the second Literal Reality (74M/cast, top damage source).
+- The loss was NOT a control problem: we absorbed 288.8M (Spiritual Wall 132.2M /
+  WoK 98.2M / Windwalker 58.4M) vs their 142.8M (Soul Banner 67.5M ×3 / Windwalker
+  50.9M / Soul Symbiosis 24.5M) — out-shielded them 2:1 and still lost. Ghostia has
+  no keystone cast worth interrupting; damage arrives as a stream of small mask
+  ticks and sustain is banner/thrall-driven. The gap remains damage *placement*
+  (thralls eating single-target casts), same as section 9.
+- Contested-stat reality check (see combat-mechanics.md): duration multiplier clamps
+  0.5–1.25x, so the 2.8s is 1.4s vs a stacked-resist opponent.
+
+### Decision: monsterforms — UNEQUIP BOTH
+
+Titan Similitude: 2 casts, 6.48M total (3.2M/slot, worst on the track), and the main
+track is locked while they cast. They fire in the mid-late phase of longer fights —
+exactly when the LR#2 ramp needs slots. Equipping gives no passive stats, only a
+hollow BR display bump. Freed slots ≈ 2 inkstone casts ≈ ~39M + 50 gen (~6x value).
+
+### Revised opener (Master's Hand retained; if it were ever dropped)
+
+Losing any +25 source means the 5-inkstone sweep tops at 225, short of Hidden Hook's
+250 Summit. Fix: hold Hidden Hook one slot for Unleashed Ink's 2nd cast (13s CD
+returns right as the ~8-cast sweep ends at ~2.5s/cast) -> 275 -> Summit. First Scorch
+lands ~22–25s. Note: at 2.5s/cast only TWO casts fit the 5s Scorch window —
+Dragonpit + Fire Lotus; Spire always landed outside it (its "cast last" position is
+correct but it gets no Scorch bonus).
+
+## 13. Decompile pipeline (for future skill/config lookups)
 
 Repo: `~/Projects/BreakthroughCalc/apk_analysis/`. Game = `com.ltgames.android.m71.us`,
 Unity IL2CPP + tolua (game logic/data = Lua). See `RE_FINDINGS.md`.
@@ -238,7 +305,7 @@ Unity IL2CPP + tolua (game logic/data = Lua). See `RE_FINDINGS.md`.
 - **Note:** cultivation *balance* tables are server-authoritative (not in client);
   combat *skill* definitions and status classifications ARE client-side and verifiable.
 
-## 13. Internal term glossary
+## 14. Internal term glossary
 
 | English | Chinese | config key |
 |---|---|---|
