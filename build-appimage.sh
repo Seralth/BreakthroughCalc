@@ -2,8 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 [ -d .venv ] || { python3 -m venv .venv; .venv/bin/pip install "PySide6==6.11.1" "pyinstaller==6.21.0"; }
+# Bundle the whole data directory: listing files one by one is how shipped
+# builds silently lost respira_sources.json (empty Respira picker v2.7.1-2.10).
 .venv/bin/pyinstaller --noconfirm --clean --name breakthrough-calc --windowed \
-  --add-data data/breakthrough.json:data --add-data data/pill_effect_sources.json:data --add-data packaging/breakthrough-calc.png:. main.py
+  --add-data data:data --add-data packaging/breakthrough-calc.png:. main.py
 rm -rf packaging/AppDir
 mkdir -p packaging/AppDir/usr/bin
 cp -r dist/breakthrough-calc/* packaging/AppDir/usr/bin/

@@ -1,4 +1,17 @@
-__version__ = "2.12"
+__version__ = "2.14"
+
+
+def parse_version(s: str):
+    """'v2.7' -> (2, 7, 0); None if unparseable. Prerelease suffixes ignored."""
+    s = s.strip().lstrip("vV").split("-")[0].split("+")[0]
+    parts = s.split(".")
+    try:
+        nums = [int(p) for p in parts if p != ""]
+    except ValueError:
+        return None
+    if not nums:
+        return None
+    return tuple((nums + [0, 0, 0])[:3])
 
 # GitHub repo used by the update checker and release links.
 REPO = "Seralth/BreakthroughCalc"

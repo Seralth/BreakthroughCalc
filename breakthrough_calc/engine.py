@@ -26,10 +26,17 @@ The spreadsheet model, verified against its own "speed checker" cell:
 
 from __future__ import annotations
 
-import json
 import math
-import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+# Re-exported for compatibility: data loading lives in data_io (the GUI and
+# tests import these names from here).
+from .data_io import (  # noqa: F401
+    _load_catalog,
+    load_data,
+    load_pill_sources,
+    load_respira_sources,
+)
 
 TICK_SECONDS = 8.0
 
@@ -45,8 +52,18 @@ _BAND_Z = 1.645
 # gush on the 5th fruit reset the "guaranteed in x6" counter back to 6).
 GUSH_GUARANTEE_EVERY = 6
 
-# Extractor rarity ladder; rank N grants +20% orb EXP to tiers 1..N (no Common line).
-EXTRACTOR_RANKS = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
+# Extractor rarity ladder = data["rarity_names"]; rank N grants +20% orb EXP
+# to tiers 1..N (no Common line) — see fruit_stats.
+
+# Base abode energy for the Connection..Incarnation stage band (in-game
+# "Cultivation Bonus" screen, verified 2026-07-05: abode 208.06 = 130 x 1.60).
+# Outside that band the base is unknown, so the GUI's implied-aura-bonus
+# readout is hidden.
+BASE_ENERGY = 130.0
+
+# Strive Bonus caps at +120% while in the mortal world (Nascent..Incarnation
+# per the in-game Strive panel); the GUI warns above it.
+STRIVE_CAP_MORTAL = 1.20
 
 # Strive tier tables recovered from the client config (cfg_us_calc).
 # Young servers (world level < 30) use a major-realm-gap table; mature servers
@@ -81,41 +98,6 @@ def _strive_shape_mature(level_gap: int, major_gap: int) -> float:
         extra = _STRIVE_EXTRA_RANK[1]
     return sub + extra
 
-import sys
-
-if getattr(sys, "frozen", False):
-    _BASE = sys._MEIPASS  # PyInstaller bundle
-else:
-    _BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_DATA_PATH = os.path.join(_BASE, "data", "breakthrough.json")
-
-
-def load_data(path: str | None = None) -> dict:
-    with open(path or _DATA_PATH) as f:
-        return json.load(f)
-
-
-def load_pill_sources() -> list:
-    """Catalog of known Cultivation Pill Effect sources (recovered from game
-    data) for the GUI picker. Missing file just means no catalog."""
-    return _load_catalog("pill_effect_sources.json")
-
-
-def load_respira_sources() -> list:
-    """Catalog of known Respira attempt/EXP sources for the GUI picker.
-    kind: 'attempt' (+N daily attempts), 'exp_pct' (informational — the in-game
-    Respira EXP tooltip already includes it), 'pill_attempt' (raises the daily
-    pill limit instead)."""
-    return _load_catalog("respira_sources.json")
-
-
-def _load_catalog(fname: str) -> list:
-    try:
-        with open(os.path.join(_BASE, "data", fname)) as f:
-            return json.load(f)
-    except (OSError, ValueError):
-        return []
-
 
 @dataclass
 class Inputs:
@@ -129,6 +111,9 @@ class Inputs:
     target_stage: str = ""          # for "time until future stage"
     target_phase: str = ""          # optional: half-step within target_stage
     target_grade: str = ""          # optional: grade within target_phase
+    # UI-only: never read by the math. Both UIs compare it against
+    # prestock_days; it rides Inputs for the cross-platform schema (prefs
+    # blob + OMV2 'td' key on mobile).
     timegate_days: float = 0.0      # days until the world-level timegate lifts (0 = not set)
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
     mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
@@ -197,7 +182,9 @@ class Results:
     base_xp_per_day: float = 0.0        # culti_speed at the current grade, per day
     effective_xp_per_day: float = 0.0   # base with gem + pill speed-ups applied
     pill_xp_per_day: float = 0.0
-    pill_speedup: float = 0.0      # ratio (E17)
+    # Daily flat XP as a fraction of base tick XP (legacy Donk-sheet ratio,
+    # cell E17). No UI displays it; kept for cross-engine parity coverage.
+    pill_speedup: float = 0.0
     gem_speedup: float = 0.0
     mythic_pills_per_day: float = 0.0
     pearl_xp_per_day: float = 0.0
@@ -208,7 +195,14 @@ class Results:
     phase_band: tuple = (0.0, 0.0)
     stage_band: tuple = (0.0, 0.0)
     target_band: tuple = (0.0, 0.0)
-    breakdown: dict = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class PillBreakdown:
+    """Daily pill/artifact XP model (the unit-test API for pill math)."""
+    xp_per_day: float
+    mythic_per_day: float
+    pearl_xp_per_day: float
 
 
 class Engine:
@@ -258,8 +252,36 @@ class Engine:
             return -1
         return self.row_index(stage, phase, grade)
 
+    def base_low(self, stage: str, phase: str, grade: str) -> float | None:
+        """Base absorption band low for a row; None for an unknown row."""
+        i = self.row_index(stage, phase, grade)
+        return self.rows[i]["low"] if i >= 0 else None
+
+    def implied_strive(self, stage: str, phase: str, grade: str,
+                       absorption_ratio: float) -> float | None:
+        """Implied Strive Bonus from the entered absorption at a row (game
+        formula: Absorption = Base x (1 + Strive)); None for an unknown row."""
+        low = self.base_low(stage, phase, grade)
+        if low is None or low <= 0:
+            return None
+        return absorption_ratio / low - 1
+
+    def has_strive(self, stage: str) -> bool:
+        """Strive Bonus exists from Nascent Soul onward (earlier stages have
+        no Strive panel in-game)."""
+        order = self.stages()
+        return stage in order and order.index(stage) >= order.index("Nascent")
+
+    def base_energy_known(self, stage: str) -> bool:
+        """BASE_ENERGY = 130 is verified for Connection..Incarnation only."""
+        order = self.stages()
+        if stage not in order:
+            return False
+        return (order.index("Connection") <= order.index(stage)
+                <= order.index("Incarnation"))
+
     # ---- pills ---------------------------------------------------------
-    def _pill_math(self, inp: Inputs) -> dict:
+    def pill_math(self, inp: Inputs) -> PillBreakdown:
         gold, purple, blue, mythic = self.data["pill_xp"].get(inp.pill_rank, [0, 0, 0, 0])
         plus_ratio = inp.pill_effect
         star = self.data["star"]
@@ -327,14 +349,12 @@ class Engine:
 
         total_xp_day = (mythic_per_day * mythic_xp + used_gold * gold_xp
                         + used_purple * purple_xp + used_blue * blue_xp + pearl_xp_day)
-        return {
-            "xp_per_day": total_xp_day,
-            "mythic_per_day": mythic_per_day,
-            "pearl_xp_day": pearl_xp_day,
-        }
+        return PillBreakdown(total_xp_day, mythic_per_day, pearl_xp_day)
+
+    _pill_math = pill_math  # compat alias
 
     # ---- fruits ----------------------------------------------------------
-    def _fruit_stats(self, inp: Inputs) -> tuple[float, float]:
+    def fruit_stats(self, inp: Inputs) -> tuple[float, float]:
         """(mean XP, variance) for a fruit batch. Each fruit independently rolls
         a gush (the crit) and a quality tier, so the batch total is a sum of
         i.i.d. per-fruit XP — mean and variance both scale with the count."""
@@ -362,8 +382,9 @@ class Engine:
         # no Common line). Verified: Epic extractor shows exactly
         # Uncommon/Rare/Epic +20%. (Donk's sheet gated these on culti-level
         # thresholds instead, which also boosted the Common tier.)
-        rank_idx = EXTRACTOR_RANKS.index(inp.extractor_rarity) \
-            if inp.extractor_rarity in EXTRACTOR_RANKS else 0
+        ladder = self.data["rarity_names"]
+        rank_idx = ladder.index(inp.extractor_rarity) \
+            if inp.extractor_rarity in ladder else 0
         # Expected quality factor (treated as deterministic — the data models it
         # as an aggregate, not a single-tier draw, so only gush drives variance).
         # The quality table rows sum to 1.0 (levels 0-10) or 0.7 (levels 11+);
@@ -412,6 +433,41 @@ class Engine:
         var_total = (base * e_q) ** 2 * (gxm - 1) ** 2 * var_gush_count
         return mean, var_total
 
+    _fruit_stats = fruit_stats  # compat alias
+
+    # ---- strive drop-off ---------------------------------------------------
+    def _strive_dropoff(self, inp: Inputs, idx: int, strive: float):
+        """Optional Strive drop-off: if server #1's Stage is given and you're
+        behind them, Strive steps DOWN as you climb major realms toward #1
+        (gap shrinks). Anchored to your real current Strive via _strive_shape,
+        so at the current grade it's unchanged; it fades to 0 at #1's realm.
+        Returns strive_of(row) or None (then Strive is held constant — and
+        cancels out of the time entirely)."""
+        stage_order = self.stages()
+        if inp.top_stage not in stage_order or inp.stage not in stage_order:
+            return None
+        top_i = stage_order.index(inp.top_stage)
+        cur_gap = top_i - stage_order.index(inp.stage)
+        # #1's exact grade is unknown; approximate them at the start of
+        # their Stage for the level-gap count (mature-server regime).
+        top_row = self.stage_start_index(inp.top_stage)
+        stage_idx = {s: i for i, s in enumerate(stage_order)}
+        row_idx = {id(r): i for i, r in enumerate(self.rows)}
+
+        def shape_at(row_i: int, row_stage: str) -> float:
+            major = top_i - stage_idx.get(row_stage, top_i)
+            if inp.mature_server:
+                return _strive_shape_mature(top_row - row_i, major)
+            return _strive_shape(major)
+
+        cur_shape = shape_at(idx, inp.stage)
+        # strive <= 0 (absorption at/below base) cannot fade toward #1 —
+        # a negative scale would make speeds RISE toward them.
+        if not (cur_gap > 0 and cur_shape > 0 and strive > 0):
+            return None
+        scale = strive / cur_shape
+        return lambda row: scale * shape_at(row_idx[id(row)], row["stage"])
+
     # ---- main calc -------------------------------------------------------
     def calculate(self, inp: Inputs) -> Results:
         res = Results()
@@ -438,14 +494,14 @@ class Engine:
         strive = inp.absorption_ratio / cur["low"] - 1 if cur["low"] > 0 else 0.0
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 
-        pills = self._pill_math(inp)
+        pills = self.pill_math(inp)
         # Respira: mean daily XP = attempts x base x 1.8 (crit mean). Event
         # attempts are a one-off, credited up front like fruit.
         respira_daily = inp.respira_per_day * inp.respira_exp * _RESPIRA_CRIT_MEAN
         respira_event_xp = inp.respira_event * inp.respira_exp * _RESPIRA_CRIT_MEAN
-        daily_xp = pills["xp_per_day"] + respira_daily
+        daily_xp = pills.xp_per_day + respira_daily
         pill_ratio = (daily_xp / inp.culti_speed) * TICK_SECONDS / 86400.0
-        fruit_mean, fruit_var = self._fruit_stats(inp)
+        fruit_mean, fruit_var = self.fruit_stats(inp)
         fruit_xp = fruit_mean + respira_event_xp
 
         # Crit variance for the best/worst band. Fruit + event attempts are
@@ -455,39 +511,15 @@ class Engine:
         var_upfront = fruit_var + inp.respira_event * exp2
         var_daily = inp.respira_per_day * exp2      # per day of projection
 
-        # Optional Strive drop-off: if server #1's Stage is given and you're
-        # behind them, Strive steps DOWN as you climb major realms toward #1
-        # (gap shrinks). Anchored to your real current Strive via _strive_shape,
-        # so at the current grade it's unchanged; it fades to 0 at #1's realm.
-        # Without this, Strive is held constant (and cancels out of the time).
-        stage_order = self.stages()
-        strive_of = None
-        if inp.top_stage in stage_order and inp.stage in stage_order:
-            top_i = stage_order.index(inp.top_stage)
-            cur_gap = top_i - stage_order.index(inp.stage)
-            # #1's exact grade is unknown; approximate them at the start of
-            # their Stage for the level-gap count (mature-server regime).
-            top_row = self.stage_start_index(inp.top_stage)
-            stage_idx = {s: i for i, s in enumerate(stage_order)}
-            row_idx = {id(r): i for i, r in enumerate(self.rows)}
-
-            def shape_at(row_i: int, row_stage: str) -> float:
-                major = top_i - stage_idx.get(row_stage, top_i)
-                if inp.mature_server:
-                    return _strive_shape_mature(top_row - row_i, major)
-                return _strive_shape(major)
-
-            cur_shape = shape_at(idx, inp.stage)
-            # strive <= 0 (absorption at/below base) cannot fade toward #1 —
-            # a negative scale would make speeds RISE toward them.
-            if cur_gap > 0 and cur_shape > 0 and strive > 0:
-                scale = strive / cur_shape
-                def strive_of(row):
-                    return scale * shape_at(row_idx[id(row)], row["stage"])
+        strive_of = self._strive_dropoff(inp, idx, strive)
 
         def speed(row) -> float:
             s = strive_of(row) if strive_of else strive
             return max(1e-12, abode * row["low"] * (1 + s))
+
+        def row_rate(row) -> float:
+            # XP/sec while cultivating `row`, before daily flat XP.
+            return speed(row) * (1 + gem) / TICK_SECONDS
 
         # Per-row wall-clock integration. Gem multiplies cultivation speed
         # (claimable storage of gem% x speed — treated as continuous, i.e.
@@ -506,19 +538,20 @@ class Engine:
         else:
             start_credit, deferred_credit = fruit_xp, 0.0
 
+        completion = min(1.0, max(0.0, inp.grade_completion))
+        remaining_cur = cur["grade_xp"] * (1 - completion)
+
         def real_seconds(upto: int) -> float:
             credit = start_credit
             deferred = deferred_credit
             window_left = reset_window
             total = 0.0
-            completion = min(1.0, max(0.0, inp.grade_completion))
-            remaining_cur = cur["grade_xp"] * (1 - completion)
             for j in range(idx, upto + 1):
                 xp = remaining_cur if j == idx else self.rows[j]["grade_xp"]
                 take = min(credit, xp)
                 credit -= take
                 left = xp - take
-                base_rate = speed(self.rows[j]) * (1 + gem) / TICK_SECONDS
+                base_rate = row_rate(self.rows[j])
                 if window_left > 0.0 and left > 0.0:
                     sec_np = left / base_rate
                     if sec_np <= window_left:
@@ -549,11 +582,11 @@ class Engine:
         while send + 1 < len(self.rows) and self.rows[send + 1]["stage"] == inp.stage:
             send += 1
 
-        eff_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS) * (1 + gem) + daily_xp
+        base_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS)
+        eff_per_day = base_per_day * (1 + gem) + daily_xp
 
         def xp_ahead(upto: int) -> float:
-            completion = min(1.0, max(0.0, inp.grade_completion))
-            total = cur["grade_xp"] * (1 - completion)
+            total = remaining_cur
             for j in range(idx + 1, upto + 1):
                 total += self.rows[j]["grade_xp"]
             return max(0.0, total - start_credit - deferred_credit)
@@ -589,8 +622,7 @@ class Engine:
                     # Prestock scenario: a timegate parks you at the Stage cap,
                     # where excess EXP accrues at the CAPPED row's rate (no
                     # future-row speed scaling; pills/Respira stay flat).
-                    cap_rate = (speed(self.rows[send]) * (1 + gem) / TICK_SECONDS
-                                + daily_rate)
+                    cap_rate = row_rate(self.rows[send]) + daily_rate
                     overflow_xp = xp_ahead(tstart - 1) - xp_ahead(send)
                     res.prestock_days = days(
                         real_seconds(send) + overflow_xp / cap_rate)
@@ -615,13 +647,13 @@ class Engine:
         res.valid = True
         res.abode_aura = abode
         res.strive = strive
-        res.base_xp_per_day = inp.culti_speed * (86400.0 / TICK_SECONDS)
-        res.effective_xp_per_day = res.base_xp_per_day * (1 + gem) + daily_xp
-        res.pill_xp_per_day = pills["xp_per_day"]
+        res.base_xp_per_day = base_per_day
+        res.effective_xp_per_day = eff_per_day
+        res.pill_xp_per_day = pills.xp_per_day
         res.pill_speedup = pill_ratio
         res.gem_speedup = gem
-        res.mythic_pills_per_day = pills["mythic_per_day"]
-        res.pearl_xp_per_day = pills["pearl_xp_day"]
+        res.mythic_pills_per_day = pills.mythic_per_day
+        res.pearl_xp_per_day = pills.pearl_xp_per_day
         res.respira_xp_per_day = respira_daily
         res.fruit_xp = fruit_xp
         # Matches Donk's sheet (myrfruits B45/B46): fruit XP / current speed, no gem/pill divisor.
