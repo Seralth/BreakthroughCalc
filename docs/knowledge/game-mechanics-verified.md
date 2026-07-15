@@ -125,6 +125,13 @@ Privilege.'):
 - Tier 3 **Perfect Incarnation** (Corporia path at Incarnation Middle):
   Aura Absorption Ratio +20% applying to stages before Voidbreak (Late)/
   Middle; blessing rewards +5.
+- COMMUNITY-REPORTED (2026-07-15, via Seralth, not yet screenshot-verified):
+  the Tier 1 realm-restriction removal is what allows feeding higher-stage
+  Cultivation Pills to the LOWER secondary path so it catches up (pills are
+  normally realm-locked to the taker's stage). The Tier 2 and Tier 3 +20%
+  bonuses are two separate bonuses that STACK (+40% total) where windows
+  overlap; Tier 3 keeps Tier 2's bonus and extends coverage up to Voidbreak
+  (Late)/Middle rather than replacing it.
 - Dump also has a rank→reward table (Blessing Ranking 1→6, 2→5, 3→4,
   4–10→3, 11+→2) and post-ascension privileges granting Absorption Ratio
   +200% at (mortal? immortal-world) stages plus high-stage pill access.
@@ -139,8 +146,12 @@ uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
 (Late)") breaks the cancellation: windowed rows are faster than the pure
 base-band progression predicts. Same class of issue for the +200%
 post-ascension privilege and Virya (both additive terms, per the formula).
-UNVERIFIED: whether the blessing "+20%" is +20 percentage points added to
-the ratio (like Virya) or ×1.2 on it — needs an in-game absorption-tooltip
-breakdown screenshot with the blessing active before modeling it. Until
-then the calc under-estimates speed (over-estimates time) for accounts with
-these blessings on pre-Voidbreak rows.
+Stacking (+40% in the overlap, community-reported above) makes the windowed
+effect twice as large. Separately, the pills-on-secondary-path use means a
+secondary-path projection would see BOTH a bigger flat daily-XP term (better
+pills) and the windowed absorption bonus. UNVERIFIED: whether the blessing
+"+20%" is +20 percentage points added to the ratio (like Virya) or ×1.2 on
+it — needs an in-game absorption-tooltip breakdown screenshot with the
+blessing active before modeling it. Until then the calc under-estimates
+speed (over-estimates time) for accounts with these blessings on
+pre-Voidbreak rows.
