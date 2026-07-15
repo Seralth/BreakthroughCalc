@@ -4,8 +4,6 @@
 /// engine.py STRIVE_CAP_MORTAL + gui.py's absorb-base readout.
 library;
 
-import 'dart:math' as math;
-
 import 'engine.dart';
 
 /// Strive Bonus caps at +120% while in the mortal world (Nascent through
@@ -49,15 +47,16 @@ AbsorptionDiag? diagnoseAbsorption(Engine engine, Inputs inp, double strive) {
   if (nascentIdx < 0 || stages.indexOf(inp.stage) < nascentIdx) return null;
   final idx = engine.rowIndex(inp.stage, inp.phase, inp.grade);
   if (idx < 0) return null;
-  final base = ((engine.rows[idx] as Map)['low'] as num).toDouble();
-  // Strip the declared Ascension blessing pp before comparing to the base
-  // band, mirroring the engine's strive decomposition and the desktop
-  // readout (gui.py _update_absorb_base).
+  // Blessing pp join the base BEFORE the Strive multiplier (official
+  // composition), so compare against the blessed base — mirrors the
+  // engine's strive decomposition and the desktop readout.
   final vbm = engine.targetStartIndex('Voidbreak', 'MIDDLE', '');
   final bless =
       inp.blessPp + (vbm < 0 || idx < vbm ? inp.blessWindowPp : 0.0);
-  final entered = math.max(0.0, inp.absorptionRatio - bless);
-  final belowBase = entered > 0 && entered < base - _eps;
+  final base =
+      ((engine.rows[idx] as Map)['low'] as num).toDouble() + bless;
+  final belowBase =
+      inp.absorptionRatio > 0 && inp.absorptionRatio < base - _eps;
   final incarnIdx = stages.indexWhere((s) => s.startsWith('Incarnation'));
   final mortal = incarnIdx < 0 || stages.indexOf(inp.stage) <= incarnIdx;
   final aboveCap = strive > striveCapMortal + _eps;

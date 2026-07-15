@@ -202,13 +202,23 @@ via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
 absorption ratio (like Virya in the official formula), not ×1.2. Still
 pending one in-game absorption-tooltip reading with a tier active for
 screenshot-grade verification (a 40%-band player with +20% should read
-60%, not 48%). MODELED (2026-07-15, issue #25): both engines take two
-inputs — a persistent pp bonus (`bless_pp`) and the conditional
-before-Voidbreak-MIDDLE pp bonus (`bless_window_pp`) — applied additively
-per-row (speed(row) = abode × (low_row × (1+strive) + bless(row))). The
-entered absorption ratio is the on-screen TOTAL; the engine strips the
-current row's blessing to recover true Strive, so the implied-Strive
-readout is no longer contaminated for blessed accounts.
+60%, not 48%). SUPERSEDED on composition (2026-07-15, i18n corpus sweep):
+the client's own rules text gives the official formula —
+"Absorption ratio = (base absorption ratio + Virya absorption ratio) x
+(1 + Strive Bonus)" — i.e. blessing/Virya pp join the STAGE BASE inside
+the Strive multiplier, not the displayed total. A companion string scopes
+the Virya bonus to the current Stage ("Aura Absorption Rate +%d%% in
+Current Stage"); values are %d templates (server-side), so the +20pp tier
+values remain community-sourced.
+MODELED (2026-07-15, updated same day to the official composition): both
+engines take two inputs — a persistent pp bonus (`bless_pp`) and the
+conditional before-Voidbreak-MIDDLE pp bonus (`bless_window_pp`) — applied
+per-row as speed(row) = abode × (low_row + bless(row)) × (1+strive). The
+entered absorption ratio is the on-screen TOTAL; the engine recovers true
+Strive as absorption / (low_cur + bless_cur) − 1, so the implied-Strive
+readout is not contaminated for blessed accounts. The tooltip-grade check
+updates accordingly: a base-40% player with +20pp blessing at Strive s
+should display (0.40 + 0.20) × (1 + s).
 ## Respira base XP is FIXED per major Stage (verified 2026-07-15)
 
 Community "Respira has a fixed value" claims are correct, with a precise
