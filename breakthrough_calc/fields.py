@@ -141,6 +141,9 @@ FIELDS: tuple = (
     FieldSpec("respira_exp", "respira_exp", "dspin", inputs_attr="respira_exp",
               tooltip="The base (non-crit) Cultivation EXP from one Respira attempt — see the "
                       "note below the field."),
+    FieldSpec("respira_books", "respira_books", "dspin",
+              tooltip="Your total ACTIVE 'Respira Effect' percent from technique books. Only "
+                      "used by the Auto button: Base EXP = Stage base × (1 + this %)."),
     FieldSpec("elixir_per_day", "elixir_per_day", "dspin", inputs_attr="elixir_per_day",
               tooltip="XP elixirs consumed per day."),
     FieldSpec("elixir_exp", "elixir_exp", "dspin", inputs_attr="elixir_exp",

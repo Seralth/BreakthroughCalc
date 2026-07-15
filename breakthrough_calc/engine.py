@@ -44,6 +44,14 @@ TICK_SECONDS = 8.0
 _RESPIRA_CRIT = ((1, 0.60), (2, 0.30), (5, 0.08), (10, 0.02))
 _RESPIRA_CRIT_MEAN = sum(m * p for m, p in _RESPIRA_CRIT)          # 1.8
 _RESPIRA_CRIT_VAR = sum(p * m * m for m, p in _RESPIRA_CRIT) - _RESPIRA_CRIT_MEAN ** 2  # 2.56
+
+# Respira per-attempt BASE XP is one server-side constant per major Stage;
+# the on-screen value is base x (1 + Respira Effect books %) (resolved
+# 2026-07-15 from two-account readings, game-mechanics-verified.md).
+_RESPIRA_BASE = {"Nascent": 3157.0, "Incarnation": 6385.0}
+# Unmeasured Stages are extrapolated by the measured Nascent->Incarnation
+# ratio (2.02249); each extrapolated step carries model risk ~1%.
+_RESPIRA_STAGE_RATIO = _RESPIRA_BASE["Incarnation"] / _RESPIRA_BASE["Nascent"]
 # z for a ~90% central interval (P5..P95), the "best/worst" band.
 _BAND_Z = 1.645
 
@@ -279,6 +287,22 @@ class Engine:
         if low is None or low <= 0:
             return None
         return absorption_ratio / low - 1
+
+    def respira_base_estimate(self, stage: str) -> float | None:
+        """Per-Stage Respira base XP: measured where known, otherwise the
+        nearest measured anchor scaled by the per-Stage ratio."""
+        order = self.stages()
+        if stage not in order:
+            return None
+        if stage in _RESPIRA_BASE:
+            return _RESPIRA_BASE[stage]
+        i = order.index(stage)
+        anchors = [(order.index(s), b) for s, b in _RESPIRA_BASE.items()
+                   if s in order]
+        if not anchors:
+            return None
+        ai, ab = min(anchors, key=lambda t: abs(t[0] - i))
+        return ab * _RESPIRA_STAGE_RATIO ** (i - ai)
 
     def blessing_applies(self, stage: str, phase: str, grade: str) -> bool:
         """Whether the conditional (before Voidbreak MIDDLE) blessing tier

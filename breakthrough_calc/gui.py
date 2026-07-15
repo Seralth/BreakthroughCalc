@@ -305,7 +305,19 @@ class MainWindow(QMainWindow):
         else:
             rf.addRow(tr("Attempts / day"), self.respira_per_day)
         rf.addRow(tr("Extra attempts today"), self.respira_event)
-        rf.addRow(tr("Base EXP / attempt"), self.respira_exp)
+        self.respira_books = QDoubleSpinBox(); self.respira_books.setRange(0, 1000)
+        self.respira_books.setDecimals(1); self.respira_books.setSuffix(" %")
+        rx_wrap = QWidget(); rx_h = QHBoxLayout(rx_wrap); rx_h.setContentsMargins(0, 0, 0, 0)
+        rx_h.addWidget(self.respira_exp, 1)
+        rx_btn = QPushButton(tr("Auto"))
+        rx_btn.setToolTip(tr(
+            "Fill Base EXP from your Stage's Respira base (measured for "
+            "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
+            "elsewhere) times (1 + Respira Effect books %)."))
+        rx_btn.clicked.connect(self._autofill_respira_exp)
+        rx_h.addWidget(rx_btn)
+        rf.addRow(tr("Base EXP / attempt"), rx_wrap)
+        rf.addRow(tr("Respira Effect books"), self.respira_books)
         respira_hint = QLabel(tr(
             "Do a few Respira: most give the same small EXP (the base — enter that); "
             "some give 2×/5×/10× (crits — ignore, handled automatically)."))
@@ -889,6 +901,14 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         self._save_settings()
         super().closeEvent(event)
+
+    def _autofill_respira_exp(self):
+        stage = stage_key(self.stage.currentText())
+        base = self.engine.respira_base_estimate(stage)
+        if base is None:
+            return
+        self.respira_exp.setValue(
+            round(base * (1 + self.respira_books.value() / 100.0)))
 
     def _update_absorb_base(self, res):
         """Show the selected Grade's base Absorption Ratio, and warn on under-entry."""
