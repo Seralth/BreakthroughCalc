@@ -5,55 +5,18 @@ from __future__ import annotations
 import os
 import sys
 
-from PySide6.QtCore import QEvent, QObject, Qt, QUrl
-from PySide6.QtGui import QDesktopServices, QGuiApplication, QWheelEvent
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices, QGuiApplication
 
-from . import DONATE_RID, DONATE_URL, __version__
+from . import __version__
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QDialog, QDialogButtonBox, QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
+    QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
     QInputDialog, QLabel,
-    QLineEdit, QMainWindow, QMenu, QPushButton, QScrollArea, QSpinBox, QTabWidget,
+    QMainWindow, QPushButton, QScrollArea, QSpinBox, QTabWidget,
     QTextBrowser, QVBoxLayout,
     QWidget,
 )
-
-
-class _WheelGuard(QObject):
-    """Swallow wheel events on unfocused spin/combo widgets so scrolling the
-    form doesn't silently change values (Qt steps them even without focus).
-
-    The event is re-dispatched to the enclosing QScrollArea's viewport so the
-    page still scrolls while the cursor is over one of the many spinboxes.
-    The viewport itself has no filter installed, so this cannot recurse."""
-
-    def eventFilter(self, obj, event):
-        if event.type() == QEvent.Wheel and not obj.hasFocus():
-            event.ignore()
-            self._forward_to_scroll_area(obj, event)
-            return True
-        return super().eventFilter(obj, event)
-
-    @staticmethod
-    def _forward_to_scroll_area(obj, event):
-        parent = obj.parent()
-        while parent is not None and not isinstance(parent, QScrollArea):
-            parent = parent.parent()
-        if parent is None:
-            return
-        viewport = parent.viewport()
-        clone = QWheelEvent(
-            viewport.mapFromGlobal(event.globalPosition()),
-            event.globalPosition(),
-            event.pixelDelta(),
-            event.angleDelta(),
-            event.buttons(),
-            event.modifiers(),
-            event.phase(),
-            event.inverted(),
-            event.source(),
-        )
-        QApplication.sendEvent(viewport, clone)
 
 from . import theme, i18n
 from .i18n import tr, tr_duration
@@ -64,6 +27,10 @@ from .labels import (
 )
 from .profiles import ProfileStore, settings_path
 from .update_check import UpdateChecker
+from .widgets import (
+    DonateDialog, PillEffectRows, WheelGuard, clear_accents, link_enabled,
+    make_catalog_menu, restyle_all, style_accent,
+)
 
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
 
@@ -102,7 +69,7 @@ class MainWindow(QMainWindow):
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
         self.setWindowTitle(tr("Breakthrough Calculator"))
-        self._muted_labels = []
+        clear_accents()  # full rebuild: drop stale accent-label registrations
         central = QWidget()
         root = QVBoxLayout(central)
         root.addLayout(self._build_toolbar())
@@ -142,10 +109,10 @@ class MainWindow(QMainWindow):
         f.addRow(tr("Abode Aura"), self.abode_aura)
         f.addRow(tr("Absorption Ratio"), self.absorb)
         self.absorb_base = QLabel("")
-        self.absorb_base.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.absorb_base)
+        style_accent(self.absorb_base, "muted", self._acc)
         f.addRow("", self.absorb_base)
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
-        self.array_out.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.array_out)
+        style_accent(self.array_out, "muted", self._acc)
         f.addRow("", self.array_out)
         self.array_apply = QPushButton(tr("Apply to Cultivation Speed"))
         self.array_apply.clicked.connect(self._apply_array_speed)
@@ -184,34 +151,10 @@ class MainWindow(QMainWindow):
 
         # Cultivation pill effect = sum of contributions (technique books, curios,
         # etc.). Record each source once so swapping gear means editing one row.
-        pe_wrap = QWidget(); pe_v = QVBoxLayout(pe_wrap); pe_v.setContentsMargins(0, 0, 0, 0)
-        self.pe_rows = []
-        self.pe_rows_layout = QVBoxLayout(); self.pe_rows_layout.setContentsMargins(0, 0, 0, 0)
-        pe_v.addLayout(self.pe_rows_layout)
-        self.pe_total = QLabel(tr("Total: {} %").format("0.00")); self.pe_total.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pe_total)
-        add_pe = QPushButton(tr("＋ Add source"))
-        add_pe.setToolTip(tr("Add a pill-effect source (a technique book, a curio, …). Their percentages sum."))
-        add_pe.clicked.connect(lambda: (self._add_pe_row(), self.recalc()))
-        pe_bottom = QHBoxLayout(); pe_bottom.addWidget(self.pe_total, 1); pe_bottom.addWidget(add_pe)
         self.pe_catalog = load_pill_sources()
-        if self.pe_catalog:
-            cat_btn = QPushButton(tr("＋ From catalog"))
-            cat_btn.setToolTip(tr("Known pill-effect sources from the game data. Click to add "
-                                  "(prefilled, editable); already-added sources are hidden."))
-            cat_menu = QMenu(cat_btn)
-            cat_menu.setToolTipsVisible(True)
-            for src in self.pe_catalog:
-                pct = f'{src["percent"]:g}%' if src.get("percent") else tr("varies")
-                act = cat_menu.addAction(f'{src["name"]}  ({pct})')
-                act.setToolTip(src.get("note", ""))
-                act.setData(src)
-            cat_menu.aboutToShow.connect(self._sync_catalog_menu)
-            cat_menu.triggered.connect(self._add_catalog_source)
-            cat_btn.setMenu(cat_menu)
-            self._cat_menu = cat_menu
-            pe_bottom.addWidget(cat_btn)
-        pe_v.addLayout(pe_bottom)
-        f.addRow(tr("Cultivation pill effect"), pe_wrap)
+        self.pe_rows = PillEffectRows(self.pe_catalog, lambda: self._acc)
+        self.pe_rows.changed.connect(self.recalc)
+        f.addRow(tr("Cultivation pill effect"), self.pe_rows)
 
         self.pill_limit.setToolTip(tr("Shared daily attempt limit for all cultivation pills (vase red pills are exempt)."))
         f.addRow(tr("Daily pill attempts (shared)"), self.pill_limit)
@@ -219,7 +162,7 @@ class MainWindow(QMainWindow):
         f.addRow(tr("Epic (Purple) used / day"), self.purple_day)
         f.addRow(tr("Rare (Blue) used / day"), self.blue_day)
         self.pill_attempts = QLabel("")
-        self.pill_attempts.setStyleSheet(f"color: {self._acc['muted']};"); self._muted_labels.append(self.pill_attempts)
+        style_accent(self.pill_attempts, "muted", self._acc)
         f.addRow("", self.pill_attempts)
         self.dailies_done = QCheckBox(tr("Already used today's pills/respira"))
         self.dailies_done.setToolTip(tr(
@@ -283,17 +226,11 @@ class MainWindow(QMainWindow):
         g.addWidget(self.pearl_xp10_label, 5, 0); g.addWidget(self.pearl_xp10, 5, 2, 1, 2)
         # Grey out each artifact's controls while it is unchecked, so it is
         # obvious the inputs only count once the artifact is enabled.
-        def _link(box, *widgets):
-            def apply(on):
-                for w in widgets:
-                    w.setEnabled(on)
-            box.toggled.connect(apply)
-            apply(box.isChecked())
-        _link(self.vase, self.vase_star, self.vase_skin, self.vase_charge,
-              self.vase_input, self.vase_input_label)
-        _link(self.mirror, self.mirror_star, self.mirror_skin, self.mirror_charge)
-        _link(self.pearl, self.pearl_star, self.pearl_skin, self.pearl_charge,
-              self.pearl_xp10, self.pearl_xp10_label)
+        link_enabled(self.vase, self.vase_star, self.vase_skin, self.vase_charge,
+                     self.vase_input, self.vase_input_label)
+        link_enabled(self.mirror, self.mirror_star, self.mirror_skin, self.mirror_charge)
+        link_enabled(self.pearl, self.pearl_star, self.pearl_skin, self.pearl_charge,
+                     self.pearl_xp10, self.pearl_xp10_label)
         lv.addWidget(arts)
 
         respira = QGroupBox(tr("Respira"))
@@ -322,22 +259,17 @@ class MainWindow(QMainWindow):
                 "attempts from the field. Greyed entries are informational only: "
                 "Respira EXP bonuses are already inside your in-game EXP tooltip, "
                 "and pill-attempt bonuses belong in the Daily pill attempts input."))
-            rsp_menu = QMenu(rsp_btn)
-            rsp_menu.setToolTipsVisible(True)
-            for src in self.respira_catalog:
+
+            def rsp_label(src):
                 if src.get("kind") == "attempt":
-                    act = rsp_menu.addAction(f'{src["name"]}  (+{src["value"]:g}/day)')
-                    act.setCheckable(True)
-                    act.setData(src)
-                else:
-                    label = tr("info") if src.get("kind") == "exp_pct" else tr("pill limit")
-                    act = rsp_menu.addAction(f'{src["name"]}  ({label})')
-                    act.setEnabled(False)
-                act.setToolTip(src.get("note", ""))
-            rsp_menu.aboutToShow.connect(self._sync_respira_menu)
-            rsp_menu.triggered.connect(self._toggle_respira_source)
-            rsp_btn.setMenu(rsp_menu)
-            self._respira_menu = rsp_menu
+                    return f'{src["name"]}  (+{src["value"]:g}/day)'
+                label = tr("info") if src.get("kind") == "exp_pct" else tr("pill limit")
+                return f'{src["name"]}  ({label})'
+            self._respira_menu = make_catalog_menu(
+                rsp_btn, self.respira_catalog, rsp_label,
+                checkable=True, enabled=lambda src: src.get("kind") == "attempt",
+                on_sync=self._sync_respira_menu,
+                on_triggered=self._toggle_respira_source)
             rp_h.addWidget(rsp_btn)
             rf.addRow(tr("Attempts / day"), rp_wrap)
         else:
@@ -348,8 +280,7 @@ class MainWindow(QMainWindow):
             "Do a few Respira: most give the same small EXP (the base — enter that); "
             "some give 2×/5×/10× (crits — ignore, handled automatically)."))
         respira_hint.setWordWrap(True)
-        respira_hint.setStyleSheet(f"color: {self._acc['muted']};")
-        self._muted_labels.append(respira_hint)
+        style_accent(respira_hint, "muted", self._acc)
         rf.addRow("", respira_hint)
         lv.addWidget(respira)
 
@@ -375,7 +306,11 @@ class MainWindow(QMainWindow):
             "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
             "your server's #1. Set \"Server #1's Stage\" above to model that drop-off (estimated); "
             "leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way."))
-        note.setWordWrap(True); note.setStyleSheet(f"color: {self._acc['muted']}; font-size: 11px;"); self._muted_labels.append(note)
+        note.setWordWrap(True)
+        style_accent(note, "muted", self._acc)
+        # initial style also pins the font size; theme changes re-apply the
+        # color only (mirrors the old _muted_labels restyle, which dropped it)
+        note.setStyleSheet(f"color: {self._acc['muted']}; font-size: 11px;")
         lv.addWidget(note)
         lv.addStretch(1)
 
@@ -411,7 +346,7 @@ class MainWindow(QMainWindow):
         rf = QFormLayout(right)
         for text, attr in self.RESULT_ROWS:
             lbl = mklabel(); setattr(self, attr, lbl); rf.addRow(tr(text), lbl)
-        self.o_error = QLabel(""); self.o_error.setStyleSheet(f"color: {self._acc['bad']};"); self.o_error.setWordWrap(True)
+        self.o_error = QLabel(""); style_accent(self.o_error, "bad", self._acc); self.o_error.setWordWrap(True)
         rf.addRow(self.o_error)
         btns = QHBoxLayout()
         self.copy_btn = QPushButton(tr("Copy results")); self.copy_btn.clicked.connect(self._copy_results)
@@ -424,7 +359,7 @@ class MainWindow(QMainWindow):
         pf = QFormLayout(self.pin_box)
         self.pin_labels = {}
         for text, attr in self.RESULT_ROWS:
-            lbl = mklabel(); lbl.setStyleSheet(f"font-weight: bold; color: {self._acc['good']};"); self.pin_labels[attr] = lbl
+            lbl = mklabel(); style_accent(lbl, "good", self._acc, "font-weight: bold; color: {};"); self.pin_labels[attr] = lbl
             pf.addRow(tr(text), lbl)
         self.unpin_btn = QPushButton(tr("Clear A")); self.unpin_btn.clicked.connect(self._unpin_results)
         pf.addRow(self.unpin_btn)
@@ -1947,7 +1882,7 @@ class MainWindow(QMainWindow):
             hints.colorSchemeChanged.connect(self._on_color_scheme_changed)
 
     def _install_wheel_guard(self):
-        self._wheel_guard = _WheelGuard(self)
+        self._wheel_guard = WheelGuard(self)
         for cls in (QAbstractSpinBox, QComboBox):
             for w in self.findChildren(cls):
                 w.setFocusPolicy(Qt.StrongFocus)
@@ -2048,7 +1983,7 @@ class MainWindow(QMainWindow):
             target_grade=self.target_grade.currentText(),
             timegate_days=self.timegate.value(),
             top_stage=stage_key(self.top_stage.currentText()),
-            pill_rank=self.pill_rank.currentText(), pill_effect=self._pill_effect_total() / 100.0,
+            pill_rank=self.pill_rank.currentText(), pill_effect=self.pe_rows.total() / 100.0,
             pill_limit=self.pill_limit.value(), gold_per_day=self.gold_day.value(),
             purple_per_day=self.purple_day.value(), blue_per_day=self.blue_day.value(),
             mark_blue=self.mark_blue.value(), mark_purple=self.mark_purple.value(),
@@ -2134,7 +2069,7 @@ class MainWindow(QMainWindow):
                 vals[key] = w.isChecked()
             else:
                 vals[key] = w.value()
-        vals["pill_sources"] = [[le.text(), sp.value()] for le, sp, _ in self.pe_rows]
+        vals["pill_sources"] = self.pe_rows.sources()
         vals["respira_sources"] = sorted(self._respira_checked)
         return vals
 
@@ -2144,7 +2079,7 @@ class MainWindow(QMainWindow):
         srcs = vals.get("pill_sources")
         if srcs is None and "pill_effect_pct" in vals:
             srcs = [["", vals["pill_effect_pct"]]]
-        self._set_pill_sources(srcs if srcs is not None else [])
+        self.pe_rows.set_sources(srcs if srcs is not None else [])
         # checked respira catalog sources; the attempts value itself is stored
         # in respira_per_day, so only the checkmarks need restoring
         rs = vals.get("respira_sources")
@@ -2287,32 +2222,7 @@ class MainWindow(QMainWindow):
 
     # ---- donate ------------------------------------------------------------
     def _show_donate(self):
-        dlg = QDialog(self)
-        dlg.setWindowTitle(tr("Support the calculator"))
-        v = QVBoxLayout(dlg)
-        intro = QLabel(tr(
-            "If the calculator saves you time, you can support development by "
-            "gifting in-game vouchers:<ol>"
-            "<li>Open <a href='{}'>SEAGM — OverMortal vouchers</a></li>"
-            "<li>Pick any voucher amount</li>"
-            "<li>Paste the RID below into the site's <b>RID</b> field</li></ol>").format(DONATE_URL))
-        intro.setOpenExternalLinks(True)
-        intro.setWordWrap(True)
-        v.addWidget(intro)
-        row = QHBoxLayout()
-        rid = QLineEdit(DONATE_RID)
-        rid.setReadOnly(True)
-        row.addWidget(rid)
-        copy = QPushButton(tr("Copy RID"))
-        copy.clicked.connect(
-            lambda: QApplication.clipboard().setText(DONATE_RID))
-        row.addWidget(copy)
-        v.addLayout(row)
-        bb = QDialogButtonBox(QDialogButtonBox.Close)
-        bb.rejected.connect(dlg.reject)
-        bb.clicked.connect(dlg.accept)
-        v.addWidget(bb)
-        dlg.exec()
+        DonateDialog(self).exec()
 
     # ---- update check (logic in update_check.UpdateChecker) ---------------
     def _on_update_result(self, text: str, visible: bool):
@@ -2323,11 +2233,7 @@ class MainWindow(QMainWindow):
         self._theme = name
         self._acc = theme.accents(name)
         theme.apply(QApplication.instance(), name)
-        for lbl in self._muted_labels:
-            lbl.setStyleSheet(f"color: {self._acc['muted']};")
-        for lbl in self.pin_labels.values():
-            lbl.setStyleSheet(f"font-weight: bold; color: {self._acc['good']};")
-        self.o_error.setStyleSheet(f"color: {self._acc['bad']};")
+        restyle_all(self._acc)
         self._rebuild_info_tab()
         self.recalc()
         obj = self._store.read(); obj["theme"] = name; self._store.write(obj)
@@ -2361,54 +2267,6 @@ class MainWindow(QMainWindow):
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
 
-    # ---- pill-effect sources (technique books, curios, …) ----------------
-    def _add_pe_row(self, label: str = "", value: float = 0.0):
-        row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
-        le = QLineEdit(label); le.setPlaceholderText(tr("source (e.g. technique book, curio)"))
-        sp = QDoubleSpinBox(); sp.setRange(0, 500); sp.setDecimals(2); sp.setSuffix(" %"); sp.setValue(value)
-        rm = QPushButton("✕"); rm.setFixedWidth(28)
-        h.addWidget(le, 1); h.addWidget(sp); h.addWidget(rm)
-        self.pe_rows_layout.addWidget(row)
-        entry = (le, sp, row)
-        self.pe_rows.append(entry)
-        le.textChanged.connect(self.recalc)
-        sp.valueChanged.connect(self.recalc)
-        rm.clicked.connect(lambda: self._remove_pe_row(entry))
-        return entry
-
-    def _remove_pe_row(self, entry):
-        if entry in self.pe_rows:
-            self.pe_rows.remove(entry)
-        entry[2].setParent(None)
-        if not self.pe_rows:            # keep at least one row
-            self._add_pe_row()
-        self.recalc()
-
-    def _sync_catalog_menu(self):
-        # Hide sources already added so they can't be picked twice; remove them
-        # via the row's ✕ button.
-        labels = {le.text() for le, _, _ in self.pe_rows}
-        for act in self._cat_menu.actions():
-            act.setVisible(act.data()["name"] not in labels)
-
-    def _add_catalog_source(self, act):
-        src = act.data()
-        if any(e[0].text() == src["name"] for e in self.pe_rows):
-            return
-        if src.get("prompt", {}).get("kind") == "star_upgrade":
-            picked = self._ask_star_upgrade(src)
-            if picked is None:        # user cancelled
-                return
-            value = picked
-        else:
-            value = float(src["percent"]) if src.get("percent") else 0.0
-        # drop a leftover blank placeholder row
-        blanks = [e for e in self.pe_rows if not e[0].text() and e[1].value() == 0]
-        self._add_pe_row(src["name"], value)
-        for e in blanks:
-            self._remove_pe_row(e)
-        self.recalc()
-
     def _sync_respira_menu(self):
         for act in self._respira_menu.actions():
             src = act.data()
@@ -2427,53 +2285,8 @@ class MainWindow(QMainWindow):
             self.respira_per_day.setValue(max(0.0, self.respira_per_day.value() - float(src["value"])))
         self.recalc()
 
-    def _ask_star_upgrade(self, src) -> float | None:
-        """Small dialog matching the in-game curio upgrade screen: pick star and
-        upgrade level, return the computed pill-effect %."""
-        p = src["prompt"]
-
-        def value_for(star, upgrade):
-            return p["base"] + p["per_upgrade"] * upgrade + p["star_add"][star - 1]
-
-        dlg = QDialog(self)
-        dlg.setWindowTitle(src["name"])
-        lay = QFormLayout(dlg)
-        star = QComboBox(); star.addItems([f"{i}★" for i in range(1, p["stars"] + 1)])
-        upg = QComboBox(); upg.addItems([str(i) for i in range(p["max_upgrade"] + 1)])
-        out = QLabel()
-        out.setStyleSheet(f"color: {self._acc['muted']};")
-
-        def refresh():
-            out.setText(tr("Cultivation Pill Effect: {}%").format(
-                f"{value_for(star.currentIndex() + 1, upg.currentIndex()):.1f}"))
-        star.currentIndexChanged.connect(refresh)
-        upg.currentIndexChanged.connect(refresh)
-        refresh()
-        lay.addRow(tr("Star"), star)
-        lay.addRow(tr("Upgrade level"), upg)
-        lay.addRow("", out)
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.accepted.connect(dlg.accept)
-        buttons.rejected.connect(dlg.reject)
-        lay.addRow(buttons)
-        if dlg.exec() != QDialog.Accepted:
-            return None
-        return round(value_for(star.currentIndex() + 1, upg.currentIndex()), 1)
-
-    def _pill_effect_total(self) -> float:
-        return sum(sp.value() for _, sp, _ in self.pe_rows)
-
-    def _set_pill_sources(self, sources):
-        for _, _, row in list(self.pe_rows):
-            row.setParent(None)
-        self.pe_rows.clear()
-        for lbl, val in sources:
-            self._add_pe_row(str(lbl), float(val))
-        if not self.pe_rows:
-            self._add_pe_row()
-
     def _update_pill_attempts(self):
-        self.pe_total.setText(tr("Total: {} %").format(f"{self._pill_effect_total():.2f}"))
+        self.pe_rows.update_total()
         used = self.gold_day.value() + self.purple_day.value() + self.blue_day.value()
         limit = self.pill_limit.value()
         msg = tr("Attempts used: {} / {} (shared; vase red pills exempt)").format(f"{used:g}", f"{limit:g}")
