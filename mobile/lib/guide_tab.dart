@@ -37,9 +37,8 @@ final Map<String, int> guideSlugs = {
 };
 
 const _guideFooterText =
-    'Spotted an error or something missing? Much of this guide '
-    'comes from player observations — please report corrections '
-    'and new data at:';
+    'Spotted an error or something missing? Please report '
+    'corrections and new data at:';
 
 class GuideTab extends StatefulWidget {
   const GuideTab({super.key});
@@ -112,7 +111,7 @@ Widget _choosingPage(BuildContext context) {
         'looks — Path Switch exists from Foundation (7-day cooldown, '
         'rising Fateum cost) — but your path shapes combat style, gear '
         'priorities, and which elixirs/pets/aux picks fit. This summary '
-        'is community consensus, and the consensus is genuinely mixed — '
+        'is subjective, and opinion is genuinely mixed — '
         'treat it as orientation, not law.'),
     Text('The five paths', style: h3),
     para('• Swordia (HP/physical) — highest sustained DPS in the game; '
@@ -326,7 +325,7 @@ Widget _voidbreakPage(BuildContext context) {
     // Community-guide material (2026): friend levels/payoffs are the
     // circulating consensus list, cross-checked against the app's own
     // pill/Respira source data where the two overlap.
-    Text('Ascension day (community checklist)', style: h3),
+    Text('Ascension day checklist', style: h3),
     para('The order of operations for the day you break through to '
         'Voidbreak:\n'
         '• Before the breakthrough: don\'t claim dailies or pill bags — '
@@ -338,17 +337,17 @@ Widget _voidbreakPage(BuildContext context) {
         '• Unlock Pandemonium and its three maps.\n'
         '• Claim the treasure trove at Voidbreak, not at Incarnation — '
         'it scales with the realm you claim it in.'),
-    Text('Immortal Friends (community priorities)', style: h3),
+    Text('Immortal Friends (recommended priorities)', style: h3),
     para('Friends\' levels pay off in cultivation terms at specific '
-        'breakpoints. The consensus unlock/level priorities:\n'
+        'breakpoints. The recommended unlock/level priorities:\n'
         '• Crane Boy to max — +1 daily pill attempt.\n'
         '• Iron Fan 36, Daji 73, Shen Gongbao 117 — +1 daily Respira '
         'attempt each.\n'
         '• Jiang Ziya 116 and Taotie 117 — +3% pill effect each.\n'
         '• Macaque 17 — +3% Respira EXP (already included in your '
         'in-game Respira tooltip).\n'
-        '• Also on the community priority list (payoff not recorded '
-        'yet): White Astra 31, Princess Adalinda 81, Leizhenzi 129.'),
+        '• Also recommended (payoff unknown): White Astra 31, '
+        'Princess Adalinda 81, Leizhenzi 129.'),
     para('These attempt/effect bonuses are exactly what the calculator\'s '
         'pill and Respira source pickers model — tick them there once you '
         'hit the breakpoints.'),
@@ -420,9 +419,9 @@ Widget _spendingPage(BuildContext context) {
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
     Text('Spending (if you pay at all)', style: h3),
-    para('None of this is a recommendation to spend — it\'s the '
-        'community\'s answer to "if I do, what\'s actually worth it?" '
-        'All of it is consensus opinion.'),
+    para('None of this is a recommendation to spend — it\'s an answer '
+        'to "if I do, what\'s actually worth it?" '
+        'All of it is subjective.'),
     Text('Priorities', style: h3),
     para('• Permanent one-time buys first: the watering curio set and the '
         'permanent passes beat any consumable pack — you buy them once '
@@ -436,7 +435,7 @@ Widget _spendingPage(BuildContext context) {
         '• Law fruit packs are atrocious value — do not buy them.\n'
         '• Heavy pet investment is whale territory '
         '([[guide:pets|Guide → Pets]]).'),
-    Text('Timegate BR targets (era-specific community estimates)', style: h3),
+    Text('Timegate BR targets (era-specific estimates)', style: h3),
     para('Rough battle-rating bands players report aiming for at each '
         'realm\'s timegate content, by spending tier (F2P → heavy). These '
         'drift with every era — treat as orientation only:\n'

@@ -541,7 +541,7 @@ class _CalculatorPageState extends State<CalculatorPage>
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              tr("Base attempt limit is 10/day (from game data); add permanent bonuses. "
+              tr("Base attempt limit is 10/day; add permanent bonuses. "
                   "Do a few Respira: most give the same small EXP (the base — enter that); "
                   "some give 2×/5×/10× (crits — ignore, handled automatically)."),
               style: const TextStyle(fontSize: 12, color: Colors.grey),

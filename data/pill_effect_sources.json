@@ -42,17 +42,17 @@
  {
   "name": "Zixiao Sutra (R8 technique)",
   "percent": 1.0,
-  "note": "+1% Cultivation Pill Effect on learning (screenshot-verified 2026-07-15)."
+  "note": "+1% Cultivation Pill Effect on learning."
  },
  {
   "name": "Astral Arcanum (R8 technique)",
   "percent": 2.0,
-  "note": "+2% Cultivation Pill Effect at Tier 3 (screenshot-verified 2026-07-15)."
+  "note": "+2% Cultivation Pill Effect at Tier 3."
  },
  {
   "name": "Chroma (R8 technique)",
   "percent": 4.0,
-  "note": "+1% on learning, +3% at Tier 6 (total +4%). Also +1 Respira attempt at Tier 3 and +1 daily pill attempt at Tier 12 - see the Respira catalog (screenshot-verified 2026-07-15)."
+  "note": "+1% on learning, +3% at Tier 6 (total +4%). Also +1 Respira attempt at Tier 3 and +1 daily pill attempt at Tier 12 - see the Respira catalog."
  },
  {
   "name": "Yang Spirit Jade (curio)",
@@ -81,11 +81,11 @@
  {
   "name": "Jiang Ziya (immortal friend, lv 116)",
   "percent": 3.0,
-  "note": "+3% Cultivation Pill Effect at level 116 (2026 community guide)."
+  "note": "+3% Cultivation Pill Effect at level 116."
  },
  {
   "name": "Taotie (immortal friend, lv 117)",
   "percent": 3.0,
-  "note": "+3% Cultivation Pill Effect at level 117 (2026 community guide)."
+  "note": "+3% Cultivation Pill Effect at level 117."
  }
 ]
