@@ -44,8 +44,7 @@ final Map<String, int> refSlugs = {
 const _refFooterText =
     'Spotted an error, or have data for a "?" in a table (a '
     'screenshot of a tier you\'ve crossed, an endgame number)? '
-    'Much of this page is reconstructed from player screenshots, '
-    'and single data points regularly fill real gaps — please '
+    'Single data points regularly fill real gaps — please '
     'report it at:';
 
 class ReferenceTab extends StatefulWidget {
@@ -182,8 +181,8 @@ Widget _pillsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
             (e.value[pillMythic] as num).toString(),
           ]
       ],
-      'Confirmed against in-game tooltips. Pill-effect bonuses add as percentage '
-      'points and multiply the base once.',
+      'Pill-effect bonuses add as percentage points and multiply the '
+      'base once.',
     ),
     if (catalog.isNotEmpty)
       table(
@@ -286,12 +285,10 @@ Widget _elixirsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         ['70%', '?', '60', '?'],
         ['50/30/20%', '?', '?', '?'],
       ],
-      'Verified against 18 observed items, whose lifetime totals all '
-      'reproduce exactly from these widths (each tier contributes '
-      'uses × base × ratio). "?" marks tiers no character has crossed yet; '
-      'the in-game tooltip says the ladder continues 70 → 50 → 30 → 20% '
-      'before the hard cap. Cultivation-EXP elixirs use different, wider '
-      'tiers (first tier 20 uses, not 10).',
+      'Each tier contributes uses × base × ratio. "?" marks tiers no '
+      'character has crossed yet; the in-game tooltip says the ladder '
+      'continues 70 → 50 → 30 → 20% before the hard cap. Cultivation-EXP '
+      'elixirs use different, wider tiers (first tier 20 uses, not 10).',
     ),
     Text('Elixirs and paths', style: h3),
     para('EXP elixirs are path-specific: the Vigor ladder feeds Literatia, '
@@ -310,7 +307,7 @@ Widget _elixirsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         'anyone optimizing money spent — the 150%/120% early tolerance tiers '
         'make each realm\'s batch worth the most right when you buy it.'),
     Text('The Sense stat', style: h3),
-    para('Sense (internally spirit_max) currently only gates treasure capacity: '
+    para('Sense currently only gates treasure capacity: '
         'Fabao slots at Sense 1/7/13/16/19/22, Gubao slots at 15/18/21. It '
         'grows ~1 per realm level; the tooltip says more uses are planned. It '
         'is not part of any exposed damage or cultivation formula.'),
@@ -459,7 +456,7 @@ Widget _combatPage(BuildContext context, Engine engine, List<dynamic> catalog) {
         'in-game: its tooltip shows your current crit rate for your realm. '
         '(The exact conversion curve lives on the server, so no formula here — '
         'the tooltip is the source of truth.)'),
-    para('The rest of the crit family, confirmed from game data:\n'
+    para('The rest of the crit family:\n'
         '• Crit DMG: a crit deals 150% damage baseline (rounded down); Crit '
         'DMG bonuses raise that multiplier.\n'
         '• Crit Defense: each +1% cuts an attacker\'s crit multiplier by 1% '
@@ -506,12 +503,12 @@ Widget _combatPage(BuildContext context, Engine engine, List<dynamic> catalog) {
     Text('Affix priorities', style: h3),
     para('Which rolled bonus lines to chase on gear and relics has its '
         'own page now — see the [[ref:affixes|Affixes tab]] for the full '
-        'tier list, the named rolls and their ranges, and the verified '
+        'tier list, the named rolls and their ranges, and the exact '
         'paralysis/penetration math.'),
     Text('About the missing numbers', style: h3),
-    para('The rules and thresholds above are confirmed from game data. The '
-        'exact values — what a given 10-level bonus or resonance rank grants — '
-        'are decided server-side and vary by item and realm, so this page '
+    para('The exact values — what a given 10-level bonus or resonance rank '
+        'grants — are decided server-side and vary by item and realm, so '
+        'this page '
         'doesn\'t guess at them. Where a number isn\'t listed, read it as '
         '"unknown", not "zero". For the exact per-point math the game does '
         'expose, see the [[ref:advanced#perpoint|Advanced tab]].'),
@@ -533,9 +530,8 @@ Widget _affixesPage(BuildContext context, Engine engine, List<dynamic> catalog) 
     Text('Gear & Relic Affixes', style: t.textTheme.titleLarge),
     para('Affixes are the rolled bonus lines on forged gear and relics. '
         'Which item drops is luck; which lines it rolls is what separates '
-        'a keeper from forge fodder. The tier ranking below is the '
-        'community consensus list; the caps and per-point math are '
-        'confirmed from game data.'),
+        'a keeper from forge fodder. The tier ranking below is '
+        'subjective; the caps and per-point math are exact.'),
     para('Two caps drive most of the ranking: crit rate is hard-capped at '
         '50% and hit is capped at 99% (with a 25% floor — nobody can be '
         'evade-tanked below a 1-in-4 chance to hit). Capped stats are '
@@ -600,8 +596,8 @@ Widget _affixesPage(BuildContext context, Engine engine, List<dynamic> catalog) 
     para('Defense lines are weak because Penetration strips up to 50% of '
         'defense when the attacker wins the contested check — see the '
         '[[ref:advanced#penblock|Advanced tab]].'),
-    para('Paralysis math, corrected against client data: boost and resist '
-        'cancel 1:1; each leftover point shifts proc chance by 0.2% '
+    para('Paralysis math: boost and resist cancel 1:1; each leftover '
+        'point shifts proc chance by 0.2% '
         '(enhance capped at +100%, resist at −50%) and duration by 0.5% — '
         'but the duration boost caps at +25% (only the resist side '
         'reaches −50%), so duration-boost lines saturate at 50 points of '
@@ -621,8 +617,8 @@ Widget _affixesPage(BuildContext context, Engine engine, List<dynamic> catalog) 
     para('Prioritize T0/T1 lines on weapons and pendants first. Reroll '
         'toward base-stat % (Wonder / Blade Rage / Spellforge) and relic '
         'cast speed — those two families define endgame power. Tier '
-        'placement is community opinion; the numbers and caps quoted are '
-        'from game data.'),
+        'placement is subjective; the numbers and caps quoted are '
+        'exact.'),
   ], footerText: _refFooterText);
 }
 
@@ -635,8 +631,8 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
     para('Short explainers for the systems the rest of this app keeps '
-        'mentioning. Everything quoted is from the game\'s own text; where '
-        'a number is server-side, it\'s omitted rather than guessed.'),
+        'mentioning. Where a number is server-side, it\'s omitted rather '
+        'than guessed.'),
     Text('Currencies', style: h3),
     para('• Spiritium — "the basic currency in the cultivation world. '
         'Mainly obtained in Realms. Used in Market, Alchemy, Forge Room and '
@@ -656,8 +652,7 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         'from artifact daily charges and the realm-breakthrough elixir '
         'packs.'),
     Text('Shop-by-shop buying guide', style: h3),
-    para('Community-consensus priorities (from circulating player guides — '
-        'sanity-checked but not client data):\n'
+    para('Recommended priorities:\n'
         '• Market (Spiritium): Demonroot (pet skills), Kunlun Jade '
         '(backpack space), Monster Core, Rare+ cultivation pills, Atlases, '
         'stat elixirs. It refreshes every 3 hours; you get 10 manual '
@@ -701,8 +696,8 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         'to yield an extra fruit. This is why the guide says to bank pet '
         'speed-ups and Fateum for the garden before Voidbreak: law levels '
         'are a time-integral, so starting earlier compounds.'),
-    para('Community practice (consistent advice, unverified numbers): '
-        'have 24 garden slots by Voidbreak; on ascension day unlock laws '
+    para('Common practice: have 24 garden slots by Voidbreak; on '
+        'ascension day unlock laws '
         'immediately and get fruits planted. Blitz has a daily budget '
         '(~120 hours\' worth) — ideally spend all of it every day. Law '
         'fruits range Uncommon → Legendary; early on harvest low rarities '
@@ -766,22 +761,22 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         'tier breakpoints first — carries through the rest of the game.'),
     // Community-guide material (2026) from here down — priorities and
     // tier lists are consensus, not client data.
-    Text('Technique roadmap (community priorities)', style: h3),
-    para('The consensus per-rank picks, tier breakpoints first:\n'
+    Text('Technique roadmap (recommended priorities)', style: h3),
+    para('The recommended per-rank picks, tier breakpoints first:\n'
         '• R4: Golden Core (+5% pill effect at completion) and Astrology '
         'to Tier 7.\n'
         '• R5: Ninefall and Bloodization to Tier 7.\n'
         '• R6: Dragon\'s Flight or Yin\'s Grasp to Tier 10.\n'
-        '• R7 (from the app\'s own source data): Floral Essence — +3% '
+        '• R7: Floral Essence — +3% '
         'pill effect at Tier 6, +1 daily pill attempt at Tier 9; Great '
         'Yang Manual — +4% pill effect at Tier 9.\n'
         '• R10: Immortal Ascension to Tier 13.'),
-    para('The community list for R8–R9 wasn\'t preserved — if you have '
-        'it, please report it via the footer link. For Technique Points, '
-        'the consensus Spirit World strategy is three passes: clear what '
+    para('R8–R9 picks aren\'t listed yet — if you have them, please '
+        'report them via the footer link. For Technique Points, the '
+        'recommended Spirit World strategy is three passes: clear what '
         'you can, come back stronger, finish later — rather than grinding '
         'one full clear early.'),
-    Text('Curio priorities (community)', style: h3),
+    Text('Curio priorities (recommended)', style: h3),
     para('• Value order: abode/pill-bonus curios > main-path ATK > '
         'HP/MP.\n'
         '• Star up Pen & Block equally — a Pen roughly 1000 over the '
@@ -790,8 +785,8 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
         'curio deep.\n'
         '• Daemonfae, Field and Reincarnation curios have their own '
         'niches — hold them rather than feeding them away.'),
-    Text('Fields (Perfection, community)', style: h3),
-    para('At Perfection you pick a Field; the consensus mapping:\n'
+    Text('Fields (Perfection)', style: h3),
+    para('At Perfection you pick a Field; the usual mapping:\n'
         '• Solarium — PvE-leaning and the usual F2P pick.\n'
         '• Swordium — the general-purpose choice.\n'
         '• Darkmyth — team-oriented; pick it with your sect, not solo.\n'
@@ -825,14 +820,14 @@ Widget _advancedPage(BuildContext context, Engine engine, List<dynamic> catalog)
       'the best/worst band on short horizons.',
     ),
     para('Fruit gush pity: the "Gush guaranteed in Aura Orb x6" counter is a '
-        'soft pity — any gush, random or guaranteed, resets it (verified '
-        'in-game 2026-07-10 with a counted batch). So a gush is guaranteed '
+        'soft pity — any gush, random or guaranteed, resets it. So a gush '
+        'is guaranteed '
         'within 6 fruits of the last one, and the displayed chance is the '
         'per-fruit random rate. The calculator models the miss streak as a '
         'Markov chain and computes the exact gush-count mean and variance, '
         'which narrows the fruit side of the band.'),
-    para('Strive tier tables (client config; the live value is recomputed '
-        'hourly server-side, so only the shape is used, anchored to your real '
+    para('Strive tier tables (the live value is recomputed hourly '
+        'server-side, so only the shape is used, anchored to your real '
         'Strive):\n'
         '• Young servers (world level < 30): by major-realm gap to server #1 '
         '— 15/20/30/40/50/60/70% for gaps 1–7.\n'
@@ -846,9 +841,7 @@ Widget _advancedPage(BuildContext context, Engine engine, List<dynamic> catalog)
         'widest in relative terms on short projections and tightens as the '
         'horizon grows.'),
     Text('Combat internals', style: h3),
-    para('Exact mechanics recovered from the game\'s own stat definitions and '
-        'tooltip text. Everything numbered here is stated by the client; '
-        'damage resolution itself runs on the server, so treat this as the '
+    para('Damage resolution itself runs on the server, so treat this as the '
         'rulebook rather than a full damage calculator.'),
     Text('Flat stats and realm normalization', style: h3),
     para('Crit Chance, Crit Resistance, Hit Rate and Dodge are stored as flat '
@@ -976,8 +969,8 @@ Widget _advancedPage(BuildContext context, Engine engine, List<dynamic> catalog)
         'base score, and for Relics a realm-corrected score that only '
         'applies once your realm meets the item\'s requirement — an '
         'under-realm Relic shows its uncorrected, lower BR).'),
-    para('The exact weight constants exist in client data but the server\'s '
-        'final assembly (level factors, rounding) isn\'t visible, so per-stat '
+    para('The exact weight constants are known, but the server\'s '
+        'final assembly (level factors, rounding) isn\'t, so per-stat '
         'BR predictions from these weights are approximate.'),
     para('One BR formula is fully client-side — standard monster BR:\n\n'
         '    floor( (hp_std^0.98 + mp_std^0.98) × hp_mult × max(atk_mults) )\n\n'
