@@ -16,7 +16,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
   build-web:
+    needs: test
     runs-on: ubuntu-latest
     defaults:
       run:

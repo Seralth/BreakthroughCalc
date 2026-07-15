@@ -97,15 +97,15 @@ class PillMath(unittest.TestCase):
         # Vase 1*, 15.4% pill effect: red pill EXP must be base x 1.254 (additive),
         # not base x 1.154 x 1.10 (multiplicative).
         inp = base_inputs(pill_rank="4R", pill_effect=0.154, vase=True, vase_star="1*")
-        pills = self.e._pill_math(inp)
-        mythic_each = pills["xp_per_day"] / pills["mythic_per_day"]
+        pills = self.e.pill_math(inp)
+        mythic_each = pills.xp_per_day / pills.mythic_per_day
         self.assertAlmostEqual(mythic_each, 150480, places=6)
 
     def test_shared_attempt_pool(self):
         # 10 attempts, 6 gold + 8 purple entered -> 6 gold + 4 purple used.
         inp = base_inputs(pill_rank="4R", pill_limit=10, gold_per_day=6,
                           purple_per_day=8, blue_per_day=5)
-        xp = self.e._pill_math(inp)["xp_per_day"]
+        xp = self.e.pill_math(inp).xp_per_day
         self.assertAlmostEqual(xp, 6 * 60000 + 4 * 30000)
 
 
@@ -114,7 +114,7 @@ class VaseModel(unittest.TestCase):
         self.e = Engine()
 
     def pills_per_day(self, **kw):
-        return self.e._pill_math(base_inputs(vase=True, **kw))["mythic_per_day"]
+        return self.e.pill_math(base_inputs(vase=True, **kw)).mythic_per_day
 
     def test_rank_cost_table(self):
         # In-game cost table: 75/82/90/97 for 1R-4R, 100 from 5R on.
@@ -148,20 +148,20 @@ class MirrorModel(unittest.TestCase):
         self.e = Engine()
 
     def mythic(self, **kw):
-        return self.e._pill_math(
-            base_inputs(vase=True, vase_star="0*", mirror=True, **kw))["mythic_per_day"]
+        return self.e.pill_math(
+            base_inputs(vase=True, vase_star="0*", mirror=True, **kw)).mythic_per_day
 
     def test_additive_star_skin_discount(self):
         # 5* (-10%) + skin (-10%) -> cost 200 x 0.80 = 160, NOT 200 x 0.9 x 0.9.
-        vase_only = self.e._pill_math(
-            base_inputs(vase=True, vase_star="0*"))["mythic_per_day"]
+        vase_only = self.e.pill_math(
+            base_inputs(vase=True, vase_star="0*")).mythic_per_day
         copies = self.mythic(mirror_star="5*", mirror_skin=True) - vase_only
         energy = 96 * 3.0 + 100
         self.assertAlmostEqual(copies, energy / 160.0 * 1.15)
 
     def test_five_star_extra_copy(self):
-        vase_only = self.e._pill_math(
-            base_inputs(vase=True, vase_star="0*"))["mythic_per_day"]
+        vase_only = self.e.pill_math(
+            base_inputs(vase=True, vase_star="0*")).mythic_per_day
         c4 = self.mythic(mirror_star="4*") - vase_only
         c5 = self.mythic(mirror_star="5*") - vase_only
         # Same energy discount tier (-10%) at 4* and 5*; the ratio is the
@@ -174,8 +174,8 @@ class PearlModel(unittest.TestCase):
         self.e = Engine()
 
     def pearl_xp(self, **kw):
-        return self.e._pill_math(
-            base_inputs(pearl=True, pearl_xp_per_10=1000, **kw))["pearl_xp_day"]
+        return self.e.pill_math(
+            base_inputs(pearl=True, pearl_xp_per_10=1000, **kw)).pearl_xp_per_day
 
     def test_flat_twenty_percent_from_one_star(self):
         # 1* + skin: cost floor(10 x 0.85) = 8; energy 224.8 -> 28 uses x 1200.
@@ -233,7 +233,7 @@ class DailiesDone(unittest.TestCase):
                   purple_per_day=4, blue_per_day=4)
         base = self.e.calculate(base_inputs(**kw))
         done = self.e.calculate(base_inputs(dailies_done=True, **kw))
-        pill_xp = self.e._pill_math(base_inputs(**kw))["xp_per_day"]
+        pill_xp = self.e.pill_math(base_inputs(**kw)).xp_per_day
         eff_rate = base.effective_xp_per_day
         self.assertAlmostEqual(done.stage_days - base.stage_days,
                                pill_xp / eff_rate, places=6)
@@ -277,7 +277,7 @@ class RespiraAndBands(unittest.TestCase):
         self.assertAlmostEqual(r.stage_days - lo, hi - r.stage_days, places=6)  # symmetric
 
     def test_fruit_variance_positive(self):
-        _, var = self.e._fruit_stats(base_inputs(
+        _, var = self.e.fruit_stats(base_inputs(
             fruit_rank="R3", fruit_count=50, lvl_culti=10, lvl_quality=10, lvl_gush=10))
         self.assertGreater(var, 0)
 
@@ -286,8 +286,8 @@ class RespiraAndBands(unittest.TestCase):
         # long miss streaks, so 6 fruits carry LESS gush variance than 6
         # independent Bernoulli fruits.
         kw = dict(fruit_rank="R3", lvl_culti=10, lvl_quality=10, lvl_gush=10)
-        _, v6 = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
-        _, v1 = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
+        _, v6 = self.e.fruit_stats(base_inputs(fruit_count=6, **kw))
+        _, v1 = self.e.fruit_stats(base_inputs(fruit_count=1, **kw))
         self.assertLess(v6, 6 * v1)
         self.assertGreater(v6, 0)
 
@@ -318,7 +318,7 @@ class FruitQualityDistribution(unittest.TestCase):
         order = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"]
         kw = dict(fruit_rank="R8", fruit_count=10, lvl_culti=20, lvl_gush=20)
         for lvl in (0, 5, 10, 11, 20, 30):
-            means = [self.e._fruit_stats(base_inputs(
+            means = [self.e.fruit_stats(base_inputs(
                 lvl_quality=lvl, extractor_rarity=r, **kw))[0] for r in order]
             for a, b in zip(means, means[1:]):
                 self.assertLessEqual(a, b + 1e-9, msg=f"lvl {lvl}: {means}")
@@ -361,9 +361,9 @@ class ScreenshotGroundTruth2026_07_07(unittest.TestCase):
         # all missed; otherwise it rolls gc like any other fruit.
         kw = dict(fruit_rank="R8", lvl_culti=20, lvl_quality=15, lvl_gush=14,
                   extractor_rarity="Epic")
-        m6, _ = self.e._fruit_stats(base_inputs(fruit_count=6, **kw))
-        m5, _ = self.e._fruit_stats(base_inputs(fruit_count=5, **kw))
-        m1, _ = self.e._fruit_stats(base_inputs(fruit_count=1, **kw))
+        m6, _ = self.e.fruit_stats(base_inputs(fruit_count=6, **kw))
+        m5, _ = self.e.fruit_stats(base_inputs(fruit_count=5, **kw))
+        m1, _ = self.e.fruit_stats(base_inputs(fruit_count=1, **kw))
         gc = self.fl["14"]["gush_chance"]
         gxm = self.fl["14"]["gush_xp"]
         per_fruit = m1 / (1 + gc * (gxm - 1))  # base * E[quality factor]
@@ -375,8 +375,8 @@ class ScreenshotGroundTruth2026_07_07(unittest.TestCase):
         # Raising the Gush track (not the Culti track) must raise the payout.
         kw = dict(fruit_rank="R8", fruit_count=5, lvl_culti=20, lvl_quality=15,
                   extractor_rarity="Epic")
-        lo, _ = self.e._fruit_stats(base_inputs(lvl_gush=0, **kw))
-        hi, _ = self.e._fruit_stats(base_inputs(lvl_gush=14, **kw))
+        lo, _ = self.e.fruit_stats(base_inputs(lvl_gush=0, **kw))
+        hi, _ = self.e.fruit_stats(base_inputs(lvl_gush=14, **kw))
         self.assertGreater(hi, lo)
 
     def test_gem_does_not_multiply_pill_xp(self):
@@ -394,9 +394,9 @@ class ScreenshotGroundTruth2026_07_07(unittest.TestCase):
         # boosts nothing. At quality 0 (all-Common orbs) rarity Epic vs Common
         # must differ only via the residual fill, which is zero at quality<=10.
         kw = dict(fruit_rank="R8", fruit_count=5, lvl_culti=20, lvl_gush=14)
-        m_c, _ = self.e._fruit_stats(base_inputs(
+        m_c, _ = self.e.fruit_stats(base_inputs(
             lvl_quality=0, extractor_rarity="Common", **kw))
-        m_e, _ = self.e._fruit_stats(base_inputs(
+        m_e, _ = self.e.fruit_stats(base_inputs(
             lvl_quality=0, extractor_rarity="Epic", **kw))
         self.assertAlmostEqual(m_c, m_e, places=6)  # tier 0 gets no +20% either way
 
@@ -475,10 +475,6 @@ class Formatting(unittest.TestCase):
         self.assertEqual(fmt_days(-1), "0D 0H 0M")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class PrestockOvercap(unittest.TestCase):
     """Timegate prestock (verified 2026-07-15 from the community 2026 guide;
     see docs/knowledge/game-mechanics-verified.md): displayed overcap % =
@@ -526,3 +522,67 @@ class PrestockOvercap(unittest.TestCase):
         self.assertFalse(r1.prestock_valid)
         self.assertFalse(r2.prestock_valid)
         self.assertTrue(r1.target_valid and r2.target_valid)
+
+class GapCoverage(unittest.TestCase):
+    """Behavior pins added 2026-07-15 before the structural refactor: each
+    asserts the engine's CURRENT verified behavior for paths no other test
+    touched, so pure code motion cannot silently change them."""
+
+    def setUp(self):
+        self.e = Engine()
+
+    def test_star_marks_add_to_pill_effect(self):
+        base = self.e.pill_math(base_inputs(
+            pill_rank="4R", pill_limit=10, gold_per_day=1))
+        marked = self.e.pill_math(base_inputs(
+            pill_rank="4R", pill_limit=10, gold_per_day=1, mark_gold=0.1))
+        gold = self.e.data["pill_xp"]["4R"][0]
+        self.assertAlmostEqual(marked.xp_per_day - base.xp_per_day,
+                               0.1 * gold, places=6)
+
+    def test_mirror_without_vase_makes_no_mythic_pills(self):
+        p = self.e.pill_math(base_inputs(mirror=True, mirror_star="5*"))
+        self.assertEqual(p.mythic_per_day, 0.0)
+
+    def test_fruit_highest_rank_is_1_5x(self):
+        kw = dict(fruit_rank="R6", fruit_count=10, lvl_gush=10)
+        m_lo, _ = self.e.fruit_stats(base_inputs(**kw))
+        m_hi, _ = self.e.fruit_stats(base_inputs(fruit_highest_rank=True, **kw))
+        self.assertAlmostEqual(m_hi, 1.5 * m_lo, places=6)
+
+    def test_fruit_levels_clamp_to_30(self):
+        kw = dict(fruit_rank="R6", fruit_count=10)
+        at30 = self.e.fruit_stats(base_inputs(lvl_gush=30, lvl_culti=30,
+                                               lvl_quality=30, **kw))
+        over = self.e.fruit_stats(base_inputs(lvl_gush=40, lvl_culti=35,
+                                               lvl_quality=99, **kw))
+        self.assertEqual(at30, over)
+
+    def test_fruit_days_saved_formula(self):
+        # Matches Donk's sheet: fruit XP / current speed, no gem/pill divisor.
+        r = self.e.calculate(base_inputs(fruit_rank="R6", fruit_count=10,
+                                         aura_gem="Legendary"))
+        self.assertAlmostEqual(r.fruit_days_saved,
+                               r.fruit_xp / 57.22 * 8.0 / 86400.0, places=9)
+
+    def test_fruit_xp_includes_event_respira_when_dailies_not_done(self):
+        r = self.e.calculate(base_inputs(respira_event=5, respira_exp=1000))
+        self.assertAlmostEqual(r.fruit_xp, 5 * 1000 * 1.8, places=6)
+
+    def test_prestock_band_brackets_prestock_days(self):
+        r = self.e.calculate(base_inputs(
+            stage="Incarnation", phase="LATE", grade="G12",
+            target_stage="Voidbreak", target_phase="LATE", target_grade="G1",
+            respira_per_day=20, respira_exp=5000))
+        self.assertTrue(r.prestock_valid)
+        lo, hi = r.prestock_band
+        self.assertLess(lo, r.prestock_days)
+        self.assertGreater(hi, r.prestock_days)
+
+    def test_missing_catalog_file_is_empty_list(self):
+        from breakthrough_calc.engine import _load_catalog
+        self.assertEqual(_load_catalog("no_such_catalog_file.json"), [])
+
+
+if __name__ == "__main__":
+    unittest.main()

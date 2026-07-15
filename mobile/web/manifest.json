@@ -1,11 +1,11 @@
 {
-    "name": "breakthrough_calc",
-    "short_name": "breakthrough_calc",
+    "name": "Breakthrough Calculator",
+    "short_name": "Breakthrough Calc",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Breakthrough-time calculator for OverMortal cultivation planning.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
