@@ -6,6 +6,31 @@ PySide6 (`breakthrough_calc/`), mobile is Flutter (`mobile/`). Core math lives
 in `breakthrough_calc/engine.py`; ground-truth tests in `tests/test_engine.py`
 (class `ScreenshotGroundTruth2026_07_07` pins in-game verified behavior).
 
+## Architecture (2026-07-15 refactor)
+
+The two apps are deliberately parallel; module layouts mirror each other.
+- Desktop: `engine.py` (math; parity twin of `engine.dart`), `data_io.py`
+  (frozen-app paths + loaders), `gui.py` (thin MainWindow), `fields.py`
+  (declarative input-field registry: widget/persistence/Inputs/tooltip in ONE
+  place), `docs.py` (all Reference/Guide HTML; no Qt), `widgets.py`,
+  `labels.py`, `profiles.py`, `update_check.py`, `theme.py`, `i18n.py`.
+- Mobile: `engine.dart`, `main.dart` (thin coordinator), `form_widgets.dart`,
+  `results_card.dart` + `absorption_diag.dart`, `reference_tab.dart` /
+  `guide_tab.dart` / `doc_nav.dart` / `doc_widgets.dart`, `share_codec.dart`
+  (OMV2 build codes — wire format doc: `docs/knowledge/share-code-format.md`),
+  `input_store.dart`, `source_pickers.dart`, `app_dialogs.dart`,
+  `update_banner.dart`, `theme.dart`, `i18n.dart`.
+- Gates (all must stay green; CI runs them on every push via
+  `.github/workflows/ci.yml`): `pytest` from the repo root; `cd mobile &&
+  flutter analyze && flutter test`; parity `python test/gen_expected.py &&
+  dart run test/parity.dart` (every `Results` field, 28 scenarios). Engine
+  changes must land in BOTH engines + regenerate expected.json; data-table
+  KEY ORDER is part of the OMV2 wire format (pinned by share_codec_test).
+- Known duplication that is NOT engine-parity: translations (i18n.py vs
+  i18n.dart, drifted) and Reference/Guide prose (docs.py vs reference_tab/
+  guide_tab.dart) are hand-maintained twice — unification is a planned
+  follow-up; keep edits mirrored manually until then.
+
 ## Critical mechanics rules (violating these = wrong math)
 
 - **Pills/Respira are FLAT daily XP**, not multipliers. Aura Gem multiplies
