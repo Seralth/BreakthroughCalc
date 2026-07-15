@@ -722,6 +722,35 @@ class ElixirIncome(unittest.TestCase):
         self.assertAlmostEqual(zero.phase_days, not_done.phase_days, places=9)
 
 
+class RespiraBaseEstimate(unittest.TestCase):
+    """Per-Stage Respira base XP (resolved 2026-07-15 from two-account
+    readings; see game-mechanics-verified.md): display = base x (1 + Respira
+    Effect books %). Measured anchors Nascent 3157 / Incarnation 6385;
+    other Stages extrapolated by the measured x2.02249 per-Stage ratio."""
+
+    def setUp(self):
+        self.e = Engine()
+
+    def test_measured_anchors(self):
+        self.assertEqual(self.e.respira_base_estimate("Nascent"), 3157.0)
+        self.assertEqual(self.e.respira_base_estimate("Incarnation"), 6385.0)
+        # Anchors reproduce Seralth's displays at his exact +28% books.
+        self.assertEqual(round(3157.0 * 1.28), 4041)
+        self.assertEqual(round(6385.0 * 1.28), 8173)
+
+    def test_extrapolation_up_and_down(self):
+        r = 6385.0 / 3157.0
+        self.assertAlmostEqual(self.e.respira_base_estimate("Voidbreak"),
+                               6385.0 * r, places=6)
+        self.assertAlmostEqual(self.e.respira_base_estimate("Supreme"),
+                               6385.0 * r ** 7, places=3)
+        self.assertAlmostEqual(self.e.respira_base_estimate("Virtuoso"),
+                               3157.0 / r, places=6)
+
+    def test_unknown_stage_is_none(self):
+        self.assertIsNone(self.e.respira_base_estimate("Atlantis"))
+
+
 class GapCoverage(unittest.TestCase):
     """Behavior pins added 2026-07-15 before the structural refactor: each
     asserts the engine's CURRENT verified behavior for paths no other test

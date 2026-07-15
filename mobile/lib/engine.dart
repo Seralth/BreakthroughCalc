@@ -356,6 +356,16 @@ class Results {
 
 double _num(Object? v) => (v as num).toDouble();
 
+// Respira per-attempt BASE XP: one server-side constant per major Stage;
+// on-screen value = base x (1 + Respira Effect books %) (resolved
+// 2026-07-15, game-mechanics-verified.md). Unmeasured Stages extrapolate
+// by the measured Nascent->Incarnation ratio (mirrors engine.py).
+const Map<String, double> _respiraBase = {
+  'Nascent': 3157.0,
+  'Incarnation': 6385.0,
+};
+const double _respiraStageRatio = 6385.0 / 3157.0;
+
 class Engine {
   final Map<String, dynamic> data;
   final List<dynamic> rows;
@@ -385,6 +395,27 @@ class Engine {
         for (final r in rows)
           if (r['stage'] == stage && r['phase'] == phase) r['grade'] as String
       ];
+
+  /// Per-Stage Respira base XP: measured where known, otherwise the nearest
+  /// measured anchor scaled by the per-Stage ratio (mirrors engine.py).
+  double? respiraBaseEstimate(String stage) {
+    final order = stages();
+    final i = order.indexOf(stage);
+    if (i < 0) return null;
+    if (_respiraBase.containsKey(stage)) return _respiraBase[stage];
+    int? ai;
+    double? ab;
+    for (final e in _respiraBase.entries) {
+      final j = order.indexOf(e.key);
+      if (j < 0) continue;
+      if (ai == null || (j - i).abs() < (ai - i).abs()) {
+        ai = j;
+        ab = e.value;
+      }
+    }
+    if (ai == null || ab == null) return null;
+    return ab * math.pow(_respiraStageRatio, i - ai).toDouble();
+  }
 
   int rowIndex(String stage, String phase, String grade) {
     for (var i = 0; i < rows.length; i++) {
