@@ -9,7 +9,11 @@ permissions:
   contents: write
 
 jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
   build-apk:
+    needs: test
     runs-on: ubuntu-latest
     defaults:
       run:
