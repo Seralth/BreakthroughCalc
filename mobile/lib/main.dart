@@ -262,10 +262,10 @@ class _CalculatorPageState extends State<CalculatorPage>
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(tr('Force refresh?')),
-        content: Text(tr(
-                'Reloads the app fresh from the server, clearing the offline '
+        content: Text(
+            '${tr('Reloads the app fresh from the server, clearing the offline '
                 'cache. Use this if an update seems stuck. Your inputs are '
-                'saved and will survive.') +
+                'saved and will survive.')}'
             '\n\n${tr('Current build')}: v$appVersion · $buildStamp'),
         actions: [
           TextButton(
