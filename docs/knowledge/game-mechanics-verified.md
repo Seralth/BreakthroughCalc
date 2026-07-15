@@ -108,33 +108,41 @@ Verified from APK i18n strings (`apk_analysis/i18n_all.json`, en/zh/ru):
   while sitting in Completed awaiting ascension — same open question as the
   overcap accrual rate above.
 
-### Blessing Ranking tied to Completed/Perfected (2026-07-15, in-game tooltip)
+### Ascension Virya blessings tied to Completed/Perfected (2026-07-15, screenshots)
 
-Per Seralth's in-game blessing tooltip, corroborated by dump strings
-('Higher cultivation means higher blessing ranking for more rewards. /
-Completing stage to progress forward can increase rewards.' = 圆满后境界精进
-可增加福泽奖励; templates '%s Absorption Ratio + %s%%' and 'Absorption Ratio
-Before %s: + %s%%'; 'Activate the "Cultivation Pill Auto-Transmogrification"
-Privilege.'):
+SCREENSHOT-VERIFIED (2026-07-15, ~/Pictures/respira-books-2026-07-15/
+Screenshot_20260715-0333*.png — "Ascension Virya" screen, player at
+Incarnation (L) Late G12, blessing ranking No.1 → 6 reward vases). Dump
+strings corroborate (圆满后境界精进可增加福泽奖励; templates '%s Absorption
+Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
 
-- Tier 1 **Completion** (Incarnation 100% + breakthrough): removes the realm
-  restriction on taking Cultivation Pills; unlocks the Cultivation Pill
-  Auto-Transmogrification privilege; blessing rewards +1.
-- Tier 2 **Perfection (C)** (Tier 1 + Corporia path at Nascent Soul Late):
-  Incarnation (Late) Aura Absorption Ratio +20%; blessing rewards +3.
-- Tier 3 **Perfect Incarnation** (Corporia path at Incarnation Middle):
-  Aura Absorption Ratio +20% applying to stages before Voidbreak (Late)/
-  Middle; blessing rewards +5.
-- COMMUNITY-REPORTED (2026-07-15, via Seralth, not yet screenshot-verified):
-  the Tier 1 realm-restriction removal is what allows feeding higher-stage
-  Cultivation Pills to the LOWER secondary path so it catches up (pills are
-  normally realm-locked to the taker's stage). The Tier 2 and Tier 3 +20%
-  bonuses are two separate bonuses that STACK (+40% total) where windows
-  overlap; Tier 3 keeps Tier 2's bonus and extends coverage up to Voidbreak
-  (Late)/Middle rather than replacing it.
+- Tier **Completion** (req: "Reach Incarnation (L) Late 100% and break
+  through"): "Remove Realm Restrictions for Taking Cultivation Pills";
+  "Activate the Cultivation Pill Auto-Transmogrification Privilege";
+  Blessing Rewards +1; privilege "First Esotability". The restriction
+  removal is what lets higher-stage Cultivation Pills be fed to the LOWER
+  secondary path to catch it up (community-explained use).
+- Tier **Perfection (C)** (reqs: primary at Incarnation (L) Completion;
+  secondary at Nascent Soul (L) Late; clear Outer Realm Mighty Monster
+  Amethyst Fiend in Myrimon Wonder): "Incarnation (L) Aura Absorption Ratio
+  +20%"; Blessing Rewards +3.
+- Tier **Perfect ...** (gold; reqs: secondary at Incarnation (L) Middle;
+  clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
+  Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
+  +20%"; Blessing Rewards +5; "Second Esotability". Both lines shown
+  together on one tier ⇒ the bonuses STACK: +40% on Incarnation (Late),
+  +20% from there until Voidbreak (L) Middle.
+- A fourth tier circle ("Double …", partially occluded) sits between
+  Completion and Perfection (C) — contents not yet captured.
+- Blessing tiers/bonuses are per-path — the screen and status bar use path
+  suffix (L) (player's primary), confirming path letters beyond M/C/P
+  (cf. elixir notes' L/G/M/C/S).
+- Cross-check: the screen's Late G12 XP denominator 5,623,090 exactly
+  matches data/breakthrough.json Incarnation Late G12 grade_xp — independent
+  confirmation of our XP table.
 - Dump also has a rank→reward table (Blessing Ranking 1→6, 2→5, 3→4,
-  4–10→3, 11+→2) and post-ascension privileges granting Absorption Ratio
-  +200% at (mortal? immortal-world) stages plus high-stage pill access.
+  4–10→3, 11+→2 — matches No.1 ⇒ 6 vases on screen) and post-ascension
+  privileges granting Absorption Ratio +200% plus high-stage pill access.
 - Official absorption formula (dump): Cultivation Speed = Abode Aura ×
   Absorption Ratio (× Heavenly Power Bonus); Absorption Ratio = Base Stage
   Absorption Ratio × (1 + Strive Bonus) + Virya Absorption Ratio.
@@ -146,8 +154,8 @@ uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
 (Late)") breaks the cancellation: windowed rows are faster than the pure
 base-band progression predicts. Same class of issue for the +200%
 post-ascension privilege and Virya (both additive terms, per the formula).
-Stacking (+40% in the overlap, community-reported above) makes the windowed
-effect twice as large. Separately, the pills-on-secondary-path use means a
+Stacking (+40% in the overlap, screenshot-verified above) makes the
+windowed effect twice as large. Separately, the pills-on-secondary-path use means a
 secondary-path projection would see BOTH a bigger flat daily-XP term (better
 pills) and the windowed absorption bonus. UNVERIFIED: whether the blessing
 "+20%" is +20 percentage points added to the ratio (like Virya) or ×1.2 on
