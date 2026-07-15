@@ -40,6 +40,21 @@
   "note": "+4% Cultivation Pill Effect at Tier 9."
  },
  {
+  "name": "Zixiao Sutra (R8 technique)",
+  "percent": 1.0,
+  "note": "+1% Cultivation Pill Effect on learning (screenshot-verified 2026-07-15)."
+ },
+ {
+  "name": "Astral Arcanum (R8 technique)",
+  "percent": 2.0,
+  "note": "+2% Cultivation Pill Effect at Tier 3 (screenshot-verified 2026-07-15)."
+ },
+ {
+  "name": "Chroma (R8 technique)",
+  "percent": 4.0,
+  "note": "+1% on learning, +3% at Tier 6 (total +4%). Also +1 Respira attempt at Tier 3 and +1 daily pill attempt at Tier 12 - see the Respira catalog (screenshot-verified 2026-07-15)."
+ },
+ {
   "name": "Yang Spirit Jade (curio)",
   "percent": 1.0,
   "note": "Epic curio. Upgrade track: 8 levels (blue/purple/yellow/red stardust, 2 each), +0.2% per level from 1.0%. Stars 1-5 add on top, reaching 5.8% at max. Pick your star and upgrade level from the curio's screen.",

@@ -30,9 +30,21 @@
   "note": "+3% Respira EXP at level 17. Informational: your in-game Respira EXP tooltip already includes this."
  },
  {
+  "name": "Chroma Tier 3 (R8 technique)",
+  "kind": "attempt",
+  "value": 1,
+  "note": "+1 daily Respira attempt at Tier 3 (screenshot-verified 2026-07-15)."
+ },
+ {
   "name": "Crane Boy (immortal friend, max)",
   "kind": "pill_attempt",
   "value": 1,
   "note": "+1 daily PILL attempt at max level - raise the Daily pill limit input, not Respira."
+ },
+ {
+  "name": "Chroma Tier 12 (R8 technique)",
+  "kind": "pill_attempt",
+  "value": 1,
+  "note": "+1 daily PILL attempt at Tier 12 - raise the Daily pill limit input, not Respira (screenshot-verified 2026-07-15)."
  }
 ]
