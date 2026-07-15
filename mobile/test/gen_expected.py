@@ -1,5 +1,6 @@
 """Run the shared scenarios through the Python engine and dump expected outputs.
 The Dart parity test checks its own engine against this file."""
+import dataclasses
 import json
 import os
 import sys
@@ -7,15 +8,11 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(os.path.dirname(HERE)))  # repo root -> breakthrough_calc
 
-from breakthrough_calc.engine import Engine, Inputs
+from breakthrough_calc.engine import Engine, Inputs, Results
 
-FIELDS = [
-    "valid", "error", "phase_days", "stage_days", "target_days", "target_valid",
-    "abode_aura", "strive", "base_xp_per_day", "effective_xp_per_day",
-    "pill_xp_per_day", "pill_speedup", "gem_speedup", "mythic_pills_per_day",
-    "pearl_xp_per_day", "respira_xp_per_day", "fruit_xp", "fruit_days_saved",
-    "phase_band", "stage_band", "target_band",
-]
+# Every Results field is parity-checked; a field added to only one engine
+# fails loudly in parity.dart instead of silently escaping coverage.
+FIELDS = [f.name for f in dataclasses.fields(Results)]
 
 e = Engine()
 scenarios = json.load(open(os.path.join(HERE, "scenarios.json")))

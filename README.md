@@ -140,11 +140,13 @@ python3 -m venv .venv
 Tests:
 
 ```bash
-python3 -m unittest discover -s tests
+pytest                # or: python3 -m unittest discover -s tests
 ```
 
-The Linux AppImage builds with `./build-appimage.sh`. Windows and Android builds
-run on GitHub Actions per tagged release. The Android app is a separate Flutter
-project in `mobile/`, kept isolated from the desktop app; it reuses the same data
-and a Dart port of the engine verified against the Python one. See
-`mobile/README.md`.
+The Linux AppImage builds locally with `./build-appimage.sh`. CI builds the
+Windows exe and Linux AppImage on every master push and attaches all desktop
+artifacts (plus the Android APK) to tagged `v*` releases; the web app deploys
+on every master push touching `mobile/` or `data/`. The Android/web app is a
+separate Flutter project in `mobile/`, kept isolated from the desktop app; it
+reuses the same data and a Dart port of the engine verified against the Python
+one. See `mobile/README.md`.

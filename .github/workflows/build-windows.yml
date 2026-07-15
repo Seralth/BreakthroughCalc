@@ -11,14 +11,7 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Engine regression tests
-        run: python -m unittest discover -s tests -v
+    uses: ./.github/workflows/ci.yml
 
   build-windows:
     needs: test
@@ -35,8 +28,7 @@ jobs:
           pyinstaller --onefile --windowed
           --name "BreakthroughCalculator"
           --icon packaging/breakthrough-calc.ico
-          --add-data "data/breakthrough.json;data"
-          --add-data "data/pill_effect_sources.json;data"
+          --add-data "data;data"
           --add-data "packaging/breakthrough-calc.png;."
           main.py
       - uses: actions/upload-artifact@v4

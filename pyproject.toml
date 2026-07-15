@@ -1,0 +1,6 @@
+# Test-runner configuration only — the app is not pip-installed; it runs from
+# a checkout (main.py) or a PyInstaller bundle. pythonpath makes bare `pytest`
+# resolve `breakthrough_calc` from the repo root (python -m unittest works too).
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

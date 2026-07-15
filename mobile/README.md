@@ -6,15 +6,14 @@ data tables in `../data` — no shared code.
 
 ## Status
 - **Engine: complete and verified.** `lib/engine.dart` is a 1:1 port of
-  `breakthrough_calc/engine.py`, validated against the Python engine on 12
-  shared scenarios (`dart run test/parity.dart` → all match to 1e-6). Covers
-  pills, all three artifacts, respira, fruit gush pity, strive drop-off (both
-  regimes), and the variance bands.
-- **UI: starter foundation.** `lib/main.dart` wires the core cultivation inputs
-  and headline results to the engine. Remaining UI work: pills, artifacts,
-  respira, fruit, star-mark inputs, the pill-effect catalog picker, profiles,
-  the theme selector, and the Reference tab (all straightforward — the engine
-  and data already provide everything).
+  `breakthrough_calc/engine.py`, validated against the Python engine on all
+  shared scenarios in `test/scenarios.json` (`dart run test/parity.dart` →
+  all match to 1e-6). Covers pills, all three artifacts, respira, fruit gush
+  pity, strive drop-off (both regimes), prestock, and the variance bands.
+- **UI: feature-complete port** at parity with the desktop app (all inputs,
+  catalogs, profiles via prefs, themes, i18n, Reference + Guide tabs, update
+  check) plus mobile-only shareable build codes (`lib/share_codec.dart`,
+  OMV2 format — not yet ported to desktop).
 
 ## Data
 `../data` is the single source of truth. Copy it into the Flutter assets before
