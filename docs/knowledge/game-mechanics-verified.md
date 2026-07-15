@@ -262,10 +262,10 @@ entire major Stage — it does not scale with phase or grade.
   constancy stands). Best hypothesis: display = shared base × (1 + account's
   Respira Effect books). Seralth +28% ⇒ base 6,385; friend's display then
   implies ~+49% books (9,515 / 6,385 = 1.490) — CHECK the friend's total
-  Respira Effect % to confirm. CAVEAT: the friend's float text reads
-  "MP +9,515" (not cultivation EXP) — unconfirmed whether this was a daily
-  Respira attempt or the MP meditation interaction; if MP, it confirms the
-  crit table but not the XP base.
+  Respira Effect % to confirm. (Display quirk, player-clarified 2026-07-15:
+  the cultivation screen labels cultivation-XP gain floats as "MP +x" —
+  passive ticks and Respira procs alike — so these ARE cultivation-XP
+  readings, not mana.)
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
