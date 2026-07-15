@@ -63,3 +63,16 @@ applied after the (still manual) breakthrough.
   our arithmetic reproduction is the only public cross-check. Accrual rate
   while overcapped remains UNVERIFIED (assumed normal capped-row rate);
   verify against the in-game % once capped.
+
+## R8 technique books — pill-effect coverage complete (2026-07-15)
+
+Screenshot-verified from the in-game R8 technique screens: only THREE R8
+books carry Cultivation Pill Effect lines — Zixiao Sutra (+1% on learning),
+Astral Arcanum (+2% at Tier 3), Chroma (+1% on learning, +3% at Tier 6,
+plus +1 Respira attempt at Tier 3 and +1 daily pill attempt at Tier 12).
+Per Seralth (2026-07-15): the other six R8 books (Tao of Taiqing, Origin
+Scripture, No-Thought Sutra, Moon Meru, Dracophant, Cauldron Refinement)
+have NO pill-effect lines — their absence from data/pill_effect_sources.json
+is complete coverage, not missing data. Books' Base Abode Aura bonuses are
+deliberately NOT cataloged (they're already inside the player's entered
+Abode Aura reading; adding them would double-count).
