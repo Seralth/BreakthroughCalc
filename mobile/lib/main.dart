@@ -394,6 +394,9 @@ class _CalculatorPageState extends State<CalculatorPage>
       'absorption_ratio': inp.absorptionRatio,
       'aura_gem': inp.auraGem,
       'target_stage': inp.targetStage,
+      'target_phase': inp.targetPhase,
+      'target_grade': inp.targetGrade,
+      'timegate_days': inp.timegateDays,
       'top_stage': inp.topStage,
       'mature_server': inp.matureServer,
       'dailies_done': inp.dailiesDone,
@@ -524,8 +527,10 @@ class _CalculatorPageState extends State<CalculatorPage>
             inp.phase = engine.phasesFor(v).first;
             inp.grade = engine.gradesFor(v, inp.phase).first;
             if (inp.targetStage.isNotEmpty &&
-                stages.indexOf(inp.targetStage) <= stages.indexOf(v)) {
+                stages.indexOf(inp.targetStage) < stages.indexOf(v)) {
               inp.targetStage = '';
+              inp.targetPhase = '';
+              inp.targetGrade = '';
             }
             _recalc();
           }, display: trStage),
@@ -567,10 +572,30 @@ class _CalculatorPageState extends State<CalculatorPage>
             _recalc();
           }, display: tr),
           _dropdown(tr('Target Stage'), inp.targetStage.isEmpty ? '(none)' : inp.targetStage,
-              ['(none)', ...stages.sublist(stages.indexOf(inp.stage) + 1)], (v) {
+              ['(none)', ...stages.sublist(stages.indexOf(inp.stage))], (v) {
             inp.targetStage = v == '(none)' ? '' : v!;
+            inp.targetPhase = '';
+            inp.targetGrade = '';
             _recalc();
           }, display: trStage),
+          if (inp.targetStage.isNotEmpty)
+            _dropdown(tr('Target half-step'), inp.targetPhase.isEmpty ? '(none)' : inp.targetPhase,
+                ['(none)', ...engine.phasesFor(inp.targetStage)], (v) {
+              inp.targetPhase = v == '(none)' ? '' : v!;
+              inp.targetGrade = '';
+              _recalc();
+            }, display: trPhase),
+          if (inp.targetStage.isNotEmpty && inp.targetPhase.isNotEmpty)
+            _dropdown(tr('Target grade'), inp.targetGrade.isEmpty ? '(none)' : inp.targetGrade,
+                ['(none)', ...engine.gradesFor(inp.targetStage, inp.targetPhase)], (v) {
+              inp.targetGrade = v == '(none)' ? '' : v!;
+              _recalc();
+            }),
+          if (inp.targetStage.isNotEmpty)
+            _num(tr('Timegate lifts in (days)'), inp.timegateDays, (v) {
+              inp.timegateDays = v.clamp(0, 1000);
+              _recalc();
+            }),
           _dropdown(tr('Server #1 Stage (Strive)'), inp.topStage.isEmpty ? '(none)' : inp.topStage,
               ['(none)', ...stages], (v) {
             inp.topStage = v == '(none)' ? '' : v!;
@@ -755,6 +780,17 @@ class _CalculatorPageState extends State<CalculatorPage>
                 row(tr('Stage breakthrough in'), trDuration(fmtDays(res.stageDays)), res.stageBand),
                 if (res.targetValid)
                   row(tr('Target reached in'), trDuration(fmtDays(res.targetDays)), res.targetBand),
+                if (res.prestockValid)
+                  row(
+                      tr('Prestock for target (overcap)'),
+                      '${res.prestockPct.toStringAsFixed(0)}% — ${trDuration(fmtDays(res.prestockDays))}',
+                      res.prestockBand),
+                if (res.prestockValid && inp.timegateDays > 0)
+                  row(
+                      tr('At timegate'),
+                      inp.timegateDays >= res.prestockDays
+                          ? '✓ ${tr('stocked {} early').replaceFirst('{}', trDuration(fmtDays(inp.timegateDays - res.prestockDays)))}'
+                          : '✗ ${tr('short by {}').replaceFirst('{}', trDuration(fmtDays(res.prestockDays - inp.timegateDays)))}'),
                 const Divider(),
                 row(tr('Abode Aura (implied)'), res.abodeAura.toStringAsFixed(1)),
                 row(tr('Cultivation XP / day'), res.baseXpPerDay.toStringAsFixed(0)),
@@ -1048,11 +1084,15 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   void _pickCatalog() async {
+    // Hide sources already added so they can't be picked twice; remove them
+    // via their row's delete button.
+    final added = {for (final e in _peSources) e[0] as String};
     final choice = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       builder: (_) => ListView(
         children: [
           for (final s in widget.catalog.cast<Map<String, dynamic>>())
+            if (!added.contains(s['name']))
             ListTile(
               title: Text(s['name'] as String),
               trailing: Text(((s['percent'] as num?) ?? 0) == 0 ? tr('varies') : '${s['percent']}%'),

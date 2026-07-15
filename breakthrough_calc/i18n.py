@@ -96,6 +96,34 @@ TRANSLATIONS = {
   "Apply to Cultivation Speed": "Применить к скорости совершенствования",
   "Cultivation Speed (XP / Cosmoapsis)": "Скорость совершенствования (опыт за фазу инь-ян)",
   "Target Stage": "Целевая стадия",
+  "Target half-step": "Целевая половина",
+  "Target grade": "Целевая ступень",
+  "Optional: a half-step within the target Stage. Blank = start of the Stage.":
+      "Необязательно: половина внутри целевой стадии. Пусто = начало стадии.",
+  "Optional: a grade within the target half-step. Blank = start of the half-step.":
+      "Необязательно: ступень внутри целевой половины. Пусто = начало половины.",
+  "Timegate lifts in": "Врата времени откроются через",
+  " days": " дн.",
+  "Prestock for target (overcap)": "Запас до цели (избыток)",
+  "At timegate": "К вратам времени",
+  "stocked {} early": "запас готов за {} до врат",
+  "short by {}": "не хватает {}",
+  "Optional: days until the world-level timegate lifts (shown in-game once someone "
+  "reaches the last half-step). Compared against the prestock time. Reminder: use "
+  "Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.":
+      "Необязательно: дней до открытия мировых врат времени (видно в игре, когда кто-то "
+      "достигает последней половины). Сравнивается со временем накопления запаса. Напоминание: "
+      "используйте плоды Миримон ДО врат — врата открывают следующий мир, и плоды теряют бонус +50% высшего мира.",
+  "Overcap needed for the target, in the game's own display convention (XP since the "
+  "start of the final half-step ÷ that half-step's total), and the time to stock it. "
+  "While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT "
+  "speed — no future-grade speedups. Slower than the ungated 'Target reached in'.":
+      "Необходимый избыток для цели в игровом формате (опыт с начала последней половины ÷ "
+      "её общий объём) и время его накопления. Во время врат вы стоите на пределе стадии, "
+      "опыт идёт с ТЕКУЩЕЙ скоростью — без ускорений будущих ступеней. Медленнее, чем "
+      "«Целевая стадия через» без врат.",
+  "Whether your stocked XP reaches the target before the timegate lifts.":
+      "Достигнет ли ваш запас опыта цели до открытия врат времени.",
   "Server #1's Stage (Strive)": "Стадия №1 сервера (Стремление)",
   "Mature server (world level 30+)": "Зрелый сервер (уровень мира 30+)",
   "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
@@ -135,10 +163,10 @@ TRANSLATIONS = {
   "info": "справка", "pill limit": "лимит пилюль",
   "Add a pill-effect source (a technique book, a curio, …). Their percentages sum.":
       "Добавьте источник эффекта пилюль (книга техник, древность, …). Их проценты суммируются.",
-  "Known pill-effect sources from the game data. Check to add "
-  "(prefilled, editable), uncheck to remove.":
-      "Известные источники эффекта пилюль из данных игры. Отметьте, чтобы добавить "
-      "(предзаполнено, можно править), снимите отметку, чтобы убрать.",
+  "Known pill-effect sources from the game data. Click to add "
+  "(prefilled, editable); already-added sources are hidden.":
+      "Известные источники эффекта пилюль из данных игры. Нажмите, чтобы добавить "
+      "(предзаполнено, можно править); уже добавленные источники скрыты.",
   "Shared daily attempt limit for all cultivation pills (vase red pills are exempt).":
       "Общий дневной лимит попыток для всех пилюль дао (красные пилюли из вазы не считаются).",
   "Check if you've already taken today's daily pills and Respira. The "
@@ -299,7 +327,7 @@ TRANSLATIONS = {
   "Select a valid stage / phase / grade.": "Выберите корректные стадию / половину / ступень.",
   "Cultivation speed and absorption ratio must be > 0.":
       "Скорость совершенствования и эфф. поглощения должны быть > 0.",
-  "Target stage precedes current stage.": "Целевая стадия раньше текущей.",
+  "Target must be after your current grade.": "Цель должна быть после текущей ступени.",
   # -- star upgrade dialog -------------------------------------------------------
   "Upgrade level": "Уровень улучшения",
   "Cultivation Pill Effect: {}%": "Эффект пилюли дао: {}%",
@@ -359,6 +387,34 @@ TRANSLATIONS = {
   "Apply to Cultivation Speed": "Auf Anbaugeschwindigkeit anwenden",
   "Cultivation Speed (XP / Cosmoapsis)": "Anbaugeschwindigkeit (EXP / Cosmoapsis)",
   "Target Stage": "Ziel-Bühne",
+  "Target half-step": "Ziel-Halbschritt",
+  "Target grade": "Ziel-Grad",
+  "Optional: a half-step within the target Stage. Blank = start of the Stage.":
+      "Optional: ein halber Schritt innerhalb der Ziel-Bühne. Leer = Beginn der Bühne.",
+  "Optional: a grade within the target half-step. Blank = start of the half-step.":
+      "Optional: ein Grad innerhalb des Ziel-Halbschritts. Leer = Beginn des halben Schritts.",
+  "Timegate lifts in": "Zeittor öffnet in",
+  " days": " Tage",
+  "Prestock for target (overcap)": "Vorrat fürs Ziel (Überlauf)",
+  "At timegate": "Am Zeittor",
+  "stocked {} early": "{} vor dem Tor fertig",
+  "short by {}": "fehlen {}",
+  "Optional: days until the world-level timegate lifts (shown in-game once someone "
+  "reaches the last half-step). Compared against the prestock time. Reminder: use "
+  "Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.":
+      "Optional: Tage bis das Welt-Zeittor öffnet (im Spiel sichtbar, sobald jemand den letzten "
+      "Halbschritt erreicht). Wird mit der Vorratszeit verglichen. Erinnerung: Myrimon-Früchte "
+      "VOR dem Tor verwenden — das Tor schaltet das nächste Reich frei, wodurch sie den +50%-Höchstreich-Bonus verlieren.",
+  "Overcap needed for the target, in the game's own display convention (XP since the "
+  "start of the final half-step ÷ that half-step's total), and the time to stock it. "
+  "While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT "
+  "speed — no future-grade speedups. Slower than the ungated 'Target reached in'.":
+      "Benötigter Überlauf fürs Ziel im Anzeigeformat des Spiels (EP seit Beginn des letzten "
+      "Halbschritts ÷ dessen Gesamt-EP) und die Zeit zum Ansparen. Während des Zeittors stehst "
+      "du am Stufen-Limit, EP läuft mit AKTUELLER Geschwindigkeit — ohne die Beschleunigung "
+      "späterer Grade. Langsamer als das ungegatete „Ziel-Bühne erreicht in“.",
+  "Whether your stocked XP reaches the target before the timegate lifts.":
+      "Ob dein EP-Vorrat das Ziel erreicht, bevor das Zeittor öffnet.",
   "Server #1's Stage (Strive)": "Bühne der Server-Nr. 1 (Streben)",
   "Mature server (world level 30+)": "Reifer Server (Weltstufe 30+)",
   "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
@@ -398,10 +454,10 @@ TRANSLATIONS = {
   "info": "Info", "pill limit": "Pillenlimit",
   "Add a pill-effect source (a technique book, a curio, …). Their percentages sum.":
       "Füge eine Pillenwirkungs-Quelle hinzu (Technikbuch, Kuriosität, …). Die Prozente summieren sich.",
-  "Known pill-effect sources from the game data. Check to add "
-  "(prefilled, editable), uncheck to remove.":
-      "Bekannte Pillenwirkungs-Quellen aus den Spieldaten. Ankreuzen zum Hinzufügen "
-      "(vorausgefüllt, editierbar), abwählen zum Entfernen.",
+  "Known pill-effect sources from the game data. Click to add "
+  "(prefilled, editable); already-added sources are hidden.":
+      "Bekannte Pillenwirkungs-Quellen aus den Spieldaten. Anklicken zum Hinzufügen "
+      "(vorausgefüllt, editierbar); bereits hinzugefügte Quellen sind ausgeblendet.",
   "Shared daily attempt limit for all cultivation pills (vase red pills are exempt).":
       "Geteiltes tägliches Versuchslimit für alle Kultivierungspillen (rote Vasen-Pillen ausgenommen).",
   "Check if you've already taken today's daily pills and Respira. The "
@@ -558,7 +614,7 @@ TRANSLATIONS = {
   "Select a valid stage / phase / grade.": "Wähle gültige Bühne / Phase / Grad.",
   "Cultivation speed and absorption ratio must be > 0.":
       "Anbaugeschwindigkeit und Absorptionsverhältnis müssen > 0 sein.",
-  "Target stage precedes current stage.": "Die Ziel-Bühne liegt vor der aktuellen Bühne.",
+  "Target must be after your current grade.": "Das Ziel muss nach dem aktuellen Grad liegen.",
   "Upgrade level": "Verbesserungsstufe",
   "Cultivation Pill Effect: {}%": "Wirkung der Kultivierungspille: {}%",
  },
@@ -617,6 +673,34 @@ TRANSLATIONS = {
   "Apply to Cultivation Speed": "Aplicar a la velocidad de cultivo",
   "Cultivation Speed (XP / Cosmoapsis)": "Velocidad de cultivo (EXP / Cosmoapsis)",
   "Target Stage": "Etapa objetivo",
+  "Target half-step": "Medio paso objetivo",
+  "Target grade": "Rango objetivo",
+  "Optional: a half-step within the target Stage. Blank = start of the Stage.":
+      "Opcional: un medio paso dentro de la etapa objetivo. Vacío = inicio de la etapa.",
+  "Optional: a grade within the target half-step. Blank = start of the half-step.":
+      "Opcional: un rango dentro del medio paso objetivo. Vacío = inicio del medio paso.",
+  "Timegate lifts in": "La puerta temporal abre en",
+  " days": " días",
+  "Prestock for target (overcap)": "Reserva para el objetivo (exceso)",
+  "At timegate": "En la puerta temporal",
+  "stocked {} early": "reserva lista {} antes",
+  "short by {}": "faltan {}",
+  "Optional: days until the world-level timegate lifts (shown in-game once someone "
+  "reaches the last half-step). Compared against the prestock time. Reminder: use "
+  "Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.":
+      "Opcional: días hasta que abra la puerta temporal del mundo (visible en el juego cuando "
+      "alguien alcanza el último medio paso). Se compara con el tiempo de reserva. Recordatorio: "
+      "usa las frutas Myrimon ANTES de la puerta — al abrir se desbloquea el siguiente reino y pierden el bono de +50% de reino máximo.",
+  "Overcap needed for the target, in the game's own display convention (XP since the "
+  "start of the final half-step ÷ that half-step's total), and the time to stock it. "
+  "While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT "
+  "speed — no future-grade speedups. Slower than the ungated 'Target reached in'.":
+      "Exceso necesario para el objetivo en el formato del juego (EXP desde el inicio del último "
+      "medio paso ÷ su total) y el tiempo para reservarlo. Durante la puerta permaneces en el "
+      "tope de la etapa, la EXP avanza a tu velocidad ACTUAL — sin las mejoras de rangos futuros. "
+      "Más lento que «Etapa objetivo alcanzada en» sin puerta.",
+  "Whether your stocked XP reaches the target before the timegate lifts.":
+      "Si tu EXP reservada alcanza el objetivo antes de que abra la puerta temporal.",
   "Server #1's Stage (Strive)": "Etapa del n.º 1 del servidor (Esfuerzo)",
   "Mature server (world level 30+)": "Servidor maduro (nivel de mundo 30+)",
   "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
@@ -658,10 +742,10 @@ TRANSLATIONS = {
   "Add a pill-effect source (a technique book, a curio, …). Their percentages sum.":
       "Añade una fuente de efecto de píldora (un libro de técnica, una curiosidad, …). "
       "Sus porcentajes se suman.",
-  "Known pill-effect sources from the game data. Check to add "
-  "(prefilled, editable), uncheck to remove.":
-      "Fuentes de efecto de píldora conocidas de los datos del juego. Marca para añadir "
-      "(prellenado, editable), desmarca para quitar.",
+  "Known pill-effect sources from the game data. Click to add "
+  "(prefilled, editable); already-added sources are hidden.":
+      "Fuentes de efecto de píldora conocidas de los datos del juego. Pulsa para añadir "
+      "(prellenado, editable); las fuentes ya añadidas se ocultan.",
   "Shared daily attempt limit for all cultivation pills (vase red pills are exempt).":
       "Límite diario compartido de intentos para todas las píldoras de cultivo "
       "(las píldoras rojas del jarrón están exentas).",
@@ -821,7 +905,7 @@ TRANSLATIONS = {
   "Select a valid stage / phase / grade.": "Selecciona una etapa / fase / rango válidos.",
   "Cultivation speed and absorption ratio must be > 0.":
       "La velocidad de cultivo y la relación de absorción deben ser > 0.",
-  "Target stage precedes current stage.": "La etapa objetivo es anterior a la etapa actual.",
+  "Target must be after your current grade.": "El objetivo debe estar después del rango actual.",
   "Upgrade level": "Nivel de mejora",
   "Cultivation Pill Effect: {}%": "Efecto de la Píldora de Cultivo: {}%",
  },
@@ -879,6 +963,32 @@ TRANSLATIONS = {
   "Apply to Cultivation Speed": "应用到修炼速度",
   "Cultivation Speed (XP / Cosmoapsis)": "修炼速度（修为/周天）",
   "Target Stage": "目标境界",
+  "Target half-step": "目标半步",
+  "Target grade": "目标阶",
+  "Optional: a half-step within the target Stage. Blank = start of the Stage.":
+      "可选：目标境界内的半步。留空 = 境界开始处。",
+  "Optional: a grade within the target half-step. Blank = start of the half-step.":
+      "可选：目标半步内的阶。留空 = 半步开始处。",
+  "Timegate lifts in": "时间之门开启于",
+  " days": " 天",
+  "Prestock for target (overcap)": "目标预存（溢出）",
+  "At timegate": "开门时",
+  "stocked {} early": "提前 {} 存满",
+  "short by {}": "还差 {}",
+  "Optional: days until the world-level timegate lifts (shown in-game once someone "
+  "reaches the last half-step). Compared against the prestock time. Reminder: use "
+  "Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.":
+      "可选：距世界时间之门开启的天数（有人到达最后半步后游戏内可见）。与预存时间对比。"
+      "提醒：请在开门前使用弥力蒙果——开门解锁下一境界后，果实将失去 +50% 最高境界加成。",
+  "Overcap needed for the target, in the game's own display convention (XP since the "
+  "start of the final half-step ÷ that half-step's total), and the time to stock it. "
+  "While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT "
+  "speed — no future-grade speedups. Slower than the ungated 'Target reached in'.":
+      "达到目标所需的溢出百分比（按游戏显示方式：自最后半步开始累计的经验 ÷ 该半步总量）"
+      "及预存所需时间。被时间之门限制时停在境界上限，经验按当前速度累积——没有未来阶的加速。"
+      "比无门的“达到目标境界还需”更慢。",
+  "Whether your stocked XP reaches the target before the timegate lifts.":
+      "你的预存经验能否在时间之门开启前达到目标。",
   "Server #1's Stage (Strive)": "服务器第一名的境界（奋起）",
   "Mature server (world level 30+)": "成熟服务器（世界等级30+）",
   "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption "
@@ -914,9 +1024,9 @@ TRANSLATIONS = {
   "info": "说明", "pill limit": "丹药次数",
   "Add a pill-effect source (a technique book, a curio, …). Their percentages sum.":
       "添加一个丹药效果来源（功法书、古宝等）。百分比相加。",
-  "Known pill-effect sources from the game data. Check to add "
-  "(prefilled, editable), uncheck to remove.":
-      "游戏数据中已知的丹药效果来源。勾选添加（已预填，可编辑），取消勾选移除。",
+  "Known pill-effect sources from the game data. Click to add "
+  "(prefilled, editable); already-added sources are hidden.":
+      "游戏数据中已知的丹药效果来源。点击添加（已预填，可编辑）；已添加的来源会隐藏。",
   "Shared daily attempt limit for all cultivation pills (vase red pills are exempt).":
       "所有道行丹共享的每日次数上限（净瓶红丹不计入）。",
   "Check if you've already taken today's daily pills and Respira. The "
@@ -1054,7 +1164,7 @@ TRANSLATIONS = {
   "Select a valid stage / phase / grade.": "请选择有效的境界 / 半步 / 小境界。",
   "Cultivation speed and absorption ratio must be > 0.":
       "修炼速度和吸收率必须大于0。",
-  "Target stage precedes current stage.": "目标境界早于当前境界。",
+  "Target must be after your current grade.": "目标必须在当前阶之后。",
   "Upgrade level": "升级等级",
   "Cultivation Pill Effect: {}%": "修为丹服用效果：{}%",
  },

@@ -477,3 +477,52 @@ class Formatting(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PrestockOvercap(unittest.TestCase):
+    """Timegate prestock (verified 2026-07-15 from the community 2026 guide;
+    see docs/knowledge/game-mechanics-verified.md): displayed overcap % =
+    cumulative XP since the start of the current half-step / half-step total.
+    Two independent community data points match the grade_xp table exactly."""
+
+    def test_incarnation_to_voidbreak_late_g1_is_440pct(self):
+        e = Engine()
+        r = e.calculate(base_inputs(
+            stage="Incarnation", phase="LATE", grade="G12",
+            target_stage="Voidbreak", target_phase="LATE", target_grade="G1"))
+        self.assertTrue(r.prestock_valid)
+        self.assertAlmostEqual(r.prestock_pct, 440.0, delta=1.0)
+
+    def test_wholeness_completion_from_early_is_404pct(self):
+        # The Strive-sniffing data point: overcapping a path parked at
+        # Wholeness EARLY G20 to 404% = Wholeness completion. Same convention:
+        # target the start of Perfection from Wholeness EARLY.
+        e = Engine()
+        rows = e.rows
+        early = sum(r["grade_xp"] for r in rows
+                    if r["stage"] == "Wholeness" and r["phase"] == "EARLY")
+        rest = sum(r["grade_xp"] for r in rows
+                   if r["stage"] == "Wholeness" and r["phase"] != "EARLY")
+        self.assertAlmostEqual((early + rest) / early * 100, 404.0, delta=1.0)
+
+    def test_prestock_slower_than_ungated_target(self):
+        # Parked at the Stage cap, XP accrues at the capped row's rate — the
+        # prestock time must exceed the ungated projection, which uses the
+        # faster future-row speeds.
+        e = Engine()
+        r = e.calculate(base_inputs(
+            stage="Incarnation", phase="LATE", grade="G12",
+            target_stage="Voidbreak", target_phase="LATE", target_grade="G1"))
+        self.assertTrue(r.target_valid)
+        self.assertGreater(r.prestock_days, r.target_days)
+
+    def test_no_prestock_for_next_stage_start_or_same_stage(self):
+        e = Engine()
+        r1 = e.calculate(base_inputs(
+            stage="Incarnation", phase="LATE", grade="G12", target_stage="Voidbreak"))
+        r2 = e.calculate(base_inputs(
+            stage="Incarnation", phase="MIDDLE", grade="G1",
+            target_stage="Incarnation", target_phase="LATE"))
+        self.assertFalse(r1.prestock_valid)
+        self.assertFalse(r2.prestock_valid)
+        self.assertTrue(r1.target_valid and r2.target_valid)

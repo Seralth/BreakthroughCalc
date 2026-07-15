@@ -127,6 +127,9 @@ class Inputs:
     absorption_ratio: float = 0.0   # e.g. 0.017 for 1.7%
     aura_gem: str = "None"
     target_stage: str = ""          # for "time until future stage"
+    target_phase: str = ""          # optional: half-step within target_stage
+    target_grade: str = ""          # optional: grade within target_phase
+    timegate_days: float = 0.0      # days until the world-level timegate lifts (0 = not set)
     top_stage: str = ""             # server #1's Stage; enables Strive drop-off projection
     mature_server: bool = True      # world level >= 30: minor-gap tiers + extra-rank bonus
     dailies_done: bool = False      # today's daily pills/respira already used; defer to next reset
@@ -184,6 +187,11 @@ class Results:
     stage_days: float = 0.0        # time until end of current stage
     target_days: float = 0.0       # time until start of target stage
     target_valid: bool = False
+    # Prestock (timegated): XP stocked while parked at the current Stage's cap.
+    prestock_valid: bool = False
+    prestock_pct: float = 0.0      # overcap % needed, in the game's display convention
+    prestock_days: float = 0.0     # days to stock the target's XP at the capped rate
+    prestock_band: tuple = (0.0, 0.0)
     abode_aura: float = 0.0
     strive: float = 0.0                 # implied Strive Bonus (multiplier, e.g. 0.30 = +30%)
     base_xp_per_day: float = 0.0        # culti_speed at the current grade, per day
@@ -237,6 +245,18 @@ class Engine:
             if r["stage"] == stage:
                 return i
         return -1
+
+    def target_start_index(self, stage: str, phase: str = "", grade: str = "") -> int:
+        """Row index where the target begins: start of the stage, of a
+        half-step within it, or of a specific grade."""
+        if not phase:
+            return self.stage_start_index(stage)
+        if not grade:
+            for i, r in enumerate(self.rows):
+                if r["stage"] == stage and r["phase"] == phase:
+                    return i
+            return -1
+        return self.row_index(stage, phase, grade)
 
     # ---- pills ---------------------------------------------------------
     def _pill_math(self, inp: Inputs) -> dict:
@@ -558,14 +578,36 @@ class Engine:
         res.phase_band = band(res.phase_days, pend)
         res.stage_band = band(res.stage_days, send)
 
-        if inp.target_stage and inp.target_stage != inp.stage:
-            tstart = self.stage_start_index(inp.target_stage)
+        if inp.target_stage:
+            tstart = self.target_start_index(
+                inp.target_stage, inp.target_phase, inp.target_grade)
             if tstart > idx:
                 res.target_days = days(real_seconds(tstart - 1))
                 res.target_band = band(res.target_days, tstart - 1)
                 res.target_valid = True
+                if tstart > send + 1:
+                    # Prestock scenario: a timegate parks you at the Stage cap,
+                    # where excess EXP accrues at the CAPPED row's rate (no
+                    # future-row speed scaling; pills/Respira stay flat).
+                    cap_rate = (speed(self.rows[send]) * (1 + gem) / TICK_SECONDS
+                                + daily_rate)
+                    overflow_xp = xp_ahead(tstart - 1) - xp_ahead(send)
+                    res.prestock_days = days(
+                        real_seconds(send) + overflow_xp / cap_rate)
+                    res.prestock_band = band(res.prestock_days, tstart - 1)
+                    # Overcap % in the game's display convention (verified
+                    # 2026-07-15): cumulative XP since the start of the Stage's
+                    # final half-step ÷ that half-step's total.
+                    cap_phase = self.rows[send]["phase"]
+                    hs_total = sum(r["grade_xp"] for r in self.rows
+                                   if r["stage"] == inp.stage and r["phase"] == cap_phase)
+                    beyond = sum(self.rows[j]["grade_xp"]
+                                 for j in range(send + 1, tstart))
+                    if hs_total > 0:
+                        res.prestock_pct = (hs_total + beyond) / hs_total * 100.0
+                        res.prestock_valid = True
             elif tstart >= 0:
-                res.error = "Target stage precedes current stage."
+                res.error = "Target must be after your current grade."
 
         # fruit time saved at current speed
         fruit_secs = fruit_xp / inp.culti_speed * TICK_SECONDS if inp.culti_speed else 0.0
