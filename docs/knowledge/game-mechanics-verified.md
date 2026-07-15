@@ -129,9 +129,17 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
 - Tier **Perfect ...** (gold; reqs: secondary at Incarnation (L) Middle;
   clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
   Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
-  +20%"; Blessing Rewards +5; "Second Esotability". Both lines shown
-  together on one tier ⇒ the bonuses STACK: +40% on Incarnation (Late),
-  +20% from there until Voidbreak (L) Middle.
+  +20%"; Blessing Rewards +5; "Second Esotability".
+- COMMUNITY MODEL of the stacking (older player via Seralth 2026-07-15,
+  self-rated ~90% sure; supersedes the narrower window reading where they
+  conflict): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
+  Absorption Ratio" add flat to +40%, and that +40% PERSISTS past
+  Incarnation (it is named for the tier, not windowed to the stage). The
+  "Before Voidbreak (L) Middle +20%" is the conditional one on top: +60%
+  total until passing Voidbreak Middle, then back to +40% permanently.
+  Meta consequence: players park in Voidbreak (Early) — +60% plus VB's
+  higher base band (0.50 vs Incarnation Late 0.40) — and prestock until
+  they can clear Middle into Late in one push.
 - The "Double" label between the tier circles is NOT a tier (unclickable,
   per Seralth). PLAUSIBLE INFERENCE: it is the active-Virya status badge
   (dump: 'Double' = 双; template ">Within {1} hours, receive {3}x {2}
@@ -159,8 +167,9 @@ uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
 (Late)") breaks the cancellation: windowed rows are faster than the pure
 base-band progression predicts. Same class of issue for the +200%
 post-ascension privilege and Virya (both additive terms, per the formula).
-Stacking (+40% in the overlap, screenshot-verified above) makes the
-windowed effect twice as large. Separately, the pills-on-secondary-path use means a
+Per the community model above, the effective bonus is +40% persistent
+(+60% before Voidbreak Middle) — and since it persists past Incarnation,
+it is a permanent absorption modifier, not just a window. Separately, the pills-on-secondary-path use means a
 secondary-path projection would see BOTH a bigger flat daily-XP term (better
 pills) and the windowed absorption bonus. UNVERIFIED: whether the blessing
 "+20%" is +20 percentage points added to the ratio (like Virya) or ×1.2 on
