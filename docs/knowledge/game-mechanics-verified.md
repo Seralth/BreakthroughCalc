@@ -100,13 +100,20 @@ entire major Stage — it does not scale with phase or grade.
   (Nascent: 183,679 × 0.022 = 4,040.9 → 4041; match to 0.002%).
   Predictions to confirm/refute with one reading at any other Stage:
   Foundation 253, Virtuoso 867, Incarnation 17,372, Voidbreak 22,445.
-- Corroboration (recalled, imprecise — NOT verification): Seralth's
-  Incarnation character shows "low 18000s" per attempt from memory, with
-  Respira-effect buffs active (technique books grant "+x% Respira effect" =
-  `extra_exp_yunqi`, e.g. Floral Essence +3%). Predicted 17,372 base × 1.03
-  ≈ 17,893; +4–6% total ≈ 18.1–18.4k — consistent with the 2.2% rule.
-  Needs the exact on-screen value plus the character's total Respira-effect %
-  to count as verified.
+- Technique-book Respira lines (screenshot-verified 2026-07-15, Incarnation
+  char; cataloged in data/respira_sources.json): activated total **+28%
+  Respira Effect** (Energy Unification 1, Cosmic Power 3, Golden Core 1,
+  Astrology 3, Taiyin Meridian 3, Yin's Grasp 5, Floral Essence 3,
+  Purify & Cleanse 4, Great Yang Manual 5) and **+2 attempts** (Cosmic Power,
+  Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
+  Cauldron Refinement T3 +3%, Moon Meru T12 +10%, Chroma T3 +1 attempt.
+  "Respira Effect" = `extra_exp_yunqi`.
+- OPEN TENSION: with +28% books the 2.2% rule predicts the Incarnation
+  display ≈ 17,372 × 1.28 ≈ 22.2k, but Seralth recalls "low 18000s"
+  (imprecise, from memory). Either the recall is off, the shown value
+  excludes book buffs, or the 2.2% rule is wrong. An exact reading after
+  the daily attempt reset decides; do NOT treat the 2.2% rule as usable
+  until then.
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
