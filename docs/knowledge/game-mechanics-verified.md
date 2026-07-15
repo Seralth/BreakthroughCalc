@@ -133,9 +133,11 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
   Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
   +20%"; Blessing Rewards +5; "Second Esotability".
-- COMMUNITY MODEL of the stacking (older player via Seralth 2026-07-15,
-  self-rated ~90% sure; supersedes the narrower window reading where they
-  conflict): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
+- COMMUNITY MODEL of the stacking (TWO independent player confirmations via
+  Seralth 2026-07-15 — an older player self-rated ~90% sure, plus a second
+  player confirming +60% total while in Incarnation, dropping to +40% after
+  Voidbreak Middle removes the conditional +20%; supersedes the narrower
+  window reading where they conflict): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
   Absorption Ratio" add flat to +40%, and that +40% PERSISTS past
   Incarnation (it is named for the tier, not windowed to the stage). The
   "Before Voidbreak (L) Middle +20%" is the conditional one on top: +60%
