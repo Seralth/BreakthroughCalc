@@ -15,6 +15,13 @@
 //    are omitted at encode time anyway), and codes from newer app versions
 //    import fine on older ones — unknown keys are simply ignored. Only a
 //    truly incompatible restructuring warrants bumping the 'OMV2.' prefix.
+//
+// WIRE-FORMAT CONTRACT: the enum indexes reference the engine data tables,
+// so the ORDER of breakthrough.json's rows / gem_bonus / pill_xp / fruit_xp
+// keys / rarity_names (plus _stars/_vaseInputs below) and the
+// zlib+base64url framing are all part of the format. Reordering any of them
+// corrupts every previously shared code; test/share_codec_test.dart pins
+// each order and a golden vector.
 import 'dart:convert';
 
 import 'package:archive/archive.dart';

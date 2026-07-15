@@ -4,12 +4,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '../lib/engine.dart';
+import 'package:breakthrough_calc/engine.dart';
 
 const double tol = 1e-6;
 
 void main() {
-  final data = jsonDecode(File('assets/data/breakthrough.json').readAsStringSync())
+  // Read the canonical data file directly (not the sync_data.sh asset copy),
+  // so a stale asset can never produce confusing numeric parity diffs.
+  final data = jsonDecode(File('../data/breakthrough.json').readAsStringSync())
       as Map<String, dynamic>;
   final scenarios = jsonDecode(File('test/scenarios.json').readAsStringSync()) as List;
   final expected = jsonDecode(File('test/expected.json').readAsStringSync()) as List;
@@ -26,6 +28,10 @@ void main() {
       'stage_days': r.stageDays,
       'target_days': r.targetDays,
       'target_valid': r.targetValid,
+      'prestock_valid': r.prestockValid,
+      'prestock_pct': r.prestockPct,
+      'prestock_days': r.prestockDays,
+      'prestock_band': r.prestockBand,
       'abode_aura': r.abodeAura,
       'strive': r.strive,
       'base_xp_per_day': r.baseXpPerDay,
@@ -44,6 +50,12 @@ void main() {
     };
     final diffs = <String>[];
     exp.forEach((k, ev) {
+      if (!got.containsKey(k)) {
+        // A Python Results field the Dart side doesn't report: loud failure
+        // instead of silent non-coverage.
+        diffs.add('$k: present in expected.json but missing from Dart got-map');
+        return;
+      }
       final gv = got[k];
       if (ev is bool || ev is String) {
         if (ev != gv) diffs.add('$k: py=$ev dart=$gv');

@@ -475,10 +475,6 @@ class Formatting(unittest.TestCase):
         self.assertEqual(fmt_days(-1), "0D 0H 0M")
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class PrestockOvercap(unittest.TestCase):
     """Timegate prestock (verified 2026-07-15 from the community 2026 guide;
     see docs/knowledge/game-mechanics-verified.md): displayed overcap % =
@@ -526,3 +522,67 @@ class PrestockOvercap(unittest.TestCase):
         self.assertFalse(r1.prestock_valid)
         self.assertFalse(r2.prestock_valid)
         self.assertTrue(r1.target_valid and r2.target_valid)
+
+class GapCoverage(unittest.TestCase):
+    """Behavior pins added 2026-07-15 before the structural refactor: each
+    asserts the engine's CURRENT verified behavior for paths no other test
+    touched, so pure code motion cannot silently change them."""
+
+    def setUp(self):
+        self.e = Engine()
+
+    def test_star_marks_add_to_pill_effect(self):
+        base = self.e._pill_math(base_inputs(
+            pill_rank="4R", pill_limit=10, gold_per_day=1))
+        marked = self.e._pill_math(base_inputs(
+            pill_rank="4R", pill_limit=10, gold_per_day=1, mark_gold=0.1))
+        gold = self.e.data["pill_xp"]["4R"][0]
+        self.assertAlmostEqual(marked["xp_per_day"] - base["xp_per_day"],
+                               0.1 * gold, places=6)
+
+    def test_mirror_without_vase_makes_no_mythic_pills(self):
+        p = self.e._pill_math(base_inputs(mirror=True, mirror_star="5*"))
+        self.assertEqual(p["mythic_per_day"], 0.0)
+
+    def test_fruit_highest_rank_is_1_5x(self):
+        kw = dict(fruit_rank="R6", fruit_count=10, lvl_gush=10)
+        m_lo, _ = self.e._fruit_stats(base_inputs(**kw))
+        m_hi, _ = self.e._fruit_stats(base_inputs(fruit_highest_rank=True, **kw))
+        self.assertAlmostEqual(m_hi, 1.5 * m_lo, places=6)
+
+    def test_fruit_levels_clamp_to_30(self):
+        kw = dict(fruit_rank="R6", fruit_count=10)
+        at30 = self.e._fruit_stats(base_inputs(lvl_gush=30, lvl_culti=30,
+                                               lvl_quality=30, **kw))
+        over = self.e._fruit_stats(base_inputs(lvl_gush=40, lvl_culti=35,
+                                               lvl_quality=99, **kw))
+        self.assertEqual(at30, over)
+
+    def test_fruit_days_saved_formula(self):
+        # Matches Donk's sheet: fruit XP / current speed, no gem/pill divisor.
+        r = self.e.calculate(base_inputs(fruit_rank="R6", fruit_count=10,
+                                         aura_gem="Legendary"))
+        self.assertAlmostEqual(r.fruit_days_saved,
+                               r.fruit_xp / 57.22 * 8.0 / 86400.0, places=9)
+
+    def test_fruit_xp_includes_event_respira_when_dailies_not_done(self):
+        r = self.e.calculate(base_inputs(respira_event=5, respira_exp=1000))
+        self.assertAlmostEqual(r.fruit_xp, 5 * 1000 * 1.8, places=6)
+
+    def test_prestock_band_brackets_prestock_days(self):
+        r = self.e.calculate(base_inputs(
+            stage="Incarnation", phase="LATE", grade="G12",
+            target_stage="Voidbreak", target_phase="LATE", target_grade="G1",
+            respira_per_day=20, respira_exp=5000))
+        self.assertTrue(r.prestock_valid)
+        lo, hi = r.prestock_band
+        self.assertLess(lo, r.prestock_days)
+        self.assertGreater(hi, r.prestock_days)
+
+    def test_missing_catalog_file_is_empty_list(self):
+        from breakthrough_calc.engine import _load_catalog
+        self.assertEqual(_load_catalog("no_such_catalog_file.json"), [])
+
+
+if __name__ == "__main__":
+    unittest.main()
