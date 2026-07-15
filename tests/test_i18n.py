@@ -17,16 +17,7 @@ PKG = os.path.join(REPO, "breakthrough_calc")
 NON_EN_LANGS = [c for c in i18n.LANGS if c != "en"]
 
 # Literal tr() arguments that are intentionally NOT translated.
-# TODO(stage-1): both entries below are known-stale and get fixed in the
-# "fix:" commit of the 2026-07-15 refactor; remove them from this whitelist
-# when the translations are added/re-keyed.
-UNTRANSLATED_OK = {
-    # gui.py wording was updated but i18n.py still keys the old sentence.
-    "Your daily Respira attempt limit as shown in-game (base + permanent "
-    "bonus attempts). The base limit is 10/day (confirmed from game data). "
-    "Leave out temporary event attempts.",
-    "← Back",
-}
+UNTRANSLATED_OK: set[str] = set()
 
 
 def literal_tr_calls():
@@ -82,6 +73,9 @@ class CallSiteCoverage(unittest.TestCase):
         for text in UNTRANSLATED_OK:
             self.assertIn(text, calls,
                           "whitelisted string no longer appears in any tr() call")
+            for lang in NON_EN_LANGS:
+                self.assertNotIn(text, i18n.TRANSLATIONS[lang],
+                                 "whitelisted string IS translated — remove it")
 
 
 class RoundTrip(unittest.TestCase):

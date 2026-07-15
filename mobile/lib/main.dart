@@ -245,8 +245,8 @@ class _CalculatorPageState extends State<CalculatorPage>
     ));
   }
 
-  /// No url_launcher dependency, so instead of opening a browser we show the
-  /// release URL as selectable text with a copy button.
+  /// Copy-based flow kept deliberately (SEAGM has no URL prefill, so the
+  /// user must paste the RID by hand anyway; a dialog keeps both visible).
   static const _donateUrl =
       'https://www.seagm.com/en-us/overmortal-vouchers-global';
   static const _donateRid = '28953_U1C466A474D1A0000';

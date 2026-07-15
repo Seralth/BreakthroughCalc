@@ -35,8 +35,7 @@ jobs:
           pyinstaller --onefile --windowed
           --name "BreakthroughCalculator"
           --icon packaging/breakthrough-calc.ico
-          --add-data "data/breakthrough.json;data"
-          --add-data "data/pill_effect_sources.json;data"
+          --add-data "data;data"
           --add-data "packaging/breakthrough-calc.png;."
           main.py
       - uses: actions/upload-artifact@v4

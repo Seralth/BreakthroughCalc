@@ -1,4 +1,4 @@
-__version__ = "2.12"
+__version__ = "2.14"
 
 # GitHub repo used by the update checker and release links.
 REPO = "Seralth/BreakthroughCalc"
