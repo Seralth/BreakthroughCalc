@@ -523,6 +523,205 @@ class PrestockOvercap(unittest.TestCase):
         self.assertFalse(r2.prestock_valid)
         self.assertTrue(r1.target_valid and r2.target_valid)
 
+    def test_prestock_rate_excludes_strive(self):
+        # Overcap accrual runs at the capped row's rate WITHOUT the Strive
+        # Bonus (player-confirmed 2026-07-15, game-mechanics-verified.md), so
+        # the overcap rate is abode x base low = culti_speed x low_cap /
+        # absorption: doubling the entered absorption at the same culti_speed
+        # halves the abode and exactly doubles the OVERCAP leg of the wait
+        # (the pre-cap leg is absorption-invariant by ratio cancellation).
+        e = Engine()
+        kw = dict(stage="Incarnation", phase="LATE", grade="G12",
+                  target_stage="Voidbreak", target_phase="LATE", target_grade="G1")
+        a = e.calculate(base_inputs(absorption_ratio=0.275, **kw))
+        b = e.calculate(base_inputs(absorption_ratio=0.550, **kw))
+        # Time to reach the cap = target_days for the next Stage's start.
+        base = e.calculate(base_inputs(
+            absorption_ratio=0.275, stage="Incarnation", phase="LATE",
+            grade="G12", target_stage="Voidbreak")).target_days
+        self.assertAlmostEqual(b.prestock_days - base,
+                               2 * (a.prestock_days - base), places=6)
+
+    def test_prestock_slows_as_strive_rises(self):
+        # Higher entered absorption (more Strive) at the same culti_speed
+        # means a weaker de-strived overcap rate -> longer prestock. Before
+        # the 2026-07-15 fix these were equal (strive cancelled).
+        e = Engine()
+        kw = dict(stage="Incarnation", phase="LATE", grade="G12",
+                  target_stage="Voidbreak", target_phase="LATE", target_grade="G1")
+        low = e.calculate(base_inputs(absorption_ratio=0.40, **kw))   # strive 0
+        high = e.calculate(base_inputs(absorption_ratio=0.48, **kw))  # strive +20%
+        self.assertGreater(high.prestock_days, low.prestock_days)
+
+    def test_prestock_inside_reset_window_ignores_daily_streams(self):
+        # With today's dailies spent and the entire prestock run finishing
+        # inside the reset window, daily streams contribute nothing — heavy
+        # or zero daily inputs must give the identical prestock time.
+        e = Engine()
+        kw = dict(stage="Incarnation", phase="LATE", grade="G12",
+                  culti_speed=1e9, absorption_ratio=0.4,
+                  target_stage="Voidbreak", target_phase="LATE",
+                  target_grade="G1", dailies_done=True, reset_in_hours=24.0)
+        heavy = e.calculate(base_inputs(respira_per_day=50, respira_exp=50000,
+                                        elixir_per_day=50, elixir_exp=50000,
+                                        **kw))
+        none = e.calculate(base_inputs(**kw))
+        self.assertTrue(heavy.prestock_valid and none.prestock_valid)
+        self.assertAlmostEqual(heavy.prestock_days, none.prestock_days,
+                               places=9)
+
+    def test_prestock_event_respira_credited_at_reset(self):
+        # The reset window outlasts the (short) climb to the cap, so it
+        # closes during the overcap leg: the deferred event-Respira XP must
+        # shorten the remaining overcap. It was silently dropped before the
+        # 2026-07-15 window-aware overcap fix.
+        e = Engine()
+        kw = dict(stage="Incarnation", phase="LATE", grade="G15",
+                  grade_completion=0.999,
+                  target_stage="Voidbreak", target_phase="LATE",
+                  target_grade="G1", dailies_done=True, reset_in_hours=24.0,
+                  respira_per_day=10, respira_exp=5000)
+        with_event = e.calculate(base_inputs(respira_event=1000, **kw))
+        without = e.calculate(base_inputs(**kw))
+        self.assertTrue(with_event.prestock_valid and without.prestock_valid)
+        self.assertLess(with_event.prestock_days, without.prestock_days)
+
+class AscensionBlessing(unittest.TestCase):
+    """Ascension Virya blessing absorption bonuses (community-triple-confirmed
+    additive 2026-07-15; see docs/knowledge/game-mechanics-verified.md):
+    additive percentage points on the absorption ratio, entered separately so
+    the engine can strip them from the on-screen total to recover true Strive.
+    The conditional tier applies only to rows before Voidbreak MIDDLE."""
+
+    def setUp(self):
+        self.e = Engine()
+
+    def test_blessing_strip_recovers_same_strive(self):
+        # The same true Strive entered two ways — raw 0.33 (= 0.275 x 1.2),
+        # and as a 0.53 on-screen total with a 0.20 declared blessing — must
+        # decompose to the identical Strive.
+        plain = self.e.calculate(base_inputs(absorption_ratio=0.33))
+        blessed = self.e.calculate(base_inputs(absorption_ratio=0.53,
+                                               bless_pp=0.20))
+        self.assertAlmostEqual(plain.strive, blessed.strive, places=9)
+
+    def test_strive_display_decontaminated(self):
+        # Nascent LATE G5 base low = 0.275. Entered 0.475 with a +0.20
+        # blessing implies TRUE strive 0, not the contaminated +72.7%.
+        r = self.e.calculate(base_inputs(absorption_ratio=0.475, bless_pp=0.20))
+        self.assertAlmostEqual(r.strive, 0.0, places=9)
+
+    def test_blessing_must_not_exceed_absorption(self):
+        r = self.e.calculate(base_inputs(absorption_ratio=0.15, bless_pp=0.20))
+        self.assertFalse(r.valid)
+        self.assertIn("blessing", r.error)
+
+    def test_windowed_bonus_drops_at_voidbreak_middle(self):
+        # Same entered absorption and same total blessing at the CURRENT row
+        # (Incarnation is before Voidbreak MIDDLE, so both configs strip the
+        # same 0.20). Past Voidbreak MIDDLE the windowed config loses its pp,
+        # so a target beyond the window takes LONGER; a target inside the
+        # window is identical.
+        kw = dict(stage="Incarnation", phase="MIDDLE", grade="G1",
+                  absorption_ratio=0.60)
+        flat = base_inputs(bless_pp=0.20, bless_window_pp=0.0,
+                           target_stage="Wholeness", **kw)
+        windowed = base_inputs(bless_pp=0.0, bless_window_pp=0.20,
+                               target_stage="Wholeness", **kw)
+        self.assertGreater(self.e.calculate(windowed).target_days,
+                           self.e.calculate(flat).target_days)
+        flat_in = base_inputs(bless_pp=0.20, bless_window_pp=0.0,
+                              target_stage="Voidbreak", target_phase="MIDDLE", **kw)
+        win_in = base_inputs(bless_pp=0.0, bless_window_pp=0.20,
+                             target_stage="Voidbreak", target_phase="MIDDLE", **kw)
+        self.assertAlmostEqual(self.e.calculate(win_in).target_days,
+                               self.e.calculate(flat_in).target_days, places=9)
+
+    def test_window_boundary_rows_exactly(self):
+        # The conditional pp is live on Voidbreak EARLY rows and gone AT
+        # Voidbreak MIDDLE G1 (an off-by-one that kept it alive at the
+        # boundary row would shift the strive decomposition). Pinned via
+        # res.strive = (entered - bless_cur) / low - 1.
+        e = self.e
+        low_mid = e.base_low("Voidbreak", "MIDDLE", "G1")
+        r_at = e.calculate(base_inputs(
+            stage="Voidbreak", phase="MIDDLE", grade="G1",
+            absorption_ratio=0.9, bless_window_pp=0.20))
+        self.assertAlmostEqual(r_at.strive, 0.9 / low_mid - 1, places=9)
+        low_early = e.base_low("Voidbreak", "EARLY", "G1")
+        r_before = e.calculate(base_inputs(
+            stage="Voidbreak", phase="EARLY", grade="G1",
+            absorption_ratio=0.9, bless_window_pp=0.20))
+        self.assertAlmostEqual(r_before.strive,
+                               (0.9 - 0.20) / low_early - 1, places=9)
+
+    def test_blessing_projects_slower_than_strive_inflation(self):
+        # Same on-screen absorption 0.475 at Nascent LATE G5 (base 0.275).
+        # Read as pure Strive (+72.7%) it MULTIPLIES every future row's base;
+        # read correctly as base + 0.20 blessing it only ADDS 0.20. Across
+        # rising bands (Incarnation lows are 0.4+) the multiplicative reading
+        # overstates future speed, so declaring the blessing must lengthen the
+        # projection — this pins the optimism the 2026-07-15 fix removes.
+        # (On flat bands, low_row == low_cur, the two readings coincide:
+        # low*(1+0.2/0.275) == low + 0.2 exactly at low == 0.275.)
+        kw = dict(stage="Nascent", phase="LATE", grade="G5",
+                  absorption_ratio=0.475, target_stage="Voidbreak")
+        blessed = self.e.calculate(base_inputs(bless_pp=0.20, **kw))
+        unblessed = self.e.calculate(base_inputs(**kw))
+        self.assertTrue(blessed.valid and unblessed.valid)
+        self.assertGreater(blessed.target_days, unblessed.target_days)
+
+
+class ElixirIncome(unittest.TestCase):
+    """XP elixirs: flat daily XP = attempts/day x EXP/item x effectiveness,
+    riding the same daily pool as pills/Respira (never gem-multiplied,
+    deferred by the dailies-done reset window)."""
+
+    KW = dict(elixir_per_day=20, elixir_exp=3000, elixir_effect=0.8)
+
+    def setUp(self):
+        self.e = Engine()
+
+    def test_elixir_daily_xp_formula(self):
+        r = self.e.calculate(base_inputs(**self.KW))
+        self.assertAlmostEqual(r.elixir_xp_per_day, 20 * 3000 * 0.8, places=9)
+        self.assertAlmostEqual(
+            r.effective_xp_per_day,
+            r.base_xp_per_day + r.elixir_xp_per_day, places=6)
+
+    def test_elixir_not_gem_multiplied(self):
+        # Mirror of test_gem_does_not_multiply_pill_xp: gem scales the base
+        # speed only; elixir XP stays flat on top.
+        r = self.e.calculate(base_inputs(aura_gem="Mythic", **self.KW))
+        self.assertAlmostEqual(
+            r.effective_xp_per_day,
+            r.base_xp_per_day * 1.28 + r.elixir_xp_per_day, places=6)
+
+    def test_elixir_shortens_projection(self):
+        plain = self.e.calculate(base_inputs())
+        boosted = self.e.calculate(base_inputs(**self.KW))
+        self.assertLess(boosted.stage_days, plain.stage_days)
+
+    def test_elixir_deferred_with_dailies_done(self):
+        # With dailies already used, the window until the reset runs without
+        # the elixir XP, so a short estimate must not shrink; and zero hours
+        # to reset equals not-done at all.
+        base = dict(base_inputs().__dict__)
+        done = self.e.calculate(Inputs(**{**base, **self.KW,
+                                          "dailies_done": True,
+                                          "reset_in_hours": 24.0}))
+        not_done = self.e.calculate(Inputs(**{**base, **self.KW,
+                                              "dailies_done": False}))
+        zero = self.e.calculate(Inputs(**{**base, **self.KW,
+                                          "dailies_done": True,
+                                          "reset_in_hours": 0.0}))
+        # Strictly greater: base_inputs has no pills/Respira, so elixir is
+        # the only windowed daily stream here — if the window ran WITH the
+        # elixir XP the two would be exactly equal.
+        self.assertGreater(done.phase_days, not_done.phase_days)
+        self.assertAlmostEqual(zero.phase_days, not_done.phase_days, places=9)
+
+
 class GapCoverage(unittest.TestCase):
     """Behavior pins added 2026-07-15 before the structural refactor: each
     asserts the engine's CURRENT verified behavior for paths no other test

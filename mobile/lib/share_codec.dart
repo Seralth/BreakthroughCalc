@@ -93,6 +93,11 @@ const List<_F> _fields = [
   _F('lq', 'lvl_quality', 'i'),
   _F('lg', 'lvl_gush', 'i'),
   _F('er', 'extractor_rarity', 'e', _rarities),
+  _F('bp', 'bless_pp', 'd'),
+  _F('bw', 'bless_window_pp', 'd'),
+  _F('ed', 'elixir_per_day', 'd'),
+  _F('ex', 'elixir_exp', 'd'),
+  _F('ef', 'elixir_effect', 'd'),
 ];
 
 Map<String, dynamic> _compact(

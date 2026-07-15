@@ -79,6 +79,12 @@ const goldenDecoded = {
   'lvl_quality': 9,
   'lvl_gush': 14,
   'extractor_rarity': 'Epic',
+  // New fields decode at their Inputs() defaults for old codes.
+  'bless_pp': 0.0,
+  'bless_window_pp': 0.0,
+  'elixir_per_day': 0.0,
+  'elixir_exp': 0.0,
+  'elixir_effect': 1.0,
   'pe_sources': [
     ['Robe +3', 5.0],
     ['Technique', 2.5],
@@ -141,6 +147,26 @@ void main() {
           ],
           {'Morning Dew', 'Zen Hall'});
       expect(decodeBuildCode(e, code), equals(goldenDecoded));
+    });
+
+    test('blessing/elixir fields round-trip non-default values', () {
+      // goldenDecoded carries the new keys at their defaults, so this is
+      // the only test where non-default values cross the wire — it catches
+      // a deleted or cross-wired _F mapping for bp/bw/ed/ex/ef.
+      final inp = Inputs.fromMap(
+          Map<String, dynamic>.from(goldenDecoded)..remove('pe_sources')
+            ..remove('respira_sources'));
+      inp.blessPp = 0.15;
+      inp.blessWindowPp = 0.2;
+      inp.elixirPerDay = 12.0;
+      inp.elixirExp = 4000.0;
+      inp.elixirEffect = 0.75;
+      final out = decodeBuildCode(e, encodeBuildCode(e, inp, [], {}))!;
+      expect(out['bless_pp'], 0.15);
+      expect(out['bless_window_pp'], 0.2);
+      expect(out['elixir_per_day'], 12.0);
+      expect(out['elixir_exp'], 4000.0);
+      expect(out['elixir_effect'], 0.75);
     });
 
     test('default inputs encode compactly and decode to defaults', () {

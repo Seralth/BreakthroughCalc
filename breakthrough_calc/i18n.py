@@ -269,6 +269,39 @@ TRANSLATIONS = {
   "Effective XP / day": "Эффективный опыт в день",
   "Pill XP / day": "Опыт от пилюль в день",
   "Daily XP share (pills+Respira / gem)": "Доля дневного опыта (пилюли+дыхание ци / самоцвет)",
+  "Daily XP share (daily flat XP / gem)": "Доля дневного опыта (фиксированный опыт / самоцвет)",
+  "Ascension blessing": "Благословение вознесения",
+  "Blessing before Voidbreak Middle": "Благословение до Преодоления (Средняя)",
+  "XP elixirs / day": "Эликсиров опыта / день",
+  "EXP per elixir": "Опыт за эликсир",
+  "Elixir effectiveness": "Эффективность эликсира",
+  "Elixir XP / day": "Опыт с эликсиров / день",
+  "Share of your effective daily XP that comes from flat sources "
+  "(pills + Respira + elixirs), and the Aura Gem's speed bonus on "
+  "cultivation. Flat XP does not scale with grade EXP, so a high share "
+  "means slower progress at higher grades than raw speed suggests.":
+      "Доля эффективного дневного опыта из фиксированных источников (пилюли + дыхание ци + "
+      "эликсиры) и бонус скорости самоцвета ауры к совершенствованию. Фиксированный опыт не "
+      "растёт с опытом ступеней, поэтому высокая доля означает более медленный прогресс на "
+      "высоких ступенях, чем предполагает чистая скорость.",
+  "Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
+  "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+  "Absorption Ratio above as displayed in-game: it already includes this.":
+      "Благословение вирьи вознесения: постоянный бонус к коэффициенту поглощения в процентных "
+      "пунктах (Совершенство (C) +20 и Идеал +20 — с обоими введите 40). Коэффициент поглощения "
+      "выше вводите как показано в игре: он уже включает этот бонус.",
+  "The conditional blessing tier (+20 percentage points) that the game removes "
+  "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
+  "drop it.":
+      "Условный уровень благословения (+20 процентных пунктов), который игра убирает на "
+      "Преодолении (Средняя). Вводится отдельно, чтобы прогнозы дальше этой точки его не учитывали.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "Коэффициент поглощения должен превышать бонус благословения.",
+  "XP elixirs consumed per day.": "Эликсиров опыта, используемых в день.",
+  "Cultivation EXP granted by one elixir (item tooltip).":
+      "Опыт совершенствования за один эликсир (из описания предмета).",
+  "Elixir effectiveness percent after elixir tolerance (100 = full effect).":
+      "Эффективность эликсира в процентах с учётом толерантности (100 = полный эффект).",
   "Mythic pills / day": "Мифич. пилюль в день",
   "Pearl XP / day": "Опыт от жемчужины в день",
   "Respira XP / day": "Опыт дыхания ци в день",
@@ -559,6 +592,39 @@ TRANSLATIONS = {
   "Effective XP / day": "Effektive EXP / Tag",
   "Pill XP / day": "Pillen-EXP / Tag",
   "Daily XP share (pills+Respira / gem)": "Tages-EXP-Anteil (Pillen+Atmung / Juwel)",
+  "Daily XP share (daily flat XP / gem)": "Tages-EXP-Anteil (fixe EXP / Juwel)",
+  "Ascension blessing": "Aufstiegssegen",
+  "Blessing before Voidbreak Middle": "Segen vor Leerenbruch (Mitte)",
+  "XP elixirs / day": "EXP-Elixiere / Tag",
+  "EXP per elixir": "EXP pro Elixier",
+  "Elixir effectiveness": "Elixier-Wirksamkeit",
+  "Elixir XP / day": "Elixier-EXP / Tag",
+  "Share of your effective daily XP that comes from flat sources "
+  "(pills + Respira + elixirs), and the Aura Gem's speed bonus on "
+  "cultivation. Flat XP does not scale with grade EXP, so a high share "
+  "means slower progress at higher grades than raw speed suggests.":
+      "Anteil der effektiven Tages-EXP aus fixen Quellen (Pillen + Atmung + Elixiere) und "
+      "der Geschwindigkeitsbonus des Aura-Juwels auf die Kultivierung. Fixe EXP skalieren "
+      "nicht mit den Stufen-EXP; ein hoher Anteil bedeutet auf höheren Stufen langsameren "
+      "Fortschritt, als die reine Geschwindigkeit nahelegt.",
+  "Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
+  "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+  "Absorption Ratio above as displayed in-game: it already includes this.":
+      "Aufstiegs-Virya-Segen: dauerhafter Absorptionsraten-Bonus in Prozentpunkten "
+      "(Perfektion (C) +20 und Perfekt +20 — mit beiden 40 eingeben). Die Absorptionsrate "
+      "oben wie im Spiel angezeigt eingeben: sie enthält diesen Bonus bereits.",
+  "The conditional blessing tier (+20 percentage points) that the game removes "
+  "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
+  "drop it.":
+      "Die bedingte Segensstufe (+20 Prozentpunkte), die das Spiel bei Leerenbruch (Mitte) "
+      "entfernt. Separat geführt, damit Prognosen über diesen Punkt hinaus sie fallen lassen.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "Die Absorptionsrate muss den Segensbonus übersteigen.",
+  "XP elixirs consumed per day.": "Pro Tag verbrauchte EXP-Elixiere.",
+  "Cultivation EXP granted by one elixir (item tooltip).":
+      "Kultivierungs-EXP eines Elixiers (Gegenstands-Tooltip).",
+  "Elixir effectiveness percent after elixir tolerance (100 = full effect).":
+      "Elixier-Wirksamkeit in Prozent nach Elixiertoleranz (100 = volle Wirkung).",
   "Mythic pills / day": "Mythische Pillen / Tag",
   "Pearl XP / day": "Perlen-EXP / Tag",
   "Respira XP / day": "Atmungs-EXP / Tag",
@@ -852,6 +918,40 @@ TRANSLATIONS = {
   "Effective XP / day": "EXP efectiva / día",
   "Pill XP / day": "EXP de píldoras / día",
   "Daily XP share (pills+Respira / gem)": "Cuota de EXP diaria (píldoras+Inhala / gema)",
+  "Daily XP share (daily flat XP / gem)": "Cuota de EXP diaria (EXP fija / gema)",
+  "Ascension blessing": "Bendición de ascensión",
+  "Blessing before Voidbreak Middle": "Bendición antes de Ruptura del Vacío (Intermedio)",
+  "XP elixirs / day": "Elixires de EXP / día",
+  "EXP per elixir": "EXP por elixir",
+  "Elixir effectiveness": "Eficacia del elixir",
+  "Elixir XP / day": "EXP de elixires / día",
+  "Share of your effective daily XP that comes from flat sources "
+  "(pills + Respira + elixirs), and the Aura Gem's speed bonus on "
+  "cultivation. Flat XP does not scale with grade EXP, so a high share "
+  "means slower progress at higher grades than raw speed suggests.":
+      "Parte de tu EXP diaria efectiva que proviene de fuentes fijas (píldoras + Inhala + "
+      "elixires), y el bono de velocidad de la gema de aura a la cultivación. La EXP fija "
+      "no escala con la EXP de los grados: una cuota alta implica un progreso más lento en "
+      "grados altos de lo que sugiere la velocidad.",
+  "Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
+  "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+  "Absorption Ratio above as displayed in-game: it already includes this.":
+      "Bendición Virya de ascensión: bono permanente al índice de absorción en puntos "
+      "porcentuales (Perfección (C) +20 y Perfecto +20 — con ambos, introduce 40). Introduce "
+      "arriba el índice de absorción tal como lo muestra el juego: ya incluye este bono.",
+  "The conditional blessing tier (+20 percentage points) that the game removes "
+  "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
+  "drop it.":
+      "El nivel condicional de la bendición (+20 puntos porcentuales) que el juego retira en "
+      "Ruptura del Vacío (Intermedio). Se introduce aparte para que las proyecciones más allá "
+      "de ese punto lo descarten.",
+  "Absorption ratio must exceed the blessing bonus.":
+      "El índice de absorción debe superar el bono de la bendición.",
+  "XP elixirs consumed per day.": "Elixires de EXP consumidos al día.",
+  "Cultivation EXP granted by one elixir (item tooltip).":
+      "EXP de cultivación de un elixir (descripción del objeto).",
+  "Elixir effectiveness percent after elixir tolerance (100 = full effect).":
+      "Eficacia del elixir en porcentaje tras la tolerancia (100 = efecto completo).",
   "Mythic pills / day": "Píldoras míticas / día",
   "Pearl XP / day": "EXP de la perla / día",
   "Respira XP / day": "EXP de Inhala / día",
@@ -1119,6 +1219,35 @@ TRANSLATIONS = {
   "Effective XP / day": "每日有效修为",
   "Pill XP / day": "每日丹药修为",
   "Daily XP share (pills+Respira / gem)": "每日修为占比（丹药+吐纳 / 纳灵石）",
+  "Daily XP share (daily flat XP / gem)": "每日修为占比（固定修为 / 纳灵石）",
+  "Ascension blessing": "飞升福泽",
+  "Blessing before Voidbreak Middle": "万象破虚中期前的福泽",
+  "XP elixirs / day": "每日经验灵药",
+  "EXP per elixir": "每个灵药的修为",
+  "Elixir effectiveness": "灵药效果",
+  "Elixir XP / day": "灵药修为 / 天",
+  "Share of your effective daily XP that comes from flat sources "
+  "(pills + Respira + elixirs), and the Aura Gem's speed bonus on "
+  "cultivation. Flat XP does not scale with grade EXP, so a high share "
+  "means slower progress at higher grades than raw speed suggests.":
+      "有效每日修为中来自固定来源（丹药 + 吐纳 + 灵药）的占比，以及纳灵石对修炼速度的加成。"
+      "固定修为不随境界修为增长，占比越高，高境界的实际进度就越慢于速度所示。",
+  "Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
+  "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+  "Absorption Ratio above as displayed in-game: it already includes this.":
+      "飞升福泽（精进）：吸收率的永久加成，按百分点计（大乘 (C) +20 与圆满 +20——两者都有请输入 40）。"
+      "上方的吸收率请按游戏内显示填写：其中已包含此加成。",
+  "The conditional blessing tier (+20 percentage points) that the game removes "
+  "at Voidbreak Middle. Kept separate so projections past Voidbreak Middle "
+  "drop it.":
+      "条件福泽（+20 个百分点），到万象破虚中期时被移除。单独填写，以便超过该点的预测不再计入。",
+  "Absorption ratio must exceed the blessing bonus.":
+      "吸收率必须高于福泽加成。",
+  "XP elixirs consumed per day.": "每日使用的经验灵药数量。",
+  "Cultivation EXP granted by one elixir (item tooltip).":
+      "单个灵药提供的修为（物品说明）。",
+  "Elixir effectiveness percent after elixir tolerance (100 = full effect).":
+      "灵药效果百分比（计入灵药耐受后；100 = 完整效果）。",
   "Mythic pills / day": "每日红丹数",
   "Pearl XP / day": "每日逆尘珠修为",
   "Respira XP / day": "每日吐纳修为",

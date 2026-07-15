@@ -134,6 +134,17 @@ class Inputs {
   int lvlGush;
   String extractorRarity;
 
+  // Ascension Virya blessings: additive percentage-point bonuses on the
+  // absorption ratio; the conditional tier applies only before Voidbreak
+  // MIDDLE. The entered absorption is the on-screen total (includes them).
+  double blessPp;
+  double blessWindowPp;
+
+  // XP elixirs: flat daily XP stream analogous to Respira (no crit roll).
+  double elixirPerDay;
+  double elixirExp;
+  double elixirEffect;
+
   Inputs({
     this.stage = 'Novice',
     this.phase = 'N/A',
@@ -183,6 +194,11 @@ class Inputs {
     this.lvlQuality = 0,
     this.lvlGush = 0,
     this.extractorRarity = 'Common',
+    this.blessPp = 0.0,
+    this.blessWindowPp = 0.0,
+    this.elixirPerDay = 0.0,
+    this.elixirExp = 0.0,
+    this.elixirEffect = 1.0,
   });
 
   /// Build from a snake_case map (matches the Python Inputs kwargs). Used by the
@@ -241,6 +257,11 @@ class Inputs {
       lvlQuality: i('lvl_quality', 0),
       lvlGush: i('lvl_gush', 0),
       extractorRarity: s('extractor_rarity', 'Common'),
+      blessPp: d('bless_pp', 0.0),
+      blessWindowPp: d('bless_window_pp', 0.0),
+      elixirPerDay: d('elixir_per_day', 0.0),
+      elixirExp: d('elixir_exp', 0.0),
+      elixirEffect: d('elixir_effect', 1.0),
     );
   }
 
@@ -296,6 +317,11 @@ class Inputs {
         'lvl_quality': lvlQuality,
         'lvl_gush': lvlGush,
         'extractor_rarity': extractorRarity,
+        'bless_pp': blessPp,
+        'bless_window_pp': blessWindowPp,
+        'elixir_per_day': elixirPerDay,
+        'elixir_exp': elixirExp,
+        'elixir_effect': elixirEffect,
       };
 }
 
@@ -320,6 +346,7 @@ class Results {
   double mythicPillsPerDay = 0.0;
   double pearlXpPerDay = 0.0;
   double respiraXpPerDay = 0.0;
+  double elixirXpPerDay = 0.0;
   double fruitXp = 0.0;
   double fruitDaysSaved = 0.0;
   List<double> phaseBand = [0.0, 0.0];
@@ -556,14 +583,32 @@ class Engine {
     final cur = rows[idx];
     final curLow = _num(cur['low']);
     final abode = inp.cultiSpeed / inp.absorptionRatio;
-    final strive = curLow > 0 ? inp.absorptionRatio / curLow - 1 : 0.0;
+
+    // Ascension blessing pp: the conditional tier applies only to rows
+    // BEFORE Voidbreak MIDDLE; the persistent tiers apply to every row.
+    final vbm = targetStartIndex('Voidbreak', 'MIDDLE', '');
+    final blessEnd = vbm >= 0 ? vbm : rows.length;
+    double blessAt(int j) =>
+        inp.blessPp + (j < blessEnd ? inp.blessWindowPp : 0.0);
+    final blessCur = blessAt(idx);
+    if (blessCur > 0 && inp.absorptionRatio <= blessCur) {
+      res.error = 'Absorption ratio must exceed the blessing bonus.';
+      return res;
+    }
+    // Strive multiplies the base band; blessing pp are additive on top, so
+    // the current row's blessing is stripped from the on-screen total to
+    // recover the true Strive (mirrors engine.py — keep in lockstep).
+    final strive =
+        curLow > 0 ? (inp.absorptionRatio - blessCur) / curLow - 1 : 0.0;
     final gemMap = data['gem_bonus'] as Map<String, dynamic>;
     final gem = gemMap.containsKey(inp.auraGem) ? _num(gemMap[inp.auraGem]) : 0.0;
 
     final pills = pillMath(inp);
     final respiraDaily = inp.respiraPerDay * inp.respiraExp * respiraCritMean;
     final respiraEventXp = inp.respiraEvent * inp.respiraExp * respiraCritMean;
-    final dailyXp = pills['xp_per_day']! + respiraDaily;
+    // XP elixirs: flat daily XP, deterministic (no crit roll observed).
+    final elixirDaily = inp.elixirPerDay * inp.elixirExp * inp.elixirEffect;
+    final dailyXp = pills['xp_per_day']! + respiraDaily + elixirDaily;
     final pillRatio = (dailyXp / inp.cultiSpeed) * tickSeconds / 86400.0;
     final fs = fruitStats(inp);
     final fruitMean = fs[0], fruitVar = fs[1];
@@ -596,9 +641,11 @@ class Engine {
       }
     }
 
-    double speed(dynamic row) {
+    double speed(int j) {
+      final row = rows[j];
       final s = striveOf != null ? striveOf(row) : strive;
-      return math.max(1e-12, abode * _num(row['low']) * (1 + s));
+      return math.max(
+          1e-12, abode * (_num(row['low']) * (1 + s) + blessAt(j)));
     }
 
     // Per-row wall-clock integration: gem multiplies cultivation speed only;
@@ -623,7 +670,7 @@ class Engine {
         var take = math.min(credit, xp);
         credit -= take;
         var left = xp - take;
-        final baseRate = speed(rows[j]) * (1 + gem) / tickSeconds;
+        final baseRate = speed(j) * (1 + gem) / tickSeconds;
         if (windowLeft > 0.0 && left > 0.0) {
           final secNp = left / baseRate;
           if (secNp <= windowLeft) {
@@ -693,11 +740,44 @@ class Engine {
         if (tstart > send + 1) {
           // Prestock scenario: a timegate parks you at the Stage cap, where
           // excess EXP accrues at the CAPPED row's rate (no future-row speed
-          // scaling; pills/Respira stay flat).
-          final capRate =
-              speed(rows[send]) * (1 + gem) / tickSeconds + dailyRate;
-          final overflowXp = xpAhead(tstart - 1) - xpAhead(send);
-          res.prestockDays = days(realSeconds(send) + overflowXp / capRate);
+          // scaling; pills/Respira stay flat). Overcap accrual runs WITHOUT
+          // the Strive Bonus (player-confirmed 2026-07-15) — de-strived aura
+          // component; blessing pp still apply. The overcap leg is
+          // reset-window aware (mirrors engine.py — keep in lockstep).
+          final capSpeed = abode * (_num(rows[send]['low']) + blessAt(send));
+          final capBase = capSpeed * (1 + gem) / tickSeconds;
+          final pre = realSeconds(send);
+          final windowRem = math.max(0.0, resetWindow - pre);
+          // Credits accounted explicitly: only what was available during
+          // the climb (deferred event XP only if the window closed there)
+          // can spill into the overcap XP; otherwise the deferred credit
+          // lands at the reset inside the overcap leg.
+          var rawToSend =
+              _num(cur['grade_xp']) * (1 - inp.gradeCompletion.clamp(0.0, 1.0));
+          for (var j = idx + 1; j <= send; j++) {
+            rawToSend += _num(rows[j]['grade_xp']);
+          }
+          var rawOver = 0.0;
+          for (var j = send + 1; j < tstart; j++) {
+            rawOver += _num(rows[j]['grade_xp']);
+          }
+          final preCredit =
+              startCredit + (windowRem > 0.0 ? 0.0 : deferredCredit);
+          var over =
+              math.max(0.0, rawOver - math.max(0.0, preCredit - rawToSend));
+          var total = pre;
+          if (windowRem > 0.0 && over > 0.0) {
+            final inWin = capBase * windowRem;
+            if (over <= inWin) {
+              total += over / capBase;
+              over = 0.0;
+            } else {
+              over = math.max(0.0, over - inWin - deferredCredit);
+              total += windowRem;
+            }
+          }
+          total += over / (capBase + dailyRate);
+          res.prestockDays = days(total);
           res.prestockBand = band(res.prestockDays, tstart - 1);
           // Overcap % in the game's display convention (verified 2026-07-15):
           // cumulative XP since the start of the Stage's final half-step ÷
@@ -737,6 +817,7 @@ class Engine {
     res.mythicPillsPerDay = pills['mythic_per_day']!;
     res.pearlXpPerDay = pills['pearl_xp_day']!;
     res.respiraXpPerDay = respiraDaily;
+    res.elixirXpPerDay = elixirDaily;
     res.fruitXp = fruitXp;
     res.fruitDaysSaved = fruitSecs / 86400.0;
     return res;
