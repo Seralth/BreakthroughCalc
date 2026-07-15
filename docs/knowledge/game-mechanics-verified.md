@@ -108,12 +108,13 @@ entire major Stage — it does not scale with phase or grade.
   Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
   Cauldron Refinement T3 +3%, Moon Meru T12 +10%, Chroma T3 +1 attempt.
   "Respira Effect" = `extra_exp_yunqi`.
-- OPEN TENSION: with +28% books the 2.2% rule predicts the Incarnation
-  display ≈ 17,372 × 1.28 ≈ 22.2k, but Seralth recalls "low 18000s"
-  (imprecise, from memory). Either the recall is off, the shown value
-  excludes book buffs, or the 2.2% rule is wrong. An exact reading after
-  the daily attempt reset decides; do NOT treat the 2.2% rule as usable
-  until then.
+- Incarnation cross-check (PENDING exact reading): with +28% books the
+  2.2% rule predicts the Incarnation display ≈ 17,372 × 1.28 ≈ 22.2k.
+  Seralth initially recalled "low 18000s" but on seeing the prediction
+  said 22.2k "sounds more correct" (the 18k memory was likely days old).
+  Recall-based either way — an exact on-screen per-attempt value after the
+  daily attempt reset is still required before treating the 2.2% rule as
+  verified.
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
