@@ -15,7 +15,11 @@ import 'update_check.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.11';
+const appVersion = '2.12';
+
+/// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
+/// Shown in-app so it's obvious whether a deploy has actually been picked up.
+const buildStamp = String.fromEnvironment('BUILD_STAMP', defaultValue: 'dev');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -259,9 +263,10 @@ class _CalculatorPageState extends State<CalculatorPage>
       builder: (ctx) => AlertDialog(
         title: Text(tr('Force refresh?')),
         content: Text(tr(
-            'Reloads the app fresh from the server, clearing the offline '
-            'cache. Use this if an update seems stuck. Your inputs are '
-            'saved and will survive.')),
+                'Reloads the app fresh from the server, clearing the offline '
+                'cache. Use this if an update seems stuck. Your inputs are '
+                'saved and will survive.') +
+            '\n\n${tr('Current build')}: v$appVersion · $buildStamp'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -731,6 +736,16 @@ class _CalculatorPageState extends State<CalculatorPage>
             _recalc();
           }, display: tr),
         ]),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Center(
+            child: Text(
+              'v$appVersion · $buildStamp',
+              style: TextStyle(
+                  fontSize: 11, color: Theme.of(context).hintColor),
+            ),
+          ),
+        ),
       ],
     );
   }

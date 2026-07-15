@@ -183,6 +183,7 @@ const Map<String, Map<String, String>> _t = {
   'At timegate': {'ru': 'К вратам времени', 'de': 'Am Zeittor', 'es': 'En la puerta temporal', 'zh': '开门时'},
   'stocked {} early': {'ru': 'запас готов за {} до врат', 'de': '{} vor dem Tor fertig', 'es': 'reserva lista {} antes', 'zh': '提前 {} 存满'},
   'short by {}': {'ru': 'не хватает {}', 'de': 'fehlen {}', 'es': 'faltan {}', 'zh': '还差 {}'},
+  'Current build': {'ru': 'Текущая сборка', 'de': 'Aktueller Build', 'es': 'Compilación actual', 'zh': '当前版本'},
   'Server #1 Stage (Strive)': {'ru': 'Стадия №1 сервера (Стремление)', 'de': 'Bühne des Server-Ersten (Streben)', 'es': 'Etapa del n.º 1 del servidor (Esfuerzo)', 'zh': '全服第一期（奋起）'},
   '(none)': {'ru': '(нет)', 'de': '(keine)', 'es': '(ninguna)', 'zh': '（无）'},
   'Mature server (world 30+)': {'ru': 'Зрелый сервер (мир 30+)', 'de': 'Reifer Server (Welt 30+)', 'es': 'Servidor maduro (mundo 30+)', 'zh': '成熟服务器（世界30+）'},
