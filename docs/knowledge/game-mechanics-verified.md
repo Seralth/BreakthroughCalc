@@ -100,6 +100,13 @@ entire major Stage — it does not scale with phase or grade.
   (Nascent: 183,679 × 0.022 = 4,040.9 → 4041; match to 0.002%).
   Predictions to confirm/refute with one reading at any other Stage:
   Foundation 253, Virtuoso 867, Incarnation 17,372, Voidbreak 22,445.
+- Corroboration (recalled, imprecise — NOT verification): Seralth's
+  Incarnation character shows "low 18000s" per attempt from memory, with
+  Respira-effect buffs active (technique books grant "+x% Respira effect" =
+  `extra_exp_yunqi`, e.g. Floral Essence +3%). Predicted 17,372 base × 1.03
+  ≈ 17,893; +4–6% total ≈ 18.1–18.4k — consistent with the 2.2% rule.
+  Needs the exact on-screen value plus the character's total Respira-effect %
+  to count as verified.
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
