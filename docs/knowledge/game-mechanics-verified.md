@@ -132,8 +132,13 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   +20%"; Blessing Rewards +5; "Second Esotability". Both lines shown
   together on one tier ⇒ the bonuses STACK: +40% on Incarnation (Late),
   +20% from there until Voidbreak (L) Middle.
-- A fourth tier circle ("Double …", partially occluded) sits between
-  Completion and Perfection (C) — contents not yet captured.
+- The "Double" label between the tier circles is NOT a tier (unclickable,
+  per Seralth). PLAUSIBLE INFERENCE: it is the active-Virya status badge
+  (dump: 'Double' = 双; template ">Within {1} hours, receive {3}x {2}
+  Cosmoapsis gains.") — i.e. the Ascension Virya session grants ×2
+  cultivation gains per Cosmoapsis while its countdown (02:26:31 in the
+  screenshot) runs. Verify by comparing the /Cosmoapsis speed readout
+  during vs after the timer.
 - Blessing tiers/bonuses are per-path — the screen and status bar use path
   suffix (L) (player's primary), confirming path letters beyond M/C/P
   (cf. elixir notes' L/G/M/C/S).
