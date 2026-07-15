@@ -259,10 +259,19 @@ entire major Stage — it does not scale with phase or grade.
   proc 19,030 — exactly ×2.0, confirming the yunqi_crit ×2 tier and its
   proc name. 9,515 ≠ Seralth's 8,173 at the same major Stage ⇒ the
   DISPLAYED per-attempt value is per-account (the within-account per-Stage
-  constancy stands). Best hypothesis: display = shared base × (1 + account's
-  Respira Effect books). Seralth +28% ⇒ base 6,385; friend's display then
-  implies ~+49% books (9,515 / 6,385 = 1.490) — CHECK the friend's total
-  Respira Effect % to confirm. (Display quirk, player-clarified 2026-07-15:
+  constancy stands). Model: display = shared base × (1 + account's Respira
+  Effect books). Friend reports +51% ⇒ implied base 6,301.3; Seralth +28%
+  ⇒ implied base 6,385.2 — 1.3% apart, and BOTH book totals are
+  self-reported as ±a-few-percent (Seralth confirmed his may be off), so
+  the implied-base ranges overlap: the model is consistent with all data
+  within reading error. Best point estimate: base-doubles-per-Stage gives
+  Incarnation base = 2 × (4,041/1.28 = 3,157) = **6,314**, inside both
+  accounts' ranges (predicts Seralth's effective books ≈ +29.4%, friend's
+  ≈ +50.7%). Alternative residual if exact recounts still disagree: a
+  second per-account modifier (dump has extra_base_yunqi separate from
+  extra_exp_yunqi). NEXT to pin exactly: recount ACTIVE Respira Effect
+  lines on either account + a fresh same-day Respira reading; the base
+  then equals reading / (1 + exact books). (Display quirk, player-clarified 2026-07-15:
   the cultivation screen labels cultivation-XP gain floats as "MP +x" —
   passive ticks and Respira procs alike — so these ARE cultivation-XP
   readings, not mana.)
