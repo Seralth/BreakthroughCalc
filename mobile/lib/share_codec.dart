@@ -9,8 +9,9 @@
 // code is unreadable.
 //
 // FORWARD COMPATIBILITY — adding a new input feature:
-// 1. Give it a fresh short key in _compact() and a defaulted read in
-//    _expand(). Never reuse or rename existing keys.
+// 1. Give it a fresh short key: add one _F entry to _fields below (the
+//    field also needs its long key in Inputs.toMap/fromMap). Never reuse or
+//    rename existing short keys.
 // 2. That's it: old codes lack the key and decode to the default (defaults
 //    are omitted at encode time anyway), and codes from newer app versions
 //    import fine on older ones — unknown keys are simply ignored. Only a
@@ -18,7 +19,7 @@
 //
 // WIRE-FORMAT CONTRACT: the enum indexes reference the engine data tables,
 // so the ORDER of breakthrough.json's rows / gem_bonus / pill_xp / fruit_xp
-// keys / rarity_names (plus _stars/_vaseInputs below) and the
+// keys / rarity_names (plus engine.dart's starLevels/vaseInputKinds) and the
 // zlib+base64url framing are all part of the format. Reordering any of them
 // corrupts every previously shared code; test/share_codec_test.dart pins
 // each order and a golden vector.
@@ -28,25 +29,79 @@ import 'package:archive/archive.dart';
 
 import 'engine.dart';
 
-const _stars = ['0*', '1*', '2*', '3*', '4*', '5*'];
-const _vaseInputs = ['Blue', 'Purple', 'Gold'];
-
 List<String> _gems(Engine e) => (e.data['gem_bonus'] as Map).keys.cast<String>().toList();
 List<String> _ranks(Engine e) => (e.data['pill_xp'] as Map).keys.cast<String>().toList();
 List<String> _fruits(Engine e) => (e.data['fruit_xp'] as Map).keys.cast<String>().toList();
 List<String> _rarities(Engine e) => (e.data['rarity_names'] as List).cast<String>();
 
+List<String> _stars(Engine e) => starLevels;
+List<String> _vaseInputs(Engine e) => vaseInputKinds;
+
+/// One short<->long key table shared by encode and decode. `kind` drives
+/// both directions ('d' double, 'i' int, 'b' bool-as-0/1, 'e' enum index
+/// into `src`), so the two sides can never drift apart.
+///
+/// Stage/phase/grade and the target/top-stage keys ('s','p','g','ts','tp',
+/// 'tg','os') are handled separately: their decode cascades (a phase index
+/// is relative to the decoded stage) and empty selections encode as -1.
+class _F {
+  final String short;
+  final String long;
+  final String kind;
+  final List<String> Function(Engine)? src;
+  const _F(this.short, this.long, this.kind, [this.src]);
+}
+
+const List<_F> _fields = [
+  _F('gc', 'grade_completion', 'd'),
+  _F('cs', 'culti_speed', 'd'),
+  _F('ar', 'absorption_ratio', 'd'),
+  _F('ag', 'aura_gem', 'e', _gems),
+  _F('td', 'timegate_days', 'd'),
+  _F('ms', 'mature_server', 'b'),
+  _F('dd', 'dailies_done', 'b'),
+  _F('rh', 'reset_in_hours', 'd'),
+  _F('rd', 'respira_per_day', 'd'),
+  _F('re', 'respira_event', 'd'),
+  _F('rx', 'respira_exp', 'd'),
+  _F('pr', 'pill_rank', 'e', _ranks),
+  _F('pl', 'pill_limit', 'd'),
+  _F('gd', 'gold_per_day', 'd'),
+  _F('pd', 'purple_per_day', 'd'),
+  _F('bd', 'blue_per_day', 'd'),
+  _F('mb', 'mark_blue', 'd'),
+  _F('mp', 'mark_purple', 'd'),
+  _F('mg', 'mark_gold', 'd'),
+  _F('v', 'vase', 'b'),
+  _F('vs', 'vase_star', 'e', _stars),
+  _F('vk', 'vase_skin', 'b'),
+  _F('vi', 'vase_input', 'e', _vaseInputs),
+  _F('vc', 'vase_charge', 'b'),
+  _F('mi', 'mirror', 'b'),
+  _F('mis', 'mirror_star', 'e', _stars),
+  _F('mik', 'mirror_skin', 'b'),
+  _F('mic', 'mirror_charge', 'b'),
+  _F('pe', 'pearl', 'b'),
+  _F('pes', 'pearl_star', 'e', _stars),
+  _F('pek', 'pearl_skin', 'b'),
+  _F('pex', 'pearl_xp_per_10', 'd'),
+  _F('pec', 'pearl_charge', 'b'),
+  _F('fr', 'fruit_rank', 'e', _fruits),
+  _F('fc', 'fruit_count', 'd'),
+  _F('fh', 'fruit_highest_rank', 'b'),
+  _F('lc', 'lvl_culti', 'i'),
+  _F('lq', 'lvl_quality', 'i'),
+  _F('lg', 'lvl_gush', 'i'),
+  _F('er', 'extractor_rarity', 'e', _rarities),
+];
+
 Map<String, dynamic> _compact(
     Engine e, Inputs inp, List<List<dynamic>> pe, Set<String> respira) {
-  int b(bool v) => v ? 1 : 0;
+  final long = inp.toMap();
   final m = <String, dynamic>{
     's': e.stages().indexOf(inp.stage),
     'p': e.phasesFor(inp.stage).indexOf(inp.phase),
     'g': e.gradesFor(inp.stage, inp.phase).indexOf(inp.grade),
-    'gc': inp.gradeCompletion,
-    'cs': inp.cultiSpeed,
-    'ar': inp.absorptionRatio,
-    'ag': _gems(e).indexOf(inp.auraGem),
     'ts': inp.targetStage.isEmpty ? -1 : e.stages().indexOf(inp.targetStage),
     'tp': inp.targetPhase.isEmpty || inp.targetStage.isEmpty
         ? -1
@@ -56,43 +111,13 @@ Map<String, dynamic> _compact(
             inp.targetStage.isEmpty
         ? -1
         : e.gradesFor(inp.targetStage, inp.targetPhase).indexOf(inp.targetGrade),
-    'td': inp.timegateDays,
     'os': inp.topStage.isEmpty ? -1 : e.stages().indexOf(inp.topStage),
-    'ms': b(inp.matureServer),
-    'dd': b(inp.dailiesDone),
-    'rh': inp.resetInHours,
-    'rd': inp.respiraPerDay,
-    're': inp.respiraEvent,
-    'rx': inp.respiraExp,
-    'pr': _ranks(e).indexOf(inp.pillRank),
-    'pl': inp.pillLimit,
-    'gd': inp.goldPerDay,
-    'pd': inp.purplePerDay,
-    'bd': inp.bluePerDay,
-    'mb': inp.markBlue,
-    'mp': inp.markPurple,
-    'mg': inp.markGold,
-    'v': b(inp.vase),
-    'vs': _stars.indexOf(inp.vaseStar),
-    'vk': b(inp.vaseSkin),
-    'vi': _vaseInputs.indexOf(inp.vaseInput),
-    'vc': b(inp.vaseCharge),
-    'mi': b(inp.mirror),
-    'mis': _stars.indexOf(inp.mirrorStar),
-    'mik': b(inp.mirrorSkin),
-    'mic': b(inp.mirrorCharge),
-    'pe': b(inp.pearl),
-    'pes': _stars.indexOf(inp.pearlStar),
-    'pek': b(inp.pearlSkin),
-    'pex': inp.pearlXpPer10,
-    'pec': b(inp.pearlCharge),
-    'fr': _fruits(e).indexOf(inp.fruitRank),
-    'fc': inp.fruitCount,
-    'fh': b(inp.fruitHighestRank),
-    'lc': inp.lvlCulti,
-    'lq': inp.lvlQuality,
-    'lg': inp.lvlGush,
-    'er': _rarities(e).indexOf(inp.extractorRarity),
+    for (final f in _fields)
+      f.short: switch (f.kind) {
+        'b' => (long[f.long] as bool) ? 1 : 0,
+        'e' => f.src!(e).indexOf(long[f.long] as String),
+        _ => long[f.long], // 'd' / 'i': raw number
+      },
     'P': pe,
     'R': respira.toList()..sort(),
   };
@@ -133,75 +158,56 @@ Map<String, dynamic>? decodeBuildCode(Engine e, String code) {
   }
 }
 
+String _pick(List<String> l, dynamic i, String dv) {
+  final n = (i as num?)?.toInt() ?? -2;
+  return (n >= 0 && n < l.length) ? l[n] : dv;
+}
+
 Map<String, dynamic> _expand(Engine e, Map<String, dynamic> m) {
-  final def = _defaultInputs(e);
-  String pick(List<String> l, dynamic i, String dv) {
-    final n = (i as num?)?.toInt() ?? -2;
-    return (n >= 0 && n < l.length) ? l[n] : dv;
-  }
+  // Start from the full default long-key map and overlay only the decoded
+  // short keys — absent keys therefore decode to the defaults by
+  // construction, and the output shape always matches the prefs blob.
+  // pill_effect is derived from pe_sources at recalc time and has never
+  // been wire data, so it is not part of the decode output either.
+  final out = _defaultInputs(e).toMap()..remove('pill_effect');
 
-  double d(String k, double dv) => (m[k] as num?)?.toDouble() ?? dv;
-  int ii(String k, int dv) => (m[k] as num?)?.toInt() ?? dv;
-  bool b(String k, bool dv) => m.containsKey(k) ? m[k] == 1 : dv;
-
-  final stage = pick(e.stages(), m['s'], def.stage);
-  final phase = pick(e.phasesFor(stage), m['p'], e.phasesFor(stage).first);
+  final stage = _pick(e.stages(), m['s'], out['stage'] as String);
+  final phase = _pick(e.phasesFor(stage), m['p'], e.phasesFor(stage).first);
   final grade =
-      pick(e.gradesFor(stage, phase), m['g'], e.gradesFor(stage, phase).first);
-  final tstage = pick(e.stages(), m['ts'], '');
-  final tphase = tstage.isEmpty ? '' : pick(e.phasesFor(tstage), m['tp'], '');
+      _pick(e.gradesFor(stage, phase), m['g'], e.gradesFor(stage, phase).first);
+  final tstage = _pick(e.stages(), m['ts'], '');
+  final tphase = tstage.isEmpty ? '' : _pick(e.phasesFor(tstage), m['tp'], '');
   final tgrade = tstage.isEmpty || tphase.isEmpty
       ? ''
-      : pick(e.gradesFor(tstage, tphase), m['tg'], '');
-  return {
-    'stage': stage,
-    'phase': phase,
-    'grade': grade,
-    'grade_completion': d('gc', 0),
-    'culti_speed': d('cs', 0),
-    'absorption_ratio': d('ar', 0),
-    'aura_gem': pick(_gems(e), m['ag'], def.auraGem),
-    'target_stage': tstage,
-    'target_phase': tphase,
-    'target_grade': tgrade,
-    'timegate_days': d('td', 0),
-    'top_stage': pick(e.stages(), m['os'], ''),
-    'mature_server': b('ms', def.matureServer),
-    'dailies_done': b('dd', def.dailiesDone),
-    'reset_in_hours': d('rh', def.resetInHours),
-    'respira_per_day': d('rd', 0),
-    'respira_event': d('re', 0),
-    'respira_exp': d('rx', 0),
-    'pill_rank': pick(_ranks(e), m['pr'], def.pillRank),
-    'pill_limit': d('pl', 0),
-    'gold_per_day': d('gd', 0),
-    'purple_per_day': d('pd', 0),
-    'blue_per_day': d('bd', 0),
-    'mark_blue': d('mb', 0),
-    'mark_purple': d('mp', 0),
-    'mark_gold': d('mg', 0),
-    'vase': b('v', false),
-    'vase_star': pick(_stars, m['vs'], def.vaseStar),
-    'vase_skin': b('vk', false),
-    'vase_input': pick(_vaseInputs, m['vi'], def.vaseInput),
-    'vase_charge': b('vc', def.vaseCharge),
-    'mirror': b('mi', false),
-    'mirror_star': pick(_stars, m['mis'], def.mirrorStar),
-    'mirror_skin': b('mik', false),
-    'mirror_charge': b('mic', def.mirrorCharge),
-    'pearl': b('pe', false),
-    'pearl_star': pick(_stars, m['pes'], def.pearlStar),
-    'pearl_skin': b('pek', false),
-    'pearl_xp_per_10': d('pex', 0),
-    'pearl_charge': b('pec', def.pearlCharge),
-    'fruit_rank': pick(_fruits(e), m['fr'], def.fruitRank),
-    'fruit_count': d('fc', 0),
-    'fruit_highest_rank': b('fh', false),
-    'lvl_culti': ii('lc', 0),
-    'lvl_quality': ii('lq', 0),
-    'lvl_gush': ii('lg', 0),
-    'extractor_rarity': pick(_rarities(e), m['er'], def.extractorRarity),
-    'pe_sources': m['P'] as List? ?? [],
-    'respira_sources': m['R'] as List? ?? [],
-  };
+      : _pick(e.gradesFor(tstage, tphase), m['tg'], '');
+  out['stage'] = stage;
+  out['phase'] = phase;
+  out['grade'] = grade;
+  out['target_stage'] = tstage;
+  out['target_phase'] = tphase;
+  out['target_grade'] = tgrade;
+  out['top_stage'] = _pick(e.stages(), m['os'], '');
+
+  for (final f in _fields) {
+    switch (f.kind) {
+      case 'd':
+        final v = m[f.short];
+        if (v != null) out[f.long] = (v as num).toDouble();
+      case 'i':
+        final v = m[f.short];
+        if (v != null) out[f.long] = (v as num).toInt();
+      case 'b':
+        // A present-but-null value decodes to false (legacy semantics),
+        // not to the default.
+        if (m.containsKey(f.short)) out[f.long] = m[f.short] == 1;
+      case 'e':
+        if (m.containsKey(f.short)) {
+          out[f.long] = _pick(f.src!(e), m[f.short], out[f.long] as String);
+        }
+    }
+  }
+
+  out['pe_sources'] = m['P'] as List? ?? [];
+  out['respira_sources'] = m['R'] as List? ?? [];
+  return out;
 }

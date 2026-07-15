@@ -290,10 +290,10 @@ class _ReferenceTabState extends State<ReferenceTab>
           for (final e in pillXp.entries)
             [
               e.key,
-              (e.value[2] as num).toString(),
-              (e.value[1] as num).toString(),
-              (e.value[0] as num).toString(),
-              (e.value[3] as num).toString(),
+              (e.value[pillBlue] as num).toString(),
+              (e.value[pillPurple] as num).toString(),
+              (e.value[pillGold] as num).toString(),
+              (e.value[pillMythic] as num).toString(),
             ]
         ],
         'Confirmed against in-game tooltips. Pill-effect bonuses add as percentage '

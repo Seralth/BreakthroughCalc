@@ -463,54 +463,7 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   Map<String, dynamic> _inputsMap() => {
-      'stage': inp.stage,
-      'phase': inp.phase,
-      'grade': inp.grade,
-      'grade_completion': inp.gradeCompletion,
-      'culti_speed': inp.cultiSpeed,
-      'absorption_ratio': inp.absorptionRatio,
-      'aura_gem': inp.auraGem,
-      'target_stage': inp.targetStage,
-      'target_phase': inp.targetPhase,
-      'target_grade': inp.targetGrade,
-      'timegate_days': inp.timegateDays,
-      'top_stage': inp.topStage,
-      'mature_server': inp.matureServer,
-      'dailies_done': inp.dailiesDone,
-      'reset_in_hours': inp.resetInHours,
-      'respira_per_day': inp.respiraPerDay,
-      'respira_event': inp.respiraEvent,
-      'respira_exp': inp.respiraExp,
-      'pill_rank': inp.pillRank,
-      'pill_effect': inp.pillEffect,
-      'pill_limit': inp.pillLimit,
-      'gold_per_day': inp.goldPerDay,
-      'purple_per_day': inp.purplePerDay,
-      'blue_per_day': inp.bluePerDay,
-      'mark_blue': inp.markBlue,
-      'mark_purple': inp.markPurple,
-      'mark_gold': inp.markGold,
-      'vase': inp.vase,
-      'vase_star': inp.vaseStar,
-      'vase_skin': inp.vaseSkin,
-      'vase_input': inp.vaseInput,
-      'mirror': inp.mirror,
-      'mirror_star': inp.mirrorStar,
-      'mirror_skin': inp.mirrorSkin,
-      'pearl': inp.pearl,
-      'pearl_star': inp.pearlStar,
-      'pearl_skin': inp.pearlSkin,
-      'pearl_xp_per_10': inp.pearlXpPer10,
-      'vase_charge': inp.vaseCharge,
-      'mirror_charge': inp.mirrorCharge,
-      'pearl_charge': inp.pearlCharge,
-      'fruit_rank': inp.fruitRank,
-      'fruit_count': inp.fruitCount,
-      'fruit_highest_rank': inp.fruitHighestRank,
-      'lvl_culti': inp.lvlCulti,
-      'lvl_quality': inp.lvlQuality,
-      'lvl_gush': inp.lvlGush,
-      'extractor_rarity': inp.extractorRarity,
+      ...inp.toMap(),
       'pe_sources': _peSources,
       'respira_sources': _respiraSources.toList(),
     };
@@ -524,8 +477,6 @@ class _CalculatorPageState extends State<CalculatorPage>
     setState(() => res = engine.calculate(inp));
     _saveInputs();
   }
-
-  static const _stars = ['0*', '1*', '2*', '3*', '4*', '5*'];
 
   @override
   Widget build(BuildContext context) {
@@ -739,7 +690,7 @@ class _CalculatorPageState extends State<CalculatorPage>
           _artifact(tr('Starsea Vase'), inp.vase, inp.vaseStar, inp.vaseSkin, inp.vaseCharge,
               (v) => inp.vase = v, (v) => inp.vaseStar = v, (v) => inp.vaseSkin = v,
               (v) => inp.vaseCharge = v),
-          _dropdown(tr('Vase input pill'), inp.vaseInput, ['Blue', 'Purple', 'Gold'], (v) {
+          _dropdown(tr('Vase input pill'), inp.vaseInput, vaseInputKinds, (v) {
             inp.vaseInput = v!;
             _recalc();
           }, display: tr),
@@ -1064,7 +1015,7 @@ class _CalculatorPageState extends State<CalculatorPage>
               initialValue: star,
               isExpanded: true,
               decoration: InputDecoration(labelText: tr('Star')),
-              items: [for (final s in _stars) DropdownMenuItem(value: s, child: Text(s))],
+              items: [for (final s in starLevels) DropdownMenuItem(value: s, child: Text(s))],
               onChanged: on ? (v) { onStar(v!); _recalc(); } : null,
             ),
           ),

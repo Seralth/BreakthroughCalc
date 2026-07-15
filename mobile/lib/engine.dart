@@ -27,6 +27,22 @@ const double _bandZ = 1.645; // ~90% (P5..P95) interval
 // pity — any gush resets the counter; verified in-game 2026-07-10).
 const int gushGuaranteeEvery = 6;
 
+// pill_xp row layout: each rank maps to [gold, purple, blue, mythic]
+// (data/breakthrough.json; e.g. 1R = [1500, 750, 400, 3000]). Use these
+// consts anywhere a pill row is indexed so the color->column mapping is
+// spelled out.
+const int pillGold = 0;
+const int pillPurple = 1;
+const int pillBlue = 2;
+const int pillMythic = 3;
+
+// Artifact star levels and Vase input-pill kinds. The OMV2 share codec
+// stores INDEXES into these lists, so their order is part of the wire
+// format — never reorder (share_codec_test.dart pins usage via the golden
+// vector).
+const List<String> starLevels = ['0*', '1*', '2*', '3*', '4*', '5*'];
+const List<String> vaseInputKinds = ['Blue', 'Purple', 'Gold'];
+
 const Map<int, double> _striveShapeTbl = {
   1: 0.15, 2: 0.20, 3: 0.30, 4: 0.40, 5: 0.50, 6: 0.60, 7: 0.70,
 };
@@ -72,6 +88,9 @@ class Inputs {
   String targetStage;
   String targetPhase;
   String targetGrade;
+  // UI-only: never read by the math. Both UIs compare it against
+  // prestock_days; it rides Inputs for the cross-platform schema (prefs
+  // blob + OMV2 'td' key on mobile).
   double timegateDays;
   String topStage;
   bool matureServer;
@@ -224,6 +243,60 @@ class Inputs {
       extractorRarity: s('extractor_rarity', 'Common'),
     );
   }
+
+  /// Snake_case map with EXACTLY the keys [fromMap] reads (round-trip pinned
+  /// by test). This is the single enumeration of the cross-platform input
+  /// schema: the prefs blob and build-code expansion both derive from it.
+  Map<String, dynamic> toMap() => {
+        'stage': stage,
+        'phase': phase,
+        'grade': grade,
+        'grade_completion': gradeCompletion,
+        'culti_speed': cultiSpeed,
+        'absorption_ratio': absorptionRatio,
+        'aura_gem': auraGem,
+        'target_stage': targetStage,
+        'target_phase': targetPhase,
+        'target_grade': targetGrade,
+        'timegate_days': timegateDays,
+        'top_stage': topStage,
+        'mature_server': matureServer,
+        'dailies_done': dailiesDone,
+        'reset_in_hours': resetInHours,
+        'respira_per_day': respiraPerDay,
+        'respira_event': respiraEvent,
+        'respira_exp': respiraExp,
+        'pill_rank': pillRank,
+        'pill_effect': pillEffect,
+        'pill_limit': pillLimit,
+        'gold_per_day': goldPerDay,
+        'purple_per_day': purplePerDay,
+        'blue_per_day': bluePerDay,
+        'mark_blue': markBlue,
+        'mark_purple': markPurple,
+        'mark_gold': markGold,
+        'vase': vase,
+        'vase_star': vaseStar,
+        'vase_skin': vaseSkin,
+        'vase_input': vaseInput,
+        'mirror': mirror,
+        'mirror_star': mirrorStar,
+        'mirror_skin': mirrorSkin,
+        'pearl': pearl,
+        'pearl_star': pearlStar,
+        'pearl_skin': pearlSkin,
+        'pearl_xp_per_10': pearlXpPer10,
+        'vase_charge': vaseCharge,
+        'mirror_charge': mirrorCharge,
+        'pearl_charge': pearlCharge,
+        'fruit_rank': fruitRank,
+        'fruit_count': fruitCount,
+        'fruit_highest_rank': fruitHighestRank,
+        'lvl_culti': lvlCulti,
+        'lvl_quality': lvlQuality,
+        'lvl_gush': lvlGush,
+        'extractor_rarity': extractorRarity,
+      };
 }
 
 class Results {
@@ -331,10 +404,10 @@ class Engine {
   Map<String, double> pillMath(Inputs inp) {
     final pillXp = data['pill_xp'] as Map<String, dynamic>;
     final rankVals = pillXp[inp.pillRank];
-    final gold = rankVals != null ? _num(rankVals[0]) : 0.0;
-    final purple = rankVals != null ? _num(rankVals[1]) : 0.0;
-    final blue = rankVals != null ? _num(rankVals[2]) : 0.0;
-    final mythic = rankVals != null ? _num(rankVals[3]) : 0.0;
+    final gold = rankVals != null ? _num(rankVals[pillGold]) : 0.0;
+    final purple = rankVals != null ? _num(rankVals[pillPurple]) : 0.0;
+    final blue = rankVals != null ? _num(rankVals[pillBlue]) : 0.0;
+    final mythic = rankVals != null ? _num(rankVals[pillMythic]) : 0.0;
     final plus = inp.pillEffect;
     final disc = data['artifact_energy_discount'] as Map<String, dynamic>;
     double discOf(String k) => disc.containsKey(k) ? _num(disc[k]) : 0.0;
