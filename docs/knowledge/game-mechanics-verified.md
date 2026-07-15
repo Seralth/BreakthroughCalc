@@ -95,11 +95,17 @@ entire major Stage — it does not scale with phase or grade.
   and percent-scale modifiers `extra_base_yunqi`/`extra_exp_yunqi`/
   `extra_crit_yunqi` (cfg_us_attrib.lua / cfg_us_affix.lua). The base amount
   is server-authoritative (consistent with all balance tables).
-- **PLAUSIBLE INFERENCE (single-stage evidence, NOT yet verified)**: the
-  per-Stage constant equals **2.2% of the Stage's EARLY G1 grade_xp**
-  (Nascent: 183,679 × 0.022 = 4,040.9 → 4041; match to 0.002%).
-  Predictions to confirm/refute with one reading at any other Stage:
-  Foundation 253, Virtuoso 867, Incarnation 17,372, Voidbreak 22,445.
+- **REFUTED (2026-07-15, issue #27)**: the hypothesis that the per-Stage
+  constant equals 2.2% of the Stage's Early G1 grade_xp (Nascent:
+  183,679 × 0.022 = 4,040.9 → 4041, match to 0.002% — but coincidence).
+  Incarnation reading came in at **8,173** vs the rule's prediction of
+  17,372 (Early G1) / 32,626 (Late G1); no grade_xp row in
+  breakthrough.json yields 8,173 at 2.2% under any books assumption.
+  Measured per-Stage constants so far (non-crit on-screen values):
+  **Nascent 4,041 · Incarnation 8,173** (ratio 2.022 — near ×2 per Stage,
+  but that is one ratio, not a verified law; a Voidbreak reading near
+  16,3xx would support it). Formula unknown; treat the constants as a
+  lookup of measured values.
 - Technique-book Respira lines (screenshot-verified 2026-07-15, Incarnation
   char; cataloged in data/respira_sources.json): activated total **+28%
   Respira Effect** (Energy Unification 1, Cosmic Power 3, Golden Core 1,
@@ -108,15 +114,17 @@ entire major Stage — it does not scale with phase or grade.
   Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
   Cauldron Refinement T3 +3%, Moon Meru T12 +10%, Chroma T3 +1 attempt.
   "Respira Effect" = `extra_exp_yunqi`.
-- Incarnation cross-check (PENDING exact reading): with +28% books the
-  2.2% rule predicts the Incarnation display ≈ 17,372 × 1.28 ≈ 22.2k.
-  Seralth initially recalled "low 18000s" but on seeing the prediction
-  said 22.2k "sounds more correct" (the 18k memory was likely days old).
-  Recall-based either way — an exact on-screen per-attempt value after the
-  daily attempt reset is still required before treating the 2.2% rule as
-  verified.
+- Incarnation reading (2026-07-15, exact, resolves the pending cross-check):
+  common non-crit value **8,173** with **16,3xx** crit procs observed in the
+  same session. The earlier "low 18000s"/"22.2k sounds more correct" recall
+  was wrong — a caution against recall-based confirmation. The ~×2 procs are
+  consistent with the client crit table's ×1.8 *expected* value being the
+  mean of a distribution that includes ×2 rolls. OPEN: whether the on-screen
+  base already includes the +28% technique books (if so, unbuffed base is
+  ~6,385) — needs a reading with a book newly toggled to compare.
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
-Engine note: once the 2.2% rule is confirmed at a second Stage, the Respira
-input could be auto-filled per Stage instead of user-entered.
+Engine note: no derivable formula — the Respira input stays user-entered.
+A per-Stage lookup of measured constants (Nascent 4,041 / Incarnation 8,173)
+could pre-fill the field as a suggestion once more Stages are recorded.
