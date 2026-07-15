@@ -25,3 +25,4 @@ flutter:
     - assets/data/breakthrough.json
     - assets/data/pill_effect_sources.json
     - assets/data/respira_sources.json
+    - assets/data/sources.json

@@ -597,11 +597,13 @@ class AscensionBlessing(unittest.TestCase):
         self.e = Engine()
 
     def test_blessing_strip_recovers_same_strive(self):
-        # The same true Strive entered two ways — raw 0.33 (= 0.275 x 1.2),
-        # and as a 0.53 on-screen total with a 0.20 declared blessing — must
-        # decompose to the identical Strive.
+        # The same true Strive (+20%) entered two ways — raw 0.33
+        # (= 0.275 x 1.2), and as the blessed on-screen total 0.57
+        # (= (0.275 + 0.20) x 1.2) with a 0.20 declared blessing — must
+        # decompose to the identical Strive under the official composition
+        # Absorption = (base + blessing) x (1 + Strive).
         plain = self.e.calculate(base_inputs(absorption_ratio=0.33))
-        blessed = self.e.calculate(base_inputs(absorption_ratio=0.53,
+        blessed = self.e.calculate(base_inputs(absorption_ratio=0.57,
                                                bless_pp=0.20))
         self.assertAlmostEqual(plain.strive, blessed.strive, places=9)
 
@@ -641,7 +643,7 @@ class AscensionBlessing(unittest.TestCase):
         # The conditional pp is live on Voidbreak EARLY rows and gone AT
         # Voidbreak MIDDLE G1 (an off-by-one that kept it alive at the
         # boundary row would shift the strive decomposition). Pinned via
-        # res.strive = (entered - bless_cur) / low - 1.
+        # res.strive = entered / (low + bless_cur) - 1.
         e = self.e
         low_mid = e.base_low("Voidbreak", "MIDDLE", "G1")
         r_at = e.calculate(base_inputs(
@@ -653,7 +655,7 @@ class AscensionBlessing(unittest.TestCase):
             stage="Voidbreak", phase="EARLY", grade="G1",
             absorption_ratio=0.9, bless_window_pp=0.20))
         self.assertAlmostEqual(r_before.strive,
-                               (0.9 - 0.20) / low_early - 1, places=9)
+                               0.9 / (low_early + 0.20) - 1, places=9)
 
     def test_blessing_projects_slower_than_strive_inflation(self):
         # Same on-screen absorption 0.475 at Nascent LATE G5 (base 0.275).

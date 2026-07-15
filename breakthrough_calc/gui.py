@@ -919,20 +919,20 @@ class MainWindow(QMainWindow):
         if low is None:
             self.absorb_base.setText("")
             return
-        base = low * 100
-        # Strip the declared Ascension blessing pp so the readout compares
-        # true Strive against the base band (the engine does the same).
+        # Blessing pp join the base BEFORE the Strive multiplier (official
+        # composition), so the readout compares against the blessed base.
         bless = self.bless_pp.value()
         if self.engine.blessing_applies(stage, phase, grade):
             bless += self.bless_window.value()
-        entered = max(0.0, self.absorb.value() - bless)
+        base = low * 100 + bless
+        entered = self.absorb.value()
         warn = False
         if self.engine.has_strive(stage):
             # res.strive is the engine's implied Strive for these same inputs;
             # when the engine couldn't run (e.g. speed still 0) fall back to
             # the widget-implied value so the readout behaves as before.
-            frac = res.strive if res.valid else self.engine.implied_strive(
-                stage, phase, grade, entered / 100.0)
+            frac = res.strive if res.valid else (
+                entered / base - 1 if base > 0 else None)
             strive = (frac if frac is not None else 0.0) * 100
             if abs(strive) < 1e-6:
                 strive = 0.0

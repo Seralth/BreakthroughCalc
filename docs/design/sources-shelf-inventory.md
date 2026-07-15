@@ -1,5 +1,12 @@
-```
-```
+> **Name corrections (2026-07-15, verified against the APK i18n string
+> corpus; applied in data/sources.json):** "Iron Fan" → **Princess Iron
+> Fan**; "Macaque" → **Six Eared Macaque**; "Dragon's Flight" → **Dragon
+> Flight** (no apostrophe). The Ascension Virya tier ladder is officially
+> **Completion / Eminence / Perfection / Half Step** (ratings 1/3/5/7) —
+> the community's "Perfection (C)" / "Perfect" tier names collide with
+> Stage names and are replaced. "Ninefall Hoarfrost" is a distinct book
+> from "Ninefall". Timereversal Pearl is absent from this APK build's
+> strings (predates it) — community name retained.
 
 {
   "catalog_version": "candidate-1 (Track A inventory, 2026-07-15)",

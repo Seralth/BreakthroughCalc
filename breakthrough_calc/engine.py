@@ -541,19 +541,20 @@ class Engine:
             res.error = "Absorption ratio must exceed the blessing bonus."
             return res
 
-        # Strive is a MULTIPLIER on each stage's base absorption; blessing pp
-        # are ADDITIVE on top (game formula: Absorption = Base x (1 + Strive)
-        # + blessing). The entered absorption is the on-screen total, so the
-        # current row's blessing is stripped to recover the true Strive.
+        # Official composition (client rules text): Absorption ratio =
+        # (Stage base + Virya blessing pp) x (1 + Strive Bonus) — blessing pp
+        # join the base BEFORE the Strive multiplier. The entered absorption
+        # is the on-screen total, so true Strive is recovered by dividing by
+        # the blessed base.
         # NOTE: with no blessing, abode = culti_speed/absorption and
         # (1+strive) = absorption/low_cur make strive/absorption CANCEL out of
         # speed(row) below: speed(row) = culti_speed * low_row / low_cur —
         # the entered absorption does not affect the projected time at all.
-        # Blessing pp break that cancellation only by their additive term:
-        # speed(row) = abode * (low_row * (1+strive) + bless(row)), which
+        # Blessing pp break that cancellation only via the base shift:
+        # speed(row) = abode * (low_row + bless(row)) * (1+strive), which
         # still reduces exactly to culti_speed at the current row.
-        strive = ((inp.absorption_ratio - bless_cur) / cur["low"] - 1
-                  if cur["low"] > 0 else 0.0)
+        strive = (inp.absorption_ratio / (cur["low"] + bless_cur) - 1
+                  if cur["low"] + bless_cur > 0 else 0.0)
         gem = self.data["gem_bonus"].get(inp.aura_gem, 0.0)
 
         pills = self.pill_math(inp)
@@ -582,7 +583,7 @@ class Engine:
         def speed(j: int) -> float:
             row = self.rows[j]
             s = strive_of(row) if strive_of else strive
-            return max(1e-12, abode * (row["low"] * (1 + s) + bless_at(j)))
+            return max(1e-12, abode * (row["low"] + bless_at(j)) * (1 + s))
 
         def row_rate(j: int) -> float:
             # XP/sec while cultivating row j, before daily flat XP.

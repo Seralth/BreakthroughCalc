@@ -1,0 +1,352 @@
+{
+ "schema_version": 1,
+ "catalog_version": 1,
+ "categories": [
+  {"id": "technique_book", "label": "Technique books"},
+  {"id": "immortal_friend", "label": "Immortal friends"},
+  {"id": "blessing", "label": "Ascension blessings"},
+  {"id": "curio", "label": "Curios"},
+  {"id": "other", "label": "Other"}
+ ],
+ "targets": {
+  "pill_effect": {"field": "pill_effect", "label": "Cultivation Pill Effect",
+                  "unit": "percent", "mode": "raw_additive", "combine": "sum", "base": "none"},
+  "pill_attempts": {"field": "pill_limit", "label": "Daily pill limit",
+                    "unit": "count", "mode": "raw_additive", "combine": "sum", "base": "user"},
+  "respira_attempts": {"field": "respira_per_day", "label": "Respira attempts per day",
+                       "unit": "count", "mode": "raw_additive", "combine": "sum", "base": "user"},
+  "respira_effect": {"field": "respira_books", "label": "Respira Effect",
+                     "unit": "percent", "mode": "raw_additive", "combine": "sum", "base": "none"},
+  "bless_pp": {"field": "bless_pp", "label": "Absorption blessing",
+               "unit": "fraction_pp", "mode": "raw_additive", "combine": "sum", "base": "none"},
+  "bless_window_pp": {"field": "bless_window_pp", "label": "Absorption blessing (until Voidbreak Middle)",
+                      "unit": "fraction_pp", "mode": "raw_additive", "combine": "sum", "base": "none"},
+  "culti_speed": {"field": "culti_speed", "mode": "display_embedded", "effects_allowed": false},
+  "absorption_ratio": {"field": "absorption_ratio", "mode": "display_embedded", "effects_allowed": false},
+  "abode_aura": {"field": "abode_aura", "mode": "display_embedded", "effects_allowed": false},
+  "respira_exp": {"field": "respira_exp", "mode": "display_embedded", "effects_allowed": false},
+  "pearl_xp_per_10": {"field": "pearl_xp_per_10", "mode": "display_embedded", "effects_allowed": false},
+  "info": {"mode": "informational"}
+ },
+ "sources": [
+  {"id": "longevity", "name": "Longevity", "category": "technique_book", "rank": "Novice",
+   "levels": {"kind": "binary"},
+   "effects": [
+    {"target": "respira_attempts", "value": 1,
+     "note": "+1 daily Respira attempt when maxed. Cheapest before the Foundation breakthrough."}],
+   "legacy": [{"catalog": "respira", "name": "Longevity (technique)", "implies_level": 1}],
+   "data_status": "exact"},
+
+  {"id": "energy_unification", "name": "Energy Unification", "category": "technique_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "respira_effect", "value": 1, "min_level": 1,
+     "note": "Respira Effect +1% on activation."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "rejuvenation", "name": "Rejuvenation", "category": "technique_book", "rank": "R2",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "pill_effect", "value": 2, "min_level": 1, "data_status": "community",
+     "note": "+2% Cultivation Pill Effect (completion bonus; exact tier unrecorded)."}],
+   "legacy": [{"catalog": "pe", "name": "Rejuvenation (R2 technique)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "lifeboom", "name": "Lifeboom", "category": "technique_book", "rank": "R3",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "pill_effect", "value": 1, "min_level": 1, "data_status": "community",
+     "note": "+1% Cultivation Pill Effect (completion bonus; exact tier unrecorded)."}],
+   "legacy": [{"catalog": "pe", "name": "Lifeboom (R3 technique)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "focus", "name": "Focus", "category": "technique_book", "rank": "R4",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "pill_effect", "value": 1, "min_level": 1, "data_status": "community",
+     "note": "+1% Cultivation Pill Effect (completion bonus; exact tier unrecorded)."}],
+   "legacy": [{"catalog": "pe", "name": "Focus (R4 technique)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "golden_core", "name": "Golden Core", "category": "technique_book", "rank": "R4",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "pill_effect", "value": 5, "min_level": 1, "data_status": "community",
+     "note": "+2% and +3% Cultivation Pill Effect (total +5%; exact tiers unrecorded)."},
+    {"target": "respira_effect", "value": 1, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +1% (exact tier unrecorded)."}],
+   "legacy": [{"catalog": "pe", "name": "Golden Core (R4 technique)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "astrology", "name": "Astrology", "category": "technique_book", "rank": "R4",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 3, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +3% (exact tier unrecorded)."}],
+   "legacy": [],
+   "data_status": "community"},
+
+  {"id": "ninefall", "name": "Ninefall", "category": "technique_book", "rank": "R5",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "pill_effect", "value": 2, "min_level": 1, "data_status": "community",
+     "note": "+2% Cultivation Pill Effect (completion bonus; exact tier unrecorded)."}],
+   "legacy": [{"catalog": "pe", "name": "Ninefall (R5 technique)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "cosmic_power", "name": "Cosmic Power", "category": "technique_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "respira_attempts", "value": 1, "min_level": 1, "data_status": "community",
+     "note": "+1 daily Respira attempt (exact tier unrecorded)."},
+    {"target": "respira_effect", "value": 3, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +3% (exact tier unrecorded)."}],
+   "legacy": [{"catalog": "respira", "name": "Cosmic Power (technique book)", "implies_level": 1}],
+   "data_status": "community"},
+
+  {"id": "taiyin_meridian", "name": "Taiyin Meridian", "category": "technique_book",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 3, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +3% (exact tier unrecorded)."}],
+   "legacy": [],
+   "data_status": "community"},
+
+  {"id": "dragon_flight", "name": "Dragon Flight", "category": "technique_book", "rank": "R6",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "pill_effect", "value": 2, "min_level": 3,
+     "note": "+2% Cultivation Pill Effect at Tier 3."}],
+   "legacy": [{"catalog": "pe", "name": "Dragon Flight (R6 technique)", "implies_level": 3}],
+   "data_status": "exact"},
+
+  {"id": "yins_grasp", "name": "Yin's Grasp", "category": "technique_book", "rank": "R6",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 5, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +5% (exact tier unrecorded)."}],
+   "legacy": [],
+   "data_status": "community"},
+
+  {"id": "lions_roar", "name": "Lion's Roar", "category": "technique_book", "rank": "R6",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 1, "min_level": 1,
+     "note": "Respira Effect +1% on learning. Needs the Blazelion pet to learn."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "floral_essence", "name": "Floral Essence", "category": "technique_book", "rank": "R7",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 3, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +3% (exact tier unrecorded)."},
+    {"target": "pill_effect", "value": 3, "min_level": 6,
+     "note": "+3% Cultivation Pill Effect at Tier 6."},
+    {"target": "pill_attempts", "value": 1, "min_level": 9,
+     "note": "+1 daily pill attempt at Tier 9."}],
+   "legacy": [{"catalog": "pe", "name": "Floral Essence (R7 technique)", "implies_level": 6}],
+   "data_status": "exact"},
+
+  {"id": "great_yang_manual", "name": "Great Yang Manual", "category": "technique_book", "rank": "R7",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 5, "min_level": 1, "data_status": "community",
+     "note": "Respira Effect +5% (exact tier unrecorded)."},
+    {"target": "pill_effect", "value": 4, "min_level": 9,
+     "note": "+4% Cultivation Pill Effect at Tier 9."}],
+   "legacy": [{"catalog": "pe", "name": "Great Yang Manual (R7 technique)", "implies_level": 9}],
+   "data_status": "exact"},
+
+  {"id": "purify_cleanse", "name": "Purify & Cleanse", "category": "technique_book", "rank": "R7",
+   "levels": {"kind": "tier", "max": 12},
+   "effects": [
+    {"target": "respira_effect", "value": 4, "min_level": 1,
+     "note": "Respira Effect +4% on activation."},
+    {"target": "respira_attempts", "value": 1, "min_level": 1,
+     "note": "+1 daily Respira attempt."},
+    {"target": "respira_effect", "value": 7, "min_level": 9,
+     "note": "Additional Respira Effect +7% at Tier 9."},
+    {"target": "info", "min_level": 1,
+     "note": "Complete all Respira in one tap."}],
+   "legacy": [{"catalog": "respira", "name": "Purify & Cleanse (technique book)", "implies_level": 1}],
+   "data_status": "exact"},
+
+  {"id": "zixiao_sutra", "name": "Zixiao Sutra", "category": "technique_book", "rank": "R8",
+   "levels": {"kind": "tier", "max": 15},
+   "effects": [
+    {"target": "pill_effect", "value": 1, "min_level": 1,
+     "note": "+1% Cultivation Pill Effect on learning."}],
+   "legacy": [{"catalog": "pe", "name": "Zixiao Sutra (R8 technique)", "implies_level": 1}],
+   "data_status": "exact"},
+
+  {"id": "astral_arcanum", "name": "Astral Arcanum", "category": "technique_book", "rank": "R8",
+   "levels": {"kind": "tier", "max": 15},
+   "effects": [
+    {"target": "pill_effect", "value": 2, "min_level": 3,
+     "note": "+2% Cultivation Pill Effect at Tier 3."}],
+   "legacy": [{"catalog": "pe", "name": "Astral Arcanum (R8 technique)", "implies_level": 3}],
+   "data_status": "exact"},
+
+  {"id": "chroma", "name": "Chroma", "category": "technique_book", "rank": "R8",
+   "levels": {"kind": "tier", "max": 15},
+   "effects": [
+    {"target": "pill_effect", "value": 1, "min_level": 1,
+     "note": "+1% Cultivation Pill Effect on learning."},
+    {"target": "respira_attempts", "value": 1, "min_level": 3,
+     "note": "+1 daily Respira attempt at Tier 3."},
+    {"target": "pill_effect", "value": 3, "min_level": 6,
+     "note": "+3% Cultivation Pill Effect at Tier 6."},
+    {"target": "pill_attempts", "value": 1, "min_level": 12,
+     "note": "+1 daily pill attempt at Tier 12."}],
+   "legacy": [
+    {"catalog": "pe", "name": "Chroma (R8 technique)", "implies_level": 6},
+    {"catalog": "respira", "name": "Chroma Tier 3 (R8 technique)", "implies_level": 3},
+    {"catalog": "respira", "name": "Chroma (R8 book, Tier 3)", "implies_level": 3}],
+   "data_status": "exact"},
+
+  {"id": "cauldron_refinement", "name": "Cauldron Refinement", "category": "technique_book", "rank": "R8",
+   "levels": {"kind": "tier", "max": 15},
+   "effects": [
+    {"target": "respira_effect", "value": 3, "min_level": 3,
+     "note": "Respira Effect +3% at Tier 3."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "moon_meru", "name": "Moon Meru", "category": "technique_book", "rank": "R8",
+   "levels": {"kind": "tier", "max": 15},
+   "effects": [
+    {"target": "respira_effect", "value": 10, "min_level": 12,
+     "note": "Respira Effect +10% at Tier 12."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "princess_iron_fan", "name": "Princess Iron Fan", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "respira_attempts", "value": 1, "min_level": 36,
+     "note": "+1 daily Respira attempt at level 36."}],
+   "legacy": [{"catalog": "respira", "name": "Iron Fan (immortal friend, lv 36)", "implies_level": 36}],
+   "data_status": "exact"},
+
+  {"id": "daji", "name": "Daji", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "respira_attempts", "value": 1, "min_level": 73,
+     "note": "+1 daily Respira attempt at level 73."}],
+   "legacy": [{"catalog": "respira", "name": "Daji (immortal friend, lv 73)", "implies_level": 73}],
+   "data_status": "exact"},
+
+  {"id": "shen_gongbao", "name": "Shen Gongbao", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "respira_attempts", "value": 1, "min_level": 117,
+     "note": "+1 daily Respira attempt at level 117."}],
+   "legacy": [{"catalog": "respira", "name": "Shen Gongbao (immortal friend, lv 117)", "implies_level": 117}],
+   "data_status": "exact"},
+
+  {"id": "six_eared_macaque", "name": "Six Eared Macaque", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "respira_effect", "value": 3, "min_level": 17,
+     "note": "Respira Effect +3% at level 17."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "jiang_ziya", "name": "Jiang Ziya", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "pill_effect", "value": 3, "min_level": 116,
+     "note": "+3% Cultivation Pill Effect at level 116."}],
+   "legacy": [{"catalog": "pe", "name": "Jiang Ziya (immortal friend, lv 116)", "implies_level": 116}],
+   "data_status": "exact"},
+
+  {"id": "taotie", "name": "Taotie", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "pill_effect", "value": 3, "min_level": 117,
+     "note": "+3% Cultivation Pill Effect at level 117."}],
+   "legacy": [{"catalog": "pe", "name": "Taotie (immortal friend, lv 117)", "implies_level": 117}],
+   "data_status": "exact"},
+
+  {"id": "crane_boy", "name": "Crane Boy", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "pill_attempts", "value": 1, "min_level": "max", "data_status": "community",
+     "note": "+1 daily pill attempt at max level."}],
+   "legacy": [{"catalog": "respira", "name": "Crane Boy (immortal friend, max)", "implies_level": -1}],
+   "data_status": "community"},
+
+  {"id": "white_astra", "name": "White Astra", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "info", "min_level": 31, "data_status": "unknown",
+     "note": "Widely recommended to level 31; the payoff is not recorded yet."}],
+   "legacy": [],
+   "data_status": "unknown"},
+
+  {"id": "princess_adalinda", "name": "Princess Adalinda", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "info", "min_level": 81, "data_status": "unknown",
+     "note": "Widely recommended to level 81; the payoff is not recorded yet."}],
+   "legacy": [],
+   "data_status": "unknown"},
+
+  {"id": "leizhenzi", "name": "Leizhenzi", "category": "immortal_friend",
+   "levels": {"kind": "level", "max": null},
+   "effects": [
+    {"target": "info", "min_level": 129, "data_status": "unknown",
+     "note": "Widely recommended to level 129; the payoff is not recorded yet."}],
+   "legacy": [],
+   "data_status": "unknown"},
+
+  {"id": "ascension_virya", "name": "Ascension Virya", "category": "blessing",
+   "levels": {"kind": "ladder", "labels": ["Completion", "Eminence", "Perfection", "Half Step"]},
+   "effects": [
+    {"target": "info", "min_level": 1,
+     "note": "Removes realm restrictions on Cultivation Pills; pill auto-transmogrification."},
+    {"target": "bless_pp", "value": 0.20, "min_level": 2, "data_status": "community",
+     "note": "Absorption Ratio +20 percentage points. Persists past Incarnation."},
+    {"target": "bless_pp", "value": 0.20, "min_level": 3, "data_status": "community",
+     "note": "A second +20 percentage points. Persists past Incarnation."},
+    {"target": "bless_window_pp", "value": 0.20, "min_level": 3, "data_status": "community",
+     "condition": {"kind": "before_row", "stage": "Voidbreak", "phase": "MIDDLE"},
+     "note": "Additional +20 percentage points until you pass Voidbreak Middle."},
+    {"target": "info", "min_level": 4, "data_status": "unknown",
+     "note": "Half Step tier exists; its bonus is not recorded yet."}],
+   "legacy": [],
+   "data_status": "community",
+   "note": "Blessing bonuses are per cultivation path."},
+
+  {"id": "yang_spirit_jade", "name": "Yang Spirit Jade", "category": "curio",
+   "levels": {"kind": "custom", "params": [
+    {"id": "star", "label": "Star", "min": 1, "max": 5},
+    {"id": "upgrade", "label": "Upgrade level", "min": 0, "max": 8}]},
+   "effects": [
+    {"target": "pill_effect",
+     "value_model": {"kind": "star_upgrade", "base": 1.0, "per_upgrade": 0.2,
+                     "max_upgrade": 8, "stars": 5,
+                     "star_add": [0.0, 0.8, 1.2, 2.2, 3.2], "max_value": 5.8},
+     "note": "Epic curio. 1.0% to 5.8% depending on star and upgrade level."}],
+   "legacy": [{"catalog": "pe", "name": "Yang Spirit Jade (curio)", "parametric": true}],
+   "data_status": "exact"},
+
+  {"id": "dongxuans_pot", "name": "Dongxuan's Pot", "category": "curio",
+   "levels": {"kind": "binary"},
+   "effects": [
+    {"target": "pill_effect", "value": 2,
+     "note": "+2% Cultivation Pill Effect."}],
+   "legacy": [{"catalog": "pe", "name": "Dongxuan's Pot (curio)", "implies_level": 1}],
+   "data_status": "exact"},
+
+  {"id": "pisces_pendant", "name": "Pisces Pendant", "category": "curio",
+   "levels": {"kind": "binary"},
+   "effects": [
+    {"target": "info",
+     "note": "Abode Aura +3% in the Mortal World — already inside your entered Abode Aura reading."}],
+   "legacy": [],
+   "data_status": "exact"}
+ ]
+}

@@ -626,11 +626,12 @@ class Engine {
       res.error = 'Absorption ratio must exceed the blessing bonus.';
       return res;
     }
-    // Strive multiplies the base band; blessing pp are additive on top, so
-    // the current row's blessing is stripped from the on-screen total to
-    // recover the true Strive (mirrors engine.py — keep in lockstep).
-    final strive =
-        curLow > 0 ? (inp.absorptionRatio - blessCur) / curLow - 1 : 0.0;
+    // Official composition: Absorption = (Stage base + blessing pp) x
+    // (1 + Strive) — blessing joins the base BEFORE the Strive multiplier
+    // (mirrors engine.py — keep in lockstep).
+    final strive = curLow + blessCur > 0
+        ? inp.absorptionRatio / (curLow + blessCur) - 1
+        : 0.0;
     final gemMap = data['gem_bonus'] as Map<String, dynamic>;
     final gem = gemMap.containsKey(inp.auraGem) ? _num(gemMap[inp.auraGem]) : 0.0;
 
@@ -676,7 +677,7 @@ class Engine {
       final row = rows[j];
       final s = striveOf != null ? striveOf(row) : strive;
       return math.max(
-          1e-12, abode * (_num(row['low']) * (1 + s) + blessAt(j)));
+          1e-12, abode * (_num(row['low']) + blessAt(j)) * (1 + s));
     }
 
     // Per-row wall-clock integration: gem multiplies cultivation speed only;
