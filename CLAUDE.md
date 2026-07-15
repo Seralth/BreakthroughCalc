@@ -59,6 +59,17 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
+## User-facing text style (enforced by owner, 2026-07-15)
+
+- NO provenance/verification phrasing in anything the user sees — catalog
+  notes, Reference/Guide prose, tooltips, hints, result labels. Banned:
+  "screenshot-verified", "confirmed from game data", "verified in-game",
+  dates like 2026-07-15, "(2026 community guide)", "from the dump /
+  decompiled client". Verification history belongs in docs/knowledge/ and
+  code comments only. The app states facts plainly.
+- Opinion-vs-fact distinctions ARE kept, in product language: "subjective" /
+  "exact" / "recommended" — not "community consensus" vs "verified".
+
 ## Working notes
 
 - Donation button (done, desktop + mobile): SEAGM in-game voucher gifting —
