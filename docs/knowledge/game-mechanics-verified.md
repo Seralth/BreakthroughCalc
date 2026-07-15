@@ -254,6 +254,18 @@ entire major Stage — it does not scale with phase or grade.
   mean of a distribution that includes ×2 rolls. OPEN: whether the on-screen
   base already includes the +28% technique books (if so, unbuffed base is
   ~6,385) — needs a reading with a book newly toggled to compare.
+- Cross-account data point (2026-07-15, friend-of-Seralth screenshots,
+  Ghostia char at Incarnation (G) Late G9): normal proc 9,515, "Grasped"
+  proc 19,030 — exactly ×2.0, confirming the yunqi_crit ×2 tier and its
+  proc name. 9,515 ≠ Seralth's 8,173 at the same major Stage ⇒ the
+  DISPLAYED per-attempt value is per-account (the within-account per-Stage
+  constancy stands). Best hypothesis: display = shared base × (1 + account's
+  Respira Effect books). Seralth +28% ⇒ base 6,385; friend's display then
+  implies ~+49% books (9,515 / 6,385 = 1.490) — CHECK the friend's total
+  Respira Effect % to confirm. CAVEAT: the friend's float text reads
+  "MP +9,515" (not cultivation EXP) — unconfirmed whether this was a daily
+  Respira attempt or the MP meditation interaction; if MP, it confirms the
+  crit table but not the XP base.
 - Guide corroboration: "do respira for Incarnation before breaking through,
   these will reset" (2026 community guide) — value is keyed to current Stage.
 
