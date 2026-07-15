@@ -1,0 +1,41 @@
+[
+ {"name": "chroma tier 6: pill lines active, tier-12 pill attempt not yet",
+  "shelf": {"owned": {"chroma": 6}},
+  "expect": {"pill_effect": 4.0, "respira_attempts": 1.0}},
+
+ {"name": "purify_cleanse tier 9 + macaque lv17: books stack, attempt counts",
+  "shelf": {"owned": {"purify_cleanse": 9, "six_eared_macaque": 17}},
+  "expect": {"respira_effect": 14.0, "respira_attempts": 1.0}},
+
+ {"name": "virya ladder Perfection implies Eminence: pp stack, window live",
+  "shelf": {"owned": {"ascension_virya": 3}},
+  "expect": {"bless_pp": 0.4, "bless_window_pp": 0.2}},
+
+ {"name": "yang spirit jade star 4 upgrade 8: parametric value model",
+  "shelf": {"owned": {"yang_spirit_jade": [4, 8]}},
+  "expect": {"pill_effect": 4.8}},
+
+ {"name": "crane boy maxed sentinel grants the pill attempt",
+  "shelf": {"owned": {"crane_boy": -1}},
+  "expect": {"pill_attempts": 1.0}},
+
+ {"name": "crane boy at a high numeric level does NOT satisfy unknown max",
+  "shelf": {"owned": {"crane_boy": 100}},
+  "expect": {}},
+
+ {"name": "custom extras count with no owned sources",
+  "shelf": {"owned": {}, "custom": {"pill_effect": [["Event buff", 2.5]]}},
+  "expect": {"pill_effect": 2.5}},
+
+ {"name": "info-only sources produce no raw targets",
+  "shelf": {"owned": {"white_astra": 40, "pisces_pendant": 1}},
+  "expect": {}},
+
+ {"name": "unknown source ids are version-skew passengers, ignored",
+  "shelf": {"owned": {"future_source": 3, "daji": 73}},
+  "expect": {"respira_attempts": 1.0}},
+
+ {"name": "friend below threshold contributes nothing",
+  "shelf": {"owned": {"daji": 72, "princess_iron_fan": 36}},
+  "expect": {"respira_attempts": 1.0}}
+]

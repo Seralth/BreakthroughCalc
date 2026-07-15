@@ -292,3 +292,32 @@ entire major Stage — it does not scale with phase or grade.
 Engine note: no derivable formula — the Respira input stays user-entered.
 A per-Stage lookup of measured constants (Nascent 4,041 / Incarnation 8,173)
 could pre-fill the field as a suggestion once more Stages are recorded.
+
+## Client-string findings from the sources-shelf sweep (2026-07-15)
+
+From the APK i18n corpus (apk_analysis/om/allbc/cfg_us_i18n_*.luajit,
+strings extraction; values in %d templates are server-side):
+
+- **Ascension Virya tier ladder (official names)**: Completion (rating 1),
+  Eminence (3), Perfection (5), Half Step (7) — es row corroborates. The
+  community "Perfection (C)"/"Perfect" tier names collide with Stage names;
+  mapping Eminence=+20pp / Perfection=+20pp+windowed is PLAUSIBLE (Blessing
+  Rewards 1/5 match the observed tiers) but not tooltip-verified.
+- **Creation artifact upgrade semantics**: "increases to / reduces to"
+  wording — Vase refined-pill EXP tiers +10% → +20% → +30% → +40% and
+  Mirror Duplication cost −5% → −10% REPLACE the prior tier, not stack.
+  The +30/+40 Vase tiers were previously unknown (star mapping unstated).
+  Artifact energy at 0★: 1 per Taoist Year, cap 200; charge = 30 Fateum
+  for +100. Mirror copy range: Incarnation+ pills of any quality.
+- **Star Marks**: granted by the Constellation Altar (Samsara/
+  reincarnation system), five quality ranks; pill-color marks by Mansion:
+  Ghost = Rare (blue), Turtle Beak = Epic (purple), Chariot = Legendary
+  (gold); Dipper = "Respira Aura Bonus" (a distinct stat from the
+  Respira EXP book %); Horn/Neck = Abode Aura. Per-level values
+  server-side.
+- **Technique tier structure**: special effects activate at Tier 3/6/9
+  (higher books also have 12/15); low-rank books cap at Tier 6 per the
+  achievement census. ~45 technique books exist in total; roughly half
+  are uncataloged for calculator effects (values server-side).
+- **Respira attempts reset** on main-Stage breakthrough (client rule
+  string), consistent with per-Stage Respira planning.
