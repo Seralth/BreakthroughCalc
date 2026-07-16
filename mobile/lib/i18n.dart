@@ -141,6 +141,7 @@ const Map<String, Map<String, String>> _t = {
   'lv': {'ru': 'ур', 'de': 'St', 'es': 'nv', 'zh': '级'},
   'Immortal friends': {'ru': 'Бессмертные друзья', 'de': 'Unsterbliche Freunde', 'es': 'Amigos inmortales', 'zh': '仙友'},
   'Ascension blessings': {'ru': 'Благословения вознесения', 'de': 'Aufstiegssegen', 'es': 'Bendiciones de ascensión', 'zh': '飞升祝福'},
+  'Curios': {'ru': 'Диковинки', 'de': 'Kuriositäten', 'es': 'Curiosidades', 'zh': '珍玩'},
   'Base values (before sources)': {'ru': 'Базовые значения (до источников)', 'de': 'Basiswerte (vor Quellen)', 'es': 'Valores base (antes de fuentes)', 'zh': '基础值（不含来源）'},
   'Respira attempts / day': {'ru': 'Попытки респиры / день', 'de': 'Respira-Versuche / Tag', 'es': 'Intentos de Respira / día', 'zh': '每日吐纳次数'},
   'Daily pill limit': {'ru': 'Дневной лимит пилюль', 'de': 'Tägliches Pillenlimit', 'es': 'Límite diario de píldoras', 'zh': '每日丹药上限'},
