@@ -51,8 +51,7 @@ class ProvenanceChip(QPushButton):
         if derived:
             for c in derived.contributions:
                 lvl = f" ({c.level_label})" if c.level_label else ""
-                mark = "" if c.data_status == "exact" else " *"
-                lines.append(f"{c.name}{lvl}: +{c.value:g}{mark}")
+                lines.append(f"{c.name}{lvl}: +{c.value:g}")
             for label, value in derived.custom:
                 lines.append(f"{label}: +{value:g}")
             if derived.incomplete:
@@ -174,14 +173,6 @@ class _SourceRow(QWidget):
                 self._combo.blockSignals(False)
 
 
-def _star_marker(entry: dict, row: _SourceRow) -> None:
-    if entry.get("data_status") != "exact":
-        star = QLabel("*")
-        star.setToolTip(tr("Amount or unlock tier not exactly established."))
-        lay = row.layout()
-        lay.insertWidget(lay.count(), star)
-
-
 class _BookRow(_SourceRow):
     """A Library book: the tier control plus chapter dots (one per bonus
     threshold, filled while the owned tier reaches it)."""
@@ -233,7 +224,6 @@ class _RowsPane(QWidget):
             bv = QVBoxLayout(box)
             for entry in entries:
                 row = _SourceRow(entry)
-                _star_marker(entry, row)
                 row.changed.connect(self.changed)
                 self.rows[entry["id"]] = row
                 bv.addWidget(row)
@@ -273,6 +263,13 @@ class _LibraryPane(QWidget):
             sv = QVBoxLayout(shelf)
             head = QHBoxLayout()
             head.addStretch(1)
+            empty_btn = QPushButton(tr("Empty shelf"))
+            empty_btn.setFlat(True)
+            empty_btn.setToolTip(tr("Set every book on this shelf back to "
+                                    "not learned."))
+            empty_btn.clicked.connect(
+                lambda _=False, r=rank: self._empty_shelf(by_rank[r]))
+            head.addWidget(empty_btn)
             max_btn = QPushButton(tr("Max shelf"))
             max_btn.setFlat(True)
             max_btn.setToolTip(tr("Set every book on this shelf to its "
@@ -283,7 +280,6 @@ class _LibraryPane(QWidget):
             sv.addLayout(head)
             for entry in by_rank[rank]:
                 row = _BookRow(entry)
-                _star_marker(entry, row)
                 row.changed.connect(self.changed)
                 self.rows[entry["id"]] = row
                 sv.addWidget(row)
@@ -301,6 +297,11 @@ class _LibraryPane(QWidget):
             levels = entry["levels"]
             mx = 1 if levels["kind"] == "binary" else levels.get("max") or 1
             self.rows[entry["id"]].set_owned(mx)
+        self.changed.emit()
+
+    def _empty_shelf(self, entries: list):
+        for entry in entries:
+            self.rows[entry["id"]].set_owned(None)
         self.changed.emit()
 
     def _exclusive_placeholder(self, tabs: QTabWidget):
@@ -328,8 +329,7 @@ class ShelfPage(QWidget):
         v = QVBoxLayout(self)
         intro = QLabel(tr(
             "Record what you own once; fields with a shelf chip can then "
-            "fill themselves. Entries marked * carry amounts that are not "
-            "exactly established."))
+            "fill themselves."))
         intro.setWordWrap(True)
         v.addWidget(intro)
 

@@ -122,6 +122,7 @@ const Map<String, Map<String, String>> _t = {
   'Exclusive': {'ru': 'Эксклюзивные', 'de': 'Exklusiv', 'es': 'Exclusivas', 'zh': '专属'},
   'Max': {'ru': 'Макс', 'de': 'Max', 'es': 'Máx', 'zh': '满'},
   'Max shelf': {'ru': 'Макс. полка', 'de': 'Regal maxen', 'es': 'Maximizar estante', 'zh': '整层拉满'},
+  'Empty shelf': {'ru': 'Очистить полку', 'de': 'Regal leeren', 'es': 'Vaciar estante', 'zh': '整层清空'},
   'Not learned': {'ru': 'Не изучено', 'de': 'Nicht erlernt', 'es': 'No aprendido', 'zh': '未学习'},
   'pill effect': {'ru': 'эффект пилюль', 'de': 'Pilleneffekt', 'es': 'efecto de píldora', 'zh': '丹药效果'},
   'attempts': {'ru': 'попыток', 'de': 'Versuche', 'es': 'intentos', 'zh': '次数'},

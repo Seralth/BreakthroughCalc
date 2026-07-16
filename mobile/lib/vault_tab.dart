@@ -155,6 +155,15 @@ class _VaultTabState extends State<VaultTab> {
                     TextButton(
                       onPressed: () => _edit(() {
                         for (final b in byRank[rank]!) {
+                          st.owned.remove(b['id'] as String);
+                        }
+                      }),
+                      child: Text(tr('Empty shelf'),
+                          style: const TextStyle(fontSize: 12)),
+                    ),
+                    TextButton(
+                      onPressed: () => _edit(() {
+                        for (final b in byRank[rank]!) {
                           final lv = b['levels'] as Map;
                           st.owned[b['id'] as String] = lv['kind'] == 'binary'
                               ? 1
@@ -204,9 +213,7 @@ class _VaultTabState extends State<VaultTab> {
     return ListTile(
       dense: true,
       title: Text(entry['name'] as String),
-      subtitle: Text(
-          '$dots${entry['data_status'] != 'exact' ? '  *' : ''}',
-          style: const TextStyle(fontSize: 12)),
+      subtitle: Text(dots, style: const TextStyle(fontSize: 12)),
       onTap: () => _showChapters(context, entry, lvl),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: [
         IconButton(
