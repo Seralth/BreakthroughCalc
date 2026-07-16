@@ -26,9 +26,11 @@ The two apps are deliberately parallel; module layouts mirror each other.
   feeds the calculator) is the unified ownership home:
   Library (technique books on R1–R9 rank shelves, Universal/Exclusive),
   Treasury (curios), Companions (immortal friends + blessings + base
-  values). Technique books live ONLY in data/sources.json — the legacy
-  pill_effect_sources.json / respira_sources.json keep just the
-  friend/curio rows for their pickers and migrate via legacy[] aliases.
+  values). ALL catalog sources live ONLY in data/sources.json; the
+  Reference "sources" tables render from it too. The legacy
+  pill_effect_sources.json / respira_sources.json are retained solely as
+  migration-test fixtures (not shipped, no UI pickers — those were
+  removed 2026-07-16); old user rows migrate via legacy[] aliases.
 - Gates (all must stay green; CI runs them on every push via
   `.github/workflows/ci.yml`): `pytest` from the repo root; `cd mobile &&
   flutter analyze && flutter test`; parity `python test/gen_expected.py &&

@@ -36,7 +36,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(
-        BreakthroughApp(loadEngine(), const [], const [], const {}, prefs));
+        BreakthroughApp(loadEngine(), const {}, prefs));
     await tester.pumpAndSettle();
 
     // Read the Guide first so the jump has a location to push.
