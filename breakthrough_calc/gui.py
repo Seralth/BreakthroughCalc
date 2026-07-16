@@ -76,7 +76,8 @@ class MainWindow(QMainWindow):
         # language-switch full rebuild; _doc_history is cleared by _build_ui
         # together with the doc widgets it indexes.
         self._respira_checked = set()
-        self._respira_exp_auto = None  # last self-filled Base EXP estimate
+        self._respira_exp_auto = None       # last self-filled Base EXP
+        self._respira_attempts_auto = None  # last self-filled Attempts/day
         self._shelf_catalog = load_sources()
         self._shelf = {"owned": {}, "bases": {}, "auto": []}
         self._doc_history = []
@@ -297,16 +298,14 @@ class MainWindow(QMainWindow):
         rf.addRow(tr("Attempts / day"),
                   self._with_chip(self.respira_per_day, "respira_per_day"))
         rf.addRow(tr("Extra attempts today"), self.respira_event)
-        self.respira_books = QDoubleSpinBox(); self.respira_books.setRange(0, 1000)
-        self.respira_books.setDecimals(1); self.respira_books.setSuffix(" %")
         rf.addRow(tr("Base EXP / attempt"), self.respira_exp)
-        rf.addRow(tr("Respira Effect books"),
-                  self._with_chip(self.respira_books, "respira_books"))
         respira_hint = QLabel(tr(
-            "Base EXP fills itself from your Stage; overwrite it with your "
-            "in-game reading for exact numbers (clear it to go back to the "
-            "estimate). Most Respira give the same small EXP — that is the "
-            "base; 2×/5×/10× crits are handled automatically."))
+            "Attempts and Base EXP fill themselves — attempts from the "
+            "game's base 10 plus your Vault bonuses, Base EXP from your "
+            "Stage estimate times your Vault's book bonuses. Overwrite "
+            "either with your in-game reading (clear a field to go back to "
+            "the estimate). Most Respira give the same small EXP — that is "
+            "the base; 2×/5×/10× crits are handled automatically."))
         respira_hint.setWordWrap(True)
         style_accent(respira_hint, "muted", self._acc)
         rf.addRow("", respira_hint)
@@ -704,9 +703,12 @@ class MainWindow(QMainWindow):
             d = shelf_derive(self._shelf_catalog, self._shelf)
             ra = d.get("respira_attempts")
             pa = d.get("pill_attempts")
+            # An empty attempts field means "never entered", not "base 0" —
+            # the game grants 10 Respira/day by default.
+            entered = self.respira_per_day.value()
             self._shelf["bases"] = {
-                "respira_attempts": max(0.0, self.respira_per_day.value()
-                                        - (ra.total if ra else 0.0)),
+                "respira_attempts": (max(0.0, entered - (ra.total if ra else 0.0))
+                                     if entered > 0 else 10.0),
                 "pill_attempts": max(0.0, self.pill_limit.value()
                                      - (pa.total if pa else 0.0)),
             }
@@ -923,15 +925,31 @@ class MainWindow(QMainWindow):
         super().closeEvent(event)
 
     def _auto_respira_exp(self):
-        """Keep Base EXP prefilled with the Stage estimate while the user
-        has not overridden it: fills when empty, and refreshes after stage
-        or books changes while the field still holds the previous estimate.
-        A manual entry sticks; clearing the field returns to the estimate."""
+        """Keep the Respira fields prefilled while the user has not
+        overridden them: Attempts = game base + Vault bonuses, Base EXP =
+        Stage estimate × (1 + the Vault's Respira Effect books %). Both
+        fill when empty and refresh after stage/Vault changes while still
+        holding the previous estimate; a manual entry sticks; clearing a
+        field returns to the estimate."""
+        derived = shelf_derive(self._shelf_catalog, self._shelf)
+        if "respira_per_day" not in set(self._shelf.get("auto", [])):
+            att = derived.get("respira_attempts")
+            base_att = float(self._shelf.get("bases", {})
+                             .get("respira_attempts", 10.0))
+            est_att = base_att + (att.total if att else 0.0)
+            cur = self.respira_per_day.value()
+            if cur == 0 or cur == self._respira_attempts_auto or cur == est_att:
+                self.respira_per_day.blockSignals(True)
+                self.respira_per_day.setValue(est_att)
+                self.respira_per_day.blockSignals(False)
+                self._respira_attempts_auto = est_att
         stage = stage_key(self.stage.currentText())
         base = self.engine.respira_base_estimate(stage)
         if base is None:
             return
-        est = float(round(base * (1 + self.respira_books.value() / 100.0)))
+        eff = derived.get("respira_effect")
+        books = eff.total if eff else 0.0
+        est = float(round(base * (1 + books / 100.0)))
         cur = self.respira_exp.value()
         if cur == 0 or cur == self._respira_exp_auto or cur == est:
             self.respira_exp.blockSignals(True)

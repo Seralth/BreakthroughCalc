@@ -142,9 +142,8 @@ class _CalculatorPageState extends State<CalculatorPage>
   final _absorbCtrl = TextEditingController();
   final _respiraCtrl = TextEditingController();
   final _respiraExpCtrl = TextEditingController();
-  late double _respiraBooksPct =
-      widget.prefs.getDouble('respira_books_pct') ?? 0.0;
   double? _respiraExpAuto; // last self-filled Base EXP estimate
+  double? _respiraAttemptsAuto; // last self-filled Attempts/day
 
   Engine get engine => widget.engine;
   final _nav = DocNavigator.instance;
@@ -260,10 +259,13 @@ class _CalculatorPageState extends State<CalculatorPage>
     }
     _vault = VaultState(owned: owned, auto: owned.isNotEmpty);
     final d = derive(widget.shelfCatalog, _vault.toMap());
+    // An empty attempts field means "never entered", not "base 0" — the
+    // game grants 10 Respira/day by default.
     _vault.bases = {
-      'respira_attempts': (inp.respiraPerDay -
-              (d['respira_attempts']?.total ?? 0.0))
-          .clamp(0.0, double.infinity),
+      'respira_attempts': inp.respiraPerDay > 0
+          ? (inp.respiraPerDay - (d['respira_attempts']?.total ?? 0.0))
+              .clamp(0.0, double.infinity)
+          : 10.0,
       'pill_attempts':
           (inp.pillLimit - (d['pill_attempts']?.total ?? 0.0))
               .clamp(0.0, double.infinity),
@@ -289,11 +291,8 @@ class _CalculatorPageState extends State<CalculatorPage>
     if (bless > 0) inp.blessPp = bless;
     final blessWindow = d['bless_window_pp']?.total ?? 0.0;
     if (blessWindow > 0) inp.blessWindowPp = blessWindow;
-    final books = d['respira_effect']?.total ?? 0.0;
-    if (books > 0) {
-      _respiraBooksPct = books;
-      widget.prefs.setDouble('respira_books_pct', books);
-    }
+    // Respira Effect books flow through _autoRespiraExp (the Base EXP
+    // estimate); there is no separate books field anymore.
     final peTotal = d['pill_effect']?.total ?? 0.0;
     final i = _peSources.indexWhere((s) => s[0] == _vaultPeRow);
     if (i >= 0) _removePeSource(i);
@@ -375,14 +374,28 @@ class _CalculatorPageState extends State<CalculatorPage>
     _store.save(inp, _peSources, _respiraSources);
   }
 
-  /// Keep Base EXP prefilled with the Stage estimate while the user has
-  /// not overridden it: fills when empty, refreshes after stage/books
-  /// changes while the field still holds the previous estimate. A manual
-  /// entry sticks; clearing the field returns to the estimate.
+  /// Keep the Respira fields prefilled while the user has not overridden
+  /// them: Attempts = game base + Vault bonuses, Base EXP = Stage estimate
+  /// × (1 + the Vault's Respira Effect books %). Both fill when empty and
+  /// refresh after stage/Vault changes while still holding the previous
+  /// estimate; a manual entry sticks; clearing a field returns to the
+  /// estimate.
   void _autoRespiraExp() {
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    final estAtt = (_vault.bases['respira_attempts'] ?? 10.0) +
+        (d['respira_attempts']?.total ?? 0.0);
+    if (inp.respiraPerDay == 0 ||
+        inp.respiraPerDay == _respiraAttemptsAuto ||
+        inp.respiraPerDay == estAtt) {
+      inp.respiraPerDay = estAtt;
+      _respiraAttemptsAuto = estAtt;
+      final t = fmtNum(estAtt);
+      if (_respiraCtrl.text != t) _respiraCtrl.text = t;
+    }
     final base = engine.respiraBaseEstimate(inp.stage);
     if (base == null) return;
-    final est = (base * (1 + _respiraBooksPct / 100)).roundToDouble();
+    final books = d['respira_effect']?.total ?? 0.0;
+    final est = (base * (1 + books / 100)).roundToDouble();
     if (inp.respiraExp == 0 ||
         inp.respiraExp == _respiraExpAuto ||
         inp.respiraExp == est) {
@@ -689,19 +702,16 @@ class _CalculatorPageState extends State<CalculatorPage>
             inp.respiraExp = v;
             _recalc();
           }),
-          numField(tr('Respira Effect books (%)'), _respiraBooksPct, (v) {
-            _respiraBooksPct = v;
-            widget.prefs.setDouble('respira_books_pct', v);
-            _recalc();
-          }),
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              tr('Base EXP fills itself from your Stage; overwrite it with '
-                  'your in-game reading for exact numbers (clear it to go '
-                  'back to the estimate). Most Respira give the same small '
-                  'EXP — that is the base; 2×/5×/10× crits are handled '
-                  'automatically.'),
+              tr('Attempts and Base EXP fill themselves — attempts from '
+                  'the game\'s base 10 plus your Vault bonuses, Base EXP '
+                  'from your Stage estimate times your Vault\'s book '
+                  'bonuses. Overwrite either with your in-game reading '
+                  '(clear a field to go back to the estimate). Most '
+                  'Respira give the same small EXP — that is the base; '
+                  '2×/5×/10× crits are handled automatically.'),
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),

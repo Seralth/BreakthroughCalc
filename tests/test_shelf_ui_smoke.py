@@ -38,16 +38,25 @@ def test_shelf_auto_fields_and_pe_auto_rows(window):
     w.shelf_page._rows["chroma"].set_owned(12)
     w._on_shelf_changed()
     w.virya.setCurrentIndex(3)
-    for key in ("respira_books", "bless_pp", "bless_window", "pill_limit"):
+    for key in ("bless_pp", "bless_window", "pill_limit"):
         w._set_shelf_auto(key, True)
-    assert w.respira_books.value() == 14      # 4 + 7 books + 3 friend
     assert w.bless_pp.value() == 40           # 0.20 + 0.20, percent widget
     assert w.bless_window.value() == 20
     assert w.pill_limit.value() == 1          # base 0 + Chroma Tier 12
     assert w.pe_rows.total() == 4             # Chroma +1 and +3 auto rows
-    assert w.respira_books.isReadOnly()
-    w._set_shelf_auto("respira_books", False)
-    assert not w.respira_books.isReadOnly()
+    # Respira self-fill: attempts = base 10 + Purify T6 + Chroma T3, and
+    # Base EXP = Stage estimate x (1 + 14% books) once the stage has one.
+    assert w.respira_per_day.value() == 12.0
+    from breakthrough_calc.labels import stage_disp
+    w.stage.setCurrentText(stage_disp("Nascent"))
+    assert w.respira_exp.value() == round(3157 * 1.14)  # 4+7 books +3 friend
+    # a manual entry sticks through further changes; clearing restores
+    w.respira_per_day.setValue(15.0)
+    w.recalc()
+    assert w.respira_per_day.value() == 15.0
+    w.respira_per_day.setValue(0.0)
+    w.recalc()
+    assert w.respira_per_day.value() == 12.0
 
 
 def test_shelf_state_round_trips_through_profiles(window):
