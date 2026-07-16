@@ -43,8 +43,13 @@
     // when it does.
     // Nuclear refresh for when the auto-update path wedges (seen on iOS:
     // stale cache survives until the user manually clears site data).
-    // Unregisters every service worker, wipes CacheStorage, and reloads
-    // with a cache-busting query so the network copy is fetched fresh.
+    // Three layers must ALL be flushed or the old app comes straight back:
+    // service workers, CacheStorage, and the plain HTTP cache. The last one
+    // is the subtle one — a ?fresh= query busts only index.html, while the
+    // reloaded page pulls flutter_bootstrap.js / main.dart.js from the HTTP
+    // cache (GitHub Pages serves them max-age=600, so for up to 10 minutes
+    // after a visit a "force refresh" would boot the OLD build). fetch with
+    // cache:'reload' bypasses the HTTP cache AND replaces the stored entry.
     // Called from the in-app "Force refresh" menu item.
     window.forceRefresh = function () {
       const unregister = ('serviceWorker' in navigator)
@@ -57,7 +62,12 @@
               return Promise.all(keys.map(function (k) { return caches.delete(k); }));
             }).catch(function () {})
           : Promise.resolve();
-      Promise.all([unregister, clearCaches]).then(function () {
+      const bust = ['flutter_bootstrap.js', 'main.dart.js',
+                    'flutter_service_worker.js', 'manifest.json',
+                    'version.json', 'index.html'].map(function (u) {
+        return fetch(u, {cache: 'reload'}).catch(function () {});
+      });
+      Promise.all([unregister, clearCaches].concat(bust)).then(function () {
         window.location.replace(
             window.location.pathname + '?fresh=' + Date.now());
       });
