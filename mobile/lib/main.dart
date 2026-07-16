@@ -144,6 +144,7 @@ class _CalculatorPageState extends State<CalculatorPage>
   final _respiraExpCtrl = TextEditingController();
   late double _respiraBooksPct =
       widget.prefs.getDouble('respira_books_pct') ?? 0.0;
+  double? _respiraExpAuto; // last self-filled Base EXP estimate
 
   Engine get engine => widget.engine;
   final _nav = DocNavigator.instance;
@@ -352,9 +353,28 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   void _recalc() {
+    _autoRespiraExp();
     inp.pillEffect = _peSources.fold(0.0, (a, s) => a + (s[1] as num)) / 100.0;
     setState(() => res = engine.calculate(inp));
     _store.save(inp, _peSources, _respiraSources);
+  }
+
+  /// Keep Base EXP prefilled with the Stage estimate while the user has
+  /// not overridden it: fills when empty, refreshes after stage/books
+  /// changes while the field still holds the previous estimate. A manual
+  /// entry sticks; clearing the field returns to the estimate.
+  void _autoRespiraExp() {
+    final base = engine.respiraBaseEstimate(inp.stage);
+    if (base == null) return;
+    final est = (base * (1 + _respiraBooksPct / 100)).roundToDouble();
+    if (inp.respiraExp == 0 ||
+        inp.respiraExp == _respiraExpAuto ||
+        inp.respiraExp == est) {
+      inp.respiraExp = est;
+      _respiraExpAuto = est;
+      final text = fmtNum(est);
+      if (_respiraExpCtrl.text != text) _respiraExpCtrl.text = text;
+    }
   }
 
   @override
@@ -636,39 +656,23 @@ class _CalculatorPageState extends State<CalculatorPage>
             inp.respiraEvent = v;
             _recalc();
           }),
-          Row(children: [
-            Expanded(
-              child: numCtrlField(tr('Base EXP / attempt'), _respiraExpCtrl,
-                  (v) {
-                inp.respiraExp = v;
-                _recalc();
-              }),
-            ),
-            IconButton(
-              icon: const Icon(Icons.auto_fix_high),
-              tooltip: tr('Auto-fill from Stage'),
-              onPressed: () {
-                final base = engine.respiraBaseEstimate(inp.stage);
-                if (base == null) return;
-                setState(() {
-                  inp.respiraExp =
-                      (base * (1 + _respiraBooksPct / 100)).roundToDouble();
-                  _respiraExpCtrl.text = fmtNum(inp.respiraExp);
-                });
-                _recalc();
-              },
-            ),
-          ]),
+          numCtrlField(tr('Base EXP / attempt'), _respiraExpCtrl, (v) {
+            inp.respiraExp = v;
+            _recalc();
+          }),
           numField(tr('Respira Effect books (%)'), _respiraBooksPct, (v) {
             _respiraBooksPct = v;
             widget.prefs.setDouble('respira_books_pct', v);
+            _recalc();
           }),
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              tr("Base attempt limit is 10/day; add permanent bonuses. "
-                  "Do a few Respira: most give the same small EXP (the base — enter that); "
-                  "some give 2×/5×/10× (crits — ignore, handled automatically)."),
+              tr('Base EXP fills itself from your Stage; overwrite it with '
+                  'your in-game reading for exact numbers (clear it to go '
+                  'back to the estimate). Most Respira give the same small '
+                  'EXP — that is the base; 2×/5×/10× crits are handled '
+                  'automatically.'),
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
