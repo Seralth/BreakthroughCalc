@@ -158,6 +158,9 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   secondary at Nascent Soul (L) Late; clear Outer Realm Mighty Monster
   Amethyst Fiend in Myrimon Wonder): "Incarnation (L) Aura Absorption Ratio
   +20%"; Blessing Rewards +3.
+- Secondary-path stage requirements are REACH, not complete (owner-confirmed
+  2026-07-16): "secondary at Nascent Soul (L) Late" is satisfied on entering
+  the half-step; same for the Incarnation (L) Middle requirement above it.
 - Tier **Perfect ...** (gold; reqs: secondary at Incarnation (L) Middle;
   clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
   Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
