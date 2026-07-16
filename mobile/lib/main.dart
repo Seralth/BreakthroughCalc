@@ -715,6 +715,8 @@ class _CalculatorPageState extends State<CalculatorPage>
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
+        ]),
+        formGroup(context, tr('Elixirs'), [
           numField(tr('XP elixirs / day'), inp.elixirPerDay, (v) {
             inp.elixirPerDay = v;
             _recalc();
