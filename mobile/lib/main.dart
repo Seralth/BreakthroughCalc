@@ -125,7 +125,7 @@ class CalculatorPage extends StatefulWidget {
 
 class _CalculatorPageState extends State<CalculatorPage>
     with SingleTickerProviderStateMixin {
-  late final TabController _topTabs = TabController(length: 4, vsync: this);
+  late final TabController _topTabs = TabController(length: 3, vsync: this);
   Inputs inp = Inputs();
   late Results res;
   late final InputStore _store = InputStore(widget.prefs, engine);
@@ -309,6 +309,31 @@ class _CalculatorPageState extends State<CalculatorPage>
     _recalc();
   }
 
+  void _openVault() {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => VaultPage(
+            catalog: widget.shelfCatalog,
+            state: _vault,
+            onChanged: _onVaultChanged)));
+  }
+
+  /// One-line summary of what the Vault currently contributes.
+  String _vaultSummary() {
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    final parts = <String>[];
+    final pe = d['pill_effect']?.total ?? 0.0;
+    final re = d['respira_effect']?.total ?? 0.0;
+    final att = (d['respira_attempts']?.total ?? 0.0) +
+        (d['pill_attempts']?.total ?? 0.0);
+    if (pe > 0) parts.add('+${fmtNum(pe)}% ${tr('pill effect')}');
+    if (re > 0) parts.add('+${fmtNum(re)}% ${tr('Respira')}');
+    if (att > 0) parts.add('+${fmtNum(att)} ${tr('attempts')}');
+    return parts.isEmpty
+        ? tr('Track your books, curios and companions once; the bonuses '
+            'flow to the calculator.')
+        : parts.join(' · ');
+  }
+
   // ---- shareable build string -------------------------------------------
   // Compact copy-paste export of every input, so users can share their
   // setup for troubleshooting. See share_codec.dart for the format.
@@ -335,11 +360,15 @@ class _CalculatorPageState extends State<CalculatorPage>
           title: Text(tr('Breakthrough Calculator')),
           bottom: TabBar(controller: _topTabs, tabs: [
             Tab(text: tr('Calculator')),
-            Tab(text: tr('Vault')),
             Tab(text: tr('Reference')),
             Tab(text: tr('Guide')),
           ]),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.menu_book_outlined),
+              tooltip: tr('Vault'),
+              onPressed: _openVault,
+            ),
             IconButton(
               icon: const Icon(Icons.favorite_outline),
               tooltip: tr('Donate'),
@@ -401,10 +430,6 @@ class _CalculatorPageState extends State<CalculatorPage>
         ),
         body: TabBarView(controller: _topTabs, children: [
           _calcTab(),
-          VaultTab(
-              catalog: widget.shelfCatalog,
-              state: _vault,
-              onChanged: _onVaultChanged),
           ReferenceTab(engine: engine, catalog: widget.catalog),
           const GuideTab(),
         ]),
@@ -423,6 +448,16 @@ class _CalculatorPageState extends State<CalculatorPage>
       padding: const EdgeInsets.all(12),
       children: [
         ResultsCard(engine: engine, inp: inp, res: res),
+        Card(
+          child: ListTile(
+            leading: const Icon(Icons.menu_book_outlined),
+            title: Text(tr('Vault')),
+            subtitle: Text(_vaultSummary(),
+                style: const TextStyle(fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: _openVault,
+          ),
+        ),
         formGroup(context, tr('Cultivation Base'), [
           formDropdown(tr('Stage'), inp.stage, stages, (v) {
             inp.stage = v!;

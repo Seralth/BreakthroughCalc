@@ -143,6 +143,35 @@ void main() {
     expect(find.text('Cultivation Base'), findsOneWidget);
   });
 
+  testWidgets('vault card opens the Vault; Max shelf fills a rank',
+      (tester) async {
+    tester.view.physicalSize = const Size(900, 8000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final prefs = await mockPrefs();
+    await tester.pumpWidget(
+        BreakthroughApp(engine, catalog, respiraCatalog, shelfCatalog, prefs));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(Card, 'Vault'));
+    await tester.pumpAndSettle();
+    expect(find.text('Library'), findsOneWidget);
+    expect(find.text('Treasury'), findsOneWidget);
+    expect(find.text('Longevity'), findsOneWidget);
+
+    // "Max shelf" on R1 marks Longevity owned (its dot fills).
+    await tester.tap(find.text('Max shelf').first);
+    await tester.pumpAndSettle();
+    final vaultBlob = prefs.getString('shelf_v1')!;
+    expect(vaultBlob, contains('"longevity":1'));
+
+    // Back to the calculator; the summary card reflects the contribution.
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.textContaining('attempts'), findsWidgets);
+  });
+
   testWidgets('persisted inputs blob pins the exact key set', (tester) async {
     final prefs = await mockPrefs();
     await tester.pumpWidget(
