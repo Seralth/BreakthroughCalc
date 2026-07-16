@@ -83,6 +83,14 @@ applied after the (still manual) breakthrough.
   rows (Inc Late G15 = 6,549,973; VB Late G20 = 25,232,632). Manual,
   pill-gated breakthroughs confirmed by the wiki; multi-grade carry-through of
   stocked EXP anecdotally supported ("Middle Voidbreak in one go" videos).
+- Live-screen cross-check (2026-07-16, Seralth's secondary path screenshot):
+  Nascent Soul (M) Middle G5 bar reads 134,329/632,859 — the table's G5 row
+  (632,859) matches to the digit.
+- Dao-seed display vs grades (2026-07-16, Seralth's Incarnation (L) Late
+  screen): the seed arc shows grades−1 seeds (14 seeds for G1–G14); the
+  final "fill the bar to breakthrough" band is what the table records as the
+  last grade (G15). The seed count is NOT the grade count — do not "fix"
+  grade tables from seed screenshots.
   The 440%/overcap display convention exists nowhere on the indexed web —
   our arithmetic reproduction is the only public cross-check. Accrual rate
   while overcapped: player-confirmed same as capped-row rate minus Strive
