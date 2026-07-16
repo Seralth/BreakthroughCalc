@@ -82,6 +82,11 @@ The two apps are deliberately parallel; module layouts mirror each other.
   code comments only. The app states facts plainly.
 - Opinion-vs-fact distinctions ARE kept, in product language: "subjective" /
   "exact" / "recommended" — not "community consensus" vs "verified".
+- NO data-status markers in the UI at all (no "*" on entries, no
+  exact/community badges, no "not exactly established" tooltips). The
+  customer uses a product, not a dev log. data_status stays in the data
+  files, docs/knowledge/, and code comments only. (Owner, 2026-07-16,
+  after a "*" shipped on Vault book rows.)
 
 ## Release checklist (owner rule, 2026-07-16)
 
