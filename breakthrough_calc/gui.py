@@ -180,6 +180,16 @@ class MainWindow(QMainWindow):
         self.absorb_base = QLabel("")
         style_accent(self.absorb_base, "muted", self._acc)
         f.addRow("", self.absorb_base)
+        # Ascension Virya is cultivation progression (its tiers are gated on
+        # your primary/secondary stages), so its selector lives here with the
+        # rest of the character state; it drives the blessing fields below
+        # through the same shelf derivation the Vault uses.
+        self.virya = QComboBox()
+        self.virya.addItem("—")
+        for label in self._virya_labels():
+            self.virya.addItem(label)
+        self.virya.currentIndexChanged.connect(self._on_virya_changed)
+        f.addRow("Ascension Virya", self.virya)  # official name, untranslated
         self.bless_pp = QDoubleSpinBox(); self.bless_pp.setRange(0, 1000)
         self.bless_pp.setDecimals(1); self.bless_pp.setSuffix(" %")
         self.bless_window = QDoubleSpinBox(); self.bless_window.setRange(0, 1000)
@@ -704,6 +714,7 @@ class MainWindow(QMainWindow):
                 self._shelf["auto"] = ["pill_limit", "respira_per_day"]
         self.shelf_page.set_state(self._shelf.get("owned", {}),
                                   self._shelf.get("bases", {}))
+        self._sync_virya_combo()
         self._apply_shelf(recalc=False)
         self._loading = prev
 
@@ -951,8 +962,33 @@ class MainWindow(QMainWindow):
         h.addWidget(self._shelf_chip(field_key))
         return wrap
 
+    def _virya_labels(self) -> list:
+        for s in self._shelf_catalog.get("sources", []):
+            if s["id"] == "ascension_virya":
+                return list(s["levels"]["labels"])
+        return []
+
+    def _on_virya_changed(self, index: int):
+        if self._loading:
+            return
+        if index > 0:
+            self._shelf["owned"]["ascension_virya"] = index
+        else:
+            self._shelf["owned"].pop("ascension_virya", None)
+        self._apply_shelf()
+
+    def _sync_virya_combo(self):
+        owned = self._shelf.get("owned", {}).get("ascension_virya")
+        self.virya.blockSignals(True)
+        self.virya.setCurrentIndex(int(owned) if owned else 0)
+        self.virya.blockSignals(False)
+
     def _on_shelf_changed(self, *_):
-        self._shelf["owned"] = self.shelf_page.owned()
+        owned = self.shelf_page.owned()
+        # The Vault no longer shows Virya; preserve its calculator-owned state.
+        if "ascension_virya" in self._shelf.get("owned", {}):
+            owned["ascension_virya"] = self._shelf["owned"]["ascension_virya"]
+        self._shelf["owned"] = owned
         self._apply_shelf()
 
     def _set_shelf_auto(self, field_key: str, auto: bool):

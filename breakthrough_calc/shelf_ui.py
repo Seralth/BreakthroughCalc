@@ -333,10 +333,12 @@ class ShelfPage(QWidget):
         intro.setWordWrap(True)
         v.addWidget(intro)
 
+        # Ascension Virya (category "blessing") is deliberately NOT here:
+        # its ladder is cultivation progression, so its selector lives in
+        # the Calculator's Cultivation Base group (same shelf state).
         self._panes = [
             (_LibraryPane(catalog), tr("Library")),
-            (_RowsPane(catalog, ("curio", "blessing", "other")),
-             tr("Treasury")),
+            (_RowsPane(catalog, ("curio", "other")), tr("Treasury")),
             (_RowsPane(catalog, ("immortal_friend",)), tr("Companions")),
         ]
         tabs = QTabWidget()
