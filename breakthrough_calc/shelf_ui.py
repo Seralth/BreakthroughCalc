@@ -271,6 +271,16 @@ class _LibraryPane(QWidget):
         for rank in sorted(by_rank, key=lambda r: (len(r), r)):
             shelf = QGroupBox(rank)
             sv = QVBoxLayout(shelf)
+            head = QHBoxLayout()
+            head.addStretch(1)
+            max_btn = QPushButton(tr("Max shelf"))
+            max_btn.setFlat(True)
+            max_btn.setToolTip(tr("Set every book on this shelf to its "
+                                  "final tier."))
+            max_btn.clicked.connect(
+                lambda _=False, r=rank: self._max_shelf(by_rank[r]))
+            head.addWidget(max_btn)
+            sv.addLayout(head)
             for entry in by_rank[rank]:
                 row = _BookRow(entry)
                 _star_marker(entry, row)
@@ -284,6 +294,16 @@ class _LibraryPane(QWidget):
         scroll.setWidget(universal)
         tabs.addTab(scroll, tr("Universal"))
 
+        self._exclusive_placeholder(tabs)
+
+    def _max_shelf(self, entries: list):
+        for entry in entries:
+            levels = entry["levels"]
+            mx = 1 if levels["kind"] == "binary" else levels.get("max") or 1
+            self.rows[entry["id"]].set_owned(mx)
+        self.changed.emit()
+
+    def _exclusive_placeholder(self, tabs: QTabWidget):
         exclusive = QLabel(tr(
             "Exclusive technique manuals give combat stats only, so they "
             "are not tracked yet. This shelf will fill in later."))

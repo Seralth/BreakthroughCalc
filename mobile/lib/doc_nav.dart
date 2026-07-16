@@ -19,10 +19,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'guide_tab.dart' show guideSlugs;
 import 'reference_tab.dart' show refSlugs;
 
-/// Top-level scaffold tab indices for the doc trees (the Vault tab sits
-/// between Calculator and Reference).
-const topTabReference = 2;
-const topTabGuide = 3;
+/// Top-level scaffold tab indices for the doc trees (the Vault is a
+/// full-screen page off the Calculator, not a top tab).
+const topTabReference = 1;
+const topTabGuide = 2;
 
 const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
 

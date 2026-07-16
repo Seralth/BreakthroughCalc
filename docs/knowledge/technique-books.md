@@ -80,7 +80,7 @@ in-game aura reading; Sense has no engine input).
 ### R6 (max 12; learn/3/6/9/12)
 - **Unbound Blade**: MP +30K [bs]; Ability DMG Reduction +1%; Ability DMG to Taoists +2%; Base Abode Aura +3%; T12 Technique Stats +100% (T12 explicit)
 - **Conflagration**: HP +30K [bs]; Ability DMG to Taoists +1%; Ability DMG Reduction +2%; T9 Base Abode Aura +3%; T12 Technique Stats +100% (T9/T12 explicit)
-- **Lion's Roar** (explicit): learn Respira Effect +1%; T3 Spiritium from Realms +2%; T6 Sense +2; T9 DMG Bonus to Monsters +2%; T12 Technique Stats +100% (T12 line cut off in shot; inferred by pattern)
+- **Lion's Roar** (explicit): learn Respira Effect +1%; T3 Spiritium from Realms +2%; T6 Sense +2; T9 DMG Bonus to Monsters +2%; T12 Technique Stats +100% (T12 line cut off in shot; owner-confirmed 2026-07-16)
 - **Thunder Winds**: Sense +1; DMG Bonus to Monsters +1%; Crit Multiplier +5%; Crit Block +3%; Technique Stats +100%
 - **Yin's Grasp**: Spiritium from Realms +1%; T3 Base Abode Aura +2%; T6 Respira Effect +5%; T9 Daily Cultivation Pill Attempts +1; T12 Technique Stats +100% (positional — NEW: pill attempt find)
 - **Dragon Flight**: Sense +1; T3 Cultivation Pill Effect +2%; T6 Base Abode Aura +2%; T9 MSPD +20; T12 Technique Stats +100%
@@ -137,6 +137,6 @@ in-game aura reading; Sense has no engine input).
 ## Open questions
 
 - R1–R5 max tiers and mid thresholds (see caveat above).
-- Lion's Roar final line (assumed T12 Technique Stats +100%; cut off).
-- Exclusive-tab books: entirely undocumented (stats-only per owner).
+- Exclusive-tab books: screenshot pass taken 2026-07-16 (stats-only per
+  owner); transcription pending in this doc's Exclusive section.
 - Spirit/immortal-world manuals beyond R9: not yet visible on this account.

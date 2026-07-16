@@ -21,7 +21,9 @@ The two apps are deliberately parallel; module layouts mirror each other.
   `input_store.dart`, `source_pickers.dart`, `app_dialogs.dart`,
   `update_banner.dart`, `theme.dart`, `i18n.dart`, `vault_tab.dart` (Vault
   UI twin of desktop shelf_ui.py; shelf state in the 'shelf_v1' prefs blob).
-- The Vault (desktop tab + mobile top tab) is the unified ownership home:
+- The Vault (desktop: top-level tab; mobile: full-screen page opened from
+  the Calculator's summary card / app-bar book icon — NOT a top tab, it
+  feeds the calculator) is the unified ownership home:
   Library (technique books on R1–R9 rank shelves, Universal/Exclusive),
   Treasury (curios), Companions (immortal friends + blessings + base
   values). Technique books live ONLY in data/sources.json — the legacy

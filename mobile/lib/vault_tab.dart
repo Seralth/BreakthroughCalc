@@ -49,6 +49,25 @@ class VaultState {
       );
 }
 
+/// Full-screen route around [VaultTab] — the Vault is reached from the
+/// Calculator (summary card + app-bar shortcut), not the top TabBar.
+class VaultPage extends StatelessWidget {
+  final Map<String, dynamic> catalog;
+  final VaultState state;
+  final VoidCallback onChanged;
+  const VaultPage(
+      {super.key,
+      required this.catalog,
+      required this.state,
+      required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: Text(tr('Vault'))),
+        body: VaultTab(catalog: catalog, state: state, onChanged: onChanged),
+      );
+}
+
 class VaultTab extends StatefulWidget {
   final Map<String, dynamic> catalog;
   final VaultState state;
@@ -127,9 +146,25 @@ class _VaultTabState extends State<VaultTab> {
               ),
               for (final rank in ranks) ...[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-                  child: Text(rank,
-                      style: Theme.of(context).textTheme.titleMedium),
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+                  child: Row(children: [
+                    Expanded(
+                      child: Text(rank,
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                    TextButton(
+                      onPressed: () => _edit(() {
+                        for (final b in byRank[rank]!) {
+                          final lv = b['levels'] as Map;
+                          st.owned[b['id'] as String] = lv['kind'] == 'binary'
+                              ? 1
+                              : ((lv['max'] as num?)?.toInt() ?? 1);
+                        }
+                      }),
+                      child: Text(tr('Max shelf'),
+                          style: const TextStyle(fontSize: 12)),
+                    ),
+                  ]),
                 ),
                 for (final b in byRank[rank]!) _bookRow(context, b),
               ],
@@ -206,36 +241,85 @@ class _VaultTabState extends State<VaultTab> {
     );
   }
 
-  void _showChapters(BuildContext context, Map entry, int? lvl) {
+  void _showChapters(BuildContext context, Map entry, int? _) {
+    final id = entry['id'] as String;
+    final levels = entry['levels'] as Map;
+    final isBinary = levels['kind'] == 'binary';
+    final max = isBinary ? 1 : ((levels['max'] as num?)?.toInt() ?? 15);
     showModalBottomSheet<void>(
       context: context,
-      builder: (_) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(12),
-          children: [
-            Text(entry['name'] as String,
-                style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            for (final e in (entry['effects'] ?? []) as List)
-              ListTile(
-                dense: true,
-                leading: Icon(
-                  lvl != null &&
-                          lvl >=
-                              ((e as Map)['min_level'] is int
-                                  ? e['min_level'] as int
-                                  : 1)
-                      ? Icons.check_circle
-                      : Icons.radio_button_unchecked,
-                  size: 18,
+      builder: (_) => StatefulBuilder(builder: (context, setSheet) {
+        final cur =
+            st.owned[id] == null ? 0 : (st.owned[id] as num).toInt();
+        void setTier(int v) {
+          setSheet(() {});
+          _edit(() {
+            if (v <= 0) {
+              st.owned.remove(id);
+            } else {
+              st.owned[id] = v;
+            }
+          });
+        }
+
+        return SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(12),
+            children: [
+              Row(children: [
+                Expanded(
+                  child: Text(entry['name'] as String,
+                      style: Theme.of(context).textTheme.titleLarge),
                 ),
-                title: Text(((e as Map)['note'] ?? '') as String,
-                    style: const TextStyle(fontSize: 13)),
-              ),
-          ],
-        ),
-      ),
+                TextButton(
+                  onPressed: cur > 0 ? () => setTier(0) : null,
+                  child: Text(tr('Not learned')),
+                ),
+                FilledButton(
+                  onPressed: cur < max ? () => setTier(max) : null,
+                  child: Text(tr('Max')),
+                ),
+              ]),
+              if (!isBinary)
+                Row(children: [
+                  Text(cur == 0 ? '—' : '${tr('T')}$cur',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13)),
+                  Expanded(
+                    child: Slider(
+                      value: cur.toDouble(),
+                      min: 0,
+                      max: max.toDouble(),
+                      divisions: max,
+                      label: cur == 0 ? '—' : '$cur',
+                      onChanged: (v) => setTier(v.round()),
+                    ),
+                  ),
+                  Text('${tr('T')}$max',
+                      style: const TextStyle(fontSize: 12)),
+                ]),
+              for (final e in (entry['effects'] ?? []) as List)
+                ListTile(
+                  dense: true,
+                  leading: Icon(
+                    cur > 0 &&
+                            (cur == -1 ||
+                                cur >=
+                                    ((e as Map)['min_level'] is int
+                                        ? e['min_level'] as int
+                                        : 1))
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    size: 18,
+                  ),
+                  title: Text(((e as Map)['note'] ?? '') as String,
+                      style: const TextStyle(fontSize: 13)),
+                ),
+            ],
+          ),
+        );
+      }),
     );
   }
 
