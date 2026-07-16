@@ -56,6 +56,30 @@ capped extractor ≈ day 26–28. Diversion policy tested: pills-only ≈
 pills+passive (378%), passive-only is worse (347%). Very-steep soul-cost
 fear (332%) eliminated by the alt-account cost datapoint.
 
+## Pre-ascension stockpile (web research 2026-07-16; blog/wiki-grade consensus)
+
+HOARD (strong consensus): Fateum + Fate Tokens (Elemental Law Fragments
+via Fatevillion at every Law milestone ~50/150/250); Revealstones (Nature
+Mantra from Seeker Shop for Cosmic Laws / Spiritual Abilities); plant
+speed-ups (for Law Fruits at Voidbreak).
+HOARD (thinner sourcing): Treasure Trove tokens/Jadeslips (trove
+elixirs/stat pills upgrade at Voidbreak — pull after ascending); sect
+contribution ~13–14k (next-realm blueprints + formulas; single-source
+number).
+SPEND NOW: current-grade cultivation pills (Incarnation-realm breakthrough
+pills useless post-ascension); Ability Knowledge (Immortal's Will gates on
+cumulative SPENT — 16.9M per a 2023 wiki page, stale-risk — plus Secret
+Ability Scroll; Spiritual Abilities also need Demon Spire 1350).
+GARDEN: expand to ~21–24 tiles keeping a Fateum reserve; EMPTY it before
+ascending; avoid yellow Law Fruits, blues leave leftover seeds.
+No verified source: gacha banner timing (beyond the trove), pets, curios,
+forge specifics, event resources; nothing converts/deletes at ascension —
+waste risk is opportunity cost only. Sources: grindnstrat.com Spiritual
+World guide (upd. 2025-09-05), Skillo overmortal videos (2024-09),
+Overmortal Global Fandom wiki (edits through 2026-03). Refuted claims (do
+not repeat): Immortal's Will capping the mortal ability tree; "~100 blue
+pills to finish Incarnation Late"; Princess Koi via 1 Sacred Jade.
+
 ## Model notes / residual uncertainty
 
 - Grade tables triple-verified (APK dump ladder, wiki spot-checks, live
