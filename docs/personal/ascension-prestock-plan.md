@@ -62,15 +62,18 @@ HOARD (strong consensus): Fateum + Fate Tokens (Elemental Law Fragments
 via Fatevillion at every Law milestone ~50/150/250); Revealstones (Nature
 Mantra from Seeker Shop for Cosmic Laws / Spiritual Abilities); plant
 speed-ups (for Law Fruits at Voidbreak).
-HOARD (thinner sourcing): Ancient Jadeslips (Ancient Treasure's elixirs +
-stat pills upgrade on REALM breakthrough only — wiki verbatim; its
-gear/curio drops are not stated to change) and Cosmic Jadeslips (Atlases
-adjust to the cultivation stage; users save them until Voidbreak); sect
-contribution ~13–14k (next-realm blueprints + formulas; single-source
-number). Treasure Hunt tokens: NO documented realm scaling — unknown, not
-covered by the hold advice. Pet Index / Zodiac Relic box / Gleam Chest /
-Nimbus Casket: undocumented on the wiki; check each box's in-game reward
-preview — realm-tiered consumables ⇒ probably hold, fixed items ⇒ spend.
+TROVE BOXES — hold jadeslips for exactly three: Cosmic Atlas and Ancient
+Treasure (double-sourced: wiki mechanics verbatim — elixirs/stat pills and
+atlases re-tier on REALM breakthrough only, not early/mid/late) plus Pet
+Index (single-source: Skillo "Which treasures to hoard and why"). Cadence:
+open saved slips on ARRIVING in each new realm, then resume saving for the
+next realm — a permanent rhythm. Zodiac Relic / Gleam Chest / Nimbus
+Casket and the Treasure Hunt itself (treasure tokens): omitted from every
+hoard list, no documented realm scaling — spend as you go. In-game reward
+previews only show current contents and give no hint of re-tiering, so
+this is observational community knowledge, not readable from the UI.
+Also hold: sect contribution ~13–14k (next-realm blueprints + formulas;
+single-source number).
 SPEND NOW: current-grade cultivation pills (Incarnation-realm breakthrough
 pills useless post-ascension); Ability Knowledge (Immortal's Will gates on
 cumulative SPENT — 16.9M per a 2023 wiki page, stale-risk — plus Secret
