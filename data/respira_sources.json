@@ -18,129 +18,15 @@
   "note": "+1 daily Respira attempt at level 117."
  },
  {
-  "name": "Longevity (technique)",
-  "kind": "attempt",
-  "value": 1,
-  "note": "+1 daily Respira attempt; max before breaking through to Foundation."
- },
- {
   "name": "Macaque (immortal friend, lv 17)",
   "kind": "exp_pct",
   "value": 3,
   "note": "+3% Respira EXP at level 17. Informational: your in-game Respira EXP tooltip already includes this."
  },
  {
-  "name": "Chroma Tier 3 (R8 technique)",
-  "kind": "attempt",
-  "value": 1,
-  "note": "+1 daily Respira attempt at Tier 3."
- },
- {
   "name": "Crane Boy (immortal friend, max)",
   "kind": "pill_attempt",
   "value": 1,
   "note": "+1 daily PILL attempt at max level - raise the Daily pill limit input, not Respira."
- },
- {
-  "name": "Chroma Tier 12 (R8 technique)",
-  "kind": "pill_attempt",
-  "value": 1,
-  "note": "+1 daily PILL attempt at Tier 12 - raise the Daily pill limit input, not Respira."
- },
- {
-  "name": "Energy Unification (technique book)",
-  "kind": "exp_pct",
-  "value": 1,
-  "note": "Respira Effect +1% on activation."
- },
- {
-  "name": "Cosmic Power (technique book)",
-  "kind": "attempt",
-  "value": 1,
-  "note": "+1 daily Respira attempt."
- },
- {
-  "name": "Cosmic Power (technique book)",
-  "kind": "exp_pct",
-  "value": 3,
-  "note": "Respira Effect +3%."
- },
- {
-  "name": "Golden Core (technique book)",
-  "kind": "exp_pct",
-  "value": 1,
-  "note": "Respira Effect +1%."
- },
- {
-  "name": "Astrology (technique book)",
-  "kind": "exp_pct",
-  "value": 3,
-  "note": "Respira Effect +3%."
- },
- {
-  "name": "Taiyin Meridian (technique book)",
-  "kind": "exp_pct",
-  "value": 3,
-  "note": "Respira Effect +3%."
- },
- {
-  "name": "Yin's Grasp (technique book)",
-  "kind": "exp_pct",
-  "value": 5,
-  "note": "Respira Effect +5%."
- },
- {
-  "name": "Floral Essence (technique book)",
-  "kind": "exp_pct",
-  "value": 3,
-  "note": "Respira Effect +3%."
- },
- {
-  "name": "Purify & Cleanse (technique book)",
-  "kind": "exp_pct",
-  "value": 4,
-  "note": "Respira Effect +4% on activation; also Complete-all-Respira-instantly QoL."
- },
- {
-  "name": "Purify & Cleanse (technique book, Tier 9)",
-  "kind": "exp_pct",
-  "value": 7,
-  "note": "Additional Respira Effect +7% unlocked at Tier 9."
- },
- {
-  "name": "Purify & Cleanse (technique book)",
-  "kind": "attempt",
-  "value": 1,
-  "note": "+1 daily Respira attempt."
- },
- {
-  "name": "Great Yang Manual (technique book)",
-  "kind": "exp_pct",
-  "value": 5,
-  "note": "Respira Effect +5%."
- },
- {
-  "name": "Lion's Roar (technique book)",
-  "kind": "exp_pct",
-  "value": 1,
-  "note": "Respira Effect +1% on learning (R6, needs Blazelion pet to learn)."
- },
- {
-  "name": "Cauldron Refinement (R8 book, Tier 3)",
-  "kind": "exp_pct",
-  "value": 3,
-  "note": "Respira Effect +3% at Tier 3."
- },
- {
-  "name": "Moon Meru (R8 book, Tier 12)",
-  "kind": "exp_pct",
-  "value": 10,
-  "note": "Respira Effect +10% at Tier 12."
- },
- {
-  "name": "Chroma (R8 book, Tier 3)",
-  "kind": "attempt",
-  "value": 1,
-  "note": "+1 daily Respira attempt at Tier 3."
  }
 ]

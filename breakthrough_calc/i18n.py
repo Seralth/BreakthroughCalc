@@ -299,6 +299,16 @@ TRANSLATIONS = {
       "Коэффициент поглощения должен превышать бонус благословения.",
   "Auto": "Авто",
   "Sources": "Источники",
+  "Vault": "Хранилище",
+  "Library": "Библиотека",
+  "Treasury": "Сокровищница",
+  "Companions": "Спутники",
+  "Universal": "Общие",
+  "Exclusive": "Эксклюзивные",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
+   "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире.",
+  "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
+   "Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.",
   "auto": "авто",
   "shelf": "полка",
   "Click to let the shelf fill this field.":
@@ -664,6 +674,16 @@ TRANSLATIONS = {
   "Auto": "Auto",
   "Respira Effect books": "Atmungseffekt-Bücher",
   "Sources": "Quellen",
+  "Vault": "Tresor",
+  "Library": "Bibliothek",
+  "Treasury": "Schatzkammer",
+  "Companions": "Gefährten",
+  "Universal": "Universell",
+  "Exclusive": "Exklusiv",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
+   "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv.",
+  "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
+   "Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.",
   "auto": "auto",
   "shelf": "Regal",
   "Click to let the shelf fill this field.":
@@ -1032,6 +1052,16 @@ TRANSLATIONS = {
   "Auto": "Auto",
   "Respira Effect books": "Libros de efecto de Inhala",
   "Sources": "Fuentes",
+  "Vault": "Bóveda",
+  "Library": "Biblioteca",
+  "Treasury": "Tesorería",
+  "Companions": "Compañeros",
+  "Universal": "Universales",
+  "Exclusive": "Exclusivas",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
+   "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel.",
+  "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
+   "Los manuales de técnica exclusivos solo dan estadísticas de combate, así que aún no se registran. Este estante se completará más adelante.",
   "auto": "auto",
   "shelf": "estante",
   "Click to let the shelf fill this field.":
@@ -1368,6 +1398,16 @@ TRANSLATIONS = {
       "吸收率必须高于福泽加成。",
   "Auto": "自动",
   "Sources": "来源",
+  "Vault": "宝库",
+  "Library": "藏书阁",
+  "Treasury": "珍宝阁",
+  "Companions": "道友",
+  "Universal": "通用",
+  "Exclusive": "专属",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
+   "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效。",
+  "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
+   "专属功法只提供战斗属性，暂不跟踪。此书架以后会补全。",
   "auto": "自动",
   "shelf": "书架",
   "Click to let the shelf fill this field.":

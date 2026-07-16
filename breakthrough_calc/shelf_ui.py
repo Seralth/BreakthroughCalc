@@ -11,7 +11,7 @@ from __future__ import annotations
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QGroupBox, QHBoxLayout, QLabel,
-    QPushButton, QSpinBox, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget,
 )
 
 from .i18n import tr
@@ -174,17 +174,137 @@ class _SourceRow(QWidget):
                 self._combo.blockSignals(False)
 
 
+def _star_marker(entry: dict, row: _SourceRow) -> None:
+    if entry.get("data_status") != "exact":
+        star = QLabel("*")
+        star.setToolTip(tr("Amounts not exactly established."))
+        lay = row.layout()
+        lay.insertWidget(lay.count(), star)
+
+
+class _BookRow(_SourceRow):
+    """A Library book: the tier control plus chapter dots (one per bonus
+    threshold, filled while the owned tier reaches it)."""
+
+    def __init__(self, entry: dict, parent=None):
+        super().__init__(entry, parent)
+        self._thresholds = sorted({e.get("min_level", 1)
+                                   for e in entry.get("effects", [])})
+        self._dots = QLabel()
+        self.layout().addWidget(self._dots)
+        self.changed.connect(self._update_dots)
+        self._update_dots()
+
+    def _update_dots(self):
+        owned = self.owned()
+        lvl = None if owned is None else (10**9 if owned == -1 else owned)
+        marks = []
+        for ml in self._thresholds:
+            on = lvl is not None and (
+                lvl >= (ml if isinstance(ml, int) else 10**9))
+            marks.append("●" if on else "○")
+        self._dots.setText(" ".join(marks))
+
+    def set_owned(self, value):
+        super().set_owned(value)
+        self._update_dots()
+
+
+class _RowsPane(QWidget):
+    """A scroll-friendly pane of _SourceRows for the given categories,
+    grouped by category label."""
+
+    changed = Signal()
+
+    def __init__(self, catalog: dict, categories: tuple, parent=None):
+        super().__init__(parent)
+        self.rows: dict[str, _SourceRow] = {}
+        v = QVBoxLayout(self)
+        by_cat: dict[str, list] = {}
+        for s in catalog.get("sources", []):
+            by_cat.setdefault(s["category"], []).append(s)
+        for cat in catalog.get("categories", []):
+            if cat["id"] not in categories:
+                continue
+            entries = by_cat.get(cat["id"])
+            if not entries:
+                continue
+            box = QGroupBox(tr(cat["label"]))
+            bv = QVBoxLayout(box)
+            for entry in entries:
+                row = _SourceRow(entry)
+                _star_marker(entry, row)
+                row.changed.connect(self.changed)
+                self.rows[entry["id"]] = row
+                bv.addWidget(row)
+            v.addWidget(box)
+        v.addStretch(1)
+
+
+class _LibraryPane(QWidget):
+    """The Universal bookshelf: technique books grouped into rank shelves
+    (R1 … R9), each book with a tier control and chapter dots. A second
+    Exclusive shelf is a placeholder until those manuals are recorded."""
+
+    changed = Signal()
+
+    def __init__(self, catalog: dict, parent=None):
+        super().__init__(parent)
+        self.rows: dict[str, _SourceRow] = {}
+        v = QVBoxLayout(self)
+        intro = QLabel(tr(
+            "Set each book's tier once; the bonuses it has unlocked flow to "
+            "the calculator on their own. Dots show the book's chapter "
+            "bonuses: filled ones are active at your tier."))
+        intro.setWordWrap(True)
+        v.addWidget(intro)
+        tabs = QTabWidget()
+        v.addWidget(tabs)
+
+        universal = QWidget()
+        uv = QVBoxLayout(universal)
+        books = [s for s in catalog.get("sources", [])
+                 if s["category"] == "technique_book"]
+        by_rank: dict[str, list] = {}
+        for b in books:
+            by_rank.setdefault(b.get("rank", "?"), []).append(b)
+        for rank in sorted(by_rank, key=lambda r: (len(r), r)):
+            shelf = QGroupBox(rank)
+            sv = QVBoxLayout(shelf)
+            for entry in by_rank[rank]:
+                row = _BookRow(entry)
+                _star_marker(entry, row)
+                row.changed.connect(self.changed)
+                self.rows[entry["id"]] = row
+                sv.addWidget(row)
+            uv.addWidget(shelf)
+        uv.addStretch(1)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(universal)
+        tabs.addTab(scroll, tr("Universal"))
+
+        exclusive = QLabel(tr(
+            "Exclusive technique manuals give combat stats only, so they "
+            "are not tracked yet. This shelf will fill in later."))
+        exclusive.setWordWrap(True)
+        exclusive.setAlignment(Qt.AlignTop)
+        exclusive.setMargin(12)
+        tabs.addTab(exclusive, tr("Exclusive"))
+
+
 class ShelfPage(QWidget):
-    """The set-once ownership screen: one _SourceRow per catalog entry,
-    grouped by category, plus the residual-base inputs for targets whose
-    field is base + shelf contributions."""
+    """The Vault: set-once ownership home. Library (technique books on rank
+    shelves), Treasury (curios), Companions (immortal friends + blessings)
+    with the residual-base inputs for targets whose field is base + shelf
+    contributions. Same owned()/bases()/set_state API the MainWindow has
+    always used."""
 
     changed = Signal()
 
     def __init__(self, catalog: dict, parent=None):
         super().__init__(parent)
         self.catalog = catalog
-        self._rows: dict[str, _SourceRow] = {}
         v = QVBoxLayout(self)
         intro = QLabel(tr(
             "Record what you own once; fields with a shelf chip can then "
@@ -214,27 +334,19 @@ class ShelfPage(QWidget):
         self.base_pills.valueChanged.connect(self.changed)
         v.addWidget(bases)
 
-        by_cat: dict[str, list] = {}
-        for s in catalog.get("sources", []):
-            by_cat.setdefault(s["category"], []).append(s)
-        for cat in catalog.get("categories", []):
-            entries = by_cat.get(cat["id"])
-            if not entries:
-                continue
-            box = QGroupBox(tr(cat["label"]))
-            bv = QVBoxLayout(box)
-            for entry in entries:
-                row = _SourceRow(entry)
-                if entry.get("data_status") != "exact":
-                    star = QLabel("*")
-                    star.setToolTip(tr("Amounts not exactly established."))
-                    lay = row.layout()
-                    lay.insertWidget(lay.count(), star)
-                row.changed.connect(self.changed)
-                self._rows[entry["id"]] = row
-                bv.addWidget(row)
-            v.addWidget(box)
-        v.addStretch(1)
+        self._panes = [
+            (_LibraryPane(catalog), tr("Library")),
+            (_RowsPane(catalog, ("curio",)), tr("Treasury")),
+            (_RowsPane(catalog, ("immortal_friend", "blessing", "other")),
+             tr("Companions")),
+        ]
+        tabs = QTabWidget()
+        self._rows: dict[str, _SourceRow] = {}
+        for pane, label in self._panes:
+            pane.changed.connect(self.changed)
+            self._rows.update(pane.rows)
+            tabs.addTab(pane, label)
+        v.addWidget(tabs, 1)
 
     def owned(self) -> dict:
         out = {}

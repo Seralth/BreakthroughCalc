@@ -19,7 +19,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
   `guide_tab.dart` / `doc_nav.dart` / `doc_widgets.dart`, `share_codec.dart`
   (OMV2 build codes — wire format doc: `docs/knowledge/share-code-format.md`),
   `input_store.dart`, `source_pickers.dart`, `app_dialogs.dart`,
-  `update_banner.dart`, `theme.dart`, `i18n.dart`.
+  `update_banner.dart`, `theme.dart`, `i18n.dart`, `vault_tab.dart` (Vault
+  UI twin of desktop shelf_ui.py; shelf state in the 'shelf_v1' prefs blob).
+- The Vault (desktop tab + mobile top tab) is the unified ownership home:
+  Library (technique books on R1–R9 rank shelves, Universal/Exclusive),
+  Treasury (curios), Companions (immortal friends + blessings + base
+  values). Technique books live ONLY in data/sources.json — the legacy
+  pill_effect_sources.json / respira_sources.json keep just the
+  friend/curio rows for their pickers and migrate via legacy[] aliases.
 - Gates (all must stay green; CI runs them on every push via
   `.github/workflows/ci.yml`): `pytest` from the repo root; `cd mobile &&
   flutter analyze && flutter test`; parity `python test/gen_expected.py &&
@@ -50,6 +57,10 @@ The two apps are deliberately parallel; module layouts mirror each other.
 
 - `docs/knowledge/game-mechanics-verified.md` — verified pill/gem/gush/orb/
   extractor semantics (2026-07-07 screenshots)
+- `docs/knowledge/technique-books.md` — ALL Universal technique books R1–R9
+  with full chapter/tier bonus tables (2026-07-15 screenshot pass); which
+  thresholds are exact vs positional inference. The Vault's Library renders
+  these from data/sources.json (category technique_book).
 - `docs/knowledge/combat-mechanics.md` — verified combat/gear stat mechanics
   (crit/hit/pen/block/control constants from cfg_us_calc.lua) + community
   affix tier-list cross-check; kept separate from cultivation knowledge

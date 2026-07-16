@@ -91,6 +91,8 @@ void main() {
   final engine = loadEngine();
   final catalog = loadCatalogFile('../data/pill_effect_sources.json');
   final respiraCatalog = loadCatalogFile('../data/respira_sources.json');
+  final shelfCatalog = jsonDecode(File('../data/sources.json')
+      .readAsStringSync()) as Map<String, dynamic>;
 
   Future<SharedPreferences> mockPrefs(
       [Map<String, Object> initial = const {}]) {
@@ -108,7 +110,7 @@ void main() {
 
     final prefs = await mockPrefs();
     await tester.pumpWidget(
-        BreakthroughApp(engine, catalog, respiraCatalog, prefs));
+        BreakthroughApp(engine, catalog, respiraCatalog, shelfCatalog, prefs));
     await tester.pumpAndSettle();
 
     // Calc tab is up; with speed/absorption at 0 the results card shows the
@@ -144,7 +146,7 @@ void main() {
   testWidgets('persisted inputs blob pins the exact key set', (tester) async {
     final prefs = await mockPrefs();
     await tester.pumpWidget(
-        BreakthroughApp(engine, catalog, respiraCatalog, prefs));
+        BreakthroughApp(engine, catalog, respiraCatalog, shelfCatalog, prefs));
     await tester.pumpAndSettle();
 
     // initState recalculates and saves once, so the blob exists already.

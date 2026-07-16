@@ -37,5 +37,21 @@
 
  {"name": "friend below threshold contributes nothing",
   "shelf": {"owned": {"daji": 72, "princess_iron_fan": 36}},
-  "expect": {"respira_attempts": 1.0}}
+  "expect": {"respira_attempts": 1.0}},
+
+ {"name": "yins_grasp tier 9: respira effect from tier 6 plus the pill attempt",
+  "shelf": {"owned": {"yins_grasp": 9}},
+  "expect": {"respira_effect": 5.0, "pill_attempts": 1.0}},
+
+ {"name": "astrology tier 4: respira effect and the daily pill attempt",
+  "shelf": {"owned": {"astrology": 4}},
+  "expect": {"respira_effect": 3.0, "pill_attempts": 1.0}},
+
+ {"name": "laws_of_nature tier 12: R9 book wires pill effect and respira",
+  "shelf": {"owned": {"laws_of_nature": 12}},
+  "expect": {"pill_effect": 1.0, "respira_effect": 10.0}},
+
+ {"name": "harvest_god_secret tier 12: aura lines stay informational",
+  "shelf": {"owned": {"harvest_god_secret": 12}},
+  "expect": {"respira_effect": 3.0, "pill_attempts": 1.0}}
 ]

@@ -30,7 +30,7 @@ void main() {
 
   test('contributions carry provenance and deterministic order', () {
     final d = derive(catalog, {
-      'owned': {'moon_meru': 12, 'six_eared_macaque': 17, 'purify_cleanse': 1}
+      'owned': {'moon_meru': 12, 'six_eared_macaque': 17, 'purify_cleanse': 3}
     })['respira_effect']!;
     expect(d.contributions.map((c) => c.sourceId).toList(),
         ['moon_meru', 'purify_cleanse', 'six_eared_macaque']);

@@ -15,9 +15,11 @@ import 'input_store.dart';
 import 'reference_tab.dart';
 import 'results_card.dart';
 import 'share_codec.dart';
+import 'shelf.dart';
 import 'source_pickers.dart';
 import 'theme.dart';
 import 'update_banner.dart';
+import 'vault_tab.dart';
 
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
@@ -40,18 +42,21 @@ Future<void> main() async {
   final engine = Engine(jsonDecode(raw) as Map<String, dynamic>);
   final catalog = await loadCatalog('assets/data/pill_effect_sources.json');
   final respiraCatalog = await loadCatalog('assets/data/respira_sources.json');
+  final shelfCatalog = await loadShelfCatalog('assets/data/sources.json');
   final prefs = await SharedPreferences.getInstance();
   final savedLang = prefs.getString('lang');
   if (savedLang != null && langs.containsKey(savedLang)) currentLang = savedLang;
-  runApp(BreakthroughApp(engine, catalog, respiraCatalog, prefs));
+  runApp(BreakthroughApp(engine, catalog, respiraCatalog, shelfCatalog, prefs));
 }
 
 class BreakthroughApp extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
   final List<dynamic> respiraCatalog;
+  final Map<String, dynamic> shelfCatalog;
   final SharedPreferences prefs;
-  const BreakthroughApp(this.engine, this.catalog, this.respiraCatalog, this.prefs,
+  const BreakthroughApp(this.engine, this.catalog, this.respiraCatalog,
+      this.shelfCatalog, this.prefs,
       {super.key});
 
   @override
@@ -82,6 +87,7 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
         engine: widget.engine,
         catalog: widget.catalog,
         respiraCatalog: widget.respiraCatalog,
+        shelfCatalog: widget.shelfCatalog,
         prefs: widget.prefs,
         theme: theme,
         onTheme: setTheme,
@@ -96,6 +102,7 @@ class CalculatorPage extends StatefulWidget {
   final Engine engine;
   final List<dynamic> catalog;
   final List<dynamic> respiraCatalog;
+  final Map<String, dynamic> shelfCatalog;
   final SharedPreferences prefs;
   final String theme;
   final ValueChanged<String> onTheme;
@@ -105,6 +112,7 @@ class CalculatorPage extends StatefulWidget {
     required this.engine,
     required this.catalog,
     required this.respiraCatalog,
+    required this.shelfCatalog,
     required this.prefs,
     required this.theme,
     required this.onTheme,
@@ -117,7 +125,7 @@ class CalculatorPage extends StatefulWidget {
 
 class _CalculatorPageState extends State<CalculatorPage>
     with SingleTickerProviderStateMixin {
-  late final TabController _topTabs = TabController(length: 3, vsync: this);
+  late final TabController _topTabs = TabController(length: 4, vsync: this);
   Inputs inp = Inputs();
   late Results res;
   late final InputStore _store = InputStore(widget.prefs, engine);
@@ -134,6 +142,11 @@ class _CalculatorPageState extends State<CalculatorPage>
   // controller-backed fields are covered by _syncControllers instead.
   int _formGeneration = 0;
   final _respiraSources = <String>{}; // selected 'attempt' catalog entries
+  late VaultState _vault; // the Vault's owned/bases/auto state (shelf_v1)
+  // Synthetic pill-effect row the Vault maintains in auto mode. A fixed
+  // (untranslated) name so replacement survives language switches and
+  // round-trips through build codes as a plain row.
+  static const _vaultPeRow = 'Vault (books & curios)';
   double _abode = 0; // Abode Aura, the primary input; speed = abode * absorption
   final _speedCtrl = TextEditingController();
   final _abodeCtrl = TextEditingController();
@@ -176,6 +189,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     inp.grade = engine.gradesFor(inp.stage, inp.phase).first;
     inp.pillRank = (engine.data['pill_xp'] as Map).keys.first as String;
     _restoreInputs();
+    _restoreVault();
     _syncControllers();
     _recalc();
     if (!kIsWeb) {
@@ -224,6 +238,77 @@ class _CalculatorPageState extends State<CalculatorPage>
     _respiraExpCtrl.text = fmtNum(inp.respiraExp);
   }
 
+  // ---- Vault (Sources Shelf) ---------------------------------------------
+  /// Restore the persisted Vault, or run the one-time legacy migration:
+  /// fold the old catalogs' checked entries into ownership, drop the
+  /// matched pill-effect rows, and rebase attempts so field values stay
+  /// identical (mirrors the desktop MainWindow._apply_state path).
+  void _restoreVault() {
+    final raw = widget.prefs.getString('shelf_v1');
+    if (raw != null) {
+      try {
+        _vault = VaultState.fromMap(
+            jsonDecode(raw) as Map<String, dynamic>);
+        return;
+      } catch (_) {} // corrupt blob -> re-migrate below
+    }
+    final result = migrateLegacy(
+        [for (final s in _peSources) [s[0], s[1]]],
+        _respiraSources.toList()..sort(),
+        widget.shelfCatalog);
+    final owned = (result[0] as Map).cast<String, dynamic>();
+    final migratedPe = <String>{
+      for (final s in (widget.shelfCatalog['sources'] ?? []) as List)
+        for (final a in ((s as Map)['legacy'] ?? []) as List)
+          if ((a as Map)['catalog'] == 'pe' &&
+              a['parametric'] != true &&
+              owned.containsKey(s['id']))
+            a['name'] as String
+    };
+    for (var i = _peSources.length - 1; i >= 0; i--) {
+      if (migratedPe.contains(_peSources[i][0])) _removePeSource(i);
+    }
+    _vault = VaultState(owned: owned, auto: owned.isNotEmpty);
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    _vault.bases = {
+      'respira_attempts': (inp.respiraPerDay -
+              (d['respira_attempts']?.total ?? 0.0))
+          .clamp(0.0, double.infinity),
+      'pill_attempts':
+          (inp.pillLimit - (d['pill_attempts']?.total ?? 0.0))
+              .clamp(0.0, double.infinity),
+    };
+    _saveVault();
+  }
+
+  void _saveVault() =>
+      widget.prefs.setString('shelf_v1', jsonEncode(_vault.toMap()));
+
+  /// Vault edits: persist, and in auto mode write the derived totals into
+  /// the calculator fields (manual edits stay put until the next Vault
+  /// change).
+  void _onVaultChanged() {
+    _saveVault();
+    if (_vault.auto) {
+      final d = derive(widget.shelfCatalog, _vault.toMap());
+      inp.respiraPerDay = (_vault.bases['respira_attempts'] ?? 0.0) +
+          (d['respira_attempts']?.total ?? 0.0);
+      inp.pillLimit = (_vault.bases['pill_attempts'] ?? 0.0) +
+          (d['pill_attempts']?.total ?? 0.0);
+      inp.blessPp = d['bless_pp']?.total ?? 0.0;
+      inp.blessWindowPp = d['bless_window_pp']?.total ?? 0.0;
+      _respiraBooksPct = d['respira_effect']?.total ?? 0.0;
+      widget.prefs.setDouble('respira_books_pct', _respiraBooksPct);
+      final peTotal = d['pill_effect']?.total ?? 0.0;
+      final i = _peSources.indexWhere((s) => s[0] == _vaultPeRow);
+      if (i >= 0) _removePeSource(i);
+      if (peTotal > 0) _addPeSource(_vaultPeRow, peTotal);
+      _respiraCtrl.text = fmtNum(inp.respiraPerDay);
+      _formGeneration++;
+    }
+    _recalc();
+  }
+
   // ---- shareable build string -------------------------------------------
   // Compact copy-paste export of every input, so users can share their
   // setup for troubleshooting. See share_codec.dart for the format.
@@ -250,6 +335,7 @@ class _CalculatorPageState extends State<CalculatorPage>
           title: Text(tr('Breakthrough Calculator')),
           bottom: TabBar(controller: _topTabs, tabs: [
             Tab(text: tr('Calculator')),
+            Tab(text: tr('Vault')),
             Tab(text: tr('Reference')),
             Tab(text: tr('Guide')),
           ]),
@@ -313,7 +399,15 @@ class _CalculatorPageState extends State<CalculatorPage>
               ),
           ],
         ),
-        body: TabBarView(controller: _topTabs, children: [_calcTab(), ReferenceTab(engine: engine, catalog: widget.catalog), const GuideTab()]),
+        body: TabBarView(controller: _topTabs, children: [
+          _calcTab(),
+          VaultTab(
+              catalog: widget.shelfCatalog,
+              state: _vault,
+              onChanged: _onVaultChanged),
+          ReferenceTab(engine: engine, catalog: widget.catalog),
+          const GuideTab(),
+        ]),
       );
   }
 
