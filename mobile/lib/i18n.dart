@@ -137,6 +137,7 @@ const Map<String, Map<String, String>> _t = {
     'de': 'Versuche und Basis-EXP füllen sich selbst — Versuche aus den 10 Basisversuchen des Spiels plus deinen Tresor-Boni, Basis-EXP aus der Stufenschätzung mal deinen Buch-Boni aus dem Tresor. Überschreibe beides mit deinem Spielwert (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.',
     'es': 'Los intentos y la EXP base se rellenan solos — los intentos desde los 10 básicos del juego más los bonos de tu Bóveda, la EXP base desde la estimación de tu Etapa multiplicada por los bonos de libros de la Bóveda. Sobrescribe cualquiera con tu lectura del juego (vacía el campo para volver a la estimación). La mayoría de Respira dan la misma EXP pequeña — esa es la base; los críticos 2×/5×/10× se manejan automáticamente.',
     'zh': '次数与基础经验会自动填充——次数来自游戏基础的10次加上宝库加成，基础经验来自阶段估算乘以宝库的功法加成。可用游戏内读数覆盖（清空字段即恢复估算）。大多数吐纳给出相同的小额经验——那就是基础值；2×/5×/10×暴击会自动计入。'},
+  'Elixirs': {'ru': 'Эликсиры', 'de': 'Elixiere', 'es': 'Elixires', 'zh': '灵液'},
   'Max shelf': {'ru': 'Макс. полка', 'de': 'Regal maxen', 'es': 'Maximizar estante', 'zh': '整层拉满'},
   'Empty shelf': {'ru': 'Очистить полку', 'de': 'Regal leeren', 'es': 'Vaciar estante', 'zh': '整层清空'},
   'Not learned': {'ru': 'Не изучено', 'de': 'Nicht erlernt', 'es': 'No aprendido', 'zh': '未学习'},

@@ -116,6 +116,7 @@ class MainWindow(QMainWindow):
         lv.addWidget(self._build_pills_group())
         lv.addWidget(self._build_artifacts_group())
         lv.addWidget(self._build_respira_group())
+        lv.addWidget(self._build_elixir_group())
         lv.addWidget(self._build_fruit_group())
         note = QLabel(tr(
             "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to "
@@ -309,16 +310,21 @@ class MainWindow(QMainWindow):
         respira_hint.setWordWrap(True)
         style_accent(respira_hint, "muted", self._acc)
         rf.addRow("", respira_hint)
+        return respira
+
+    def _build_elixir_group(self) -> QGroupBox:
+        elixirs = QGroupBox(tr("Elixirs"))
+        ef = QFormLayout(elixirs)
         self.elixir_per_day = QDoubleSpinBox(); self.elixir_per_day.setRange(0, 1e5)
         self.elixir_exp = QDoubleSpinBox(); self.elixir_exp.setRange(0, 1e12)
         self.elixir_exp.setDecimals(2)
         self.elixir_effect = QDoubleSpinBox(); self.elixir_effect.setRange(0, 1000)
         self.elixir_effect.setDecimals(1); self.elixir_effect.setSuffix(" %")
         self.elixir_effect.setValue(100)
-        rf.addRow(tr("XP elixirs / day"), self.elixir_per_day)
-        rf.addRow(tr("EXP per elixir"), self.elixir_exp)
-        rf.addRow(tr("Elixir effectiveness"), self.elixir_effect)
-        return respira
+        ef.addRow(tr("XP elixirs / day"), self.elixir_per_day)
+        ef.addRow(tr("EXP per elixir"), self.elixir_exp)
+        ef.addRow(tr("Elixir effectiveness"), self.elixir_effect)
+        return elixirs
 
     def _build_fruit_group(self) -> QGroupBox:
         fruit = QGroupBox(tr("Myrimon Fruit"))
