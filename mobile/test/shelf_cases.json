@@ -53,5 +53,9 @@
 
  {"name": "harvest_god_secret tier 12: aura lines stay informational",
   "shelf": {"owned": {"harvest_god_secret": 12}},
-  "expect": {"respira_effect": 3.0, "pill_attempts": 1.0}}
+  "expect": {"respira_effect": 3.0, "pill_attempts": 1.0}},
+
+ {"name": "exclusive books are tracking-only: no raw targets at max tier",
+  "shelf": {"owned": {"heavenly_scripture": 6, "whirling_fish_mystery": 6}},
+  "expect": {}}
 ]

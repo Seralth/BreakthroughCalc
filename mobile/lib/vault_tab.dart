@@ -179,17 +179,48 @@ class _VaultTabState extends State<VaultTab> {
                 for (final b in byRank[rank]!) _bookRow(context, b),
               ],
             ]),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(tr(
-                  'Exclusive technique manuals give combat stats only, so '
-                  'they are not tracked yet. This shelf will fill in '
-                  'later.')),
-            ),
+            _exclusiveShelf(context),
           ]),
         ),
       ]),
     );
+  }
+
+  Widget _exclusiveShelf(BuildContext context) {
+    final books = _byCategory('exclusive_book');
+    return ListView(padding: const EdgeInsets.all(8), children: [
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          tr('Exclusive manuals give combat stats, so they do not feed '
+              'the calculator — track them here to keep your whole '
+              'collection in one place.'),
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ),
+      Row(children: [
+        const Spacer(),
+        TextButton(
+          onPressed: () => _edit(() {
+            for (final b in books) {
+              st.owned.remove(b['id'] as String);
+            }
+          }),
+          child: Text(tr('Empty shelf'), style: const TextStyle(fontSize: 12)),
+        ),
+        TextButton(
+          onPressed: () => _edit(() {
+            for (final b in books) {
+              final lv = b['levels'] as Map;
+              st.owned[b['id'] as String] =
+                  ((lv['max'] as num?)?.toInt() ?? 1);
+            }
+          }),
+          child: Text(tr('Max shelf'), style: const TextStyle(fontSize: 12)),
+        ),
+      ]),
+      for (final b in books) _bookRow(context, b),
+    ]);
   }
 
   Widget _bookRow(BuildContext context, Map entry) {

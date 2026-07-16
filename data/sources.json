@@ -3,6 +3,7 @@
  "catalog_version": 2,
  "categories": [
   {"id": "technique_book", "label": "Technique books"},
+  {"id": "exclusive_book", "label": "Exclusive technique books"},
   {"id": "immortal_friend", "label": "Immortal friends"},
   {"id": "blessing", "label": "Ascension blessings"},
   {"id": "curio", "label": "Curios"},
@@ -681,6 +682,124 @@
     {"target": "info", "min_level": 9, "note": "Tier 9: MSPD +20."},
     {"target": "info", "min_level": 12, "note": "Tier 12: Paralysis Duration Boost +30."},
     {"target": "info", "min_level": 15, "note": "Tier 15: Technique Stats +100%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "heavenly_scripture", "name": "Heavenly Scripture", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Ability DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Ability DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "glacial_craft", "name": "Glacial Craft", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Ability DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Ability DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "petalstorm_mantra", "name": "Petalstorm Mantra", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Multiplier +12%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Relic DMG to Taoists +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Relic DMG Reduction +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "shade_command", "name": "Shade Command", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Multiplier +8%."},
+    {"target": "info", "min_level": 3, "note": "Tier 3: Relic DMG Reduction +2%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "beyond_requiem", "name": "Beyond Requiem", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Multiplier +12%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Relic DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Relic DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "porcelain_purity", "name": "Porcelain Purity", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 3, "note": "Tier 3: Relic DMG to Taoists +2%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "whirling_fish_mystery", "name": "Whirling Fish Mystery", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1,
+     "note": "On learning: Base Abode Aura +3% (inside your Abode Aura reading)."},
+    {"target": "info", "min_level": 3, "note": "Tier 3: Relic DMG Reduction +2%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "gourd_command", "name": "Gourd Command", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Multiplier +12%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Relic DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Relic DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "snow_wander", "name": "Snow Wander", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Ability DMG to Taoists +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Ability DMG Reduction +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "peach_radiance", "name": "Peach Radiance", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Ability DMG to Taoists +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Ability DMG Reduction +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "dusk_revelation", "name": "Dusk Revelation", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Multiplier +12%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Relic DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Relic DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
+   "legacy": [],
+   "data_status": "exact"},
+
+  {"id": "phoenix_reborn", "name": "Phoenix Reborn", "category": "exclusive_book",
+   "levels": {"kind": "tier", "max": 6},
+   "effects": [
+    {"target": "info", "min_level": 1, "note": "On learning: Crit Block +8%."},
+    {"target": "info", "min_level": 2, "note": "Tier 2: Ability DMG Reduction +2%."},
+    {"target": "info", "min_level": 4, "note": "Tier 4: Ability DMG to Taoists +3%."},
+    {"target": "info", "min_level": 6, "note": "Tier 6: Technique Stats +500%."}],
    "legacy": [],
    "data_status": "exact"},
 

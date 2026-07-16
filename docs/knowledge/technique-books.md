@@ -121,6 +121,31 @@ in-game aura reading; Sense has no engine input).
 - **Honored Origin**: Base Abode Aura +1%; T3 Paralysis Chance Boost +5; T6 Paralysis Chance Resist +10; T9 Base Abode Aura +3%; T12 Paralysis Duration Resist +30; T15 Technique Stats +100%
 - **Wordless Scripture**: DMG Bonus to Monsters +1%; T3 Paralysis Chance Resist +5; T6 Paralysis Chance Boost +10; T9 MSPD +20; T12 Paralysis Duration Boost +30; T15 Technique Stats +100%
 
+## Exclusive tab (screenshot pass 2026-07-16 — 12 books, complete)
+
+Flat 4×3 grid, no rank shelves. All max Tier 6; every book's capstone is
+"Technique Stats +500%". All combat/stat bonuses (tracking only — nothing
+calc-wired); the single non-combat line is Whirling Fish Mystery's Base
+Abode Aura +3% on learning (display-embedded in the aura reading like all
+aura lines). Unlocks are per-book manual items (out of scope). Most carry
+a "Divine Magicka" badge; Shade Command, Porcelain Purity and Whirling
+Fish Mystery lack it on the list icons. Thresholds verbatim: 4-line books
+at learn/T2/T4/T6, 3-line books at learn/T3/T6.
+
+Display order and tables:
+1.  **Heavenly Scripture**: Crit Block +8%; T2 Ability DMG Reduction +2%; T4 Ability DMG to Taoists +3%; T6 +500%
+2.  **Glacial Craft**: identical to Heavenly Scripture
+3.  **Petalstorm Mantra**: Crit Multiplier +12%; T2 Relic DMG to Taoists +2%; T4 Relic DMG Reduction +3%; T6 +500%
+4.  **Shade Command** (3-line): Crit Multiplier +8%; T3 Relic DMG Reduction +2%; T6 +500%
+5.  **Beyond Requiem**: Crit Multiplier +12%; T2 Relic DMG Reduction +2%; T4 Relic DMG to Taoists +3%; T6 +500%
+6.  **Porcelain Purity** (3-line): Crit Block +8%; T3 Relic DMG to Taoists +2%; T6 +500%
+7.  **Whirling Fish Mystery** (3-line): Base Abode Aura +3% on learning; T3 Relic DMG Reduction +2%; T6 +500%
+8.  **Gourd Command**: Crit Multiplier +12%; T2 Relic DMG Reduction +2%; T4 Relic DMG to Taoists +3%; T6 +500%
+9.  **Snow Wander**: Crit Block +8%; T2 Ability DMG to Taoists +2%; T4 Ability DMG Reduction +3%; T6 +500%
+10. **Peach Radiance**: identical to Snow Wander
+11. **Dusk Revelation**: identical to Gourd Command
+12. **Phoenix Reborn**: identical to Heavenly Scripture
+
 ## Corrections to prior data
 
 - Cosmic Power is **R3** (was unranked; sources.json had no rank).
@@ -137,6 +162,4 @@ in-game aura reading; Sense has no engine input).
 ## Open questions
 
 - R1–R5 max tiers and mid thresholds (see caveat above).
-- Exclusive-tab books: screenshot pass taken 2026-07-16 (stats-only per
-  owner); transcription pending in this doc's Exclusive section.
 - Spirit/immortal-world manuals beyond R9: not yet visible on this account.
