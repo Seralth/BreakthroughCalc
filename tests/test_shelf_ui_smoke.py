@@ -36,8 +36,8 @@ def test_shelf_auto_fields_and_pe_auto_rows(window):
     w.shelf_page._rows["purify_cleanse"].set_owned(9)
     w.shelf_page._rows["six_eared_macaque"].set_owned(17)
     w.shelf_page._rows["chroma"].set_owned(12)
-    w.shelf_page._rows["ascension_virya"].set_owned(3)
     w._on_shelf_changed()
+    w.virya.setCurrentIndex(3)
     for key in ("respira_books", "bless_pp", "bless_window", "pill_limit"):
         w._set_shelf_auto(key, True)
     assert w.respira_books.value() == 14      # 4 + 7 books + 3 friend

@@ -314,6 +314,22 @@ class _CalculatorPageState extends State<CalculatorPage>
     _saveVault();
   }
 
+  List<String> _viryaLabels() {
+    for (final s in (widget.shelfCatalog['sources'] ?? []) as List) {
+      if ((s as Map)['id'] == 'ascension_virya') {
+        return ((s['levels'] as Map)['labels'] as List).cast<String>();
+      }
+    }
+    return const [];
+  }
+
+  String _viryaCurrent() {
+    final owned = _vault.owned['ascension_virya'];
+    final labels = _viryaLabels();
+    if (owned == null || labels.isEmpty) return '—';
+    return labels[((owned as num).toInt()).clamp(1, labels.length) - 1];
+  }
+
   void _openVault() {
     Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (_) => VaultPage(
@@ -519,6 +535,19 @@ class _CalculatorPageState extends State<CalculatorPage>
             inp.cultiSpeed = _abode * inp.absorptionRatio;
             _speedCtrl.text = fmtNum(inp.cultiSpeed);
             _recalc();
+          }),
+          // Ascension Virya is cultivation progression (tiers gated on your
+          // primary/secondary stages) — its selector lives here and drives
+          // the blessing fields below via the shared shelf derivation.
+          formDropdown('Ascension Virya', _viryaCurrent(),
+              ['—', ..._viryaLabels()], (v) {
+            final i = _viryaLabels().indexOf(v!);
+            if (i < 0) {
+              _vault.owned.remove('ascension_virya');
+            } else {
+              _vault.owned['ascension_virya'] = i + 1;
+            }
+            _onVaultChanged();
           }),
           numField(tr('Ascension blessing (%)'), inp.blessPp * 100, (v) {
             inp.blessPp = v / 100;

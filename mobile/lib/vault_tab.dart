@@ -1,8 +1,9 @@
 /// The Vault: set-once ownership home (Dart twin of the desktop Vault in
 /// breakthrough_calc/shelf_ui.py). Library = technique books on rank
-/// shelves, Treasury = curios, Companions = immortal friends + blessings
-/// plus the residual base values. Pure UI over shelf.dart's derive();
-/// state lives with the caller (main.dart) and persists via prefs.
+/// shelves, Treasury = curios, Companions = immortal friends. Ascension
+/// Virya lives on the Calculator (it is cultivation progression, not a
+/// possession) but shares this shelf state. Pure UI over shelf.dart's
+/// derive(); state lives with the caller (main.dart), persisted in prefs.
 library;
 
 import 'dart:convert';
@@ -330,21 +331,13 @@ class _VaultTabState extends State<VaultTab> {
     );
   }
 
-  // ---- Treasury: curios + account blessings --------------------------------
+  // ---- Treasury: curios -----------------------------------------------------
+  // Ascension Virya (category "blessing") is deliberately NOT here: its
+  // ladder is cultivation progression, so its selector lives on the
+  // Calculator in Cultivation Base (same shelf state).
   Widget _treasury(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(8), children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-        child: Text(tr('Curios'),
-            style: Theme.of(context).textTheme.titleMedium),
-      ),
       for (final c in _byCategory('curio')) _curioRow(context, c),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-        child: Text(tr('Ascension blessings'),
-            style: Theme.of(context).textTheme.titleMedium),
-      ),
-      for (final b in _byCategory('blessing')) _ladderRow(context, b),
     ]);
   }
 
@@ -470,29 +463,4 @@ class _VaultTabState extends State<VaultTab> {
     );
   }
 
-  Widget _ladderRow(BuildContext context, Map entry) {
-    final id = entry['id'] as String;
-    final labels = ((entry['levels'] as Map)['labels'] as List).cast<String>();
-    final owned = st.owned[id];
-    final current =
-        owned == null ? '—' : labels[(owned as num).toInt().clamp(1, labels.length) - 1];
-    return ListTile(
-      dense: true,
-      title: Text(entry['name'] as String),
-      trailing: DropdownButton<String>(
-        value: current,
-        items: [
-          const DropdownMenuItem(value: '—', child: Text('—')),
-          for (final l in labels) DropdownMenuItem(value: l, child: Text(l)),
-        ],
-        onChanged: (v) => _edit(() {
-          if (v == null || v == '—') {
-            st.owned.remove(id);
-          } else {
-            st.owned[id] = labels.indexOf(v) + 1;
-          }
-        }),
-      ),
-    );
-  }
 }
