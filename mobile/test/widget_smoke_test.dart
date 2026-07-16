@@ -156,6 +156,18 @@ void main() {
     final vaultBlob = prefs.getString('shelf_v1')!;
     expect(vaultBlob, contains('"longevity":1'));
 
+    // The Exclusive shelf lists the exclusive manuals; maxing it records
+    // them at tier 6.
+    await tester.tap(find.text('Exclusive'));
+    await tester.pumpAndSettle();
+    expect(find.text('Heavenly Scripture'), findsOneWidget);
+    await tester.tap(find.text('Max shelf').last);
+    await tester.pumpAndSettle();
+    expect(prefs.getString('shelf_v1')!,
+        contains('"heavenly_scripture":6'));
+    await tester.tap(find.text('Universal'));
+    await tester.pumpAndSettle();
+
     // Back to the calculator; the summary card reflects the contribution.
     await tester.pageBack();
     await tester.pumpAndSettle();

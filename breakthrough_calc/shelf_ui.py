@@ -290,7 +290,40 @@ class _LibraryPane(QWidget):
         scroll.setWidget(universal)
         tabs.addTab(scroll, tr("Universal"))
 
-        self._exclusive_placeholder(tabs)
+        exclusive = QWidget()
+        ev = QVBoxLayout(exclusive)
+        note = QLabel(tr(
+            "Exclusive manuals give combat stats, so they do not feed the "
+            "calculator — track them here to keep your whole collection in "
+            "one place."))
+        note.setWordWrap(True)
+        ev.addWidget(note)
+        ex_books = [s for s in catalog.get("sources", [])
+                    if s["category"] == "exclusive_book"]
+        if ex_books:
+            head = QHBoxLayout()
+            head.addStretch(1)
+            for label, tip, slot in (
+                    ("Empty shelf", "Set every book on this shelf back to "
+                                    "not learned.", self._empty_shelf),
+                    ("Max shelf", "Set every book on this shelf to its "
+                                  "final tier.", self._max_shelf)):
+                b = QPushButton(tr(label))
+                b.setFlat(True)
+                b.setToolTip(tr(tip))
+                b.clicked.connect(lambda _=False, s=slot: s(ex_books))
+                head.addWidget(b)
+            ev.addLayout(head)
+            for entry in ex_books:
+                row = _BookRow(entry)
+                row.changed.connect(self.changed)
+                self.rows[entry["id"]] = row
+                ev.addWidget(row)
+        ev.addStretch(1)
+        ex_scroll = QScrollArea()
+        ex_scroll.setWidgetResizable(True)
+        ex_scroll.setWidget(exclusive)
+        tabs.addTab(ex_scroll, tr("Exclusive"))
 
     def _max_shelf(self, entries: list):
         for entry in entries:
@@ -303,15 +336,6 @@ class _LibraryPane(QWidget):
         for entry in entries:
             self.rows[entry["id"]].set_owned(None)
         self.changed.emit()
-
-    def _exclusive_placeholder(self, tabs: QTabWidget):
-        exclusive = QLabel(tr(
-            "Exclusive technique manuals give combat stats only, so they "
-            "are not tracked yet. This shelf will fill in later."))
-        exclusive.setWordWrap(True)
-        exclusive.setAlignment(Qt.AlignTop)
-        exclusive.setMargin(12)
-        tabs.addTab(exclusive, tr("Exclusive"))
 
 
 class ShelfPage(QWidget):

@@ -64,7 +64,7 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/technique-books.md` — ALL Universal technique books R1–R9
   with full chapter/tier bonus tables (2026-07-15 screenshot pass); which
   thresholds are exact vs positional inference. The Vault's Library renders
-  these from data/sources.json (category technique_book).
+  these from data/sources.json (categories technique_book + exclusive_book).
 - `docs/knowledge/combat-mechanics.md` — verified combat/gear stat mechanics
   (crit/hit/pen/block/control constants from cfg_us_calc.lua) + community
   affix tier-list cross-check; kept separate from cultivation knowledge

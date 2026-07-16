@@ -127,6 +127,11 @@ const Map<String, Map<String, String>> _t = {
     'de': 'Basis-EXP füllt sich selbst aus deiner Stufe; überschreibe sie mit deinem Spielwert für exakte Zahlen (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.',
     'es': 'La EXP base se rellena sola según tu Etapa; sobrescríbela con tu lectura del juego para cifras exactas (vacía el campo para volver a la estimación). La mayoría de Respira dan la misma EXP pequeña — esa es la base; los críticos 2×/5×/10× se manejan automáticamente.',
     'zh': '基础经验会根据你的阶段自动填充；想要精确数字可用游戏内读数覆盖（清空即恢复估算）。大多数吐纳给出相同的小额经验——那就是基础值；2×/5×/10×暴击会自动计入。'},
+  'Exclusive manuals give combat stats, so they do not feed the calculator — track them here to keep your whole collection in one place.': {
+    'ru': 'Эксклюзивные техники дают боевые характеристики и не влияют на калькулятор — отмечайте их здесь, чтобы вся коллекция была в одном месте.',
+    'de': 'Exklusive Handbücher geben Kampfwerte und fließen nicht in den Rechner — verfolge sie hier, damit die ganze Sammlung an einem Ort ist.',
+    'es': 'Los manuales exclusivos dan estadísticas de combate y no alimentan la calculadora — regístralos aquí para tener toda la colección en un solo lugar.',
+    'zh': '专属功法提供战斗属性，不影响计算器——在这里记录，让整个收藏集中在一处。'},
   'Max shelf': {'ru': 'Макс. полка', 'de': 'Regal maxen', 'es': 'Maximizar estante', 'zh': '整层拉满'},
   'Empty shelf': {'ru': 'Очистить полку', 'de': 'Regal leeren', 'es': 'Vaciar estante', 'zh': '整层清空'},
   'Not learned': {'ru': 'Не изучено', 'de': 'Nicht erlernt', 'es': 'No aprendido', 'zh': '未学习'},
