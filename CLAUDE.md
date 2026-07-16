@@ -83,6 +83,18 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - Opinion-vs-fact distinctions ARE kept, in product language: "subjective" /
   "exact" / "recommended" — not "community consensus" vs "verified".
 
+## Release checklist (owner rule, 2026-07-16)
+
+- Bump versions WITH each user-facing change set, not just at tag time:
+  `breakthrough_calc/__init__.__version__`, `mobile/pubspec.yaml` version
+  (increment the +build number too), `mobile/lib/main.dart` appVersion.
+  tests/test_consistency.py pins all three together.
+- Deploy latency: push → ~4 min build/deploy → up to 10 min GitHub Pages
+  CDN cache (max-age=600, headers not configurable). Inside that window
+  even a correct Force refresh serves the previous build — check
+  `curl -s https://omvault.app/version.json` before debugging "stuck"
+  updates.
+
 ## Working notes
 
 - Donation button (done, desktop + mobile): SEAGM in-game voucher gifting —
