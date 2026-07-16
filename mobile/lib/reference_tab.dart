@@ -12,9 +12,50 @@ import 'package:flutter/material.dart';
 import 'doc_nav.dart';
 import 'doc_widgets.dart';
 import 'engine.dart';
+import 'form_widgets.dart';
 
 typedef RefPageBuilder = Widget Function(
-    BuildContext context, Engine engine, List<dynamic> catalog);
+    BuildContext context, Engine engine, Map<String, dynamic> catalog);
+
+/// [[source name, bonus summary], ...] for every Vault entry with an
+/// effect aimed at one of [wanted]'s target ids ({target: unit suffix}).
+/// Twin of docs.py _vault_bonus_rows — renders from the Vault's catalog.
+List<List<String>> vaultBonusRows(
+    Map<String, dynamic> shelfCatalog, Map<String, String> wanted) {
+  final rows = <List<String>>[];
+  for (final sRaw in (shelfCatalog['sources'] ?? []) as List) {
+    final s = sRaw as Map;
+    final parts = <String>[];
+    for (final eRaw in (s['effects'] ?? []) as List) {
+      final e = eRaw as Map;
+      final tid = e['target'] as String?;
+      if (tid == null || !wanted.containsKey(tid)) continue;
+      if (e.containsKey('value_model')) {
+        final m = e['value_model'] as Map;
+        parts.add('${m['base']}–${m['max_value']}'
+            '${wanted[tid]} by star/upgrade');
+        continue;
+      }
+      final v = e['value'] as num?;
+      if (v == null) continue;
+      var part = '+${fmtNum(v.toDouble())}${wanted[tid]}';
+      final ml = e['min_level'];
+      if (ml is int && ml > 1) {
+        final kind = (s['levels'] as Map)['kind'];
+        part += kind == 'tier' ? ' (Tier $ml)' : ' (level $ml)';
+      } else if (ml == 'max') {
+        part += ' (max level)';
+      }
+      parts.add(part);
+    }
+    if (parts.isNotEmpty) {
+      var name = s['name'] as String;
+      if (s['rank'] != null) name += ' (${s['rank']} book)';
+      rows.add([name, parts.join(', ')]);
+    }
+  }
+  return rows;
+}
 
 class RefSection {
   final String slug;
@@ -49,7 +90,7 @@ const _refFooterText =
 
 class ReferenceTab extends StatefulWidget {
   final Engine engine;
-  final List<dynamic> catalog;
+  final Map<String, dynamic> catalog; // the Vault (shelf) catalog
   const ReferenceTab({super.key, required this.engine, required this.catalog});
 
   @override
@@ -109,7 +150,7 @@ class _ReferenceTabState extends State<ReferenceTab>
 }
 
 
-Widget _basicsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _basicsPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
@@ -156,7 +197,7 @@ Widget _basicsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
   ], footerText: _refFooterText);
 }
 
-Widget _pillsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _pillsPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   Widget table(String title, List<String> headers,
@@ -184,19 +225,21 @@ Widget _pillsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
       'Pill-effect bonuses add as percentage points and multiply the '
       'base once.',
     ),
-    if (catalog.isNotEmpty)
-      table(
-        'Pill Effect sources',
-        ['Source', 'Bonus'],
-        [
-          for (final s in catalog.cast<Map<String, dynamic>>())
-            [
-              s['name'] as String,
-              ((s['percent'] as num?) ?? 0) == 0 ? 'varies' : '${s['percent']}%'
-            ]
-        ],
-        'All sources stack additively.',
-      ),
+    table(
+      'Pill Effect sources',
+      ['Source', 'Bonus'],
+      vaultBonusRows(catalog, {'pill_effect': '%'}),
+      'All sources stack additively. Record what you own in the Vault and '
+      'these fill themselves; type anything else in as a custom row.',
+    ),
+    table(
+      'Respira bonus sources',
+      ['Source', 'Effect'],
+      vaultBonusRows(catalog,
+          {'respira_attempts': ' attempt/day', 'respira_effect': '% Respira Effect'}),
+      'Record these in the Vault; the Attempts / day and Respira Effect '
+      'books fields fill themselves.',
+    ),
     Text('Respira', style: h3),
     para('Daily-limited cultivation exercise. Each attempt rolls ×1/×2/×5/×10 crits at '
         '60/30/8/2% (mean ×1.8, applied automatically). Enter attempts/day and the base '
@@ -212,7 +255,7 @@ Widget _pillsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
 // Permanent consumables — verified 2026-07-10 from in-game screens
 // (formula panel, elixir tooltips, Compare BR "Pill and Elixir Details").
 
-Widget _elixirsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _elixirsPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   Widget table(String title, List<String> headers,
@@ -314,7 +357,7 @@ Widget _elixirsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
   ], footerText: _refFooterText);
 }
 
-Widget _myrimonPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
@@ -363,7 +406,7 @@ Widget _myrimonPage(BuildContext context, Engine engine, List<dynamic> catalog) 
   ], footerText: _refFooterText);
 }
 
-Widget _artifactsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _artifactsPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   Widget table(String title, List<String> headers,
@@ -417,7 +460,7 @@ Widget _artifactsPage(BuildContext context, Engine engine, List<dynamic> catalog
 // Combat-side systems overview. Combat is resolved server-side; these are
 // the client-visible rules, with exact numbers only where confirmed.
 
-Widget _combatPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _combatPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   Widget table(String title, List<String> headers,
@@ -519,7 +562,7 @@ Widget _combatPage(BuildContext context, Engine engine, List<dynamic> catalog) {
 // and caps are verified from the decompiled client configs — see
 // docs/knowledge/combat-mechanics.md for sources.
 
-Widget _affixesPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _affixesPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final t = Theme.of(context);
   final h3 = t.textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
@@ -626,7 +669,7 @@ Widget _affixesPage(BuildContext context, Engine engine, List<dynamic> catalog) 
 // strings (i18n dump) plus user-verified play notes; server-side numbers
 // are omitted rather than guessed.
 
-Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _systemsPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
@@ -797,7 +840,7 @@ Widget _systemsPage(BuildContext context, Engine engine, List<dynamic> catalog) 
 
 // Expert-level internals; only client-stated mechanics carry numbers.
 
-Widget _advancedPage(BuildContext context, Engine engine, List<dynamic> catalog) {
+Widget _advancedPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
   Widget table(String title, List<String> headers,

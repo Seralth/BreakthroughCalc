@@ -63,8 +63,10 @@ class DataAssetList(unittest.TestCase):
         is not declared in pubspec silently never ships on mobile."""
         pubspec = read("mobile", "pubspec.yaml")
         for fname in sorted(os.listdir(os.path.join(REPO, "data"))):
-            if fname == "i18n_glossary.json":
-                continue  # curation input, deliberately not shipped
+            if fname in ("i18n_glossary.json", "pill_effect_sources.json",
+                         "respira_sources.json"):
+                # curation input / legacy-migration fixtures, not shipped
+                continue
             if fname.endswith(".json"):
                 self.assertIn(f"assets/data/{fname}", pubspec,
                               f"data/{fname} missing from pubspec assets")

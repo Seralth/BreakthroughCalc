@@ -21,7 +21,6 @@ from . import __version__, theme, i18n
 from .docs import build_guide_pages, build_reference_pages
 from .engine import (
     BASE_ENERGY, STRIVE_CAP_MORTAL, Engine, Inputs, fmt_days,
-    load_pill_sources, load_respira_sources,
 )
 from .fields import FIELDS, FIELD_BY_KEY
 from .i18n import tr, tr_duration
@@ -35,7 +34,7 @@ from .shelf_ui import ProvenanceChip, ShelfPage
 from .update_check import UpdateChecker
 from .widgets import (
     DonateDialog, PillEffectRows, WheelGuard, clear_accents, link_enabled,
-    make_catalog_menu, restyle_all, style_accent,
+    restyle_all, style_accent,
 )
 
 STARS = ["0*", "1*", "2*", "3*", "4*", "5*"]
@@ -170,9 +169,9 @@ class MainWindow(QMainWindow):
         f.addRow(tr("Grade"), self.grade)
         f.addRow(tr("Grade progress"), self.completion)
         # Abode Aura, Absorption Ratio, and Cultivation Speed all come off the
-        # same in-game Cultivation Bonus screen. Enter Aura + Absorption and
-        # the Apply button appears to fill in Speed (= Aura × Absorption);
-        # Speed stays directly editable for anyone who prefers typing it.
+        # same in-game Cultivation Bonus screen. Speed = Aura × Absorption is
+        # kept in sync live (either direction), matching mobile; every field
+        # stays directly editable.
         self.abode_aura = QDoubleSpinBox(); self.abode_aura.setRange(0, 1e9)
         self.abode_aura.setDecimals(2)
         f.addRow(tr("Abode Aura"), self.abode_aura)
@@ -191,9 +190,6 @@ class MainWindow(QMainWindow):
         self.array_out = QLabel("—"); self.array_out.setWordWrap(True)
         style_accent(self.array_out, "muted", self._acc)
         f.addRow("", self.array_out)
-        self.array_apply = QPushButton(tr("Apply to Cultivation Speed"))
-        self.array_apply.clicked.connect(self._apply_array_speed)
-        f.addRow("", self.array_apply)
         f.addRow(tr("Cultivation Speed (XP / Cosmoapsis)"), self.speed)
         f.addRow(tr("Aura Gem"), self.gem)
         f.addRow(tr("Target Stage"), self.target)
@@ -218,10 +214,9 @@ class MainWindow(QMainWindow):
         self.blue_day = QDoubleSpinBox(); self.blue_day.setRange(0, 1e6)
         f.addRow(tr("Pill rank"), self.pill_rank)
 
-        # Cultivation pill effect = sum of contributions (technique books, curios,
-        # etc.). Record each source once so swapping gear means editing one row.
-        self.pe_catalog = load_pill_sources()
-        self.pe_rows = PillEffectRows(self.pe_catalog, lambda: self._acc)
+        # Cultivation pill effect = Vault-managed rows plus free-typed extras
+        # for bonuses the catalog does not carry (event buffs, Daozu treasures).
+        self.pe_rows = PillEffectRows(lambda: self._acc)
         self.pe_rows.changed.connect(self.recalc)
         f.addRow(tr("Cultivation pill effect"), self.pe_rows)
 
@@ -288,33 +283,8 @@ class MainWindow(QMainWindow):
         self.respira_per_day = QDoubleSpinBox(); self.respira_per_day.setRange(0, 1e5)
         self.respira_event = QDoubleSpinBox(); self.respira_event.setRange(0, 1e5)
         self.respira_exp = QDoubleSpinBox(); self.respira_exp.setRange(0, 1e12)
-        self.respira_catalog = load_respira_sources()
-        if self.respira_catalog:
-            rp_wrap = QWidget(); rp_h = QHBoxLayout(rp_wrap); rp_h.setContentsMargins(0, 0, 0, 0)
-            rp_h.addWidget(self.respira_per_day, 1)
-            rsp_btn = QPushButton(tr("Sources…"))
-            rsp_btn.setToolTip(tr(
-                "Known Respira bonus sources. Checkable entries add/remove daily "
-                "attempts from the field. Greyed entries are informational only: "
-                "Respira EXP bonuses are already inside your in-game EXP tooltip, "
-                "and pill-attempt bonuses belong in the Daily pill attempts input."))
-
-            def rsp_label(src):
-                if src.get("kind") == "attempt":
-                    return f'{src["name"]}  (+{src["value"]:g}/day)'
-                label = tr("info") if src.get("kind") == "exp_pct" else tr("pill limit")
-                return f'{src["name"]}  ({label})'
-            self._respira_menu = make_catalog_menu(
-                rsp_btn, self.respira_catalog, rsp_label,
-                checkable=True, enabled=lambda src: src.get("kind") == "attempt",
-                on_sync=self._sync_respira_menu,
-                on_triggered=self._toggle_respira_source)
-            rp_h.addWidget(rsp_btn)
-            rp_h.addWidget(self._shelf_chip("respira_per_day"))
-            rf.addRow(tr("Attempts / day"), rp_wrap)
-        else:
-            rf.addRow(tr("Attempts / day"),
-                      self._with_chip(self.respira_per_day, "respira_per_day"))
+        rf.addRow(tr("Attempts / day"),
+                  self._with_chip(self.respira_per_day, "respira_per_day"))
         rf.addRow(tr("Extra attempts today"), self.respira_event)
         self.respira_books = QDoubleSpinBox(); self.respira_books.setRange(0, 1000)
         self.respira_books.setDecimals(1); self.respira_books.setSuffix(" %")
@@ -502,7 +472,7 @@ class MainWindow(QMainWindow):
 
     def _build_reference_tab(self) -> QWidget:
         pages = build_reference_pages(self._acc, self.engine.data,
-                                      self.pe_catalog, self.respira_catalog)
+                                      self._shelf_catalog)
         self._ref_slugs = {slug: i for i, (slug, _, _) in enumerate(pages)}
         self._ref_tabs = tabs = self._build_doc_tab(pages)
         return tabs
@@ -526,6 +496,13 @@ class MainWindow(QMainWindow):
                 w.toggled.connect(handler)
             else:
                 w.valueChanged.connect(handler)
+        # Live speed sync (mirrors mobile): editing Aura or Absorption
+        # recomputes Speed; editing Speed back-solves Aura. The guard stops
+        # the two handlers from ping-ponging.
+        self._syncing_speed = False
+        self.abode_aura.valueChanged.connect(self._sync_speed_from_parts)
+        self.absorb.valueChanged.connect(self._sync_speed_from_parts)
+        self.speed.valueChanged.connect(self._sync_aura_from_speed)
         self._install_wheel_guard()
         self._install_tooltips()
         hints = QGuiApplication.styleHints()
@@ -891,24 +868,6 @@ class MainWindow(QMainWindow):
         spd = abode * absorb if absorb > 0 else None
         return abode, bonus, spd
 
-    def _sync_respira_menu(self):
-        for act in self._respira_menu.actions():
-            src = act.data()
-            if src:
-                act.setChecked(src["name"] in self._respira_checked)
-
-    def _toggle_respira_source(self, act):
-        src = act.data()
-        if not src:
-            return
-        if act.isChecked():
-            self._respira_checked.add(src["name"])
-            self.respira_per_day.setValue(self.respira_per_day.value() + float(src["value"]))
-        else:
-            self._respira_checked.discard(src["name"])
-            self.respira_per_day.setValue(max(0.0, self.respira_per_day.value() - float(src["value"])))
-        self.recalc()
-
     def _update_pill_attempts(self):
         self.pe_rows.update_total()
         used = self.gold_day.value() + self.purple_day.value() + self.blue_day.value()
@@ -923,36 +882,36 @@ class MainWindow(QMainWindow):
 
     def _update_array_out(self):
         r = self._array_expected()
-        if r is None:
+        if r is None or r[1] is None:
             self.array_out.setVisible(False)
-            self.array_apply.setVisible(False)
             return
         self.array_out.setVisible(True)
-        self.array_apply.setVisible(True)
-        abode, bonus, spd = r
-        # Rich text so only the stale-speed warning is highlighted red.
-        parts = []
-        if bonus is not None:
-            parts.append(tr("Implied total aura bonus: {}%  (Abode = 130 × {})").format(
+        bonus = r[1]
+        self.array_out.setText(
+            tr("Implied total aura bonus: {}%  (Abode = 130 × {})").format(
                 f"{bonus * 100:.1f}", f"{1 + bonus:.3f}"))
-        if spd is not None:
-            line = tr("Expected speed: {} / Cosmoapsis").format(f"{spd:.2f}")
-            entered = self.speed.value()
-            if entered > 0:
-                diff = (entered / spd - 1) * 100
-                if abs(diff) > 0.5:
-                    line += (f"<span style='color:{self._acc['bad']}'>"
-                             + tr("  — entered speed {} is {}% off; one of the readings is stale").format(
-                                 f"{entered:.2f}", f"{diff:+.1f}")
-                             + "</span>")
-            parts.append(line)
-        self.array_out.setText("<br>".join(parts))
-        self.array_apply.setEnabled(spd is not None)
 
-    def _apply_array_speed(self):
-        r = self._array_expected()
-        if r and r[2] is not None:
-            self.speed.setValue(r[2])
+    def _sync_speed_from_parts(self, *_):
+        if self._loading or self._syncing_speed:
+            return
+        aura, absorb = self.abode_aura.value(), self.absorb.value() / 100.0
+        if aura > 0 and absorb > 0:
+            self._syncing_speed = True
+            try:
+                self.speed.setValue(aura * absorb)
+            finally:
+                self._syncing_speed = False
+
+    def _sync_aura_from_speed(self, *_):
+        if self._loading or self._syncing_speed:
+            return
+        absorb = self.absorb.value() / 100.0
+        if absorb > 0:
+            self._syncing_speed = True
+            try:
+                self.abode_aura.setValue(self.speed.value() / absorb)
+            finally:
+                self._syncing_speed = False
 
     def closeEvent(self, event):
         self._save_settings()

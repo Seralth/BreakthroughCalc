@@ -19,8 +19,43 @@ def _footer(color: str, prose: str) -> str:
             f"<a href='{_ISSUES_URL}'>github.com/Seralth/BreakthroughCalc/issues</a>.</p>")
 
 
+def _vault_bonus_rows(shelf_catalog: dict, wanted: dict) -> list:
+    """[[source name, bonus summary], ...] for every Vault entry with an
+    effect aimed at one of `wanted`'s target ids ({target_id: unit_suffix}).
+    Renders from the same catalog the Vault uses so it can't drift."""
+    rows = []
+    for s in (shelf_catalog or {}).get("sources", []):
+        parts = []
+        for e in s.get("effects", []):
+            tid = e.get("target")
+            if tid not in wanted:
+                continue
+            if "value_model" in e:
+                m = e["value_model"]
+                parts.append(f'{m["base"]:g}–{m["max_value"]:g}'
+                             f'{wanted[tid]} by star/upgrade')
+                continue
+            if e.get("value") is None:
+                continue
+            part = f'+{e["value"]:g}{wanted[tid]}'
+            ml = e.get("min_level")
+            if isinstance(ml, int) and ml > 1:
+                kind = s.get("levels", {}).get("kind")
+                part += (f" (Tier {ml})" if kind == "tier"
+                         else f" (level {ml})")
+            elif ml == "max":
+                part += " (max level)"
+            parts.append(part)
+        if parts:
+            name = s["name"]
+            if s.get("rank"):
+                name += f' ({s["rank"]} book)'
+            rows.append([name, ", ".join(parts)])
+    return rows
+
+
 def build_reference_pages(acc: dict, engine_data: dict,
-                          pe_catalog: list, respira_catalog: list) -> list:
+                          shelf_catalog: dict) -> list:
     """Read-only reference, split into topic sub-tabs. Tables render from
     the same data the engine uses so they can't drift from the calculations."""
     d = engine_data
@@ -123,14 +158,13 @@ def build_reference_pages(acc: dict, engine_data: dict,
     pills += table(
         "Cultivation Pill Effect sources",
         ["Source", "Bonus"],
-        [[s["name"], f"{s['percent']:g}%" if s.get("percent") else "varies (see tooltip)"]
-         for s in (pe_catalog or [])],
-        "All sources stack additively. In-game these appear as technique completion "
-        "bonuses (labeled by rank, e.g. R4 Golden Core +5%) and curio effects. Other "
-        "technique ranks and Dao Ancestor treasures grant it too — read the % from "
-        "the tooltip and add it as a custom source. Quality-specific bonuses (Star "
-        "Marks, Daozu treasures, Lotus Throne) apply only to pills of that color — "
-        "enter those in the Star Marks fields.")
+        _vault_bonus_rows(shelf_catalog, {"pill_effect": "%"}),
+        "All sources stack additively. Record what you own in the Vault and "
+        "the pill-effect rows fill themselves; anything the Vault does not "
+        "carry (event buffs, Dao Ancestor treasures) can be typed in as a "
+        "custom row. Quality-specific bonuses (Star Marks, Daozu treasures, "
+        "Lotus Throne) apply only to pills of that color — enter those in "
+        "the Star Marks fields.")
 
     # ---- Artifacts & Gems ----------------------------------------------
     artifacts = "<h2>Artifacts &amp; Gems</h2>"
@@ -198,18 +232,14 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "then an attempt gives 2×, 5×, or 10× that (a crit) — ignore those; the app "
         "already accounts for crits via the ×1.8 average. So enter the smallest / "
         "most common EXP you see, not a big crit result.</p>")
-    if respira_catalog:
-        pills += table(
-            "Respira bonus sources",
-            ["Source", "Effect"],
-            [[s["name"],
-              f'+{s["value"]:g} attempts/day' if s.get("kind") == "attempt"
-              else ("EXP % — already inside your in-game EXP tooltip"
-                    if s.get("kind") == "exp_pct"
-                    else "pill attempts — enter under Daily pill attempts")]
-             for s in respira_catalog],
-            "Attempt sources can be checked from the Sources… menu next to the "
-            "Attempts / day field; the greyed entries are informational only.")
+    pills += table(
+        "Respira bonus sources",
+        ["Source", "Effect"],
+        _vault_bonus_rows(shelf_catalog,
+                          {"respira_attempts": " attempt/day",
+                           "respira_effect": "% Respira Effect"}),
+        "Record these in the Vault; the Attempts / day and Respira Effect "
+        "books fields fill themselves.")
     pills += (
         "<h3>Flat EXP — why pills matter less each grade</h3>"
         "<p><b>Pills and Respira grant flat EXP.</b> The percentage shown on the pill "

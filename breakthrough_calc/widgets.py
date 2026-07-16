@@ -84,42 +84,14 @@ def clear_accents():
     _ACCENTED.clear()
 
 
-def make_catalog_menu(button, sources, format_label, *, checkable=False,
-                      enabled=None, on_sync, on_triggered) -> QMenu:
-    """Shared builder for the pill-effect / Respira catalog menus.
-
-    format_label(src) -> the action's text. Sources for which enabled(src) is
-    false (never, when enabled is None) become greyed informational entries
-    with no data; live entries carry the source dict as data and are made
-    checkable when `checkable` (check-mark sync policy) — otherwise the
-    on_sync handler typically hides already-added entries. on_sync runs on
-    aboutToShow, on_triggered on selection."""
-    menu = QMenu(button)
-    menu.setToolTipsVisible(True)
-    for src in sources:
-        act = menu.addAction(format_label(src))
-        if enabled is None or enabled(src):
-            if checkable:
-                act.setCheckable(True)
-            act.setData(src)
-        else:
-            act.setEnabled(False)
-        act.setToolTip(src.get("note", ""))
-    menu.aboutToShow.connect(on_sync)
-    menu.triggered.connect(on_triggered)
-    button.setMenu(menu)
-    return menu
-
-
 class PillEffectRows(QWidget):
-    """The 'Cultivation pill effect' input: one row per source (a technique
-    book, a curio, …) whose percentages sum, plus a catalog menu of known
-    sources. Emits changed on any edit; the accents provider keeps dialog
-    styling on the current theme."""
+    """The 'Cultivation pill effect' input: read-only rows the Vault manages
+    plus free-typed rows whose percentages sum. Emits changed on any edit;
+    the accents provider keeps styling on the current theme."""
 
     changed = Signal()
 
-    def __init__(self, catalog, accents, parent=None):
+    def __init__(self, accents, parent=None):
         super().__init__(parent)
         self._accents = accents  # callable -> current accent dict
         v = QVBoxLayout(self)
@@ -141,21 +113,7 @@ class PillEffectRows(QWidget):
         bottom = QHBoxLayout()
         bottom.addWidget(self.total_label, 1)
         bottom.addWidget(add_pe)
-        self.catalog = catalog
-        if self.catalog:
-            cat_btn = QPushButton(tr("＋ From catalog"))
-            cat_btn.setToolTip(tr("Known pill-effect sources from the game data. Click to add "
-                                  "(prefilled, editable); already-added sources are hidden."))
-            self._menu = make_catalog_menu(
-                cat_btn, self.catalog, self._format_label,
-                on_sync=self._sync_menu, on_triggered=self._add_catalog_source)
-            bottom.addWidget(cat_btn)
         v.addLayout(bottom)
-
-    @staticmethod
-    def _format_label(src) -> str:
-        pct = f'{src["percent"]:g}%' if src.get("percent") else tr("varies")
-        return f'{src["name"]}  ({pct})'
 
     def add_row(self, label: str = "", value: float = 0.0):
         row = QWidget(); h = QHBoxLayout(row); h.setContentsMargins(0, 0, 0, 0)
@@ -216,73 +174,6 @@ class PillEffectRows(QWidget):
 
     def update_total(self):
         self.total_label.setText(tr("Total: {} %").format(f"{self.total():.2f}"))
-
-    def _sync_menu(self):
-        # Hide sources already added so they can't be picked twice; remove them
-        # via the row's ✕ button.
-        labels = ({le.text() for le, _, _ in self.rows}
-                  | {name for name, _, _ in self._auto_rows})
-        for act in self._menu.actions():
-            act.setVisible(act.data()["name"] not in labels)
-
-    def _add_catalog_source(self, act):
-        src = act.data()
-        if any(e[0].text() == src["name"] for e in self.rows):
-            return
-        if src.get("prompt", {}).get("kind") == "star_upgrade":
-            picked = StarUpgradeDialog.ask(self.window(), src, self._accents())
-            if picked is None:        # user cancelled
-                return
-            value = picked
-        else:
-            value = float(src["percent"]) if src.get("percent") else 0.0
-        # drop a leftover blank placeholder row
-        blanks = [e for e in self.rows if not e[0].text() and e[1].value() == 0]
-        self.add_row(src["name"], value)
-        for e in blanks:
-            self.remove_row(e)
-        self.changed.emit()
-
-
-class StarUpgradeDialog(QDialog):
-    """Small dialog matching the in-game curio upgrade screen: pick star and
-    upgrade level; ask() returns the computed pill-effect %, or None."""
-
-    def __init__(self, parent, src, acc):
-        super().__init__(parent)
-        self._p = p = src["prompt"]
-        self.setWindowTitle(src["name"])
-        lay = QFormLayout(self)
-        self._star = QComboBox(); self._star.addItems([f"{i}★" for i in range(1, p["stars"] + 1)])
-        self._upg = QComboBox(); self._upg.addItems([str(i) for i in range(p["max_upgrade"] + 1)])
-        out = QLabel()
-        out.setStyleSheet(f"color: {acc['muted']};")
-
-        def refresh():
-            out.setText(tr("Cultivation Pill Effect: {}%").format(f"{self._value():.1f}"))
-        self._star.currentIndexChanged.connect(refresh)
-        self._upg.currentIndexChanged.connect(refresh)
-        refresh()
-        lay.addRow(tr("Star"), self._star)
-        lay.addRow(tr("Upgrade level"), self._upg)
-        lay.addRow("", out)
-        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.accepted.connect(self.accept)
-        buttons.rejected.connect(self.reject)
-        lay.addRow(buttons)
-
-    def _value(self) -> float:
-        # star N contributes star_add[N-1]; the combos are 1★-based / 0-based
-        p = self._p
-        return p["base"] + p["per_upgrade"] * self._upg.currentIndex() + p["star_add"][self._star.currentIndex()]
-
-    @staticmethod
-    def ask(parent, src, acc):
-        dlg = StarUpgradeDialog(parent, src, acc)
-        if dlg.exec() != QDialog.Accepted:
-            return None
-        return round(dlg._value(), 1)
-
 
 class DonateDialog(QDialog):
     """SEAGM in-game voucher gifting instructions (no URL prefill supported,

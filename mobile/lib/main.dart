@@ -24,7 +24,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '2.16';
+const appVersion = '2.17';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -40,23 +40,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final raw = await rootBundle.loadString('assets/data/breakthrough.json');
   final engine = Engine(jsonDecode(raw) as Map<String, dynamic>);
-  final catalog = await loadCatalog('assets/data/pill_effect_sources.json');
-  final respiraCatalog = await loadCatalog('assets/data/respira_sources.json');
   final shelfCatalog = await loadShelfCatalog('assets/data/sources.json');
   final prefs = await SharedPreferences.getInstance();
   final savedLang = prefs.getString('lang');
   if (savedLang != null && langs.containsKey(savedLang)) currentLang = savedLang;
-  runApp(BreakthroughApp(engine, catalog, respiraCatalog, shelfCatalog, prefs));
+  runApp(BreakthroughApp(engine, shelfCatalog, prefs));
 }
 
 class BreakthroughApp extends StatefulWidget {
   final Engine engine;
-  final List<dynamic> catalog;
-  final List<dynamic> respiraCatalog;
   final Map<String, dynamic> shelfCatalog;
   final SharedPreferences prefs;
-  const BreakthroughApp(this.engine, this.catalog, this.respiraCatalog,
-      this.shelfCatalog, this.prefs,
+  const BreakthroughApp(this.engine, this.shelfCatalog, this.prefs,
       {super.key});
 
   @override
@@ -85,8 +80,6 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
       theme: themeData(theme, platform),
       home: CalculatorPage(
         engine: widget.engine,
-        catalog: widget.catalog,
-        respiraCatalog: widget.respiraCatalog,
         shelfCatalog: widget.shelfCatalog,
         prefs: widget.prefs,
         theme: theme,
@@ -100,8 +93,6 @@ class _BreakthroughAppState extends State<BreakthroughApp> {
 // ---- main page -------------------------------------------------------------
 class CalculatorPage extends StatefulWidget {
   final Engine engine;
-  final List<dynamic> catalog;
-  final List<dynamic> respiraCatalog;
   final Map<String, dynamic> shelfCatalog;
   final SharedPreferences prefs;
   final String theme;
@@ -110,8 +101,6 @@ class CalculatorPage extends StatefulWidget {
   const CalculatorPage({
     super.key,
     required this.engine,
-    required this.catalog,
-    required this.respiraCatalog,
     required this.shelfCatalog,
     required this.prefs,
     required this.theme,
@@ -445,7 +434,7 @@ class _CalculatorPageState extends State<CalculatorPage>
         ),
         body: TabBarView(controller: _topTabs, children: [
           _calcTab(),
-          ReferenceTab(engine: engine, catalog: widget.catalog),
+          ReferenceTab(engine: engine, catalog: widget.shelfCatalog),
           const GuideTab(),
         ]),
       );
@@ -587,8 +576,7 @@ class _CalculatorPageState extends State<CalculatorPage>
                 setState(() => _removePeSource(i));
                 _recalc();
               },
-              onAdd: () => setState(() => _addPeSource('', 0.0)),
-              onCatalog: _pickCatalog),
+              onAdd: () => setState(() => _addPeSource('', 0.0))),
           numField(tr('Daily pill attempts'), inp.pillLimit, (v) {
             inp.pillLimit = v;
             _captureBase('pill_attempts', v);
@@ -639,20 +627,11 @@ class _CalculatorPageState extends State<CalculatorPage>
           }),
         ]),
         formGroup(context, tr('Respira'), [
-          Row(children: [
-            Expanded(
-              child: numCtrlField(tr('Attempts / day'), _respiraCtrl, (v) {
-                inp.respiraPerDay = v;
-                _captureBase('respira_attempts', v);
-                _recalc();
-              }),
-            ),
-            IconButton(
-              icon: const Icon(Icons.list),
-              tooltip: tr('Respira sources'),
-              onPressed: _pickRespiraSources,
-            ),
-          ]),
+          numCtrlField(tr('Attempts / day'), _respiraCtrl, (v) {
+            inp.respiraPerDay = v;
+            _captureBase('respira_attempts', v);
+            _recalc();
+          }),
           numField(tr('Extra attempts today'), inp.respiraEvent, (v) {
             inp.respiraEvent = v;
             _recalc();
@@ -750,17 +729,4 @@ class _CalculatorPageState extends State<CalculatorPage>
     );
   }
 
-  // ---- source pickers (state wiring; UI in source_pickers.dart) ----
-  void _pickCatalog() {
-    pickCatalogSource(context, widget.catalog, _peSources,
-        onPicked: (name, value) {
-      setState(() => _addPeSource(name, value));
-      _recalc();
-    });
-  }
-
-  void _pickRespiraSources() {
-    pickRespiraSources(context, widget.respiraCatalog, _respiraSources,
-        inp: inp, respiraCtrl: _respiraCtrl, recalc: _recalc);
-  }
 }
