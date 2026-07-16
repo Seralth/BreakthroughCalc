@@ -98,20 +98,18 @@ class _VaultTabState extends State<VaultTab> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Column(children: [
         TabBar(tabs: [
           Tab(text: tr('Library')),
           Tab(text: tr('Treasury')),
           Tab(text: tr('Companions')),
-          Tab(text: tr('Blessings')),
         ]),
         Expanded(
           child: TabBarView(children: [
             _library(context),
             _treasury(context),
             _companions(context),
-            _blessings(context),
           ]),
         ),
       ]),
@@ -332,10 +330,21 @@ class _VaultTabState extends State<VaultTab> {
     );
   }
 
-  // ---- Treasury: curios ---------------------------------------------------
+  // ---- Treasury: curios + account blessings --------------------------------
   Widget _treasury(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(8), children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+        child: Text(tr('Curios'),
+            style: Theme.of(context).textTheme.titleMedium),
+      ),
       for (final c in _byCategory('curio')) _curioRow(context, c),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
+        child: Text(tr('Ascension blessings'),
+            style: Theme.of(context).textTheme.titleMedium),
+      ),
+      for (final b in _byCategory('blessing')) _ladderRow(context, b),
     ]);
   }
 
@@ -414,12 +423,6 @@ class _VaultTabState extends State<VaultTab> {
     ]);
   }
 
-  // ---- Blessings -----------------------------------------------------------
-  Widget _blessings(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(8), children: [
-      for (final b in _byCategory('blessing')) _ladderRow(context, b),
-    ]);
-  }
 
   Widget _friendRow(BuildContext context, Map entry) {
     final id = entry['id'] as String;
