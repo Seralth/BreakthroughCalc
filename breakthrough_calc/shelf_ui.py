@@ -177,7 +177,7 @@ class _SourceRow(QWidget):
 def _star_marker(entry: dict, row: _SourceRow) -> None:
     if entry.get("data_status") != "exact":
         star = QLabel("*")
-        star.setToolTip(tr("Amounts not exactly established."))
+        star.setToolTip(tr("Amount or unlock tier not exactly established."))
         lay = row.layout()
         lay.insertWidget(lay.count(), star)
 
