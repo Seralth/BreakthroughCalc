@@ -121,6 +121,12 @@ const Map<String, Map<String, String>> _t = {
   'Universal': {'ru': 'Общие', 'de': 'Universell', 'es': 'Universales', 'zh': '通用'},
   'Exclusive': {'ru': 'Эксклюзивные', 'de': 'Exklusiv', 'es': 'Exclusivas', 'zh': '专属'},
   'Max': {'ru': 'Макс', 'de': 'Max', 'es': 'Máx', 'zh': '满'},
+  'Blessings': {'ru': 'Благословения', 'de': 'Segen', 'es': 'Bendiciones', 'zh': '祝福'},
+  'Base EXP fills itself from your Stage; overwrite it with your in-game reading for exact numbers (clear it to go back to the estimate). Most Respira give the same small EXP — that is the base; 2×/5×/10× crits are handled automatically.': {
+    'ru': 'Базовый опыт заполняется сам по вашей Стадии; впишите своё игровое значение для точных чисел (очистите поле, чтобы вернуть оценку). Большинство респир дают одинаковый малый опыт — это база; криты 2×/5×/10× учитываются автоматически.',
+    'de': 'Basis-EXP füllt sich selbst aus deiner Stufe; überschreibe sie mit deinem Spielwert für exakte Zahlen (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.',
+    'es': 'La EXP base se rellena sola según tu Etapa; sobrescríbela con tu lectura del juego para cifras exactas (vacía el campo para volver a la estimación). La mayoría de Respira dan la misma EXP pequeña — esa es la base; los críticos 2×/5×/10× se manejan automáticamente.',
+    'zh': '基础经验会根据你的阶段自动填充；想要精确数字可用游戏内读数覆盖（清空即恢复估算）。大多数吐纳给出相同的小额经验——那就是基础值；2×/5×/10×暴击会自动计入。'},
   'Max shelf': {'ru': 'Макс. полка', 'de': 'Regal maxen', 'es': 'Maximizar estante', 'zh': '整层拉满'},
   'Empty shelf': {'ru': 'Очистить полку', 'de': 'Regal leeren', 'es': 'Vaciar estante', 'zh': '整层清空'},
   'Not learned': {'ru': 'Не изучено', 'de': 'Nicht erlernt', 'es': 'No aprendido', 'zh': '未学习'},

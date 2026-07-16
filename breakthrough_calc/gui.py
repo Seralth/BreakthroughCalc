@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
         # language-switch full rebuild; _doc_history is cleared by _build_ui
         # together with the doc widgets it indexes.
         self._respira_checked = set()
+        self._respira_exp_auto = None  # last self-filled Base EXP estimate
         self._shelf_catalog = load_sources()
         self._shelf = {"owned": {}, "bases": {}, "auto": []}
         self._doc_history = []
@@ -288,21 +289,14 @@ class MainWindow(QMainWindow):
         rf.addRow(tr("Extra attempts today"), self.respira_event)
         self.respira_books = QDoubleSpinBox(); self.respira_books.setRange(0, 1000)
         self.respira_books.setDecimals(1); self.respira_books.setSuffix(" %")
-        rx_wrap = QWidget(); rx_h = QHBoxLayout(rx_wrap); rx_h.setContentsMargins(0, 0, 0, 0)
-        rx_h.addWidget(self.respira_exp, 1)
-        rx_btn = QPushButton(tr("Auto"))
-        rx_btn.setToolTip(tr(
-            "Fill Base EXP from your Stage's Respira base (measured for "
-            "Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage "
-            "elsewhere) times (1 + Respira Effect books %)."))
-        rx_btn.clicked.connect(self._autofill_respira_exp)
-        rx_h.addWidget(rx_btn)
-        rf.addRow(tr("Base EXP / attempt"), rx_wrap)
+        rf.addRow(tr("Base EXP / attempt"), self.respira_exp)
         rf.addRow(tr("Respira Effect books"),
                   self._with_chip(self.respira_books, "respira_books"))
         respira_hint = QLabel(tr(
-            "Do a few Respira: most give the same small EXP (the base — enter that); "
-            "some give 2×/5×/10× (crits — ignore, handled automatically)."))
+            "Base EXP fills itself from your Stage; overwrite it with your "
+            "in-game reading for exact numbers (clear it to go back to the "
+            "estimate). Most Respira give the same small EXP — that is the "
+            "base; 2×/5×/10× crits are handled automatically."))
         respira_hint.setWordWrap(True)
         style_accent(respira_hint, "muted", self._acc)
         rf.addRow("", respira_hint)
@@ -917,13 +911,22 @@ class MainWindow(QMainWindow):
         self._save_settings()
         super().closeEvent(event)
 
-    def _autofill_respira_exp(self):
+    def _auto_respira_exp(self):
+        """Keep Base EXP prefilled with the Stage estimate while the user
+        has not overridden it: fills when empty, and refreshes after stage
+        or books changes while the field still holds the previous estimate.
+        A manual entry sticks; clearing the field returns to the estimate."""
         stage = stage_key(self.stage.currentText())
         base = self.engine.respira_base_estimate(stage)
         if base is None:
             return
-        self.respira_exp.setValue(
-            round(base * (1 + self.respira_books.value() / 100.0)))
+        est = float(round(base * (1 + self.respira_books.value() / 100.0)))
+        cur = self.respira_exp.value()
+        if cur == 0 or cur == self._respira_exp_auto or cur == est:
+            self.respira_exp.blockSignals(True)
+            self.respira_exp.setValue(est)
+            self.respira_exp.blockSignals(False)
+            self._respira_exp_auto = est
 
     # ---- Sources Shelf -----------------------------------------------------
     def _build_shelf_tab(self) -> QWidget:
@@ -1060,6 +1063,7 @@ class MainWindow(QMainWindow):
 
     def recalc(self, *_):
         if not self._loading:
+            self._auto_respira_exp()
             self._save_settings()
         self.copy_btn.setText(tr("Copy results"))
         res = self.engine.calculate(self._inputs())

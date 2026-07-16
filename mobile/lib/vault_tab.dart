@@ -98,18 +98,20 @@ class _VaultTabState extends State<VaultTab> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Column(children: [
         TabBar(tabs: [
           Tab(text: tr('Library')),
           Tab(text: tr('Treasury')),
           Tab(text: tr('Companions')),
+          Tab(text: tr('Blessings')),
         ]),
         Expanded(
           child: TabBarView(children: [
             _library(context),
             _treasury(context),
             _companions(context),
+            _blessings(context),
           ]),
         ),
       ]),
@@ -405,23 +407,17 @@ class _VaultTabState extends State<VaultTab> {
     );
   }
 
-  // ---- Companions: friends + blessings + bases + auto switch --------------
+  // ---- Companions: immortal friends ---------------------------------------
   Widget _companions(BuildContext context) {
-    final friends = _byCategory('immortal_friend');
-    final blessings = _byCategory('blessing');
     return ListView(padding: const EdgeInsets.all(8), children: [
-      Padding(
-        padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-        child: Text(tr('Immortal friends'),
-            style: Theme.of(context).textTheme.titleMedium),
-      ),
-      for (final f in friends) _friendRow(context, f),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-        child: Text(tr('Ascension blessings'),
-            style: Theme.of(context).textTheme.titleMedium),
-      ),
-      for (final b in blessings) _ladderRow(context, b),
+      for (final f in _byCategory('immortal_friend')) _friendRow(context, f),
+    ]);
+  }
+
+  // ---- Blessings -----------------------------------------------------------
+  Widget _blessings(BuildContext context) {
+    return ListView(padding: const EdgeInsets.all(8), children: [
+      for (final b in _byCategory('blessing')) _ladderRow(context, b),
     ]);
   }
 

@@ -336,8 +336,8 @@ class ShelfPage(QWidget):
         self._panes = [
             (_LibraryPane(catalog), tr("Library")),
             (_RowsPane(catalog, ("curio",)), tr("Treasury")),
-            (_RowsPane(catalog, ("immortal_friend", "blessing", "other")),
-             tr("Companions")),
+            (_RowsPane(catalog, ("immortal_friend",)), tr("Companions")),
+            (_RowsPane(catalog, ("blessing", "other")), tr("Blessings")),
         ]
         tabs = QTabWidget()
         self._rows: dict[str, _SourceRow] = {}
