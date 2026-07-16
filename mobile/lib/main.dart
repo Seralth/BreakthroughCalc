@@ -284,29 +284,44 @@ class _CalculatorPageState extends State<CalculatorPage>
   void _saveVault() =>
       widget.prefs.setString('shelf_v1', jsonEncode(_vault.toMap()));
 
-  /// Vault edits: persist, and in auto mode write the derived totals into
-  /// the calculator fields (manual edits stay put until the next Vault
-  /// change).
+  /// Vault edits: persist and write the totals into the calculator.
+  /// Attempts/limit fields are remainder + Vault (the remainder was
+  /// captured from the field, so manual entries are never double-counted);
+  /// percent fields are only written while the Vault actually contributes.
   void _onVaultChanged() {
     _saveVault();
-    if (_vault.auto) {
-      final d = derive(widget.shelfCatalog, _vault.toMap());
-      inp.respiraPerDay = (_vault.bases['respira_attempts'] ?? 0.0) +
-          (d['respira_attempts']?.total ?? 0.0);
-      inp.pillLimit = (_vault.bases['pill_attempts'] ?? 0.0) +
-          (d['pill_attempts']?.total ?? 0.0);
-      inp.blessPp = d['bless_pp']?.total ?? 0.0;
-      inp.blessWindowPp = d['bless_window_pp']?.total ?? 0.0;
-      _respiraBooksPct = d['respira_effect']?.total ?? 0.0;
-      widget.prefs.setDouble('respira_books_pct', _respiraBooksPct);
-      final peTotal = d['pill_effect']?.total ?? 0.0;
-      final i = _peSources.indexWhere((s) => s[0] == _vaultPeRow);
-      if (i >= 0) _removePeSource(i);
-      if (peTotal > 0) _addPeSource(_vaultPeRow, peTotal);
-      _respiraCtrl.text = fmtNum(inp.respiraPerDay);
-      _formGeneration++;
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    inp.respiraPerDay = (_vault.bases['respira_attempts'] ?? 10.0) +
+        (d['respira_attempts']?.total ?? 0.0);
+    inp.pillLimit = (_vault.bases['pill_attempts'] ?? 0.0) +
+        (d['pill_attempts']?.total ?? 0.0);
+    final bless = d['bless_pp']?.total ?? 0.0;
+    if (bless > 0) inp.blessPp = bless;
+    final blessWindow = d['bless_window_pp']?.total ?? 0.0;
+    if (blessWindow > 0) inp.blessWindowPp = blessWindow;
+    final books = d['respira_effect']?.total ?? 0.0;
+    if (books > 0) {
+      _respiraBooksPct = books;
+      widget.prefs.setDouble('respira_books_pct', books);
     }
+    final peTotal = d['pill_effect']?.total ?? 0.0;
+    final i = _peSources.indexWhere((s) => s[0] == _vaultPeRow);
+    if (i >= 0) _removePeSource(i);
+    if (peTotal > 0) _addPeSource(_vaultPeRow, peTotal);
+    _respiraCtrl.text = fmtNum(inp.respiraPerDay);
+    _formGeneration++;
     _recalc();
+  }
+
+  /// Manual edits to the attempts/limit fields re-anchor the untracked
+  /// remainder, so the Vault's next write reproduces the entered value.
+  void _captureBase(String target, double entered) {
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    final derived = d[target]?.total ?? 0.0;
+    _vault.bases[target == 'respira_attempts'
+        ? 'respira_attempts'
+        : 'pill_attempts'] = (entered - derived).clamp(0.0, double.infinity);
+    _saveVault();
   }
 
   void _openVault() {
@@ -576,6 +591,7 @@ class _CalculatorPageState extends State<CalculatorPage>
               onCatalog: _pickCatalog),
           numField(tr('Daily pill attempts'), inp.pillLimit, (v) {
             inp.pillLimit = v;
+            _captureBase('pill_attempts', v);
             _recalc();
           }),
           numField(tr('Legendary (Gold) / day'), inp.goldPerDay, (v) {
@@ -627,6 +643,7 @@ class _CalculatorPageState extends State<CalculatorPage>
             Expanded(
               child: numCtrlField(tr('Attempts / day'), _respiraCtrl, (v) {
                 inp.respiraPerDay = v;
+                _captureBase('respira_attempts', v);
                 _recalc();
               }),
             ),

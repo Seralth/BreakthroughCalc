@@ -991,11 +991,22 @@ class MainWindow(QMainWindow):
 
     def _on_shelf_changed(self, *_):
         self._shelf["owned"] = self.shelf_page.owned()
-        self._shelf["bases"] = self.shelf_page.bases()
         self._apply_shelf()
 
     def _set_shelf_auto(self, field_key: str, auto: bool):
         cur = set(self._shelf.get("auto", []))
+        if auto and field_key not in cur:
+            # Going auto keeps the field value: whatever the user's entry
+            # holds beyond the shelf's contributions becomes the invisible
+            # untracked remainder (game base, event perks, ...).
+            spec = FIELD_BY_KEY.get(field_key)
+            t = spec.shelf_target if spec else None
+            tinfo = self._shelf_catalog.get("targets", {}).get(t, {})
+            if tinfo.get("base") == "user":
+                d = shelf_derive(self._shelf_catalog, self._shelf).get(t)
+                w = getattr(self, spec.widget_attr)
+                self._shelf.setdefault("bases", {})[t] = max(
+                    0.0, w.value() - (d.total if d else 0.0))
         (cur.add if auto else cur.discard)(field_key)
         self._shelf["auto"] = sorted(cur)
         self._apply_shelf()

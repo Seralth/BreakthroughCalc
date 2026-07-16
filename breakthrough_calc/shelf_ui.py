@@ -333,27 +333,6 @@ class ShelfPage(QWidget):
         intro.setWordWrap(True)
         v.addWidget(intro)
 
-        bases = QGroupBox(tr("Base values (before sources)"))
-        bh = QHBoxLayout(bases)
-        self.base_respira = QDoubleSpinBox()
-        self.base_respira.setRange(0, 1e5)
-        self.base_respira.setValue(10)
-        self.base_respira.setToolTip(tr(
-            "Daily Respira attempts before any owned source. The game "
-            "grants 10 by default."))
-        self.base_pills = QDoubleSpinBox()
-        self.base_pills.setRange(0, 1e5)
-        self.base_pills.setToolTip(tr(
-            "Daily pill limit before any owned source."))
-        bh.addWidget(QLabel(tr("Respira attempts / day")))
-        bh.addWidget(self.base_respira)
-        bh.addWidget(QLabel(tr("Daily pill limit")))
-        bh.addWidget(self.base_pills)
-        bh.addStretch(1)
-        self.base_respira.valueChanged.connect(self.changed)
-        self.base_pills.valueChanged.connect(self.changed)
-        v.addWidget(bases)
-
         self._panes = [
             (_LibraryPane(catalog), tr("Library")),
             (_RowsPane(catalog, ("curio",)), tr("Treasury")),
@@ -376,16 +355,8 @@ class ShelfPage(QWidget):
                 out[sid] = val
         return out
 
-    def bases(self) -> dict:
-        return {"respira_attempts": self.base_respira.value(),
-                "pill_attempts": self.base_pills.value()}
-
-    def set_state(self, owned: dict, bases: dict):
+    def set_state(self, owned: dict, _bases: dict | None = None):
+        # The untracked remainder ("bases") is invisible state owned by the
+        # MainWindow — captured from the field value when a chip goes auto.
         for sid, row in self._rows.items():
             row.set_owned(owned.get(sid))
-        for widget, key, default in (
-                (self.base_respira, "respira_attempts", 10.0),
-                (self.base_pills, "pill_attempts", 0.0)):
-            widget.blockSignals(True)
-            widget.setValue(float(bases.get(key, default)))
-            widget.blockSignals(False)

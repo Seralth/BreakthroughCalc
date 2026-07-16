@@ -410,26 +410,6 @@ class _VaultTabState extends State<VaultTab> {
     final friends = _byCategory('immortal_friend');
     final blessings = _byCategory('blessing');
     return ListView(padding: const EdgeInsets.all(8), children: [
-      SwitchListTile(
-        dense: true,
-        title: Text(tr('Auto-fill calculator fields')),
-        subtitle: Text(
-            tr('Writes the Vault\'s totals into pill effect, attempts and '
-                'Respira fields whenever the Vault changes.'),
-            style: const TextStyle(fontSize: 12)),
-        value: st.auto,
-        onChanged: (v) => _edit(() => st.auto = v),
-      ),
-      formGroup(context, tr('Base values (before sources)'), [
-        numField(tr('Respira attempts / day'),
-            st.bases['respira_attempts'] ?? 10.0, (v) {
-          _edit(() => st.bases['respira_attempts'] = v);
-        }),
-        numField(tr('Daily pill limit'), st.bases['pill_attempts'] ?? 0.0,
-            (v) {
-          _edit(() => st.bases['pill_attempts'] = v);
-        }),
-      ]),
       Padding(
         padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
         child: Text(tr('Immortal friends'),
