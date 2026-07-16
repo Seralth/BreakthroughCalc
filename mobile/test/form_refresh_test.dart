@@ -42,7 +42,7 @@ void main() {
     tester.view.physicalSize = const Size(900, 8000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(BreakthroughApp(engine, const [], const [], prefs));
+    await tester.pumpWidget(BreakthroughApp(engine, const [], const [], const {}, prefs));
     await tester.pumpAndSettle();
   }
 

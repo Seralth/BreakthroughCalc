@@ -72,7 +72,7 @@ class _ReferenceTabState extends State<ReferenceTab>
 
   void _onDocLink() {
     if (!mounted) return;
-    final req = _nav.consumePendingFor(1);
+    final req = _nav.consumePendingFor(topTabReference);
     if (req == null) return;
     _tabs.animateTo(req.sub);
     if (req.anchor != null) scrollToDocAnchor(req.anchor!);

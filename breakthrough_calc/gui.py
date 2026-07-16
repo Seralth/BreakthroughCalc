@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
 
         tabs = QTabWidget()
         tabs.addTab(central, tr("Calculator"))
-        tabs.addTab(self._build_shelf_tab(), tr("Sources"))
+        tabs.addTab(self._build_shelf_tab(), tr("Vault"))
         self._tabs = tabs
         # doc history points into the doc tabs rebuilt below — start it fresh
         self._doc_history.clear()
@@ -974,7 +974,7 @@ class MainWindow(QMainWindow):
         self.shelf_page.changed.connect(self._on_shelf_changed)
         scroll = QScrollArea(); scroll.setWidgetResizable(True)
         scroll.setWidget(self.shelf_page)
-        return scroll
+        return scroll  # Library scrolls itself; outer scroll covers the rest
 
     def _shelf_chip(self, field_key: str) -> ProvenanceChip:
         chip = ProvenanceChip()

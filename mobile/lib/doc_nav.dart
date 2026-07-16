@@ -19,10 +19,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'guide_tab.dart' show guideSlugs;
 import 'reference_tab.dart' show refSlugs;
 
+/// Top-level scaffold tab indices for the doc trees (the Vault tab sits
+/// between Calculator and Reference).
+const topTabReference = 2;
+const topTabGuide = 3;
+
 const _issuesUrl = 'https://github.com/Seralth/BreakthroughCalc/issues';
 
 class DocLink {
-  final int tab; // top-level tab index: 1 = Reference, 2 = Guide
+  final int tab; // top-level tab index (see topTabReference/topTabGuide)
   final int sub; // sub-tab index within it
   final String? anchor; // anchor id (e.g. 'ref:elixirs:tolerance')
   const DocLink(this.tab, this.sub, [this.anchor]);
@@ -46,10 +51,10 @@ class DocNavigator {
   /// current location, the arrow next to the tab bar pops it.
   final ValueNotifier<List<DocLink>> backStack = ValueNotifier(const []);
 
-  DocLink? _currentLocation() => topTab == 1
-      ? DocLink(1, refSub)
-      : topTab == 2
-          ? DocLink(2, guideSub)
+  DocLink? _currentLocation() => topTab == topTabReference
+      ? DocLink(topTabReference, refSub)
+      : topTab == topTabGuide
+          ? DocLink(topTabGuide, guideSub)
           : null;
 
   void openLink(DocLink target) {
@@ -130,7 +135,7 @@ Widget docText(BuildContext context, String s) {
             style: linkStyle,
             recognizer: TapGestureRecognizer()
               ..onTap = () => DocNavigator.instance.openLink(DocLink(
-                  tree == 'ref' ? 1 : 2,
+                  tree == 'ref' ? topTabReference : topTabGuide,
                   sub,
                   anchor == null ? null : '$tree:$slug:$anchor'))));
     pos = m.end;

@@ -118,7 +118,7 @@ class Derivation(unittest.TestCase):
 
     def test_ordering_is_deterministic(self):
         shelf = {"owned": {"moon_meru": 12, "six_eared_macaque": 17,
-                           "purify_cleanse": 1}}
+                           "purify_cleanse": 3}}
         d = derive(self.cat, shelf)["respira_effect"]
         # category order first (books before friends), then value descending.
         self.assertEqual([c.source_id for c in d.contributions],

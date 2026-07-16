@@ -63,7 +63,7 @@ class _GuideTabState extends State<GuideTab>
 
   void _onDocLink() {
     if (!mounted) return;
-    final req = _nav.consumePendingFor(2);
+    final req = _nav.consumePendingFor(topTabGuide);
     if (req == null) return;
     _tabs.animateTo(req.sub);
     if (req.anchor != null) scrollToDocAnchor(req.anchor!);

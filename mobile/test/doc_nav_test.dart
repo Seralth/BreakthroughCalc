@@ -36,7 +36,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(
-        BreakthroughApp(loadEngine(), const [], const [], prefs));
+        BreakthroughApp(loadEngine(), const [], const [], const {}, prefs));
     await tester.pumpAndSettle();
 
     // Read the Guide first so the jump has a location to push.
@@ -46,7 +46,7 @@ void main() {
 
     // Follow a [[ref:systems#spire|...]]-shaped link.
     DocNavigator.instance
-        .openLink(DocLink(1, refSlugs['systems']!, 'ref:systems:spire'));
+        .openLink(DocLink(topTabReference, refSlugs['systems']!, 'ref:systems:spire'));
     await tester.pumpAndSettle();
     expect(find.text('Demon Spire'), findsOneWidget,
         reason: 'jump must land on Reference → World Systems');
