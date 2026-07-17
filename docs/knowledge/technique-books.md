@@ -159,7 +159,92 @@ Display order and tables:
   **T6** (both were min_level 1 before), +7% at T9 confirmed.
 - All 12 R9 book names and tables recorded (previously a complete blank).
 
+## Post-R9 manuals — community priority sheet (extracted 2026-07-17)
+
+Source: "Tech manual priority.xlsx" (community tier list, downloaded
+2026-07-14 to ~/Downloads). Columns per manual: unlock/T3/T6/T9/T12 node
+bonuses, an S+…C rating (R8+ only), free-text build notes. NOT
+screenshot-verified — but every R4–R9 row cross-checks node-for-node
+against the verified tables above (Chroma, Yin's Grasp, Purify & Cleanse,
+Conflagration, Unbound Blade, Honored Origin spot-checked identical), so
+per owner decision 2026-07-17 the post-R9 half is treated as reliable
+until proven otherwise. Shipped in-app as Guide → Techniques + the
+Reference → World Systems roadmap (v2.20).
+
+Alias notes (sheet → canonical): "Yang Sword" = Sunset Halberd Dance
+(node-for-node match), "Harvest God" = Harvest God Secret, "Honoured
+Origin" = Honored Origin, "Control" = Paralysis. Post-R9 sheet names may
+themselves be translation/pinyin aliases — recognizable labels, not
+confirmed in-game names. Normalized in the apps: "Heavenly Rythum" →
+Heavenly Rhythm, "Ying Yang Harmony" → Yin Yang Harmony, "Jade
+Reincarnation Tech" → Jade Reincarnation Technique.
+
+Caveats (why the Vault shelves still stop at R9): the sheet is a priority
+list, not a catalog — per-rank lists are likely incomplete (for R4–R9 it
+covers only 3–6 of each rank's books); max tiers, threshold spacing and
+the final "Technique Stats +100%" capstone are not stated (thresholds
+below assume learn/3/6/9/12 by analogy); the R10 row says only "MUST
+TAKE" with no names (the 2026 community guide separately names Immortal
+Ascension @ R10 "to Tier 13", kept in the apps). Shelf entries need
+full-catalog quality — owner will supply complete details later.
+
+New node families first seen here: elemental-law learning speed
+(Metal/Wood/Water/Fire/Earth "law spd"), Qiyun efficiency, DMG to
+divine/demonic, and "DF culti" stat lines (sheet shorthand, deliberately
+left unexpanded in the apps).
+
+### Sheet data (rank | manual | unlock; T3; T6; T9; T12 | rating | note)
+
+- R11 | Thunder Lord Incantation | Metal law spd +2%; Water +4%; Water +4%; Metal +8%; Earth +10% | S | learning speed important
+- R11 | Heavenly Rhythm | Respira effect +1%; +3%; Respira attempt +1; +7%; +9% | A− | Respira central
+- R11 | Square Inch Script | PvE dmg +1%; PvP dmg +1%; PvP dmg reduc +2%; Respira effect +7%; PvE dmg reduc +3% | B | "weird mix of pve and pvp"
+- R11 | Pure Mysterious | Abode aura +1%; aura +2%; Crit multi +3%; Crit block +3%; Fire law spd +10% | S+ | aura, law speed, hard-to-get stats
+- R12 | Cloud Satchel | Fire +2%; Earth +4%; Earth +6%; Fire +8%; Earth +10% | S | learning speed important
+- R12 | Star Blade | Crit block +1%; Water law +4%; Crit multi +3%; PvP dmg reduc +3%; Fire law +10% | A+ | "a good mix of things you want"
+- R13 | Five Thunder Mantra | Abode aura +1%; PvP dmg reduc +1%; PvP dmg +2%; PvP reduc +3%; PvP dmg +4% | A+ | "if nothing else you unlock this"
+- R13 | Pure Starlight | Spiritum +2%; Respira effect +3%; Crit multi +3%; Wood law +8%; Water law +10% | A | —
+- R14 | Samsara Scripture | PvE dmg reduc +1%; Abode aura +2%; PvE dmg +2%; Crit block +3%; Spiritum +4% | B | take to 2nd unlock
+- R14 | Yin Yang Harmony | Water +2%; Fire +4%; Fire +6%; Water +8%; Fire +10% | S | law speed important
+- R14 | Chaos Origin | Respira effect +1%; +3%; Respira attempts +1; +7%; +9% | A | Respira central
+- R15 | Taisu Scripture | Abode aura +1%; Wood law +4%; Crit block +2%; Wood +8%; Water +10% | A | —
+- R15 | Celestial Cloud Scripture | Wood +2%; Metal +4%; Metal +6%; Wood +8%; Metal +10% | S | —
+- R15 | Heaven Execution | Crit block +1%; PvP dmg reduc +1%; PvP dmg +2%; PvP reduc +3%; PvP dmg +4% | A | decent PvP, low priority
+- R16 | Supreme Heavenly Tao | Respira effect +1%; Spiritum +2%; Respira attempts +1 (sheet types "+1%" — % assumed typo); PvE dmg reduc +3%; PvP dmg +4% | B | decent mix
+- R16 | Immortality Cloud | Earth +2%; Wood +4%; Wood +6%; Earth +8%; Wood +10% | S | learning speed important
+- R16 | Pure Jade One | Abode aura +1%; aura +2%; PvP dmg +2%; PvP reduc +3%; PvP reduc +4% | S | aura + PvP stats
+- R17 | Demonbane Technique | DMG to divine +1%; Divine dmg reduc +1%; Qiyun efficiency +2%; Divine reduc +2%; DMG to divine +3% | A | "you just want t3 unlock" (read: the Qiyun node — its 3rd unlock)
+- R17 | Zen Lotus Technique | demonic-side mirror of Demonbane | A | same
+- R18 | Sanskrit Chant | Crit block +1%; Crit multi +3%; Crit block +3%; Crit multi +5%; Spiritum +4% | A | decent crit nodes
+- R18 | Magnetic Light Maneuver | PvE dmg reduc +1%; Qiyun eff +1%; Qiyun eff +2%; Respira effect +7%; PvP dmg +4% | A+ | double Qiyun nodes
+- R19 | Draconic Demon Taming | Dmg to demon +1%; +1%; Qiyun eff +2%; DF culti m.atk +2%; DF culti m.def +4% | A− | first 3 nodes; rest as magicka
+- R19 | Jade Reincarnation Technique | Dmg to demon +1%; +1%; DF culti m.atk +2%; DF p.atk +2%; DF p.def +4% | B | same minus Qiyun
+- R20 | Book of Forgotten Wishes | (author: "I hate everything in this section, take whatever you like") | — | —
+- R21 | Book of Necromancy | PvE dmg reduc +1%; Qiyun eff +1%; PvP relic dmg +2%; DF cult health +3%; Divine dmg reduc +3% | — | —
+- R21 | Book of Meditation | Cntrl dura amp +5; DF m.atk +1%; Cntrl chance +10; DF MP +3%; DF relic dmg reduc +3% | C | —
+
+### R4–R9 ratings/notes from the same sheet (nodes all match tables above)
+
+- R4: Golden Core BIS; Astrology BIS; Focus "unlock is good"
+- R5: Ninefall BIS; Bloodization "take up to T6"; Solarics "T3 if
+  magicka, all the way if corp"
+- R6: Yin's Grasp BIS "take to T9"; Conflagration BIS; Unbound Blade
+  BIS (both: PvP + aura); Dragon Flight "take to T6"
+- R7: Floral Essence BIS; Purify & Cleanse BIS; Great Yang Manual
+  "unlock is whatever, everything else good"; Aqua Power PvP "to T6";
+  Ninefall Hoarfrost PvP; Sunset Halberd Dance ("Yang Sword") PvP
+- R8: Tao of Taiqing S+ (magicka); Astral Arcanum S+; Chroma S+ ("if
+  you don't take you'll fall behind"); Origin Scripture A (corp
+  all-rounder); Zixiao Sutra B ("take the first two nodes")
+- R9: Harvest God Secret S+; Divine Water A+ (magicka PvP); Honored
+  Origin A (bought for aura); Heartless A (corp PvP); Laws of Nature B
+  ("grab the first node")
+
 ## Open questions
 
 - R1–R5 max tiers and mid thresholds (see caveat above).
-- Spirit/immortal-world manuals beyond R9: not yet visible on this account.
+- Post-R9 manuals: the priority sheet above gives partial names, five
+  node bonuses and ratings, but NOT complete per-rank catalogs, max
+  tiers/thresholds, capstone nodes or confirmed in-game names — all
+  required before the Vault shelves extend past R9.
+- R10 manual names (sheet: "MUST TAKE" only; community guide names just
+  Immortal Ascension).
