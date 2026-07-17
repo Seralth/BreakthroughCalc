@@ -631,7 +631,7 @@ Widget _petsPage(BuildContext context) {
         'behind what a Lion would be. Check the planner below with your '
         'own numbers before committing.\n'
         '• Babedeer costs double essences for PvP-only value, and Berpent '
-        'only comes from Thunderwave event rounds — neither suits a '
+        'only comes from events — neither suits a '
         'focused build.'),
     Text('Exchange and elimination', style: h3),
     para('Pets are bought with rare essences: Blazelion 5 Metal + 5 Wood, '

@@ -1608,7 +1608,7 @@ def build_guide_pages(acc: dict) -> list:
         "rarity steps behind what a Lion would be. Check the Pets tab with "
         "your own numbers before committing.</li>"
         "<li><b>Babedeer</b> costs double essences for PvP-only value, and "
-        "<b>Berpent</b> only comes from Thunderwave event rounds — neither "
+        "<b>Berpent</b> only comes from events — neither "
         "suits a focused build.</li></ul>"
         "<h3>Exchange and elimination</h3>"
         "<p>Pets are bought with rare essences: Blazelion 5 Metal + 5 Wood, "
