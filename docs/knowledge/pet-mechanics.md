@@ -22,7 +22,7 @@ internally consistent across the four sources except where noted.
 | Babetoise | Tank; taunt; P.Evasion/P.Def buffs | 5 Metal + 5 Earth |
 | Babeox | Average dmg; stun (75%/2 s); removes enemy buffs | 5 Wood + 5 Water |
 | Babedeer | PvP support (debuffs PvP dmg resistance); double cost — whale trap | 10 Fire + 10 Earth |
-| Berpent | Tanky; 2nd-highest ST dmg; buff-removal; crit-res down | NOT exchangeable (weekly Thunderwave event rounds only) |
+| Berpent | Tanky; 2nd-highest ST dmg; buff-removal; crit-res down | NOT exchangeable (event-only: "Special pet eggs" in weekly event exchanges — as of 2026-07-17 the Adventure exchange carries them, Beast Wave does not; rarely other events. The carrying event varies, so UI text says only "comes from events".) |
 
 Skill % figures in the table are from S4 (spoken, auto-captions) — treat as
 approximate until seen in a tooltip.
