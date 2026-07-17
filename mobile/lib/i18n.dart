@@ -104,6 +104,71 @@ const Map<String, Map<String, String>> _t = {
   'Skin': {'ru': 'Облик', 'de': 'Haut', 'es': 'Apariencia', 'zh': '装扮'},
   'Star': {'ru': 'Звезда', 'de': 'Stern', 'es': 'Estrella', 'zh': '星级'},
   'Donate': {'ru': 'Сделать взнос', 'de': 'Spenden', 'es': 'Donar', 'zh': '捐献'},
+  'Enjoying the calculator?': {
+    'ru': 'Нравится калькулятор?',
+    'de': 'Gefällt dir der Rechner?',
+    'es': '¿Te gusta la calculadora?',
+    'zh': '喜欢这个计算器吗？'
+  },
+  'This app is free and always will be. If it has been useful, '
+      'you can support development with a donation — sent as an '
+      'in-game voucher gift.': {
+    'ru': 'Это приложение бесплатно и всегда будет бесплатным. Если оно '
+        'было полезным, вы можете поддержать разработку взносом — он '
+        'отправляется как подарочный ваучер в игре.',
+    'de': 'Diese App ist kostenlos und bleibt es. Wenn sie dir geholfen '
+        'hat, kannst du die Entwicklung mit einer Spende unterstützen — '
+        'zugestellt als Gutschein-Geschenk im Spiel.',
+    'es': 'Esta aplicación es gratuita y siempre lo será. Si te ha '
+        'resultado útil, puedes apoyar el desarrollo con una donación — '
+        'se envía como un vale de regalo dentro del juego.',
+    'zh': '本应用永久免费。如果它对你有帮助，欢迎通过捐赠支持开发——捐赠将以游戏内代金券礼物的形式送达。'
+  },
+  'Maybe later': {
+    'ru': 'Может позже',
+    'de': 'Vielleicht später',
+    'es': 'Quizá más tarde',
+    'zh': '以后再说'
+  },
+  "Don't ask again": {
+    'ru': 'Больше не спрашивать',
+    'de': 'Nicht mehr fragen',
+    'es': 'No volver a preguntar',
+    'zh': '不再询问'
+  },
+  'Automatic updates': {
+    'ru': 'Автоматические обновления',
+    'de': 'Automatische Updates',
+    'es': 'Actualizaciones automáticas',
+    'zh': '自动更新'
+  },
+  'Get Obtainium': {
+    'ru': 'Установить Obtainium',
+    'de': 'Obtainium holen',
+    'es': 'Obtener Obtainium',
+    'zh': '获取 Obtainium'
+  },
+  'This app can update itself automatically through Obtainium, a '
+      'free app that installs new versions straight from this '
+      "project's releases. Add this app there once and every update "
+      'arrives as a notification — no more manual downloads.': {
+    'ru': 'Это приложение может обновляться автоматически через Obtainium — '
+        'бесплатное приложение, устанавливающее новые версии прямо из '
+        'релизов проекта. Добавьте туда это приложение один раз, и каждое '
+        'обновление будет приходить как уведомление — больше никаких '
+        'ручных загрузок.',
+    'de': 'Diese App kann sich automatisch über Obtainium aktualisieren — '
+        'eine kostenlose App, die neue Versionen direkt aus den Releases '
+        'dieses Projekts installiert. Einmal dort hinzufügen, und jedes '
+        'Update kommt als Benachrichtigung — kein manuelles Herunterladen '
+        'mehr.',
+    'es': 'Esta aplicación puede actualizarse automáticamente mediante '
+        'Obtainium, una aplicación gratuita que instala nuevas versiones '
+        'directamente desde las publicaciones de este proyecto. Añádela '
+        'allí una vez y cada actualización llegará como notificación — se '
+        'acabaron las descargas manuales.',
+    'zh': '本应用可通过 Obtainium 自动更新——这是一款免费应用，可直接从本项目的发布页安装新版本。只需添加一次，每个更新都会以通知形式送达——无需再手动下载。'
+  },
   'Language': {'ru': 'Язык', 'de': 'Sprache', 'es': 'Idioma', 'zh': '语言'},
   // ---- pill colors ----------------------------------------------------------
   'Blue': {'ru': 'Синяя', 'de': 'Blau', 'es': 'Azul', 'zh': '蓝'},
