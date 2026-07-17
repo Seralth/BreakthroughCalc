@@ -160,18 +160,30 @@ Widget _basicsPage(BuildContext context, Engine engine, Map<String, dynamic> cat
         'Cultivation Speed = Abode Aura × Absorption Ratio — all read from the '
         'in-game Cultivation Bonus screen. Progression is Stage → Half-step → Grade, '
         'each grade needing a fixed EXP amount.'),
+    docTable(context, 'The three Worlds', ['World', 'Stages', 'Entered by'], [
+      ['Mortal', 'Novice → Connection → Foundation →\nVirtuoso → Nascent Soul → Incarnation', '—'],
+      ['Spiritual', 'Voidbreak → Wholeness →\nPerfection → Nirvana', 'Ascension\n(first timegate)'],
+      ['Immortal', 'Celestial → Eternal → Supreme', 'Transcendence'],
+    ]),
+    para('World boundaries carry the big resets — a fresh Myrimon fruit tier '
+        'and extractor — while pill ranks step with every major Stage '
+        '(Connection 1R … Incarnation 5R, Voidbreak 6R … Supreme 12R). Each '
+        'era from Incarnation on is paced by a server timegate '
+        '([[guide:timegate|Guide → Timegate]]).'),
     Text('Core formulas', style: h3),
     para('• Cultivation Speed = Abode Aura × Absorption Ratio\n'
         '• Abode Aura = 130 × (1 + total aura bonus) — base 130 holds for '
         'Connection through Incarnation\n'
         '• Cultivation ticks every 8 seconds (one Cosmoapsis)\n'
-        '• Absorption = stage base × (1 + Strive); Strive unlocks at Nascent Soul '
-        'and fades as you approach your server\'s #1\n'
+        '• Absorption = (stage base + Virya blessing points) × (1 + Strive); Strive '
+        'unlocks at Nascent Soul and fades as you approach your server\'s #1\n'
         '• Pill EXP = base × (1 + pill effect + quality star mark [+ Vase star/skin '
         'for reds])'),
     Text('Strive', style: h3),
     para('From Nascent Soul, Strive multiplies absorption and grows the further you '
-        'are behind server #1, fading as you catch up. Set "Server #1 Stage" to model '
+        'are behind server #1, fading as you catch up. Virya blessing points join the '
+        'stage base inside the multiplier from Incarnation (Perfected) on '
+        '([[guide:timegate|Guide → Timegate]]). Set "Server #1 Stage" to model '
         'the drop-off. It does not change your current-position time (it cancels out).'),
     Text('Crit variance (best / worst)', style: h3),
     para('Respira crits and fruit gushes are random, so estimates carry a ~90% best/worst '
@@ -180,7 +192,8 @@ Widget _basicsPage(BuildContext context, Engine engine, Map<String, dynamic> cat
         'a pity floor (a gush is guaranteed within 6 fruits of the last one), narrowing the fruit side.'),
     Text('Timegates', style: h3),
     para('Timegates pace whole-server progression; Myrimon is the main F2P tool for '
-        'meeting them.'),
+        'meeting them. The prestock playbook for a gate is on '
+        '[[guide:timegate|Guide → Timegate]].'),
     Text('Tips for using the calculator',
         key: anchorKey('ref:basics:tips'), style: h3),
     para('• Fill in Abode Aura and Absorption Ratio from the Cultivation Bonus '
@@ -367,10 +380,12 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
         'with fruit rank, your Culti/Quality/Gush levels, and extractor rarity — higher '
         'quality rolls multiply the base substantially, so extractor upgrades compound.'),
     Text('Fruit ranks and realms', style: h3),
-    para('Fruit ranks map to realm bands: R3 covers Nascent–Voidbreak, R6 starts '
-        'the Spiritual world, R12 the Immortal world. R4/R5 don\'t exist.'),
-    para('Myrimon unlocks at Virtuoso; Virtuoso–Incarnation share one '
-        'fruit/extractor tier; each later major realm has its own.'),
+    para('Fruit ranks map to World bands: R3 is the Mortal World band (usable up '
+        'to the Voidbreak gate), R6 starts the Spiritual World, R12 the Immortal '
+        'World. R4/R5 don\'t exist.'),
+    para('Myrimon unlocks at Virtuoso; the Mortal World (Virtuoso–Incarnation) '
+        'shares one fruit/extractor tier; each World afterwards gets its own — '
+        'Spiritual at Voidbreak, Immortal at Celestial.'),
     Text('Uses and stacking', style: h3),
     para('During the first week uses don\'t stack; after that they do — save them '
         'for Sunday or the next BR threshold.'),
@@ -384,11 +399,12 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
         'guaranteed within 6 fruits of the last one (soft pity — any gush, '
         'random or guaranteed, resets the counter), on top of the displayed '
         'random rate.'),
-    Text('Reset on breakthrough', style: h3),
-    para('The Aura Extractor resets to Common quality / bonus 0 on main-Stage '
-        'breakthrough and auto-consumes leftover previous-Stage fruits at '
-        'pre-upgrade rates — upgrade fully before burning a stockpile, and burn '
-        'it before breaking through.'),
+    Text('Reset on realm ascension', style: h3),
+    para('The Aura Extractor resets to Common quality / bonus 0 when you ascend '
+        'to a new realm — stage breakthroughs within a realm (e.g. Nascent Soul → '
+        'Incarnation) don\'t reset it — and auto-consumes leftover previous-realm '
+        'fruits at pre-upgrade rates. Upgrade fully before burning a stockpile, '
+        'and burn it before ascending.'),
     Text('Leveling and stockpiling',
         key: anchorKey('ref:myrimon:verified'), style: h3),
     para('Extractor leveling priority: Quality → Cultivation → Gush → High Rank '
@@ -398,8 +414,8 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
         'else until the extractor is maxed. Every fruit eaten early forfeits the '
         'better quality/EXP multipliers it would have received at higher extractor '
         'tiers — the same hoard is worth substantially more processed at max rarity. '
-        'But do burn the stockpile before a main-Stage breakthrough: the extractor '
-        'resets on breakthrough (see above).'),
+        'But do burn the stockpile before a realm ascension: the extractor '
+        'resets there (see above).'),
     Text('Timegate penalty', style: h3),
     para('Fruits lose 50% of their EXP once the realm\'s timegate passes — eat '
         'the stockpile before the timegate.'),
