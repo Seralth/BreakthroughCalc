@@ -34,7 +34,8 @@ void main() {
 
   testWidgets('doc link jumps across trees and the back stack returns',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    // Flag suppresses the one-time Obtainium startup dialog (modal).
+    SharedPreferences.setMockInitialValues({'obtainium_notice_shown': true});
     final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(
         BreakthroughApp(loadEngine(), const {}, prefs));
