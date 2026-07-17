@@ -28,7 +28,7 @@ void main() {
     expect(guideSlugs, {
       'paths': 0, 'server': 1, 'routine': 2, 'novice': 3, 'virtuoso': 4,
       'nascent': 5, 'incarnation': 6, 'timegate': 7, 'voidbreak': 8,
-      'pets': 9, 'aux': 10, 'spending': 11,
+      'pets': 9, 'aux': 10, 'techniques': 11, 'spending': 12,
     });
   });
 

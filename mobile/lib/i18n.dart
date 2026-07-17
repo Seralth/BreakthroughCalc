@@ -162,11 +162,11 @@ const Map<String, Map<String, String>> _t = {
     'de': 'Schreibt die Tresor-Summen bei jeder Änderung in die Felder für Pilleneffekt, Versuche und Respira.',
     'es': 'Escribe los totales de la Bóveda en los campos de efecto de píldora, intentos y Respira cada vez que cambia.',
     'zh': '宝库变化时，自动把合计写入丹药效果、次数和吐纳字段。'},
-  'Set each book\'s tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book\'s chapter bonuses: filled ones are active at your tier.': {
-    'ru': 'Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире.',
-    'de': 'Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni: gefüllte sind auf deiner Stufe aktiv.',
-    'es': 'Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo: los rellenos están activos en tu nivel.',
-    'zh': '每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示章节加成：实心的在当前品阶已生效。'},
+  'Set each book\'s tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book\'s chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.': {
+    'ru': 'Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире, а цветные отмечают главы культивации — бонусы пилюль, дыхания ци и ауры обители, к которым стоит стремиться.',
+    'de': 'Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni: gefüllte sind auf deiner Stufe aktiv, und farbige Punkte markieren die Kultivierungskapitel — Pillen-, Atmungs- und Wohnsitz-Aura-Boni, auf die es sich hinzuarbeiten lohnt.',
+    'es': 'Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo: los rellenos están activos en tu nivel, y los puntos de color marcan los capítulos de cultivo — bonos de píldoras, Inhala y aura de la morada por los que vale la pena avanzar.',
+    'zh': '每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示章节加成：实心的在当前品阶已生效，彩色圆点标记修炼相关章节——丹药、吐纳和洞府灵气加成，值得优先追求。'},
   'Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.': {
     'ru': 'Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.',
     'de': 'Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.',
