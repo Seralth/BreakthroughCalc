@@ -37,7 +37,8 @@ equivalent lands ~day 29 (≈ 2026-08-14), about 5 days after ascension.
 3. Keep pills on secondary until it REACHES Incarnation (L) Middle
    (25.2M total from day-0 position; ~day 10–13 ≈ 2026-07-26/29, fortune
    pills help ~half a day) → **Perfection**: +40pp persistent, +20pp until
-   passing Voidbreak (L) Middle. Then all pills back to primary.
+   REACHING Voidbreak (L) Middle (window ends at the START of Middle —
+   owner-corrected 2026-07-16). Then all pills back to primary.
    Requirements are REACH the half-step, not complete it.
 4. Souls into Gush → 30, then Culti → 30, buying as they arrive.
 5. Eat weekly fruits on receipt (always primary); eat the held bank when
@@ -47,6 +48,81 @@ equivalent lands ~day 29 (≈ 2026-08-14), about 5 days after ascension.
    points combined, more than every other micro-decision.
 7. 2026-08-09: ascend immediately at ~379% stocked; the remaining ~60M
    closes ~5 days inside Voidbreak.
+
+## Pill mix variant — 50% purple / 50% blue (added 2026-07-16)
+
+Purple-only is NOT sustainable on the account; the realistic mix is the
+daily limit split 12 purple + 11 blue (vase stream unchanged — it runs on
+gold-bought input and its mythic output is exempt from the 23/day limit).
+
+- Pill stream drops 2.25M → 1.94M/day (−308k; purple 48k vs blue 25.6k
+  per pill at 5R, both ×1.248 pill effect).
+- Perfection slips ~1.5 days (secondary rush at the slower diverted rate):
+  ~day 14.6 vs 13.2.
+- **Ceiling drops ~13–15 gate points → ~365% at the gate** (vs 379%).
+  Deficit ~46M; blessed VB accrual becomes 6.20M/day, so the 440%
+  equivalent closes ~7.5 days after ascension, ~day 31–32
+  (≈ 2026-08-16/17, vs ~08-14 purple-only).
+- Verdicts unchanged: ascend immediately when the gate lifts (6.20M
+  blessed inside VB Early still beats 5.85M parked); the Perfection
+  detour is still clearly worth it (net ≈ +9 points before counting the
+  persistent +40pp inside Voidbreak); playbook order unchanged.
+- Cost is linear in the mix: ≈ −1.2 gate points per daily pill swapped
+  purple→blue (23 purple 379% … 12/11 ≈ 365% … all-blue ≈ 350%). Every
+  extra purple sustained on a good week buys ~1.2 points back.
+
+Method note: day-by-day reconstruction calibrated to this plan's anchors
+(reproduces the 2.25M pill split, Perfection ~day 13, 6.15M parked rate);
+pill XP verified from data/breakthrough.json pill_xp["5R"]. The ±2–3 pt
+band on the baseline applies here too.
+
+## After the gate: reach VB Late fastest (added 2026-07-16; window
+## boundary corrected same day — +20pp ends on REACHING VB Middle)
+
+Goal: start of VB Late asap. Skip-VB-Early threshold is only **210.1%**
+displayed (Inc Late 61.79M + VB Early 68.01M, from the grade table; same
+table reproduces 440.0% = VB Late G1 exactly), so any plausible outcome
+(347–379%) charges all of Early on ascension day.
+
+Because the +20pp window dies at Middle's start, absorption ranks:
+parked at VB EARLY cap (0.50+0.60 = 1.10) > live in Middle (0.65+0.40 =
+1.05) > parked at Inc cap (0.40+0.60 = 1.00). Hence the **park-in-Early
+meta** (independently documented community play, see
+game-mechanics-verified.md):
+
+1. 2026-08-09: ascend the moment the gate lifts (6.24M/day at the Early
+   cap vs 5.87M staying at Inc cap; split pill mix). Click through
+   Early's 20 grades — the excess (~164M at 365%) charges Early (68.0M)
+   with ~96M left in the pool.
+2. **Stop at the Early cap. Do NOT break into Middle.** Accrue at 1.10
+   absorption until the pool covers all of Middle (142.1M, i.e. +46.4M
+   at 365%): ~7.4 days streams-only; fruit income shortens that, but
+   post-gate fruits are reduced-value (see item 5) → ~5.5–7.5 days.
+3. One push: Early→Middle breakthrough, click through Middle's 20 grades
+   → **start of VB Late ≈ 2026-08-14/16**. Entering Middle early would
+   drop accrual to 1.05 — only ever enter when you can clear it whole.
+4. Consumables: the push (~day 29–31) is when the Middle breakthrough
+   materials are needed, not gate day — ~5 extra days to source VB
+   blueprints/formulas (sect ~13–14k, on the hoard list). Gate day needs
+   only the ascension itself + Early grade clicks.
+5. 6R pills if sustainable in the new realm (72k purple / 38.4k blue vs
+   48k/25.6k at 5R): ~+1M/day → ~half a day faster. Fruits: CORRECTED
+   2026-07-17 — post-gate fruits are worth LESS, not full value (the
+   gate unlocks the next fruit tier, R3 loses the highest-rank +50%,
+   and the new realm's extractor starts back at Common/level 0; the
+   07-16 note claiming decay waits for the Spiritual gate was wrong —
+   app guide + mechanics doc both say eat the bank BEFORE the gate,
+   which the day-12 playbook already does). Still eat post-gate fruit
+   income on receipt, but the with-fruit traversal estimate above is
+   optimistic — treat ~5.5–7.5 days as the band. Keep ranking 2–5 +
+   Monday pack; each pre-gate gate point ≈ 1.7–2.4 fewer hours to Late.
+
+Blessing pp apply in full to overcapped accrual — community-confirmed
+(multiple independent players, repeatedly); the engine models it
+(cap_speed = abode × (low + bless) at the capped row, de-strived). The
+parking meta and the ceiling math stand on settled mechanics. Only open
+edge: multi-grade carry-through in one push is community-attested via
+"Middle Voidbreak in one go" videos.
 
 ## Why the gate is unreachable (levers that were checked and closed)
 
@@ -66,8 +142,11 @@ TROVE BOXES — hold jadeslips for exactly three: Cosmic Atlas and Ancient
 Treasure (double-sourced: wiki mechanics verbatim — elixirs/stat pills and
 atlases re-tier on REALM breakthrough only, not early/mid/late) plus Pet
 Index (single-source: Skillo "Which treasures to hoard and why"). Cadence:
-open saved slips on ARRIVING in each new realm, then resume saving for the
-next realm — a permanent rhythm. Zodiac Relic / Gleam Chest / Nimbus
+open saved slips on ARRIVING in each new realm, then spend as you go;
+resume saving only when the next gate is weeks out (owner-corrected
+2026-07-17: realm gaps run ~half a year — the web guides' "permanent
+saving rhythm" would sit on resources pointlessly; hoard during the
+parked/capped stretch before each gate instead). Zodiac Relic / Gleam Chest / Nimbus
 Casket and the Treasure Hunt itself (treasure tokens): omitted from every
 hoard list, no documented realm scaling — spend as you go. In-game reward
 previews only show current contents and give no hint of re-tiering, so

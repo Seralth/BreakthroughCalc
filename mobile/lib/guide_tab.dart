@@ -19,11 +19,13 @@ class GuideSection {
 
 const List<GuideSection> guideSections = [
   GuideSection('paths', 'Choosing a Path', _choosingPage),
+  GuideSection('server', 'Server Timeline', _serverPage),
   GuideSection('routine', 'Daily Routine', _routinePage),
   GuideSection('novice', 'Novice–Foundation', _novicePage),
   GuideSection('virtuoso', 'Virtuoso', _virtuosoPage),
   GuideSection('nascent', 'Nascent Soul', _nascentPage),
   GuideSection('incarnation', 'Incarnation', _incarnationPage),
+  GuideSection('timegate', 'Timegate', _timegatePage),
   GuideSection('voidbreak', 'Voidbreak+', _voidbreakPage),
   GuideSection('pets', 'Pets', _petsPage),
   GuideSection('aux', 'Aux Paths', _auxPage),
@@ -142,6 +144,60 @@ Widget _choosingPage(BuildContext context) {
       padding: const EdgeInsets.all(16));
 }
 
+// Server calendar sources: docs/knowledge/game-mechanics-verified.md
+// (Worlds section); day numbers are era estimates.
+Widget _serverPage(BuildContext context) {
+  final h3 = Theme.of(context).textTheme.titleMedium;
+  Widget para(String s) => docPara(context, s);
+  return docPage(context, [
+    Text('How a server unfolds', style: h3),
+    para('OverMortal is server-paced. World-level timegates hold the whole '
+        'server to one calendar — nobody enters a new era before its gate '
+        'opens — and the catch-up mechanics accelerate everyone behind the '
+        'front. Two consequences: your first month has a known shape, and '
+        'you cannot fall permanently behind.'),
+    Text('The first month (day numbers drift by era)', style: h3),
+    para('• Day 0 — the server opens. The early stages fly: '
+        'Novice–Foundation on day one, Virtuoso by its end, Nascent Soul '
+        'around day 3 free-to-play.\n'
+        '• Weeks 1–4 — the climb through Nascent Soul and Incarnation. '
+        'Build the extractor and stockpile fruits, keep every daily stream '
+        'full, and keep battle rating growing: the Ascension Virya '
+        'blessings at Incarnation\'s end gate on Myrimon Wonder boss '
+        'clears.\n'
+        '• ~Day 35–38 — the first timegate lifts: Ascension into '
+        'Voidbreak, the Mortal → Spiritual World boundary. The parked '
+        'weeks before it are the prestock window — the full playbook is '
+        'on [[guide:timegate|Guide → Timegate]].\n'
+        '• Day 40 — server transfer unlocks (for Voidbreak and higher).\n'
+        '• After that — every major Stage from Wholeness on is paced by '
+        'its own gate, and the World-boundary resets (fresh Myrimon tier '
+        'and extractor) repeat at Celestial. The rhythm you learn at the '
+        'first gate is the game\'s permanent shape.'),
+    Text('Why you can\'t fall behind', style: h3),
+    para('Two mechanics work together. Timegates hold the server\'s front '
+        'in place — the leaders sit parked at caps, stocking overcap EXP '
+        'while the gate is closed — and Strive multiplies absorption for '
+        'everyone behind the front, fading only as you close the gap '
+        '([[ref:basics|Reference → Basics]]). The server bunches up at '
+        'every gate, then peels off front to back. A slow week doesn\'t '
+        'compound; the system pulls you back toward the pack.'),
+    Text('Joining an established server', style: h3),
+    para('• Once a gate has opened for the server it stays open — you '
+        'ascend the moment you\'re ready, no waiting.\n'
+        '• Strive is your engine: the further behind the front you start, '
+        'the bigger your absorption multiplier.\n'
+        '• The +50% highest-Stage fruit bonus isn\'t yours until you reach '
+        'the server\'s front, so extractor leveling discipline '
+        '([[ref:myrimon|Reference → Myrimon & Extractor]]) matters even '
+        'more for you — the multipliers you control are the ones you '
+        'get.\n'
+        '• Server transfer (Voidbreak and higher) can move you to a server '
+        'whose calendar fits your pace.'),
+  ], footerText: _guideFooterText,
+      padding: const EdgeInsets.all(16));
+}
+
 Widget _routinePage(BuildContext context) {
   final h3 = Theme.of(context).textTheme.titleMedium;
   Widget para(String s) => docPara(context, s);
@@ -152,7 +208,10 @@ Widget _routinePage(BuildContext context) {
         'from the other guide pages — this is just the checklist form.'),
     Text('Every day', style: h3),
     para('• Spend your daily pill attempts — highest color first (all '
-        'colors share one attempt pool; Vase reds are exempt).\n'
+        'colors share one attempt pool; Vase reds are exempt). Never leave '
+        'attempts unused: pill EXP roughly halves per quality step, so a '
+        'full limit of a lower color beats a half-filled limit of a higher '
+        'one.\n'
         '• Use your Respira attempts.\n'
         '• Keep artifact energy below its cap — Vase refines, Mirror '
         'duplications, Pearl uses. Energy regenerating into a full pool is '
@@ -170,12 +229,16 @@ Widget _routinePage(BuildContext context) {
     para('• Banked Myrimon runs: spend them on Sunday, or hold them until '
         'you can clear a higher-requirement dungeon. Fruits go to the '
         'stockpile, not the extractor, until the extractor is maxed '
-        '([[ref:myrimon#verified|Reference → Myrimon & Extractor]]).'),
+        '([[ref:myrimon#verified|Reference → Myrimon & Extractor]]).\n'
+        '• Spend resources as they come. Hoarding pays only in the parked '
+        'weeks before a timegate ([[guide:timegate|Guide → Timegate]]) — '
+        'between gates, saved resources are power you didn\'t use.'),
     Text('Before every major breakthrough', style: h3),
     para('• Spend all daily pills and Respira attempts — they reset on the '
         'breakthrough.\n'
-        '• Eat the fruit stockpile — the extractor resets to Common on a '
-        'main-Stage breakthrough and auto-consumes leftovers at pre-upgrade '
+        '• Eat the fruit stockpile before a realm ascension — the extractor '
+        'resets to Common there (stage breakthroughs within a realm don\'t '
+        'reset it) and auto-consumes leftovers at pre-upgrade '
         'rates.\n'
         '• Spend Fatevillion shop tokens — that shop resets too.\n'
         '• Don\'t claim pill bags until after the ascension.\n'
@@ -302,7 +365,191 @@ Widget _incarnationPage(BuildContext context) {
         'elixir packs — if you spend at all, these are among the best value '
         'in the game ([[ref:elixirs#expelixirs|Reference → Elixirs & Stat Pills]] '
         'explains why the '
-        'early tolerance tiers make them worth the most).'),
+        'early tolerance tiers make them worth the most).\n'
+        '• Keep battle rating growing all era — the Ascension Virya '
+        'blessing tiers gate on Myrimon Wonder boss clears (Amethyst '
+        'Fiend, Jade-Eyed Lion). Reaching the gate weeks with the bosses '
+        'unkillable means blessings locked exactly when they matter '
+        'most.\n'
+        '• The run-up to the realm timegate — prestocking past 100%, the '
+        'Ascension Virya blessings, and what to do the day the gate lifts '
+        '— has its own page: [[guide:timegate|Guide → Timegate]].'),
+  ], footerText: _guideFooterText,
+      padding: const EdgeInsets.all(16));
+}
+
+// Overcap/Virya mechanics and half-step totals:
+// docs/knowledge/game-mechanics-verified.md + data/breakthrough.json.
+Widget _timegatePage(BuildContext context) {
+  final h3 = Theme.of(context).textTheme.titleMedium;
+  Widget para(String s) => docPara(context, s);
+  return docPage(context, [
+    Text('The Voidbreak timegate', style: h3),
+    para('A world-level timegate blocks the ascension from Incarnation '
+        'into Voidbreak until a fixed server day (roughly day 35–38 of a '
+        'server\'s life; the exact day drifts by era). This ascension is '
+        'also the Mortal → Spiritual World boundary — the fresh Myrimon '
+        'tier and extractor ride on it (see the Worlds table in '
+        '[[ref:basics|Reference → Basics]]). Handled well, the gated '
+        'weeks become a stockpile that carries you deep into Voidbreak '
+        'the day the gate opens. The same pattern returns at every later '
+        'gate.'),
+    Text('Excess EXP: nothing is lost at a full gauge', style: h3),
+    para('• While the gate blocks your breakthrough, cultivation EXP keeps '
+        'accruing past the full gauge into an Excess EXP pool that is '
+        'returned after the breakthrough.\n'
+        '• Breakthroughs are always manual: stocked excess applies as you '
+        'click through each grade, so a large pool clears whole half-steps '
+        'in one go.\n'
+        '• The gauge percentage past 100% reads as EXP gained since the '
+        'start of your current half-step ÷ that half-step\'s total — so an '
+        'overcap percentage translates directly into future progress.'),
+    docTable(context, 'What a given stock buys you',
+        ['Half-step', 'Total EXP'],
+        [
+          ['Incarnation Late', '61.8M'],
+          ['Voidbreak Early (20 grades)', '68.0M'],
+          ['Voidbreak Middle (20 grades)', '142.1M'],
+          ['Voidbreak Late (20 grades)', '307.7M'],
+        ]),
+    para('• 100% — gauge full: take the Completion breakthrough (below) '
+        'and keep stocking.\n'
+        '• 210% — the excess clears all of Voidbreak Early on ascension '
+        'day.\n'
+        '• 440% — Early and Middle both: you arrive at Voidbreak Late G1 '
+        'immediately.'),
+    Text('Accrual while parked at a full gauge', style: h3),
+    para('• You accrue at the capped row\'s base band — no future-row '
+        'speed scaling.\n'
+        '• Strive does NOT apply while overcapped. Server leaders lose '
+        'nothing; the further behind the top player you are, the more '
+        'parking under-performs your normal rate.\n'
+        '• Virya blessing points apply in full.\n'
+        '• Flat daily EXP — pills, Respira, elixirs, fruits — lands in the '
+        'pool at face value, unaffected by parking.'),
+    para('Base bands rise with each half-step: Incarnation Late 0.40 → '
+        'Voidbreak Early 0.50 → Middle 0.65 → Late 0.80.'),
+    Text('Ascension Virya blessings: the biggest lever', style: h3),
+    para('Blessing points are the difference between a mediocre stock and '
+        'a huge one. Tiers unlock from your primary and secondary paths '
+        'together:\n'
+        '• Completion — reach Incarnation Late 100% and break through into '
+        'Incarnation (Perfected). A full gauge alone is not enough: the '
+        'blessing system does not start until this breakthrough is taken. '
+        'It is not blocked by the timegate — the gate blocks only the '
+        'ascension into Voidbreak — so take it the moment the gauge '
+        'fills. It removes realm restrictions on cultivation pills '
+        '(higher-rank pills can feed a lower secondary path), which is '
+        'what makes the secondary rush below possible.\n'
+        '• Perfection — primary at Incarnation (Perfected), secondary at '
+        'Nascent Soul Late, clear Amethyst Fiend in Myrimon Wonder: +20 '
+        'points absorption.\n'
+        '• Perfect — secondary at Incarnation Middle, clear Jade-Eyed '
+        'Lion: a further +20 points permanent, plus +20 points active '
+        'only before Voidbreak Middle.'),
+    para('Secondary requirements are satisfied on REACHING the named '
+        'half-step, not completing it. Fully built: +40 points permanent, '
+        '+60 total until you enter Voidbreak Middle — on a 0.40 base band '
+        'that is more than double the parked passive rate. The windowed '
+        '+20 ends the instant you enter Voidbreak Middle, which drives '
+        'the gate-day routing below.'),
+    Text('Preparing while gated', style: h3),
+    para('• Cap Incarnation early and take the Completion breakthrough at '
+        'once. Days spent climbing to the cap are not stocking days, and '
+        'the gauge filling by itself starts nothing. Top off with banked '
+        'fruits if the gauge won\'t fill on streams alone.\n'
+        '• Rush the Virya tiers immediately after: divert your daily '
+        'pills to the secondary path (passive stays on the primary) — '
+        'Nascent Soul Late unlocks the first +20, Incarnation Middle the '
+        'rest. The earlier the tiers land, the longer they multiply your '
+        'parked accrual. Clear the two Myrimon Wonder bosses ahead of '
+        'time so they never hold a tier hostage.\n'
+        '• Fill every flat stream, every day. Never leave pill attempts '
+        'unused: pill EXP roughly halves per quality step, so a full '
+        'limit of the next quality down matches a half-filled limit of '
+        'the one above.\n'
+        '• Eat the fruit bank before the gate opens — the banking and 50% '
+        'rules are on [[guide:incarnation|Guide → Incarnation]]. Leftovers '
+        'don\'t survive the ascension anyway: the mortal extractor resets '
+        'at the World boundary and auto-consumes them at pre-upgrade '
+        'rates.\n'
+        '• Hoard for the arrival — the parked weeks are the window: sect '
+        'contribution (~13–14k) for the new realm\'s blueprints and '
+        'formulas; Fateum and Fate Tokens, Revealstones, plant speed-ups; '
+        'trove jadeslips for Cosmic Atlas, Ancient Treasure and Pet Index '
+        '— their contents re-tier on realm breakthrough, so opened on '
+        'arrival they pay out at the new realm\'s tier. Don\'t run this '
+        'hoard between gates: realm gates are months apart, and resources '
+        'sat on for months are power you didn\'t use.\n'
+        '• Spend what dies with the realm: beyond the pre-breakthrough '
+        'rules on the Incarnation page, spend Ability Knowledge and '
+        'harvest the garden empty before ascending.\n'
+        '• Have breakthrough materials ready. Excess EXP applies only as '
+        'fast as you can click through breakthroughs; missing consumables '
+        'are the only thing that can stall a charged climb.'),
+    Text('Gate day', style: h3),
+    para('• Ascend the moment the gate lifts. Voidbreak Early\'s base '
+        'band (0.50) beats Incarnation Late\'s (0.40) — whether you park '
+        'or push, you accrue faster inside.\n'
+        '• Click through Voidbreak Early — your excess charges its grades '
+        'instantly.\n'
+        '• Route by where the server\'s leaders are, not by your current '
+        'Strive number. Parked at the Early cap you accrue at (0.50 + '
+        '0.60 blessing) with no Strive; live in Middle you accrue at '
+        '(0.65 + 0.40) × (1 + Strive). Strive is measured against the '
+        'server\'s top cultivator, so what matters is the Strive you '
+        'would have WHILE in Middle:\n'
+        '   – Never be the first into Middle: while the leaders hold the '
+        'Early cap, pushing past them makes you the front — your Strive '
+        'drops away and you grind Middle at a flat 1.05, worse than '
+        'parking at 1.10.\n'
+        '   – Front-runners: stay parked until the pool covers all 142.1M '
+        'of Middle, then clear it in one push and arrive at Voidbreak '
+        'Late. A one-push spends no live time in Middle, so lost Strive '
+        'never enters into it.\n'
+        '   – After the leaders push to Late, trailing players keep their '
+        'Strive while climbing Middle live. Above ~5% Strive, pushing now '
+        'beats staying parked; below it, keep parking until your own pool '
+        'covers the rest.\n'
+        'The net effect: the server bunches at the Early cap, then peels '
+        'off front to back.\n'
+        '• Move your streams up a tier: switch to the newly unlocked pill '
+        'rank as soon as it\'s sustainable, start leveling the Spiritual '
+        'World\'s fresh extractor with the new fruit income, open the '
+        'saved jadeslips, and spend the hoarded sect contribution. The '
+        'rest of arrival day (laws, Pandemonium, the trove) is the '
+        'checklist on [[guide:voidbreak|Guide → Voidbreak+]].'),
+    Text('By account type', style: h3),
+    para('• Without the Vase: your pill stream is exactly the daily '
+        'limit, so quality per attempt is everything you control there — '
+        'and your prestock leans hardest on passive accrual, which makes '
+        'the Virya rush proportionally your biggest lever. Fruits are '
+        'your swing resource; bank them well.\n'
+        '• With the Vase (and Mirror): refined red pills bypass the daily '
+        'limit, so a fed Vase adds stock at face value every parked day, '
+        'and the Mirror stacks copies on top. Keep them fed for the whole '
+        'gated stretch — artifact energy sitting at its cap is stock lost '
+        '([[ref:artifacts|Reference → Artifacts & Gems]]).\n'
+        '• Free-to-play: fruits are the main F2P tool for meeting '
+        'timegates, and blessings are progression-gated, not paid — a '
+        'built secondary path is worth more than any consumable. Sustain '
+        'the best pill quality you can, but a full limit of a lower '
+        'quality still beats a half-filled limit of a higher one.\n'
+        '• Paying: the two standout paid levers during a gate are the '
+        'daily artifact charges and the three elixir packs offered on '
+        'entering the new realm — take those at Voidbreak, not before. '
+        'The full what\'s-worth-it list is on [[guide:spending|Guide → '
+        'Spending]].\n'
+        '• Underdeveloped secondary path: the blessing tiers need the '
+        'secondary at Nascent Soul Late, then Incarnation Middle. '
+        'Completion\'s realm-restriction removal exists exactly to fix '
+        'this — the moment it lands, divert your now-unrestricted daily '
+        'pills to the secondary and power-level it. Until the tiers land '
+        'you park at base band only — well under half the blessed rate — '
+        'so every day of delay is expensive.'),
+    para('Set "Timegate lifts in (days)" on the calculator\'s input panel '
+        'to compare the gate date against the prestock projection and see '
+        'where your stock will land you.'),
   ], footerText: _guideFooterText,
       padding: const EdgeInsets.all(16));
 }
@@ -312,12 +559,15 @@ Widget _voidbreakPage(BuildContext context) {
   Widget para(String s) => docPara(context, s);
   return docPage(context, [
     Text('Voidbreak and beyond', style: h3),
-    para('• Dailies and pill bags reset on ascension — spend before you '
+    para('• Arriving with a prestock? When to hold the Early cap vs push '
+        'into Middle is on [[guide:timegate|Guide → Timegate]].\n'
+        '• Dailies and pill bags reset on ascension — spend before you '
         'break through, same as the Incarnation checklist.\n'
-        '• Each major realm from here has its own Myrimon tier: a new fruit '
-        'rank (R6+) and a fresh extractor starting back at Common quality '
-        'and bonus level 0. The stockpile-then-eat rhythm repeats every '
-        'realm.\n'
+        '• Ascension opens the Spiritual World\'s own Myrimon tier: new '
+        'fruit ranks (R6+) and a fresh extractor starting back at Common '
+        'quality and bonus level 0. Stage breakthroughs inside the World '
+        'keep it; the next reset like this comes at Celestial (Immortal '
+        'World). The stockpile-then-eat rhythm repeats at each World.\n'
         '• Strive above 120% is normal here — the 120% cap belongs to the '
         'mortal world; later realms allow overcapping (e.g. keeping your aux '
         'path a minor realm behind your main). The calculator only warns '
@@ -399,9 +649,11 @@ Widget _auxPage(BuildContext context) {
         'Ghostia for committed dual-pathers.'),
     para('Aux paths and cultivation: from Voidbreak through Wholeness the '
         'aux enables the Strive overcap play — reach half-step in '
-        'Voidbreak, then at Wholeness hold your main at Middle G1 and pump '
-        'the aux at Early G20 until absorption overcaps (~404% at Wholeness '
-        'completion), then level the main normally keeping the aux a minor '
+        'Voidbreak, then at Wholeness hold your main at Middle G1 and park '
+        'the aux at Early G20, overcapping its gauge (~404% stocked = the '
+        'rest of Wholeness covered; how overcap percentages read is on '
+        '[[guide:timegate|Guide → Timegate]]), then level the main '
+        'normally keeping the aux a minor '
         'realm behind. An Early path always counts below a Middle path for '
         'Strive, so the bonus keeps applying. This is why the calculator\'s '
         '120% Strive warning only applies to mortal-world stages.'),
