@@ -17,7 +17,7 @@ printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=Breakthrough Calculator
   "Comment=Cultivation breakthrough timer calculator" 'Exec=breakthrough-calc' \
   'Icon=breakthrough-calc' 'Categories=Utility;Calculator;' > packaging/AppDir/breakthrough-calc.desktop
 if [ ! -x packaging/appimagetool ]; then
-  curl -fsSL -o packaging/appimagetool \
+  curl -fsSL --retry 5 --retry-all-errors --retry-delay 2 -o packaging/appimagetool \
     https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
   chmod +x packaging/appimagetool
 fi
