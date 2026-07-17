@@ -169,7 +169,11 @@ against the verified tables above (Chroma, Yin's Grasp, Purify & Cleanse,
 Conflagration, Unbound Blade, Honored Origin spot-checked identical), so
 per owner decision 2026-07-17 the post-R9 half is treated as reliable
 until proven otherwise. Shipped in-app as Guide → Techniques + the
-Reference → World Systems roadmap (v2.20).
+Reference → World Systems roadmap (v2.20). As of v3.1 the in-app table
+covers ALL manuals R1–R21 with ratings derived from THESE tables under
+a fixed cultivation-speed rubric (attempt nodes heaviest; aura/pill/
+Respira/law-speed/Qiyun strong; combat = C) — independent of the
+sheet's own grades, which are recorded above for reference only.
 
 Alias notes (sheet → canonical): "Yang Sword" = Sunset Halberd Dance
 (node-for-node match), "Harvest God" = Harvest God Secret, "Honoured
