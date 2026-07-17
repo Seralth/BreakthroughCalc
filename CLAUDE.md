@@ -114,6 +114,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
 
 ## Working notes
 
+- Android release signing (2026-07-17): CI signs the APK from
+  ANDROID_KEYSTORE_BASE64 / ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_PASSWORD
+  repo secrets (key alias `omvault`); tag builds FAIL without them so a
+  debug-signed APK can never ship again (pre-2.19 releases were each signed
+  by a throwaway CI debug key — first signed update needs uninstall/
+  reinstall). Keystore: `~/keystores/omvault-release.jks` on both machines,
+  NEVER in this public repo. Local release builds read
+  `mobile/android/key.properties` (see key.properties.example).
 - Donation button (done, desktop + mobile): SEAGM in-game voucher gifting —
   URL and recipient ID in `breakthrough_calc/__init__.py` (no URL prefill
   supported by SEAGM, so instructions include the RID for manual entry).

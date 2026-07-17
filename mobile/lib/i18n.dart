@@ -122,6 +122,20 @@ const Map<String, Map<String, String>> _t = {
   'Exclusive': {'ru': 'Эксклюзивные', 'de': 'Exklusiv', 'es': 'Exclusivas', 'zh': '专属'},
   'Max': {'ru': 'Макс', 'de': 'Max', 'es': 'Máx', 'zh': '满'},
   'Blessings': {'ru': 'Благословения', 'de': 'Segen', 'es': 'Bendiciones', 'zh': '祝福'},
+  'Pet planner': {'ru': 'Планировщик питомцев', 'de': 'Haustier-Planer', 'es': 'Planificador de mascotas', 'zh': '灵宠规划'},
+  'Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.': {
+    'ru': 'Укажите один раз, что у вас есть; каждая строка покажет, сколько копий и какую редкость можно получить, вложив всё в этого питомца.',
+    'de': 'Trage einmal ein, was du besitzt; jede Zeile zeigt dann, wie viele Kopien und welche Seltenheit erreichbar sind, wenn alles in dieses Haustier fließt.',
+    'es': 'Indica una vez lo que posees; cada fila muestra cuántas copias y qué rareza podrías alcanzar apostándolo todo a esa mascota.',
+    'zh': '填写一次你拥有的数量；每行显示若全力培养该灵宠可达到的数量与稀有度。',
+  },
+  'Pets owned': {'ru': 'Питомцы в наличии', 'de': 'Vorhandene Haustiere', 'es': 'Mascotas en posesión', 'zh': '拥有的灵宠'},
+  'Rare essences owned': {'ru': 'Редкие эссенции в наличии', 'de': 'Vorhandene seltene Essenzen', 'es': 'Esencias raras en posesión', 'zh': '拥有的稀有精华'},
+  'Going all-in on one pet': {'ru': 'Если вложить всё в одного питомца', 'de': 'Alles auf ein Haustier setzen', 'es': 'Apostarlo todo a una mascota', 'zh': '全力培养一只灵宠'},
+  'Pet': {'ru': 'Питомец', 'de': 'Haustier', 'es': 'Mascota', 'zh': '灵宠'},
+  'Copies': {'ru': 'Копии', 'de': 'Kopien', 'es': 'Copias', 'zh': '数量'},
+  'Rarity': {'ru': 'Редкость', 'de': 'Seltenheit', 'es': 'Rareza', 'zh': '稀有度'},
+  'Pet realm': {'ru': 'Царство питомца', 'de': 'Haustier-Stufe', 'es': 'Reino de la mascota', 'zh': '灵宠境界'},
   'Base EXP fills itself from your Stage; overwrite it with your in-game reading for exact numbers (clear it to go back to the estimate). Most Respira give the same small EXP — that is the base; 2×/5×/10× crits are handled automatically.': {
     'ru': 'Базовый опыт заполняется сам по вашей Стадии; впишите своё игровое значение для точных чисел (очистите поле, чтобы вернуть оценку). Большинство респир дают одинаковый малый опыт — это база; криты 2×/5×/10× учитываются автоматически.',
     'de': 'Basis-EXP füllt sich selbst aus deiner Stufe; überschreibe sie mit deinem Spielwert für exakte Zahlen (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.',
@@ -162,11 +176,11 @@ const Map<String, Map<String, String>> _t = {
     'de': 'Schreibt die Tresor-Summen bei jeder Änderung in die Felder für Pilleneffekt, Versuche und Respira.',
     'es': 'Escribe los totales de la Bóveda en los campos de efecto de píldora, intentos y Respira cada vez que cambia.',
     'zh': '宝库变化时，自动把合计写入丹药效果、次数和吐纳字段。'},
-  'Set each book\'s tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book\'s chapter bonuses: filled ones are active at your tier.': {
-    'ru': 'Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире.',
-    'de': 'Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni: gefüllte sind auf deiner Stufe aktiv.',
-    'es': 'Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo: los rellenos están activos en tu nivel.',
-    'zh': '每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示章节加成：实心的在当前品阶已生效。'},
+  'Set each book\'s tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book\'s chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.': {
+    'ru': 'Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире, а цветные отмечают главы культивации — бонусы пилюль, дыхания ци и ауры обители, к которым стоит стремиться.',
+    'de': 'Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni: gefüllte sind auf deiner Stufe aktiv, und farbige Punkte markieren die Kultivierungskapitel — Pillen-, Atmungs- und Wohnsitz-Aura-Boni, auf die es sich hinzuarbeiten lohnt.',
+    'es': 'Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo: los rellenos están activos en tu nivel, y los puntos de color marcan los capítulos de cultivo — bonos de píldoras, Inhala y aura de la morada por los que vale la pena avanzar.',
+    'zh': '每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示章节加成：实心的在当前品阶已生效，彩色圆点标记修炼相关章节——丹药、吐纳和洞府灵气加成，值得优先追求。'},
   'Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.': {
     'ru': 'Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.',
     'de': 'Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.',

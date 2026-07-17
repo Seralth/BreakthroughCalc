@@ -313,10 +313,22 @@ TRANSLATIONS = {
   "Library": "Библиотека",
   "Treasury": "Сокровищница",
   "Companions": "Спутники",
+  "Pets": "Питомцы",
+  "Pets owned": "Питомцы в наличии",
+  "Rare essences owned": "Редкие эссенции в наличии",
+  "Going all-in on one pet": "Если вложить всё в одного питомца",
+  "Pet": "Питомец",
+  "Copies": "Копии",
+  "Rarity": "Редкость",
+  "Pet realm": "Царство питомца",
+  "Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.":
+      "Укажите один раз, что у вас есть; каждая строка покажет, сколько копий и какую редкость можно получить, вложив всё в этого питомца.",
+  "The Guide's Pets page explains which pet to pick and why.":
+      "Страница «Питомцы» в руководстве объясняет, какого питомца выбрать и почему.",
   "Universal": "Общие",
   "Exclusive": "Эксклюзивные",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире, а цветные отмечают главы культивации — бонусы пилюль, дыхания ци и ауры обители, к которым стоит стремиться.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.",
   "auto": "авто",
@@ -698,10 +710,22 @@ TRANSLATIONS = {
   "Library": "Bibliothek",
   "Treasury": "Schatzkammer",
   "Companions": "Gefährten",
+  "Pets": "Haustiere",
+  "Pets owned": "Vorhandene Haustiere",
+  "Rare essences owned": "Vorhandene seltene Essenzen",
+  "Going all-in on one pet": "Alles auf ein Haustier setzen",
+  "Pet": "Haustier",
+  "Copies": "Kopien",
+  "Rarity": "Seltenheit",
+  "Pet realm": "Haustier-Stufe",
+  "Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.":
+      "Trage einmal ein, was du besitzt; jede Zeile zeigt dann, wie viele Kopien und welche Seltenheit erreichbar sind, wenn alles in dieses Haustier fließt.",
+  "The Guide's Pets page explains which pet to pick and why.":
+      "Die Guide-Seite „Haustiere“ erklärt, welches Haustier man wählt und warum.",
   "Universal": "Universell",
   "Exclusive": "Exklusiv",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv, und farbige Punkte markieren die Kultivierungskapitel — Pillen-, Atmungs- und Wohnsitz-Aura-Boni, auf die es sich hinzuarbeiten lohnt.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.",
   "auto": "auto",
@@ -1086,10 +1110,22 @@ TRANSLATIONS = {
   "Library": "Biblioteca",
   "Treasury": "Tesorería",
   "Companions": "Compañeros",
+  "Pets": "Mascotas",
+  "Pets owned": "Mascotas en posesión",
+  "Rare essences owned": "Esencias raras en posesión",
+  "Going all-in on one pet": "Apostarlo todo a una mascota",
+  "Pet": "Mascota",
+  "Copies": "Copias",
+  "Rarity": "Rareza",
+  "Pet realm": "Reino de la mascota",
+  "Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.":
+      "Indica una vez lo que posees; cada fila muestra cuántas copias y qué rareza podrías alcanzar apostándolo todo a esa mascota.",
+  "The Guide's Pets page explains which pet to pick and why.":
+      "La página «Mascotas» de la guía explica qué mascota elegir y por qué.",
   "Universal": "Universales",
   "Exclusive": "Exclusivas",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel, y los puntos de color marcan los capítulos de cultivo — bonos de píldoras, Inhala y aura de la morada por los que vale la pena avanzar.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Los manuales de técnica exclusivos solo dan estadísticas de combate, así que aún no se registran. Este estante se completará más adelante.",
   "auto": "auto",
@@ -1442,10 +1478,22 @@ TRANSLATIONS = {
   "Library": "藏书阁",
   "Treasury": "珍宝阁",
   "Companions": "道友",
+  "Pets": "灵宠",
+  "Pets owned": "拥有的灵宠",
+  "Rare essences owned": "拥有的稀有精华",
+  "Going all-in on one pet": "全力培养一只灵宠",
+  "Pet": "灵宠",
+  "Copies": "数量",
+  "Rarity": "稀有度",
+  "Pet realm": "灵宠境界",
+  "Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.":
+      "填写一次你拥有的数量；每行显示若全力培养该灵宠可达到的数量与稀有度。",
+  "The Guide's Pets page explains which pet to pick and why.":
+      "指南中的灵宠页面解释了选哪只灵宠及原因。",
   "Universal": "通用",
   "Exclusive": "专属",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效。",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效，彩色圆点标记修炼相关章节——丹药、吐纳和洞府灵气加成，值得优先追求。",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "专属功法只提供战斗属性，暂不跟踪。此书架以后会补全。",
   "auto": "自动",

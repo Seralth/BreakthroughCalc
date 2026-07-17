@@ -19,7 +19,7 @@ jobs:
       tag: ${{ steps.decide.outputs.tag }}
       release: ${{ steps.decide.outputs.release }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: decide
         name: Decide release tag (auto-release on version bump)
         run: |
@@ -42,8 +42,8 @@ jobs:
     if: ${{ !startsWith(github.ref, 'refs/tags/') || !contains(github.ref_name, '-') }}
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install "PySide6==6.11.1" "pyinstaller==6.21.0"
@@ -55,7 +55,7 @@ jobs:
           --add-data "data;data"
           --add-data "packaging/breakthrough-calc.png;."
           main.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: windows
           path: "dist/BreakthroughCalculator.exe"
@@ -65,15 +65,15 @@ jobs:
     if: ${{ !startsWith(github.ref, 'refs/tags/') || !contains(github.ref_name, '-') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Build AppImage
         env:
           APPIMAGE_EXTRACT_AND_RUN: "1"
         run: ./build-appimage.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: linux
           path: BreakthroughCalculator-x86_64.AppImage
