@@ -68,6 +68,21 @@ def test_shelf_state_round_trips_through_profiles(window):
     assert w._shelf["owned"] == {"chroma": 6}
 
 
+def test_pets_state_round_trips_through_profiles(window):
+    w = window
+    w.pets_page._pet_spins["berpent"].setValue(17)
+    w.pets_page._ess_spins["metal"].setValue(10)
+    state = w._collect_state()
+    assert state["pets"] == {"owned": {"berpent": 17},
+                             "essences": {"metal": 10}}
+    w.pets_page.set_state(None)
+    w._apply_state(state)
+    assert w._pets == {"owned": {"berpent": 17}, "essences": {"metal": 10}}
+    assert w.pets_page._pet_spins["berpent"].value() == 17
+    # the projection table follows the inputs (Berpent 17 -> Legendary)
+    assert "Legendary" in w.pets_page._result.text()
+
+
 def test_legacy_profile_migrates_once_with_identical_values(window):
     w = window
     state = w._collect_state()

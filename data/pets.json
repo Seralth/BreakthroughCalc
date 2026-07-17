@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "comment": "Pet exchange planner data. Costs/refunds are RARE essences per pet copy; eliminating a copy refunds exactly its exchange cost (Berpent cannot be exchanged for but still refunds). Evidence and provenance: docs/knowledge/pet-mechanics.md.",
+  "essences": [
+    {"id": "metal", "name": "Metal"},
+    {"id": "wood", "name": "Wood"},
+    {"id": "water", "name": "Water"},
+    {"id": "fire", "name": "Fire"},
+    {"id": "earth", "name": "Earth"}
+  ],
+  "pets": [
+    {
+      "id": "blazelion",
+      "name": "Blazelion",
+      "cost": {"metal": 5, "wood": 5},
+      "refund": {"metal": 5, "wood": 5}
+    },
+    {
+      "id": "babewyrm",
+      "name": "Babewyrm",
+      "cost": {"water": 5, "fire": 5},
+      "refund": {"water": 5, "fire": 5}
+    },
+    {
+      "id": "babetoise",
+      "name": "Babetoise",
+      "cost": {"metal": 5, "earth": 5},
+      "refund": {"metal": 5, "earth": 5}
+    },
+    {
+      "id": "babeox",
+      "name": "Babeox",
+      "cost": {"wood": 5, "water": 5},
+      "refund": {"wood": 5, "water": 5}
+    },
+    {
+      "id": "babedeer",
+      "name": "Babedeer",
+      "cost": {"fire": 10, "earth": 10},
+      "refund": {"fire": 10, "earth": 10}
+    },
+    {
+      "id": "berpent",
+      "name": "Berpent",
+      "cost": null,
+      "refund": {"water": 5, "earth": 5}
+    }
+  ],
+  "rarity_ladder": [
+    {"name": "Common", "copies": 1, "realm": "Primitive"},
+    {"name": "Uncommon", "copies": 1, "realm": "Primitive"},
+    {"name": "Uncommon +1", "copies": 1, "realm": "Virtuoso Early"},
+    {"name": "Rare", "copies": 2, "realm": "Virtuoso Late"},
+    {"name": "Rare +1", "copies": 3, "realm": "Nascent Soul Early"},
+    {"name": "Rare +2", "copies": 5, "realm": "Nascent Soul Middle"},
+    {"name": "Epic", "copies": 8, "realm": "Nascent Soul Late"},
+    {"name": "Epic +1", "copies": 11, "realm": "Incarnation Early"},
+    {"name": "Epic +2", "copies": 14, "realm": "Incarnation Middle"},
+    {"name": "Legendary", "copies": 17, "realm": "Incarnation Late"},
+    {"name": "Legendary +1", "copies": 21, "realm": "Voidbreak Early"},
+    {"name": "Legendary +2", "copies": 26, "realm": "Voidbreak Middle"},
+    {"name": "Legendary +3", "copies": 32, "realm": "Voidbreak Late"}
+  ]
+}

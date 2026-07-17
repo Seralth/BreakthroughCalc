@@ -28,6 +28,8 @@ from .labels import (
     VASE_INPUT_LABELS, phase_disp, phase_key, stage_disp, stage_key,
     vase_input_disp,
 )
+from .pets import load_pets
+from .pets_ui import PetsPage
 from .profiles import ProfileStore, settings_path
 from .shelf import derive as shelf_derive, load_sources, migrate_legacy
 from .shelf_ui import ProvenanceChip, ShelfPage
@@ -80,6 +82,8 @@ class MainWindow(QMainWindow):
         self._respira_attempts_auto = None  # last self-filled Attempts/day
         self._shelf_catalog = load_sources()
         self._shelf = {"owned": {}, "bases": {}, "auto": []}
+        self._pets_catalog = load_pets()
+        self._pets = {"owned": {}, "essences": {}}
         self._doc_history = []
         store = self._store.read()
         self._theme = store.get("theme", "Seralth")
@@ -141,6 +145,7 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
         tabs.addTab(central, tr("Calculator"))
         tabs.addTab(self._build_shelf_tab(), tr("Vault"))
+        tabs.addTab(self._build_pets_tab(), tr("Pets"))
         self._tabs = tabs
         # doc history points into the doc tabs rebuilt below — start it fresh
         self._doc_history.clear()
@@ -642,6 +647,8 @@ class MainWindow(QMainWindow):
         vals["shelf"] = {"owned": dict(self._shelf.get("owned", {})),
                          "bases": dict(self._shelf.get("bases", {})),
                          "auto": list(self._shelf.get("auto", []))}
+        vals["pets"] = {"owned": dict(self._pets.get("owned", {})),
+                        "essences": dict(self._pets.get("essences", {}))}
         return vals
 
     def _apply_state(self, vals: dict):
@@ -722,6 +729,10 @@ class MainWindow(QMainWindow):
                 self._shelf["auto"] = ["pill_limit", "respira_per_day"]
         self.shelf_page.set_state(self._shelf.get("owned", {}),
                                   self._shelf.get("bases", {}))
+        pt = vals.get("pets") or {}
+        self._pets = {"owned": dict(pt.get("owned", {})),
+                      "essences": dict(pt.get("essences", {}))}
+        self.pets_page.set_state(self._pets)
         self._sync_virya_combo()
         self._apply_shelf(recalc=False)
         self._loading = prev
@@ -972,6 +983,18 @@ class MainWindow(QMainWindow):
         scroll = QScrollArea(); scroll.setWidgetResizable(True)
         scroll.setWidget(self.shelf_page)
         return scroll  # Library scrolls itself; outer scroll covers the rest
+
+    # ---- Pets ---------------------------------------------------------------
+    def _build_pets_tab(self) -> QWidget:
+        self.pets_page = PetsPage(self._pets_catalog)
+        self.pets_page.set_state(self._pets)
+        self.pets_page.changed.connect(self._on_pets_changed)
+        scroll = QScrollArea(); scroll.setWidgetResizable(True)
+        scroll.setWidget(self.pets_page)
+        return scroll
+
+    def _on_pets_changed(self, *_):
+        self._pets = self.pets_page.state()
 
     def _shelf_chip(self, field_key: str) -> ProvenanceChip:
         chip = ProvenanceChip()

@@ -814,27 +814,29 @@ Widget _systemsPage(BuildContext context, Engine engine, Map<String, dynamic> ca
     Text('Techniques', style: h3),
     para('Unlockable passives: meet a technique\'s requirements to learn '
         'it, then spend Technique Points to tier it up — special effects '
-        'unlock at Tiers 3, 6 and 9. The early-game picks the guide names '
-        '(Longevity, Energy Unification, Rejuvenation) are examples of '
-        'buying these tier effects at their cheapest; the same logic — '
-        'tier breakpoints first — carries through the rest of the game.'),
+        'unlock at Tiers 3, 6 and 9 (higher-rank manuals continue at 12 '
+        'and 15). The early-game picks the guide names (Longevity, '
+        'Energy Unification, Rejuvenation) are examples of buying these '
+        'tier effects at their cheapest; the same logic — tier '
+        'breakpoints first — carries through the rest of the game.'),
     // Community-guide material (2026) from here down — priorities and
     // tier lists are consensus, not client data.
     Text('Technique roadmap (recommended priorities)', style: h3),
-    para('The recommended per-rank picks, tier breakpoints first:\n'
-        '• R4: Golden Core (+5% pill effect at completion) and Astrology '
-        'to Tier 7.\n'
-        '• R5: Ninefall and Bloodization to Tier 7.\n'
-        '• R6: Dragon\'s Flight or Yin\'s Grasp to Tier 10.\n'
-        '• R7: Floral Essence — +3% '
-        'pill effect at Tier 6, +1 daily pill attempt at Tier 9; Great '
-        'Yang Manual — +4% pill effect at Tier 9.\n'
-        '• R10: Immortal Ascension to Tier 13.'),
-    para('R8–R9 picks aren\'t listed yet — if you have them, please '
-        'report them via the footer link. For Technique Points, the '
-        'recommended Spirit World strategy is three passes: clear what '
-        'you can, come back stronger, finish later — rather than grinding '
-        'one full clear early.'),
+    para('Quick per-rank picks below. The full rank-by-rank list through '
+        'R21 — ratings and how deep to tier each manual — is on '
+        '[[guide:techniques|Guide → Techniques]]:\n'
+        '• R4: Golden Core and Astrology; Focus\'s unlock too.\n'
+        '• R5: Ninefall; Bloodization for its aura node.\n'
+        '• R6: Yin\'s Grasp to Tier 9; Conflagration and Unbound '
+        'Blade.\n'
+        '• R7: Floral Essence and Purify & Cleanse.\n'
+        '• R8: Chroma and Astral Arcanum, plus your path\'s PvP pick.\n'
+        '• R9: Harvest God Secret; Honored Origin for its aura nodes.\n'
+        '• R10: everything — Immortal Ascension to Tier 13.\n'
+        '• R11+: each rank\'s law-speed manual first.'),
+    para('For Technique Points, the recommended Spirit World strategy '
+        'is three passes: clear what you can, come back stronger, '
+        'finish later — rather than grinding one full clear early.'),
     Text('Curio priorities (recommended)', style: h3),
     para('• Value order: abode/pill-bonus curios > main-path ATK > '
         'HP/MP.\n'

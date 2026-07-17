@@ -14,6 +14,22 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'form_widgets.dart';
 import 'i18n.dart';
 
+/// Calculator-wired effect targets (the cultivation bonuses).
+const cultivationTargets = {
+  'pill_effect', 'pill_attempts', 'respira_attempts', 'respira_effect',
+};
+
+/// True for effects worth working toward for cultivation: calc-wired
+/// pill/Respira bonuses, plus the informational Base Abode Aura and
+/// Respira QoL chapters (twin of shelf_ui._is_cultivation_effect).
+bool isCultivationEffect(Map e) {
+  final t = e['target'] as String?;
+  if (cultivationTargets.contains(t)) return true;
+  final note = (e['note'] ?? '') as String;
+  return t == 'info' &&
+      (note.contains('Abode Aura') || note.contains('Respira'));
+}
+
 /// Load the shelf catalog (a JSON object, unlike the legacy list catalogs);
 /// missing or corrupt assets yield {} (an empty Vault).
 Future<Map<String, dynamic>> loadShelfCatalog(String asset) async {
@@ -141,7 +157,9 @@ class _VaultTabState extends State<VaultTab> {
                   tr('Set each book\'s tier once; the bonuses it has '
                       'unlocked flow to the calculator on their own. Dots '
                       'show the book\'s chapter bonuses: filled ones are '
-                      'active at your tier.'),
+                      'active at your tier, and colored dots mark the '
+                      'cultivation chapters — pill, Respira and abode-aura '
+                      'bonuses worth working toward.'),
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
@@ -233,19 +251,31 @@ class _VaultTabState extends State<VaultTab> {
         (e as Map)['min_level'] is int ? e['min_level'] as int : 1
     }.toList()
       ..sort();
+    final noted = <int>{
+      for (final e in effects)
+        if (isCultivationEffect(e as Map))
+          e['min_level'] is int ? e['min_level'] as int : 1
+    };
     final lvl = owned == null
         ? null
         : (owned == -1 ? 1 << 30 : (owned as num).toInt());
-    final dots = [
-      for (final ml in thresholds) (lvl != null && lvl >= ml) ? '●' : '○'
-    ].join(' ');
+    final accent = Theme.of(context).colorScheme.primary;
+    final dots = TextSpan(children: [
+      for (var i = 0; i < thresholds.length; i++)
+        TextSpan(
+          text: (i == 0 ? '' : ' ') +
+              ((lvl != null && lvl >= thresholds[i]) ? '●' : '○'),
+          style:
+              noted.contains(thresholds[i]) ? TextStyle(color: accent) : null,
+        ),
+    ]);
     final isBinary = levels['kind'] == 'binary';
     final max = isBinary ? 1 : ((levels['max'] as num?)?.toInt() ?? 99);
     final cur = owned == null ? 0 : (owned as num).toInt();
     return ListTile(
       dense: true,
       title: Text(entry['name'] as String),
-      subtitle: Text(dots, style: const TextStyle(fontSize: 12)),
+      subtitle: Text.rich(dots, style: const TextStyle(fontSize: 12)),
       onTap: () => _showChapters(context, entry, lvl),
       trailing: Row(mainAxisSize: MainAxisSize.min, children: [
         IconButton(
@@ -338,21 +368,24 @@ class _VaultTabState extends State<VaultTab> {
                   Text('${tr('T')}$max',
                       style: const TextStyle(fontSize: 12)),
                 ]),
-              for (final e in (entry['effects'] ?? []) as List)
+              for (final e in ((entry['effects'] ?? []) as List).cast<Map>())
                 ListTile(
                   dense: true,
                   leading: Icon(
                     cur > 0 &&
                             (cur == -1 ||
                                 cur >=
-                                    ((e as Map)['min_level'] is int
+                                    (e['min_level'] is int
                                         ? e['min_level'] as int
                                         : 1))
                         ? Icons.check_circle
                         : Icons.radio_button_unchecked,
                     size: 18,
+                    color: isCultivationEffect(e)
+                        ? Theme.of(context).colorScheme.primary
+                        : null,
                   ),
-                  title: Text(((e as Map)['note'] ?? '') as String,
+                  title: Text((e['note'] ?? '') as String,
                       style: const TextStyle(fontSize: 13)),
                 ),
             ],

@@ -796,7 +796,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<h3>Techniques</h3>"
         "<p>Unlockable passives: meet a technique's requirements to learn "
         "it, then spend <b>Technique Points</b> to tier it up — "
-        "<b>special effects unlock at Tiers 3, 6 and 9</b>. The early-game "
+        "<b>special effects unlock at Tiers 3, 6 and 9</b> (higher-rank "
+        "manuals continue at 12 and 15). The early-game "
         "picks the guide names (Longevity, Energy Unification, "
         "Rejuvenation) are examples of buying these tier effects at their "
         "cheapest; the same logic — tier breakpoints first — carries "
@@ -805,18 +806,24 @@ def build_reference_pages(acc: dict, engine_data: dict,
         # Community-guide material (2026) from here down — priorities
         # and tier lists are consensus, not client data.
         "<h3>Technique roadmap (recommended priorities)</h3>"
-        "<p>Per-rank picks, tier breakpoints first:</p><ul>"
-        "<li><b>R4</b>: Golden Core (+5% pill effect at completion) and "
-        "Astrology to Tier 7.</li>"
-        "<li><b>R5</b>: Ninefall and Bloodization to Tier 7.</li>"
-        "<li><b>R6</b>: Dragon's Flight or Yin's Grasp to Tier 10.</li>"
-        "<li><b>R7</b>: Floral Essence "
-        "— +3% pill effect at Tier 6, +1 daily pill attempt at Tier 9; "
-        "Great Yang Manual — +4% pill effect at Tier 9.</li>"
-        "<li><b>R10</b>: Immortal Ascension to Tier 13.</li>"
+        "<p>Quick per-rank picks below. The full rank-by-rank list "
+        "through R21 — ratings and how deep to tier each manual — is "
+        "on <a href='app://guide/techniques'>Guide → Techniques</a>:"
+        "</p><ul>"
+        "<li><b>R4</b>: Golden Core and Astrology; Focus's unlock "
+        "too.</li>"
+        "<li><b>R5</b>: Ninefall; Bloodization for its aura node.</li>"
+        "<li><b>R6</b>: Yin's Grasp to Tier 9; Conflagration and "
+        "Unbound Blade.</li>"
+        "<li><b>R7</b>: Floral Essence and Purify &amp; Cleanse.</li>"
+        "<li><b>R8</b>: Chroma and Astral Arcanum, plus your path's "
+        "PvP pick.</li>"
+        "<li><b>R9</b>: Harvest God Secret; Honored Origin for its "
+        "aura nodes.</li>"
+        "<li><b>R10</b>: everything — Immortal Ascension to Tier 13.</li>"
+        "<li><b>R11+</b>: each rank's law-speed manual first.</li>"
         "</ul>"
-        "<p>No R8–R9 picks are listed yet — if you have "
-        "them, please report them via the footer link. For Technique Points, "
+        "<p>For Technique Points, "
         "the recommended <b>Spirit World</b> strategy is three passes: "
         "clear what you can, come back stronger, finish later — rather "
         "than grinding one full clear early.</p>"
@@ -1583,16 +1590,79 @@ def build_guide_pages(acc: dict) -> list:
     pets = (
         "<h2>Pets</h2>"
         "<p>Pets are combat companions — they raise your battle rating and "
-        "fight beside you in PvE and PvP. They do <b>not</b> affect "
-        "cultivation speed or breakthrough timing, which is why this "
-        "calculator has no pet inputs.</p><ul>"
-        "<li><b>Upgrade one pet only.</b> Upgrades get very expensive, and "
-        "a second half-built pet is worth far less than one strong one.</li>"
-        "<li>Which one: <b>Blazelion</b> for physical-damage paths "
-        "(Corporia, Swordia); <b>Babeox</b> for magical paths (Magicka, "
-        "Ghostia, Literatia).</li>"
-        "<li>Pet skills come from <b>Demonroot</b> — buy it in the market "
-        "when you see it.</li>"
+        "fight beside you. They do <b>not</b> affect cultivation speed or "
+        "breakthrough timing. Where they earn their keep is PvE damage "
+        "rankings — Demonbend Abyss, Beast Invasion, Monster Hunt, Town "
+        "Boss, the tower — which mostly means single-target damage against "
+        "one boss. In PvP even the tanky pets only survive a couple of "
+        "extra hits, so taunts and stuns rarely get to matter.</p><ul>"
+        "<li><b>Raise ONE pet only.</b> Every rarity step costs more copies "
+        "and essences than the last, and activities like Realm Map farming "
+        "allow a single pet anyway — a second half-built pet helps "
+        "nowhere.</li>"
+        "<li>Corporia: <b>Blazelion</b>. Highest single-target damage, and "
+        "its debuffs raise the physical damage the enemy takes.</li>"
+        "<li>Magicka: <b>Blazelion</b> is the recommended pick too. "
+        "Babewyrm's debuffs do boost your magic damage, but it needs Fire "
+        "essences — by far the scarcest — so a Wyrm usually sits several "
+        "rarity steps behind what a Lion would be. Check the Pets tab with "
+        "your own numbers before committing.</li>"
+        "<li><b>Babedeer</b> costs double essences for PvP-only value, and "
+        "<b>Berpent</b> only comes from Thunderwave event rounds — neither "
+        "suits a focused build.</li></ul>"
+        "<h3>Exchange and elimination</h3>"
+        "<p>Pets are bought with rare essences: Blazelion 5 Metal + 5 Wood, "
+        "Babewyrm 5 Water + 5 Fire, Babetoise 5 Metal + 5 Earth, Babeox "
+        "5 Wood + 5 Water, Babedeer 10 Fire + 10 Earth. Eliminating an "
+        "owned pet (Abode → Pet → Eliminate, costs Fateum) returns its "
+        "essences in full — Berpent returns 5 Water + 5 Earth — so spare "
+        "pets are currency: melt the ones you don't raise to buy copies of "
+        "the one you do. The <b>Pets tab</b> does this math for you: enter "
+        "what you own and it shows the copies and rarity reachable by "
+        "going all-in on each pet.</p>"
+        "<h3>Rarity ladder</h3>"
+        "<table cellpadding='4' cellspacing='0' border='1' "
+        "style='border-collapse:collapse'>"
+        "<tr><th>Rarity</th><th>Copies</th><th>Pet realm</th></tr>"
+        "<tr><td>Common</td><td>1</td><td>Primitive</td></tr>"
+        "<tr><td>Uncommon</td><td>1</td><td>Primitive</td></tr>"
+        "<tr><td>Uncommon +1</td><td>1</td><td>Virtuoso Early</td></tr>"
+        "<tr><td>Rare</td><td>2</td><td>Virtuoso Late</td></tr>"
+        "<tr><td>Rare +1</td><td>3</td><td>Nascent Soul Early</td></tr>"
+        "<tr><td>Rare +2</td><td>5</td><td>Nascent Soul Middle</td></tr>"
+        "<tr><td>Epic</td><td>8</td><td>Nascent Soul Late</td></tr>"
+        "<tr><td>Epic +1</td><td>11</td><td>Incarnation Early</td></tr>"
+        "<tr><td>Epic +2</td><td>14</td><td>Incarnation Middle</td></tr>"
+        "<tr><td>Legendary</td><td>17</td><td>Incarnation Late</td></tr>"
+        "<tr><td>Legendary +1</td><td>21</td><td>Voidbreak Early</td></tr>"
+        "<tr><td>Legendary +2</td><td>26</td><td>Voidbreak Middle</td></tr>"
+        "<tr><td>Legendary +3</td><td>32</td><td>Voidbreak Late</td></tr>"
+        "</table>"
+        "<p>Copies are cumulative — reaching Legendary consumes 17 in "
+        "total. Upgrades also take epic essences (2 by Uncommon +1, 13 in "
+        "total by Rare +2), and your pet must reach the listed pet realm "
+        "first.</p>"
+        "<h3>Feeding and skills</h3>"
+        "<table cellpadding='4' cellspacing='0' border='1' "
+        "style='border-collapse:collapse'>"
+        "<tr><th>Pill</th><th>Common</th><th>Uncommon</th><th>Rare</th></tr>"
+        "<tr><td>R1</td><td>125</td><td>250</td><td>400</td></tr>"
+        "<tr><td>R2</td><td>625</td><td>1,250</td><td>2,000</td></tr>"
+        "<tr><td>R3</td><td>1,900</td><td>3,800</td><td>6,080</td></tr>"
+        "<tr><td>R4</td><td>5,000</td><td>10,000</td><td>16,000</td></tr>"
+        "<tr><td>R5</td><td>8,000</td><td>16,000</td><td>25,600</td></tr>"
+        "</table>"
+        "<p>Pet XP per pill. R1 Cleansing/Aura · R2 Nutrition/Revitalising "
+        "· R3 Crimson/Ice Heart · R4 Purity/Dracospirit · R5 Chalcedonius/"
+        "Reinvigoration. Epic pills give roughly double Rare. Food: "
+        "Platycodon 3,500 · Siler 11,000 · Redarrow Flower 33,500 · "
+        "Dragongall Flower 54,000 · Curculigo 79,000.</p><ul>"
+        "<li><b>Feed food and Common/Uncommon pills.</b> Rarity multiplies "
+        "a pill's pet XP far less than it multiplies the pill's value "
+        "everywhere else — Rare and better pills are wasted as feed.</li>"
+        "<li>Skills unlock with rarity — the second at Uncommon, third at "
+        "Rare, fourth at Epic — and level up with <b>Demonroot</b>; buy it "
+        "in the market when you see it.</li>"
         "<li>Pets are a low spending priority: heavy pet investment is "
         "whale territory, and free players get most of the value from just "
         "leveling their one pet steadily.</li>"
@@ -1631,6 +1701,128 @@ def build_guide_pages(acc: dict) -> list:
         "only applies to mortal-world stages.</p>"
         "<p>The calculator models one path at a time — enter the numbers "
         "for whichever path you're actively cultivating.</p>")
+
+    # Manual ratings/tier advice are a community tier list (2026-07
+    # sheet); R4–R9 node values cross-checked against the Vault book
+    # tables — see docs/knowledge/technique-books.md for provenance and
+    # the full R10+ node data.
+    r11_rows = [
+        ("R11", "Pure Mysterious", "S+",
+         "Two abode-aura nodes, crit, law speed"),
+        ("R11", "Thunder Lord Incantation", "S", "Pure law-speed manual"),
+        ("R11", "Heavenly Rhythm", "A−",
+         "Respira manual: +1 attempt, up to +9% effect"),
+        ("R11", "Square Inch Script", "B", "Scattered PvE/PvP mix"),
+        ("R12", "Cloud Satchel", "S", "Pure law-speed manual"),
+        ("R12", "Star Blade", "A+", "Crit, law speed and PvP mix"),
+        ("R13", "Five Thunder Mantra", "A+",
+         "Abode-aura unlock, then PvP lines"),
+        ("R13", "Pure Starlight", "A", "Respira, crit and law speed"),
+        ("R14", "Yin Yang Harmony", "S", "Pure law-speed manual"),
+        ("R14", "Chaos Origin", "A",
+         "Respira manual: +1 attempt, up to +9% effect"),
+        ("R14", "Samsara Scripture", "B",
+         "Take to the second node (+2% aura)"),
+        ("R15", "Celestial Cloud Scripture", "S", "Pure law-speed manual"),
+        ("R15", "Taisu Scripture", "A", "Abode aura, law speed and crit"),
+        ("R15", "Heaven Execution", "A", "PvP manual, low priority"),
+        ("R16", "Immortality Cloud", "S", "Pure law-speed manual"),
+        ("R16", "Pure Jade One", "S", "Abode aura plus PvP lines"),
+        ("R16", "Supreme Heavenly Tao", "B",
+         "Mixed bag (Respira attempt, PvE/PvP)"),
+        ("R17", "Demonbane Technique", "A",
+         "Early tiers only, for the Qiyun-efficiency line"),
+        ("R17", "Zen Lotus Technique", "A",
+         "Its demonic-side mirror; same reason"),
+        ("R18", "Magnetic Light Maneuver", "A+",
+         "Two Qiyun-efficiency nodes"),
+        ("R18", "Sanskrit Chant", "A", "Crit nodes"),
+        ("R19", "Draconic Demon Taming", "A−",
+         "First three nodes: demon damage + Qiyun"),
+        ("R19", "Jade Reincarnation Technique", "B",
+         "As above, without the Qiyun node"),
+        ("R20", "Book of Forgotten Wishes", "—",
+         "Nothing here stands out — take what you like"),
+        ("R21", "Book of Necromancy", "—", "Bottom of the list"),
+        ("R21", "Book of Meditation", "C", "Bottom of the list"),
+    ]
+    techniques = (
+        "<h2>Technique manuals: what to buy</h2>"
+        "<p>Every manual carries bonus nodes — one on learning, more at "
+        "tier breakpoints (Tiers 3/6/9, adding 12 and 15 at higher "
+        "ranks). The nodes that change your breakthrough time are the "
+        "cultivation ones — Base Abode Aura, pill effect and attempts, "
+        "Respira effect and attempts — the same bonuses the Vault "
+        "tracks (record your books there and the calculator fills "
+        "itself). Everything else is combat stats, mostly PvP. The "
+        "ratings and how-deep advice below are subjective; the node "
+        "values are the manuals' own numbers.</p>"
+        "<ul>"
+        "<li><b>Buy breakpoints, not tiers</b>: a manual is worth "
+        "reaching its next good node — stopping between nodes buys only "
+        "raw stats.</li>"
+        "<li><b>Cultivation nodes come first</b>: an abode-aura or pill "
+        "node pays out every day forever; a PvP line only pays when you "
+        "fight.</li>"
+        "<li>From R11 on, <b>elemental-law learning speed</b> joins the "
+        "top of the list — law levels are a time-integral, so speed "
+        "compounds (<a href='app://ref/systems'>Reference → World "
+        "Systems</a> covers laws).</li>"
+        "</ul>"
+        "<h3>R4–R9, rank by rank</h3>"
+        "<ul>"
+        "<li><b>R4</b> — all three earn their cost: Golden Core (+2%/+3% "
+        "pill effect), Astrology (+3% Respira effect, then +1 daily pill "
+        "attempt), and Focus at least for its +1% pill effect "
+        "unlock.</li>"
+        "<li><b>R5</b> — Ninefall is the pick (abode-aura nodes "
+        "bracketing +2% pill effect). Bloodization up to its +3% aura "
+        "node. Solarics: the aura node for everyone; physical paths "
+        "continue for the P.ATK.</li>"
+        "<li><b>R6</b> — Yin's Grasp is the standout, take it to Tier 9: "
+        "+5% Respira effect, then +1 daily pill attempt. Conflagration "
+        "and Unbound Blade stack PvP lines and land Base Abode Aura +3% "
+        "at Tier 9. Dragon Flight to Tier 6 (+2% pill effect, +2% "
+        "aura).</li>"
+        "<li><b>R7</b> — Floral Essence and Purify &amp; Cleanse are the "
+        "rank's best, every node good: Floral Essence stacks Respira, "
+        "pill effect and +1 pill attempt; Purify &amp; Cleanse is the "
+        "Respira manual (instant-complete on learning, +4%/+7% effect, "
+        "+1 attempt). Great Yang Manual: weak unlock, good everything "
+        "else (+2% aura, +5% Respira, +4% pill effect). Aqua Power (to "
+        "Tier 6), Ninefall Hoarfrost and Sunset Halberd Dance are the "
+        "PvP picks.</li>"
+        "<li><b>R8</b> — Chroma is the must-buy: pill effect, +1 Respira "
+        "attempt, +4% aura, +1 pill attempt. Astral Arcanum right behind "
+        "it (pill effect plus double aura nodes). Tao of Taiqing: top "
+        "pick for magic paths — PvP lines ending in +4% aura. Origin "
+        "Scripture: the physical-path all-rounder. Zixiao Sutra: first "
+        "two nodes only (+1% pill effect, +2% aura).</li>"
+        "<li><b>R9</b> — Harvest God Secret is the cultivation manual of "
+        "the rank: +3% Respira, +3%/+4% aura, +1 pill attempt. Honored "
+        "Origin: bought for its aura nodes, the control stats are a "
+        "bonus. Divine Water (magic) and Heartless (physical, ends in "
+        "+10% Respira) are the PvP picks. Laws of Nature: the +1% pill "
+        "effect unlock early; Tier 12 adds +10% Respira effect.</li>"
+        "</ul>"
+        "<h3>R10 and beyond</h3>"
+        "<p>Everything at R10 is worth taking — Immortal Ascension to "
+        "Tier 13 in particular. From R11 the ranks settle into a "
+        "pattern: each has a law-speed manual (rated S across the "
+        "board), usually an abode-aura or Respira manual, and a PvP "
+        "manual. New node families appear here: elemental-law learning "
+        "speed, Qiyun efficiency, and divine/demonic damage.</p>"
+        "<h3>Manual priorities, R11+</h3>"
+        "<table cellpadding='4' cellspacing='0' border='1' "
+        "style='border-collapse:collapse'>"
+        "<tr><th>Rank</th><th>Manual</th><th>Rating</th><th>Why</th></tr>"
+        + "".join(
+            f"<tr><td>{r}</td><td>{n}</td><td>{g}</td><td>{w}</td></tr>"
+            for r, n, g, w in r11_rows) +
+        "</table>"
+        "<p>Manuals above R9 aren't on the Vault shelves yet — add "
+        "their pill/Respira bonuses as custom rows in the calculator's "
+        "source pickers so projections see them.</p>")
 
     # Spending advice is community consensus (2026 guide + Discord);
     # BR figures are era-specific estimates, not client data.
@@ -1674,5 +1866,6 @@ def build_guide_pages(acc: dict) -> list:
         ("voidbreak", "Voidbreak+", voidbreak),
         ("pets", "Pets", pets),
         ("aux", "Aux Paths", aux),
+        ("techniques", "Techniques", techniques),
         ("spending", "Spending", spending),
     )]

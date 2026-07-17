@@ -28,13 +28,14 @@ void main() {
     expect(guideSlugs, {
       'paths': 0, 'server': 1, 'routine': 2, 'novice': 3, 'virtuoso': 4,
       'nascent': 5, 'incarnation': 6, 'timegate': 7, 'voidbreak': 8,
-      'pets': 9, 'aux': 10, 'spending': 11,
+      'pets': 9, 'aux': 10, 'techniques': 11, 'spending': 12,
     });
   });
 
   testWidgets('doc link jumps across trees and the back stack returns',
       (tester) async {
-    SharedPreferences.setMockInitialValues({});
+    // Flag suppresses the one-time Obtainium startup dialog (modal).
+    SharedPreferences.setMockInitialValues({'obtainium_notice_shown': true});
     final prefs = await SharedPreferences.getInstance();
     await tester.pumpWidget(
         BreakthroughApp(loadEngine(), const {}, prefs));

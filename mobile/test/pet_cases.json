@@ -1,0 +1,67 @@
+[
+  {
+    "name": "community sheet example (pools: m45 w20 wa95 f18 e106)",
+    "owned": {"blazelion": 3, "babewyrm": 1, "babetoise": 4, "berpent": 17},
+    "essences": {"metal": 10, "wood": 5, "water": 5, "fire": 13, "earth": 1},
+    "expect": {
+      "blazelion": {"copies": 4, "rarity": "Rare +1", "realm": "Nascent Soul Early"},
+      "babewyrm": {"copies": 3, "rarity": "Rare +1", "realm": "Nascent Soul Early"},
+      "babetoise": {"copies": 9, "rarity": "Epic", "realm": "Nascent Soul Late"},
+      "babeox": {"copies": 4, "rarity": "Rare +1", "realm": "Nascent Soul Early"},
+      "babedeer": {"copies": 1, "rarity": "Uncommon +1", "realm": "Virtuoso Early"},
+      "berpent": {"copies": 17, "rarity": "Legendary", "realm": "Incarnation Late"}
+    }
+  },
+  {
+    "name": "empty state",
+    "owned": {},
+    "essences": {},
+    "expect": {
+      "blazelion": {"copies": 0, "rarity": null, "realm": null},
+      "babewyrm": {"copies": 0, "rarity": null, "realm": null},
+      "babetoise": {"copies": 0, "rarity": null, "realm": null},
+      "babeox": {"copies": 0, "rarity": null, "realm": null},
+      "babedeer": {"copies": 0, "rarity": null, "realm": null},
+      "berpent": {"copies": 0, "rarity": null, "realm": null}
+    }
+  },
+  {
+    "name": "essences only, no pets",
+    "owned": {},
+    "essences": {"metal": 10, "wood": 5},
+    "expect": {
+      "blazelion": {"copies": 1, "rarity": "Uncommon +1", "realm": "Virtuoso Early"},
+      "babewyrm": {"copies": 0, "rarity": null, "realm": null},
+      "babetoise": {"copies": 0, "rarity": null, "realm": null},
+      "babeox": {"copies": 0, "rarity": null, "realm": null},
+      "babedeer": {"copies": 0, "rarity": null, "realm": null},
+      "berpent": {"copies": 0, "rarity": null, "realm": null}
+    }
+  },
+  {
+    "name": "berpent copies refund water+earth but never exchange back",
+    "owned": {"berpent": 2},
+    "essences": {},
+    "expect": {
+      "blazelion": {"copies": 0, "rarity": null, "realm": null},
+      "babewyrm": {"copies": 0, "rarity": null, "realm": null},
+      "babetoise": {"copies": 0, "rarity": null, "realm": null},
+      "babeox": {"copies": 0, "rarity": null, "realm": null},
+      "babedeer": {"copies": 0, "rarity": null, "realm": null},
+      "berpent": {"copies": 2, "rarity": "Rare", "realm": "Virtuoso Late"}
+    }
+  },
+  {
+    "name": "deep reserves cap out the ladder",
+    "owned": {},
+    "essences": {"metal": 200, "wood": 200, "water": 200, "fire": 200, "earth": 200},
+    "expect": {
+      "blazelion": {"copies": 40, "rarity": "Legendary +3", "realm": "Voidbreak Late"},
+      "babewyrm": {"copies": 40, "rarity": "Legendary +3", "realm": "Voidbreak Late"},
+      "babetoise": {"copies": 40, "rarity": "Legendary +3", "realm": "Voidbreak Late"},
+      "babeox": {"copies": 40, "rarity": "Legendary +3", "realm": "Voidbreak Late"},
+      "babedeer": {"copies": 20, "rarity": "Legendary", "realm": "Incarnation Late"},
+      "berpent": {"copies": 0, "rarity": null, "realm": null}
+    }
+  }
+]
