@@ -22,14 +22,14 @@ Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle 
 - **Gush**: data `gush_chance` = RANDOM trigger rate; the ×6 pity is a **SOFT pity** — any gush (random or guaranteed) resets the "guaranteed in x6" counter (observed 2026-07-10: random gush on 5th fruit reset counter to 6; issue #9). So a gush is guaranteed within 6 of the LAST gush, not every literal 6th. Engine models it as a 6-state Markov moment recursion (exact mean+variance). `gush_xp` is the total multiplier (1.5 base = "150%", 2.06 at Gush lvl 14 = "+206%"), keyed by the **Gush track level** (Donk keyed it by Culti level — wrong).
 - **Orb quality**: residual-fill model confirmed exactly (Quality 15 + Epic → Blue 70/Purple 30). The +20% orb EXP boosts are gated on **extractor rarity rank** (Uncommon rank→Uncommon orbs, cumulative to Mythic; no Common line), not culti-level thresholds.
 - **culti_xp is 4%/level** (80% at Lv20, "+4%" per level shown in-game). The data table originally had 2%/level — fixed ×2.
-- Extractor at highest server Stage: base fruit EXP +50% (= `fruit_highest_rank`). Extractor quality/bonus reset to Common/0 on main-Stage breakthrough; leftover fruits of the previous Stage auto-consume at pre-upgrade rates.
+- Extractor at highest server Stage: base fruit EXP +50% (= `fruit_highest_rank`). Extractor quality/bonus reset to Common/0 on REALM ascension only — owner-corrected 2026-07-17: e.g. mortal → Spiritual; stage breakthroughs within a realm (Nascent Soul → Incarnation) do NOT reset it. Leftover fruits of the previous realm auto-consume at pre-upgrade rates. (Earlier "main-Stage breakthrough" wording here and in the app docs was wrong; app fixed same day.)
 
 Tests in tests/test_engine.py class ScreenshotGroundTruth2026_07_07 pin all of this. Related: [[fruit-ranks-no-r4-r5]].
 
 ## Fruit ranks
 
 
-The `fruit_xp` table in data/breakthrough.json (R3, R6–R12) is complete despite the apparent gap. Per Seralth (2026-07-06): fruit ranks map to realm bands — R3 covers Nascent through Voidbreak, R6 starts the Spiritual world, R12 starts the Immortal world. R4/R5 were never omitted; they don't exist as fruit ranks. Don't flag this as missing data in future audits.
+The `fruit_xp` table in data/breakthrough.json (R3, R6–R12) is complete despite the apparent gap. Per Seralth (2026-07-06): fruit ranks map to realm bands — R3 covers Nascent through Voidbreak, R6 starts the Spiritual world, R12 starts the Immortal world. R4/R5 were never omitted; they don't exist as fruit ranks. Don't flag this as missing data in future audits. (2026-07-17 Worlds cross-ref: "through Voidbreak" = up to the Voidbreak GATE — the Spiritual band R6 begins AT Voidbreak, the stage that opens the Spiritual World; see the Worlds section.)
 
 Related: fruit XP/balance tables are server-authoritative and NOT in the client APK dump (see apk_analysis/RE_FINDINGS.md) — client dumps can't verify balance numbers; Donk's sheet + in-game tooltips are the sources of truth.
 
@@ -68,8 +68,11 @@ applied after the (still manual) breakthrough.
   The overcap leg is also reset-window aware: with dailies_done, no daily
   XP accrues until the reset and the deferred event-Respira credit lands at
   the reset.
-  ASSUMED (unverified): blessing pp still apply while overcapped — they are
-  an absorption-band bonus, not Strive.
+  COMMUNITY-CONFIRMED (multiple independent players, repeatedly, via
+  Seralth; label upgraded from ASSUMED 2026-07-16 — do not re-hedge this):
+  blessing pp apply in full while overcapped — they are an absorption-band
+  bonus, not Strive. This underpins both the prestock ceiling math and the
+  park-in-Early meta.
 - Timegate context (2026 guide): Voidbreak gate ≈ day 35–38 of a server;
   Myrimon fruits "lose 50% of their XP" once the next realm's timegate passes —
   spend fruits before the gate. RECONCILED (2026-07-15, gameplay.tips abode
@@ -129,16 +132,77 @@ Verified from APK i18n strings (`apk_analysis/i18n_all.json`, en/zh/ru):
   our dump translated 'Incarnation (M) Completed' / 'Incarnation (C)
   Completed'. It is the ONLY stage with a Completed/圆满 state — the terminal
   sub-rank after maxing Incarnation (Late) G15 while waiting to ascend to the
-  Immortal World (Voidbreak). No other mortal-world stage has it.
+  SPIRITUAL World (Voidbreak; the "Immortal World" reading recorded here
+  earlier was wrong — see the Worlds section below). No other mortal-world
+  stage has it.
 - Grade ladders per dump (matches data/breakthrough.json): Incarnation Early
   G1–G8, Middle G1–G9, Late G1–G15.
 - Completed/Perfected is not an extra XP band — breakthrough.json's
   Incarnation Late G15 row already covers the XP to reach it. Ascension
   itself is event/quest-gated ("Path to Ascension is not yet unlocked.
   Unable to ascend."), which the time calculator does not model.
-  UNVERIFIED (server-side): whether cultivation XP keeps accruing/prestocks
-  while sitting in Completed awaiting ascension — same open question as the
-  overcap accrual rate above.
+  RESOLVED (2026-07-15/16): cultivation XP does keep accruing while sitting
+  in Completed awaiting ascension — see "Timegate overcap / XP prestocking"
+  above (capped-row rate, de-strived, blessing pp apply in full; the
+  440%/404% community data points are players stocking in exactly this
+  state). Note the Completion breakthrough itself is required first: the
+  Virya tier text reads "Reach Incarnation (L) Late 100% and break
+  through" — a full gauge without the breakthrough starts nothing
+  (owner-reconfirmed 2026-07-17).
+
+### Worlds: the full realm ladder (2026-07-17, dump i18n sweep)
+
+The 13 stages group into three Worlds. Dump enumerations: sect relocation
+"(Mortal World/Spiritual World/Immortal World)"; Ethereal Residence rules
+"As the Realms of [Human - Spirit - Immortal] progress" (de: Mensch –
+Geist – Unsterblich); abode skins listed per world.
+
+- **Mortal World**: Novice, Connection, Foundation, Virtuoso, Nascent
+  Soul, Incarnation — ends at Incarnation (Perfected).
+- **Spiritual World**: Voidbreak, Wholeness, Perfection, Nirvana —
+  entered by ASCENSION at the first world timegate (~server day 35–38).
+  Boundary evidence (system strings, not flavor): server transfer
+  "unlocks at server age 40 days ... Taoists of Voidbreak or higher" /
+  "30 days after Spiritual World unlocks" (day math only works if the
+  VB gate = Spiritual World unlock); multi-path help text "Dual
+  Cultivation Gear offers powerful stats after you ascend to the
+  Spiritual World... Virya stats ... may remove Pill usage restrictions"
+  (= the Ascension Virya system at this gate); quest line "Ascend to the
+  Spiritual World to unlock more content"; owner usage 2026-07-17
+  ("mortal to spirit") for the extractor reset at this gate.
+- **Immortal World**: Celestial, Eternal, Supreme — entered by
+  TRANSCENDENCE ("A Taoist can transcend to the Immortal World with the
+  Transcendent Token"; server milestones "Immortal World Rift",
+  "Immortal Transcendent"). Celestial-stage gear crafts from "Immortal
+  World" materials.
+
+Alignments that fall out exactly:
+- **Pill ranks are per major STAGE**, not per world: Connection=1R …
+  Incarnation=5R, Voidbreak=6R … Supreme=12R — 12 ranks = the 12 stages
+  after Novice, exact.
+- **Fruit ranks are per WORLD band**: R3 = mortal band, R6 starts the
+  Spiritual world (= Voidbreak), R12 the Immortal world (= Celestial).
+  The older phrasing "R3 covers Nascent through Voidbreak" should read
+  "up to the Voidbreak gate". UNMAPPED: how R7–R11 distribute inside the
+  Spiritual world (6 ranks, 4 stages — doesn't fit 1:1; don't guess).
+- **Extractor resets at WORLD boundaries only** (owner-corrected
+  2026-07-17): Incarnation→Voidbreak and Nirvana→Celestial. Stage
+  breakthroughs within a world never reset it.
+- FLAVOR-TEXT ANOMALIES (event/NPC dialogue; do not trust over the
+  system strings): a Stellar Ceremony line calls Voidbreak attendees
+  "mere mortals" who may yet "ascend to the Spiritual World"; a White
+  Astra quest at Voidbreak (Early) speaks of the Spiritual World as
+  still ahead; one clan story has Incarnation (Late) seeking "the
+  Immortal World". Loose localization.
+- **Immortal Friends unlock at Voidbreak+** (owner, 2026-07-17: not
+  accessible at Incarnation (L) Late) — the guide's placement of the
+  friend priorities on the Voidbreak+ page is correct; don't propose
+  moving them earlier.
+- OPEN (revisit): the **"Spiritual Leap"** event — dump strings show
+  rewards "for Taoists in Spiritual Leap" and that servers WITHOUT the
+  event get server transfer "30 days after Spiritual World unlocks".
+  Looks like a catch-up/transfer-adjacent server event; unmapped, owner
+  unsure too (2026-07-17). Not referenced anywhere user-facing.
 
 ### Ascension Virya blessings tied to Completed/Perfected (2026-07-15, screenshots)
 
@@ -167,13 +231,19 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   +20%"; Blessing Rewards +5; "Second Esotability".
 - COMMUNITY MODEL of the stacking (TWO independent player confirmations via
   Seralth 2026-07-15 — an older player self-rated ~90% sure, plus a second
-  player confirming +60% total while in Incarnation, dropping to +40% after
-  Voidbreak Middle removes the conditional +20%; supersedes the narrower
-  window reading where they conflict): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
+  player confirming +60% total while in Incarnation, dropping to +40% in
+  Voidbreak Middle): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
   Absorption Ratio" add flat to +40%, and that +40% PERSISTS past
   Incarnation (it is named for the tier, not windowed to the stage). The
   "Before Voidbreak (L) Middle +20%" is the conditional one on top: +60%
-  total until passing Voidbreak Middle, then back to +40% permanently.
+  total until REACHING Voidbreak (L) Middle, then back to +40% permanently.
+  BOUNDARY OWNER-CONFIRMED (Seralth 2026-07-16): the conditional +20pp ends
+  at the START of VB Middle — the dump template "Absorption Ratio Before
+  %s: + %s%%" is literal. The "until passing Middle" reading recorded here
+  on 2026-07-15 was wrong; engine `blessing_applies` (rows strictly before
+  the VB Middle start row) was already correct. The parking meta below only
+  works under this reading: Early cap 0.50 base + 0.60 blessing = 1.10
+  beats live Middle 0.65 + 0.40 = 1.05.
   Meta consequence: players park in Voidbreak (Early) — +60% plus VB's
   higher base band (0.50 vs Incarnation Late 0.40) — and prestock until
   they can clear Middle into Late in one push.
