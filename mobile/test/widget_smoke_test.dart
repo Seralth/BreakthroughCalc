@@ -86,9 +86,27 @@ void main() {
 
   Future<SharedPreferences> mockPrefs(
       [Map<String, Object> initial = const {}]) {
-    SharedPreferences.setMockInitialValues(initial);
+    // The one-time Obtainium notice is a modal dialog at startup; without
+    // this flag it sits over the app and blocks every finder below it.
+    SharedPreferences.setMockInitialValues(
+        {'obtainium_notice_shown': true, ...initial});
     return SharedPreferences.getInstance();
   }
+
+  testWidgets('Obtainium notice shows once, sets its flag, and closes',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(BreakthroughApp(engine, shelfCatalog, prefs));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Automatic updates'), findsOneWidget);
+    expect(prefs.getBool('obtainium_notice_shown'), isTrue);
+
+    await tester.tap(find.text('Close'));
+    await tester.pumpAndSettle();
+    expect(find.text('Automatic updates'), findsNothing);
+  });
 
   testWidgets('calc tab renders, computes, and top tabs switch',
       (tester) async {

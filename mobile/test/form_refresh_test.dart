@@ -34,7 +34,9 @@ void main() {
 
   Future<SharedPreferences> mockPrefs(
       [Map<String, Object> initial = const {}]) {
-    SharedPreferences.setMockInitialValues(initial);
+    // Suppress the one-time Obtainium startup dialog (modal, blocks finders).
+    SharedPreferences.setMockInitialValues(
+        {'obtainium_notice_shown': true, ...initial});
     return SharedPreferences.getInstance();
   }
 
