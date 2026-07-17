@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'doc_nav.dart';
 import 'doc_widgets.dart';
+import 'pet_planner.dart';
 
 class GuideSection {
   final String slug;
@@ -612,16 +613,77 @@ Widget _petsPage(BuildContext context) {
   return docPage(context, [
     Text('Pets', style: h3),
     para('Pets are combat companions — they raise your battle rating and '
-        'fight beside you in PvE and PvP. They do NOT affect cultivation '
-        'speed or breakthrough timing, which is why this calculator has no '
-        'pet inputs.'),
-    para('• Upgrade one pet only — upgrades get very expensive, and a '
-        'second half-built pet is worth far less than one strong one.\n'
-        '• Which one: Blazelion for physical-damage paths (Corporia, '
-        'Swordia); Babeox for magical paths (Magicka, Ghostia, '
-        'Literatia).\n'
-        '• Pet skills come from Demonroot — buy it in the market when you '
-        'see it.\n'
+        'fight beside you. They do not affect cultivation speed or '
+        'breakthrough timing. Where they earn their keep is PvE damage '
+        'rankings — Demonbend Abyss, Beast Invasion, Monster Hunt, Town '
+        'Boss, the tower — which mostly means single-target damage against '
+        'one boss. In PvP even the tanky pets only survive a couple of '
+        'extra hits, so taunts and stuns rarely get to matter.'),
+    para('• Raise ONE pet only. Every rarity step costs more copies and '
+        'essences than the last, and activities like Realm Map farming '
+        'allow a single pet anyway — a second half-built pet helps '
+        'nowhere.\n'
+        '• Corporia: Blazelion. Highest single-target damage, and its '
+        'debuffs raise the physical damage the enemy takes.\n'
+        '• Magicka: Blazelion is the recommended pick too. Babewyrm\'s '
+        'debuffs do boost your magic damage, but it needs Fire essences — '
+        'by far the scarcest — so a Wyrm usually sits several rarity steps '
+        'behind what a Lion would be. Check the planner below with your '
+        'own numbers before committing.\n'
+        '• Babedeer costs double essences for PvP-only value, and Berpent '
+        'only comes from Thunderwave event rounds — neither suits a '
+        'focused build.'),
+    Text('Exchange and elimination', style: h3),
+    para('Pets are bought with rare essences: Blazelion 5 Metal + 5 Wood, '
+        'Babewyrm 5 Water + 5 Fire, Babetoise 5 Metal + 5 Earth, Babeox '
+        '5 Wood + 5 Water, Babedeer 10 Fire + 10 Earth. Eliminating an '
+        'owned pet (Abode → Pet → Eliminate, costs Fateum) returns its '
+        'essences in full — Berpent returns 5 Water + 5 Earth — so spare '
+        'pets are currency: melt the ones you don\'t raise to buy copies '
+        'of the one you do.'),
+    const PetPlanner(),
+    docTable(context, 'Rarity ladder', ['Rarity', 'Copies', 'Pet realm'], [
+      ['Common', '1', 'Primitive'],
+      ['Uncommon', '1', 'Primitive'],
+      ['Uncommon +1', '1', 'Virtuoso Early'],
+      ['Rare', '2', 'Virtuoso Late'],
+      ['Rare +1', '3', 'Nascent Soul Early'],
+      ['Rare +2', '5', 'Nascent Soul Middle'],
+      ['Epic', '8', 'Nascent Soul Late'],
+      ['Epic +1', '11', 'Incarnation Early'],
+      ['Epic +2', '14', 'Incarnation Middle'],
+      ['Legendary', '17', 'Incarnation Late'],
+      ['Legendary +1', '21', 'Voidbreak Early'],
+      ['Legendary +2', '26', 'Voidbreak Middle'],
+      ['Legendary +3', '32', 'Voidbreak Late'],
+    ],
+        'Copies are cumulative — reaching Legendary consumes 17 in total. '
+        'Upgrades also take epic essences (2 by Uncommon +1, 13 in total '
+        'by Rare +2), and your pet must reach the listed pet realm first.'),
+    Text('Feeding and skills', style: h3),
+    docTable(context, 'Pet XP per pill', ['Pill', 'Common', 'Uncommon', 'Rare'], [
+      ['R1', '125', '250', '400'],
+      ['R2', '625', '1,250', '2,000'],
+      ['R3', '1,900', '3,800', '6,080'],
+      ['R4', '5,000', '10,000', '16,000'],
+      ['R5', '8,000', '16,000', '25,600'],
+    ],
+        'R1 Cleansing/Aura · R2 Nutrition/Revitalising · R3 Crimson/'
+        'Ice Heart · R4 Purity/Dracospirit · R5 Chalcedonius/'
+        'Reinvigoration. Epic pills give roughly double Rare.'),
+    docTable(context, 'Pet XP per food', ['Food', 'XP'], [
+      ['Platycodon', '3,500'],
+      ['Siler', '11,000'],
+      ['Redarrow Flower', '33,500'],
+      ['Dragongall Flower', '54,000'],
+      ['Curculigo', '79,000'],
+    ]),
+    para('• Feed food and Common/Uncommon pills. Rarity multiplies a '
+        'pill\'s pet XP far less than it multiplies the pill\'s value '
+        'everywhere else — Rare and better pills are wasted as feed.\n'
+        '• Skills unlock with rarity — the second at Uncommon, third at '
+        'Rare, fourth at Epic — and level up with Demonroot; buy it in '
+        'the market when you see it.\n'
         '• Pets are a low spending priority; heavy investment is whale '
         'territory.\n'
         '• Save the pet system\'s speed-up items for law fruits in your '
