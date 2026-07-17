@@ -29,6 +29,7 @@ const List<GuideSection> guideSections = [
   GuideSection('voidbreak', 'Voidbreak+', _voidbreakPage),
   GuideSection('pets', 'Pets', _petsPage),
   GuideSection('aux', 'Aux Paths', _auxPage),
+  GuideSection('techniques', 'Techniques', _techniquesPage),
   GuideSection('spending', 'Spending', _spendingPage),
 ];
 
@@ -659,6 +660,120 @@ Widget _auxPage(BuildContext context) {
         '120% Strive warning only applies to mortal-world stages.'),
     para('The calculator models one path at a time — enter the numbers for '
         'whichever path you\'re actively cultivating.'),
+  ], footerText: _guideFooterText,
+      padding: const EdgeInsets.all(16));
+}
+
+// Manual ratings/tier advice are a community tier list (2026-07 sheet);
+// R4–R9 node values cross-checked against the Vault book tables —
+// see docs/knowledge/technique-books.md for provenance and the full
+// R10+ node data.
+
+Widget _techniquesPage(BuildContext context) {
+  final h3 = Theme.of(context).textTheme.titleMedium;
+  Widget para(String s) => docPara(context, s);
+  return docPage(context, [
+    Text('Technique manuals: what to buy', style: h3),
+    para('Every manual carries bonus nodes — one on learning, more at '
+        'tier breakpoints (Tiers 3/6/9, adding 12 and 15 at higher '
+        'ranks). The nodes that change your breakthrough time are the '
+        'cultivation ones — Base Abode Aura, pill effect and attempts, '
+        'Respira effect and attempts — the same bonuses the Vault '
+        'tracks (record your books there and the calculator fills '
+        'itself). Everything else is combat stats, mostly PvP. The '
+        'ratings and how-deep advice below are subjective; the node '
+        'values are the manuals\' own numbers.'),
+    para('• Buy breakpoints, not tiers: a manual is worth reaching its '
+        'next good node — stopping between nodes buys only raw stats.\n'
+        '• Cultivation nodes come first: an abode-aura or pill node pays '
+        'out every day forever; a PvP line only pays when you fight.\n'
+        '• From R11 on, elemental-law learning speed joins the top of '
+        'the list — law levels are a time-integral, so speed compounds '
+        '([[ref:systems|Reference → World Systems]] covers laws).'),
+    Text('R4–R9, rank by rank', style: h3),
+    para('• R4 — all three earn their cost: Golden Core (+2%/+3% pill '
+        'effect), Astrology (+3% Respira effect, then +1 daily pill '
+        'attempt), and Focus at least for its +1% pill effect unlock.\n'
+        '• R5 — Ninefall is the pick (abode-aura nodes bracketing +2% '
+        'pill effect). Bloodization to Tier 6 (+3% aura). Solarics: the '
+        'Tier 3 aura for everyone; physical paths continue for the '
+        'P.ATK.\n'
+        '• R6 — Yin\'s Grasp is the standout, take it to Tier 9: +5% '
+        'Respira effect, then +1 daily pill attempt. Conflagration and '
+        'Unbound Blade stack PvP lines and land Base Abode Aura +3% at '
+        'Tier 9. Dragon Flight to Tier 6 (+2% pill effect, +2% aura).\n'
+        '• R7 — Floral Essence and Purify & Cleanse are the rank\'s '
+        'best, every node good: Floral Essence stacks Respira, pill '
+        'effect and +1 pill attempt; Purify & Cleanse is the Respira '
+        'manual (instant-complete on learning, +4%/+7% effect, +1 '
+        'attempt). Great Yang Manual: weak unlock, good everything '
+        'else (+2% aura, +5% Respira, +4% pill effect). Aqua Power (to '
+        'Tier 6), Ninefall Hoarfrost and Sunset Halberd Dance are the '
+        'PvP picks.\n'
+        '• R8 — Chroma is the must-buy: pill effect, +1 Respira '
+        'attempt, +4% aura, +1 pill attempt. Astral Arcanum right '
+        'behind it (pill effect plus double aura nodes). Tao of '
+        'Taiqing: top pick for magic paths — PvP lines ending in +4% '
+        'aura. Origin Scripture: the physical-path all-rounder. Zixiao '
+        'Sutra: first two nodes only (+1% pill effect, +2% aura).\n'
+        '• R9 — Harvest God Secret is the cultivation manual of the '
+        'rank: +3% Respira, +3%/+4% aura, +1 pill attempt. Honored '
+        'Origin: bought for its aura nodes, the control stats are a '
+        'bonus. Divine Water (magic) and Heartless (physical, ends in '
+        '+10% Respira) are the PvP picks. Laws of Nature: grab the +1% '
+        'pill effect unlock, little else.'),
+    Text('R10 and beyond', style: h3),
+    para('Everything at R10 is worth taking — Immortal Ascension to '
+        'Tier 13 in particular. From R11 the ranks settle into a '
+        'pattern: each has a law-speed manual (rated S across the '
+        'board), usually an abode-aura or Respira manual, and a PvP '
+        'manual. New node families appear here: elemental-law learning '
+        'speed, Qiyun efficiency, and divine/demonic damage.'),
+    docTable(context, 'Manual priorities, R11+',
+        ['Rank', 'Manual', 'Rating', 'Why'],
+        [
+          ['R11', 'Pure Mysterious', 'S+',
+           'Two abode-aura nodes, crit, law speed'],
+          ['R11', 'Thunder Lord Incantation', 'S', 'Pure law-speed manual'],
+          ['R11', 'Heavenly Rhythm', 'A−',
+           'Respira manual: +1 attempt, up to +9% effect'],
+          ['R11', 'Square Inch Script', 'B', 'Scattered PvE/PvP mix'],
+          ['R12', 'Cloud Satchel', 'S', 'Pure law-speed manual'],
+          ['R12', 'Star Blade', 'A+', 'Crit, law speed and PvP mix'],
+          ['R13', 'Five Thunder Mantra', 'A+',
+           'Abode-aura unlock, then PvP lines'],
+          ['R13', 'Pure Starlight', 'A', 'Respira, crit and law speed'],
+          ['R14', 'Yin Yang Harmony', 'S', 'Pure law-speed manual'],
+          ['R14', 'Chaos Origin', 'A',
+           'Respira manual: +1 attempt, up to +9% effect'],
+          ['R14', 'Samsara Scripture', 'B',
+           'Take to the second node (+2% aura)'],
+          ['R15', 'Celestial Cloud Scripture', 'S', 'Pure law-speed manual'],
+          ['R15', 'Taisu Scripture', 'A', 'Abode aura, law speed and crit'],
+          ['R15', 'Heaven Execution', 'A', 'PvP manual, low priority'],
+          ['R16', 'Immortality Cloud', 'S', 'Pure law-speed manual'],
+          ['R16', 'Pure Jade One', 'S', 'Abode aura plus PvP lines'],
+          ['R16', 'Supreme Heavenly Tao', 'B',
+           'Mixed bag (Respira attempt, PvE/PvP)'],
+          ['R17', 'Demonbane Technique', 'A',
+           'Take it to the Qiyun-efficiency node'],
+          ['R17', 'Zen Lotus Technique', 'A',
+           'Its demonic-side mirror; same reason'],
+          ['R18', 'Magnetic Light Maneuver', 'A+',
+           'Two Qiyun-efficiency nodes'],
+          ['R18', 'Sanskrit Chant', 'A', 'Crit nodes'],
+          ['R19', 'Draconic Demon Taming', 'A−',
+           'First three nodes: demon damage + Qiyun'],
+          ['R19', 'Jade Reincarnation Technique', 'B',
+           'As above, without the Qiyun node'],
+          ['R20', 'Book of Forgotten Wishes', '—',
+           'Nothing here stands out — take what you like'],
+          ['R21', 'Book of Necromancy', '—', 'Bottom of the list'],
+          ['R21', 'Book of Meditation', 'C', 'Bottom of the list'],
+        ],
+        'Manuals above R9 aren\'t on the Vault shelves yet — add their '
+        'pill/Respira bonuses as custom rows in the calculator\'s '
+        'source pickers so projections see them.'),
   ], footerText: _guideFooterText,
       padding: const EdgeInsets.all(16));
 }
