@@ -96,6 +96,13 @@ The two apps are deliberately parallel; module layouts mirror each other.
   `breakthrough_calc/__init__.__version__`, `mobile/pubspec.yaml` version
   (increment the +build number too), `mobile/lib/main.dart` appVersion.
   tests/test_consistency.py pins all three together.
+- **Push a `v<version>` tag with every version bump** (2026-07-17: web had
+  reached 2.18 while releases/latest sat at v2.10 — installed desktop and
+  Android apps poll GitHub releases and reported "up to date" the whole
+  time). Master push deploys ONLY the web app; the tag push is what builds
+  and attaches the APK, Windows exe, and Linux AppImage to a release. Add
+  release notes with `gh release edit v<version> --notes` (stable-tag
+  releases are created with an empty body).
 - Deploy latency: push → ~4 min build/deploy → up to 10 min GitHub Pages
   CDN cache (max-age=600, headers not configurable). Inside that window
   even a correct Force refresh serves the previous build — check
