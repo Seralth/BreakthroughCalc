@@ -24,7 +24,7 @@ jobs:
       tag: ${{ steps.decide.outputs.tag }}
       release: ${{ steps.decide.outputs.release }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: decide
         name: Decide release tag (auto-release on version bump)
         run: |
@@ -50,7 +50,7 @@ jobs:
       run:
         working-directory: mobile
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -72,6 +72,7 @@ jobs:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           STORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          WILL_RELEASE: ${{ needs.version.outputs.release }}
         run: |
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
@@ -82,8 +83,8 @@ jobs:
               echo "keyPassword=$KEY_PASS"
             } > android/key.properties
             echo "Release keystore configured."
-          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
-            echo "::error::Tag build without ANDROID_KEYSTORE_* secrets — refusing to publish a debug-signed APK (updates would break for every user)."
+          elif [[ "$GITHUB_REF" == refs/tags/* || "$WILL_RELEASE" == "true" ]]; then
+            echo "::error::Release build without ANDROID_KEYSTORE_* secrets — refusing to publish a debug-signed APK (updates would break for every user)."
             exit 1
           else
             echo "No keystore secrets — APK will be debug-signed (non-release build)."
@@ -96,7 +97,7 @@ jobs:
         run: |
           BT="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
           "$BT/apksigner" verify --print-certs BreakthroughCalculator.apk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: BreakthroughCalculator-apk
           path: mobile/BreakthroughCalculator.apk
