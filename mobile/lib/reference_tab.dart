@@ -822,11 +822,11 @@ Widget _systemsPage(BuildContext context, Engine engine, Map<String, dynamic> ca
     // Community-guide material (2026) from here down — priorities and
     // tier lists are consensus, not client data.
     Text('Technique roadmap (recommended priorities)', style: h3),
-    para('The quick per-rank picks — the full rank-by-rank list through '
-        'R21, with ratings and how deep to tier each manual, is on '
+    para('Quick per-rank picks below. The full rank-by-rank list through '
+        'R21 — ratings and how deep to tier each manual — is on '
         '[[guide:techniques|Guide → Techniques]]:\n'
         '• R4: Golden Core and Astrology; Focus\'s unlock too.\n'
-        '• R5: Ninefall; Bloodization to Tier 6.\n'
+        '• R5: Ninefall; Bloodization for its aura node.\n'
         '• R6: Yin\'s Grasp to Tier 9; Conflagration and Unbound '
         'Blade.\n'
         '• R7: Floral Essence and Purify & Cleanse.\n'

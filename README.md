@@ -16,10 +16,22 @@ Available for Windows, Linux, Android, and the web.
 - **Android**: open the link in Chrome, tap the **⋮** menu → **Add to Home
   screen** (or **Install app** when offered) and confirm. Note: Android users
   should prefer the **native APK** from the [Releases](../../releases) page — it
-  performs better and updates itself via the built-in update check; the web app
-  is mainly for iPhone users, where no native build is possible outside the App
-  Store.
+  performs better and checks for updates on launch (or updates automatically
+  via Obtainium, see below); the web app is mainly for iPhone users, where no
+  native build is possible outside the App Store.
 - The web app always serves the latest release — no updates to manage.
+
+### Automatic updates on Android (Obtainium)
+
+The APK notifies you in-app when a new version is out, but installing it is
+manual. [Obtainium](https://obtainium.imranr.dev/) automates the whole loop —
+it watches this repository's releases and installs each new APK for you:
+
+1. Install Obtainium from [obtainium.imranr.dev](https://obtainium.imranr.dev/).
+2. In Obtainium, tap **Add App** and paste this repository's URL:
+   `https://github.com/Seralth/BreakthroughCalc`
+3. That's it — Obtainium notifies you on every new release and updates the
+   app in place, keeping all your data.
 
 The app has a Reference tab that documents each mechanic and states which values
 to read from the game.

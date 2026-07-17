@@ -1,7 +1,7 @@
 name: breakthrough_calc
 description: Breakthrough Calculator — Android/mobile port (Flutter).
 publish_to: none
-version: 2.20.0+32
+version: 3.0.0+33
 
 environment:
   sdk: ">=3.4.0 <4.0.0"

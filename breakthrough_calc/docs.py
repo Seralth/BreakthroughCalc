@@ -806,13 +806,13 @@ def build_reference_pages(acc: dict, engine_data: dict,
         # Community-guide material (2026) from here down — priorities
         # and tier lists are consensus, not client data.
         "<h3>Technique roadmap (recommended priorities)</h3>"
-        "<p>The quick per-rank picks — the full rank-by-rank list "
-        "through R21, with ratings and how deep to tier each manual, is "
+        "<p>Quick per-rank picks below. The full rank-by-rank list "
+        "through R21 — ratings and how deep to tier each manual — is "
         "on <a href='app://guide/techniques'>Guide → Techniques</a>:"
         "</p><ul>"
         "<li><b>R4</b>: Golden Core and Astrology; Focus's unlock "
         "too.</li>"
-        "<li><b>R5</b>: Ninefall; Bloodization to Tier 6.</li>"
+        "<li><b>R5</b>: Ninefall; Bloodization for its aura node.</li>"
         "<li><b>R6</b>: Yin's Grasp to Tier 9; Conflagration and "
         "Unbound Blade.</li>"
         "<li><b>R7</b>: Floral Essence and Purify &amp; Cleanse.</li>"
@@ -1731,7 +1731,7 @@ def build_guide_pages(acc: dict) -> list:
         ("R16", "Supreme Heavenly Tao", "B",
          "Mixed bag (Respira attempt, PvE/PvP)"),
         ("R17", "Demonbane Technique", "A",
-         "Take it to the Qiyun-efficiency node"),
+         "Early tiers only, for the Qiyun-efficiency line"),
         ("R17", "Zen Lotus Technique", "A",
          "Its demonic-side mirror; same reason"),
         ("R18", "Magnetic Light Maneuver", "A+",
@@ -1776,9 +1776,9 @@ def build_guide_pages(acc: dict) -> list:
         "attempt), and Focus at least for its +1% pill effect "
         "unlock.</li>"
         "<li><b>R5</b> — Ninefall is the pick (abode-aura nodes "
-        "bracketing +2% pill effect). Bloodization to Tier 6 (+3% aura). "
-        "Solarics: the Tier 3 aura for everyone; physical paths continue "
-        "for the P.ATK.</li>"
+        "bracketing +2% pill effect). Bloodization up to its +3% aura "
+        "node. Solarics: the aura node for everyone; physical paths "
+        "continue for the P.ATK.</li>"
         "<li><b>R6</b> — Yin's Grasp is the standout, take it to Tier 9: "
         "+5% Respira effect, then +1 daily pill attempt. Conflagration "
         "and Unbound Blade stack PvP lines and land Base Abode Aura +3% "
@@ -1802,8 +1802,8 @@ def build_guide_pages(acc: dict) -> list:
         "the rank: +3% Respira, +3%/+4% aura, +1 pill attempt. Honored "
         "Origin: bought for its aura nodes, the control stats are a "
         "bonus. Divine Water (magic) and Heartless (physical, ends in "
-        "+10% Respira) are the PvP picks. Laws of Nature: grab the +1% "
-        "pill effect unlock, little else.</li>"
+        "+10% Respira) are the PvP picks. Laws of Nature: the +1% pill "
+        "effect unlock early; Tier 12 adds +10% Respira effect.</li>"
         "</ul>"
         "<h3>R10 and beyond</h3>"
         "<p>Everything at R10 is worth taking — Immortal Ascension to "

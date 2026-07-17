@@ -757,8 +757,8 @@ Widget _techniquesPage(BuildContext context) {
         'effect), Astrology (+3% Respira effect, then +1 daily pill '
         'attempt), and Focus at least for its +1% pill effect unlock.\n'
         '• R5 — Ninefall is the pick (abode-aura nodes bracketing +2% '
-        'pill effect). Bloodization to Tier 6 (+3% aura). Solarics: the '
-        'Tier 3 aura for everyone; physical paths continue for the '
+        'pill effect). Bloodization up to its +3% aura node. Solarics: '
+        'the aura node for everyone; physical paths continue for the '
         'P.ATK.\n'
         '• R6 — Yin\'s Grasp is the standout, take it to Tier 9: +5% '
         'Respira effect, then +1 daily pill attempt. Conflagration and '
@@ -782,8 +782,8 @@ Widget _techniquesPage(BuildContext context) {
         'rank: +3% Respira, +3%/+4% aura, +1 pill attempt. Honored '
         'Origin: bought for its aura nodes, the control stats are a '
         'bonus. Divine Water (magic) and Heartless (physical, ends in '
-        '+10% Respira) are the PvP picks. Laws of Nature: grab the +1% '
-        'pill effect unlock, little else.'),
+        '+10% Respira) are the PvP picks. Laws of Nature: the +1% pill '
+        'effect unlock early; Tier 12 adds +10% Respira effect.'),
     Text('R10 and beyond', style: h3),
     para('Everything at R10 is worth taking — Immortal Ascension to '
         'Tier 13 in particular. From R11 the ranks settle into a '
@@ -818,7 +818,7 @@ Widget _techniquesPage(BuildContext context) {
           ['R16', 'Supreme Heavenly Tao', 'B',
            'Mixed bag (Respira attempt, PvE/PvP)'],
           ['R17', 'Demonbane Technique', 'A',
-           'Take it to the Qiyun-efficiency node'],
+           'Early tiers only, for the Qiyun-efficiency line'],
           ['R17', 'Zen Lotus Technique', 'A',
            'Its demonic-side mirror; same reason'],
           ['R18', 'Magnetic Light Maneuver', 'A+',
