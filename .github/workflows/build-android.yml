@@ -36,10 +36,33 @@ jobs:
         run: |
           python3 test/gen_expected.py
           dart run test/parity.dart
+      - name: Write release signing config
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            {
+              echo "storeFile=$RUNNER_TEMP/release.jks"
+              echo "storePassword=$STORE_PASS"
+              echo "keyAlias=omvault"
+              echo "keyPassword=$KEY_PASS"
+            } > android/key.properties
+            echo "Release keystore configured."
+          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            echo "::error::Tag build without ANDROID_KEYSTORE_* secrets — refusing to publish a debug-signed APK (updates would break for every user)."
+            exit 1
+          else
+            echo "No keystore secrets — APK will be debug-signed (non-release build)."
+          fi
       - name: Build release APK
         run: flutter build apk --release --dart-define=BUILD_STAMP="${GITHUB_SHA:0:7} · $(date -u +%Y-%m-%d)"
       - name: Rename APK
         run: mv build/app/outputs/flutter-apk/app-release.apk BreakthroughCalculator.apk
+      - name: Report APK signer certificate
+        run: keytool -printcert -jarfile BreakthroughCalculator.apk | head -15 || true
       - uses: actions/upload-artifact@v4
         with:
           name: BreakthroughCalculator-apk

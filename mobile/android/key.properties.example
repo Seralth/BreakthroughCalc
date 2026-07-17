@@ -1,0 +1,6 @@
+# Copy to key.properties (gitignored) and fill in. Needed on any machine
+# that signs release APKs; without it, release builds are debug-signed.
+storeFile=/home/seralth/keystores/omvault-release.jks
+storePassword=CHANGE_ME
+keyAlias=omvault
+keyPassword=CHANGE_ME
