@@ -70,8 +70,10 @@ jobs:
         run: flutter build apk --release --dart-define=BUILD_STAMP="${GITHUB_SHA:0:7} · $(date -u +%Y-%m-%d)"
       - name: Rename APK
         run: mv build/app/outputs/flutter-apk/app-release.apk BreakthroughCalculator.apk
-      - name: Report APK signer certificate
-        run: keytool -printcert -jarfile BreakthroughCalculator.apk | head -15 || true
+      - name: Verify and report APK signer certificate
+        run: |
+          BT="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          "$BT/apksigner" verify --print-certs BreakthroughCalculator.apk
       - uses: actions/upload-artifact@v4
         with:
           name: BreakthroughCalculator-apk
