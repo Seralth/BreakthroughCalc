@@ -1608,7 +1608,7 @@ def build_guide_pages(acc: dict) -> list:
         "rarity steps behind what a Lion would be. Check the Pets tab with "
         "your own numbers before committing.</li>"
         "<li><b>Babedeer</b> costs double essences for PvP-only value, and "
-        "<b>Berpent</b> only comes from Thunderwave event rounds — neither "
+        "<b>Berpent</b> only comes from events — neither "
         "suits a focused build.</li></ul>"
         "<h3>Exchange and elimination</h3>"
         "<p>Pets are bought with rare essences: Blazelion 5 Metal + 5 Wood, "
@@ -1702,49 +1702,95 @@ def build_guide_pages(acc: dict) -> list:
         "<p>The calculator models one path at a time — enter the numbers "
         "for whichever path you're actively cultivating.</p>")
 
-    # Manual ratings/tier advice are a community tier list (2026-07
-    # sheet); R4–R9 node values cross-checked against the Vault book
-    # tables — see docs/knowledge/technique-books.md for provenance and
-    # the full R10+ node data.
-    r11_rows = [
-        ("R11", "Pure Mysterious", "S+",
-         "Two abode-aura nodes, crit, law speed"),
-        ("R11", "Thunder Lord Incantation", "S", "Pure law-speed manual"),
-        ("R11", "Heavenly Rhythm", "A−",
-         "Respira manual: +1 attempt, up to +9% effect"),
-        ("R11", "Square Inch Script", "B", "Scattered PvE/PvP mix"),
-        ("R12", "Cloud Satchel", "S", "Pure law-speed manual"),
-        ("R12", "Star Blade", "A+", "Crit, law speed and PvP mix"),
-        ("R13", "Five Thunder Mantra", "A+",
-         "Abode-aura unlock, then PvP lines"),
-        ("R13", "Pure Starlight", "A", "Respira, crit and law speed"),
-        ("R14", "Yin Yang Harmony", "S", "Pure law-speed manual"),
-        ("R14", "Chaos Origin", "A",
-         "Respira manual: +1 attempt, up to +9% effect"),
-        ("R14", "Samsara Scripture", "B",
-         "Take to the second node (+2% aura)"),
-        ("R15", "Celestial Cloud Scripture", "S", "Pure law-speed manual"),
-        ("R15", "Taisu Scripture", "A", "Abode aura, law speed and crit"),
-        ("R15", "Heaven Execution", "A", "PvP manual, low priority"),
-        ("R16", "Immortality Cloud", "S", "Pure law-speed manual"),
-        ("R16", "Pure Jade One", "S", "Abode aura plus PvP lines"),
-        ("R16", "Supreme Heavenly Tao", "B",
-         "Mixed bag (Respira attempt, PvE/PvP)"),
-        ("R17", "Demonbane Technique", "A",
-         "Early tiers only, for the Qiyun-efficiency line"),
-        ("R17", "Zen Lotus Technique", "A",
-         "Its demonic-side mirror; same reason"),
-        ("R18", "Magnetic Light Maneuver", "A+",
-         "Two Qiyun-efficiency nodes"),
-        ("R18", "Sanskrit Chant", "A", "Crit nodes"),
-        ("R19", "Draconic Demon Taming", "A−",
-         "First three nodes: demon damage + Qiyun"),
-        ("R19", "Jade Reincarnation Technique", "B",
-         "As above, without the Qiyun node"),
-        ("R20", "Book of Forgotten Wishes", "—",
-         "Nothing here stands out — take what you like"),
-        ("R21", "Book of Necromancy", "—", "Bottom of the list"),
-        ("R21", "Book of Meditation", "C", "Bottom of the list"),
+    # Ratings derived 2026-07-17 from docs/knowledge/technique-books.md
+    # (R4–R9 verified node tables; post-R9 sheet extraction) under a
+    # fixed speed-value rubric — independently of the community sheet's
+    # own grades. Rows sorted best-first within each rank. Mirror of
+    # guide_tab.dart's table.
+    manual_rows = [
+        ("R1", "Longevity", "A", "Aura at learn, then a Respira attempt"),
+        ("R2", "Energy Unification", "B", "Small Respira and aura nodes"),
+        ("R2", "Rejuvenation", "B", "Small aura node, small pill node"),
+        ("R3", "Cosmic Power", "A+", "Respira attempt at learn, effect after"),
+        ("R3", "Lifeboom", "A", "Pill effect, then a Respira attempt"),
+        ("R3", "Yang", "C", "Crit and monster-damage PvE pick"),
+        ("R4", "Astrology", "S", "Aura, Respira effect, then pill attempt"),
+        ("R4", "Golden Core", "A", "Pill effect stacked twice plus Respira"),
+        ("R4", "Focus", "B", "One small pill node, then Sense filler"),
+        ("R4", "Soul Drain", "C", "Monster-farming pick"),
+        ("R5", "Ninefall", "A", "Aura twice plus a pill node"),
+        ("R5", "Bloodization", "B", "One good aura node behind combat filler"),
+        ("R5", "Solarics", "B", "One aura node, rest combat filler"),
+        ("R5", "Taiyin Meridian", "B", "Single Respira node amid combat lines"),
+        ("R5", "Lunarics", "C", "Control-stacking PvP pick"),
+        ("R6", "Yin's Grasp", "S+", "Aura, Respira +5%, then pill attempt"),
+        ("R6", "Dragon Flight", "A", "Pill +2% and aura +2%, then filler"),
+        ("R6", "Unbound Blade", "B", "Lone aura +3%, rest ability PvP"),
+        ("R6", "Conflagration", "B", "Single aura +3% at T9, rest PvP"),
+        ("R6", "Lion's Roar", "B", "Respira and Spiritium early, then stop"),
+        ("R6", "Thunder Winds", "C", "Crit-stat combat book"),
+        ("R7", "Floral Essence", "S+", "All-speed tree ending in pill attempt"),
+        ("R7", "Purify &amp; Cleanse", "S+",
+         "Instant Respira on learn, attempts later"),
+        ("R7", "Great Yang Manual", "S", "Aura, Respira +5%, pill +4% ladder"),
+        ("R7", "Aqua Power", "C", "Ability PvP; Spiritium +4% tail"),
+        ("R7", "Bulwark", "C", "Control resist and PvE defense"),
+        ("R7", "Dragonsound", "C", "Control plus monster damage; PvE pick"),
+        ("R7", "Ninefall Hoarfrost", "C", "Magic-side PvP defense pick"),
+        ("R7", "Sunset Halberd Dance", "C", "Physical-path PvP pick"),
+        ("R7", "Vajra", "C", "Relic PvP niche"),
+        ("R8", "Chroma", "S+", "Both attempt nodes; every node speed"),
+        ("R8", "Astral Arcanum", "S", "Pill early, aura twice at T9/T12"),
+        ("R8", "Cauldron Refinement", "B", "Respira +3% at T3, then combat"),
+        ("R8", "Moon Meru", "B", "Control filler until Respira +10% at T12"),
+        ("R8", "Tao of Taiqing", "B", "Combat tree until lone aura +4% at T12"),
+        ("R8", "Zixiao Sutra", "B", "Pill and aura cheap early, then stop"),
+        ("R8", "Dracophant", "C", "Monster and relic defense pick"),
+        ("R8", "No-Thought Sutra", "C", "Paralysis stack for PvP"),
+        ("R8", "Origin Scripture", "C", "Physical PvP defense pick"),
+        ("R9", "Harvest God Secret", "S+", "Aura three times, then a pill attempt"),
+        ("R9", "Honored Origin", "A−", "Aura on learn, +3% again at T9"),
+        ("R9", "Heartless", "B", "Physical PvP until Respira +10% at T12"),
+        ("R9", "Laws of Nature", "B", "Pill unlock at learn; Respira +10% at T12"),
+        ("R9", "Divine Water", "C", "Magic-path PvP pick"),
+        ("R9", "Eight-Nine Method", "C", "Relic-ability defense pick"),
+        ("R9", "Gold Smasher", "C", "Relic-control PvP pick"),
+        ("R9", "Mara Incarnation", "C", "Physical ability-PvP pick"),
+        ("R9", "Seven Star Blade", "C", "Relic PvP pick"),
+        ("R9", "Way of Creation", "C", "Relic and ability hybrid PvP"),
+        ("R9", "Wordless Scripture", "C", "Control-stacking utility pick"),
+        ("R9", "Zhurong Mantra", "C", "Magic ability-PvP pick"),
+        ("R10", "Immortal Ascension", "S+", "Must-take — worth tiering to 13"),
+        ("R11", "Thunder Lord Incantation", "S", "Every node is law speed"),
+        ("R11", "Heavenly Rhythm", "S",
+         "All Respira: attempt mid-tree, effect around it"),
+        ("R11", "Pure Mysterious", "A+", "Aura twice early, Fire law capstone"),
+        ("R11", "Square Inch Script", "B", "One deep Respira node amid PvP filler"),
+        ("R12", "Cloud Satchel", "S", "Every node is law speed"),
+        ("R12", "Star Blade", "A−", "Two law nodes, rest combat filler"),
+        ("R13", "Pure Starlight", "A", "Early Respira, ends in two law nodes"),
+        ("R13", "Five Thunder Mantra", "B", "Aura at unlock, then all-PvP filler"),
+        ("R14", "Yin Yang Harmony", "S", "Every node is law speed"),
+        ("R14", "Chaos Origin", "S",
+         "All Respira: attempt mid-tree, effect around it"),
+        ("R14", "Samsara Scripture", "B", "One early aura node, Spiritium tail"),
+        ("R15", "Celestial Cloud Scripture", "S", "Every node is law speed"),
+        ("R15", "Taisu Scripture", "A", "Aura at learn plus three law nodes"),
+        ("R15", "Heaven Execution", "C", "PvP ladder only"),
+        ("R16", "Immortality Cloud", "S", "Every node is law speed"),
+        ("R16", "Supreme Heavenly Tao", "A", "Respira attempt mid-tree, then combat"),
+        ("R16", "Pure Jade One", "B+", "Aura twice up front, then pure PvP"),
+        ("R17", "Demonbane Technique", "B", "One Qiyun node early, rest divine combat"),
+        ("R17", "Zen Lotus Technique", "B", "Demonic mirror: same lone Qiyun node"),
+        ("R18", "Magnetic Light Maneuver", "A", "Qiyun twice, then Respira +7%"),
+        ("R18", "Sanskrit Chant", "C", "Crit-stacking PvP pick"),
+        ("R19", "Draconic Demon Taming", "B", "One Qiyun node, then stat filler"),
+        ("R19", "Jade Reincarnation Technique", "C",
+         "Demon damage and stat lines only"),
+        ("R20", "Book of Forgotten Wishes", "C",
+         "Nothing stands out — take what you like"),
+        ("R21", "Book of Necromancy", "B", "A small Qiyun node amid filler"),
+        ("R21", "Book of Meditation", "C", "Control and stat lines, no speed"),
     ]
     techniques = (
         "<h2>Technique manuals: what to buy</h2>"
@@ -1754,9 +1800,13 @@ def build_guide_pages(acc: dict) -> list:
         "cultivation ones — Base Abode Aura, pill effect and attempts, "
         "Respira effect and attempts — the same bonuses the Vault "
         "tracks (record your books there and the calculator fills "
-        "itself). Everything else is combat stats, mostly PvP. The "
-        "ratings and how-deep advice below are subjective; the node "
-        "values are the manuals' own numbers.</p>"
+        "itself). Everything else is combat stats, mostly PvP. "
+        "Ratings grade cultivation-speed value only: <b>S+</b> "
+        "must-buy, tier deep · <b>S</b> core speed manual · <b>A</b> "
+        "solid speed value · <b>B</b> a node or two worth a stop · "
+        "<b>C</b> combat or utility only (the note names its niche). "
+        "How deep to go is judgment; the node values are the manuals' "
+        "own numbers.</p>"
         "<ul>"
         "<li><b>Buy breakpoints, not tiers</b>: a manual is worth "
         "reaching its next good node — stopping between nodes buys only "
@@ -1812,13 +1862,13 @@ def build_guide_pages(acc: dict) -> list:
         "board), usually an abode-aura or Respira manual, and a PvP "
         "manual. New node families appear here: elemental-law learning "
         "speed, Qiyun efficiency, and divine/demonic damage.</p>"
-        "<h3>Manual priorities, R11+</h3>"
+        "<h3>Every Universal manual, rated</h3>"
         "<table cellpadding='4' cellspacing='0' border='1' "
         "style='border-collapse:collapse'>"
         "<tr><th>Rank</th><th>Manual</th><th>Rating</th><th>Why</th></tr>"
         + "".join(
             f"<tr><td>{r}</td><td>{n}</td><td>{g}</td><td>{w}</td></tr>"
-            for r, n, g, w in r11_rows) +
+            for r, n, g, w in manual_rows) +
         "</table>"
         "<p>Manuals above R9 aren't on the Vault shelves yet — add "
         "their pill/Respira bonuses as custom rows in the calculator's "
