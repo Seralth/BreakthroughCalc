@@ -162,3 +162,13 @@ on every master push touching `mobile/` or `data/`. The Android/web app is a
 separate Flutter project in `mobile/`, kept isolated from the desktop app; it
 reuses the same data and a Dart port of the engine verified against the Python
 one. See `mobile/README.md`.
+
+## License
+
+The app code is licensed under the [PolyForm Noncommercial License
+1.0.0](LICENSE): free to use, read, modify, and share — selling it or putting
+features behind a paywall is reserved to the author. The compiled game
+information stays free: game facts belong to no one, in-game text remains the
+publisher's, and this project's own prose and curation are
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Details in
+[NOTICE.md](NOTICE.md).

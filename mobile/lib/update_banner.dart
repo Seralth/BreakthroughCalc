@@ -15,6 +15,56 @@ const releasesLatestUrl =
 
 const obtainiumUrl = 'https://obtainium.imranr.dev/';
 
+/// One reminder after 10 launches; "Maybe later" (or dismissing) re-asks
+/// in 60 days, Donate / "Don't ask again" never again. Twin of
+/// MainWindow._maybe_donation_nag on desktop.
+Future<void> maybeShowDonationNag(BuildContext context,
+    SharedPreferences prefs, VoidCallback onDonate) async {
+  final state = prefs.getString('donate_nag') ?? '';
+  if (state == 'never') return;
+  final launches = (prefs.getInt('launch_count') ?? 0) + 1;
+  await prefs.setInt('launch_count', launches);
+  if (launches < 10) return;
+  final now = DateTime.now().millisecondsSinceEpoch;
+  if (state == 'later' && now < (prefs.getInt('donate_nag_due') ?? 0)) {
+    return;
+  }
+  await prefs.setString('donate_nag', 'later');
+  await prefs.setInt(
+      'donate_nag_due', now + const Duration(days: 60).inMilliseconds);
+  if (!context.mounted) return;
+  await showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(tr('Enjoying the calculator?')),
+      content: Text(tr(
+          'This app is free and always will be. If it has been useful, '
+          'you can support development with a donation — sent as an '
+          'in-game voucher gift.')),
+      actions: [
+        TextButton(
+          onPressed: () {
+            prefs.setString('donate_nag', 'never');
+            Navigator.pop(ctx);
+            onDonate();
+          },
+          child: Text(tr('Donate')),
+        ),
+        TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(tr('Maybe later'))),
+        TextButton(
+          onPressed: () {
+            prefs.setString('donate_nag', 'never');
+            Navigator.pop(ctx);
+          },
+          child: Text(tr("Don't ask again")),
+        ),
+      ],
+    ),
+  );
+}
+
 /// One-time notice that updates can be automated with Obtainium.
 /// Sets the prefs flag up front so it can never show twice.
 Future<void> maybeShowObtainiumNotice(

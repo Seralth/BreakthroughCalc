@@ -5,14 +5,15 @@ from __future__ import annotations
 import os
 import re
 import sys
+import time
 
-from PySide6.QtCore import Qt, QUrl
+from PySide6.QtCore import Qt, QTimer, QUrl
 from PySide6.QtGui import QDesktopServices, QGuiApplication, QIcon
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
     QInputDialog, QLabel,
-    QMainWindow, QPushButton, QScrollArea, QSpinBox, QTabWidget,
+    QMainWindow, QMessageBox, QPushButton, QScrollArea, QSpinBox, QTabWidget,
     QTextBrowser, QVBoxLayout,
     QWidget,
 )
@@ -101,6 +102,9 @@ class MainWindow(QMainWindow):
         self._updates = UpdateChecker(self)
         self._updates.result.connect(self._on_update_result)
         self._updates.check()  # async; silent no-op offline
+        # Delayed so it only ever fires in a running event loop (never in
+        # the Qt smoke tests, which construct the window without exec()).
+        QTimer.singleShot(1500, self._maybe_donation_nag)
 
     # ---- UI construction -------------------------------------------------
     def _build_ui(self):
@@ -848,6 +852,43 @@ class MainWindow(QMainWindow):
     # ---- donate ------------------------------------------------------------
     def _show_donate(self):
         DonateDialog(self).exec()
+
+    def _maybe_donation_nag(self):
+        # One reminder after 10 launches; "Maybe later" (or closing the
+        # dialog) re-asks in 60 days, Donate / "Don't ask again" never
+        # again. Twin of maybeShowDonationNag in mobile update_banner.dart.
+        obj = self._store.read()
+        if obj.get("donate_nag") == "never":
+            return
+        launches = int(obj.get("launch_count", 0)) + 1
+        obj["launch_count"] = launches
+        now = int(time.time())
+        due_ok = (obj.get("donate_nag") != "later"
+                  or now >= int(obj.get("donate_nag_due", 0)))
+        show = launches >= 10 and due_ok
+        if show:
+            obj["donate_nag"] = "later"
+            obj["donate_nag_due"] = now + 60 * 86400
+        self._store.write(obj)
+        if not show:
+            return
+        box = QMessageBox(self)
+        box.setWindowTitle(tr("Enjoying the calculator?"))
+        box.setText(tr(
+            "This app is free and always will be. If it has been useful, "
+            "you can support development with a donation — sent as an "
+            "in-game voucher gift."))
+        donate = box.addButton(tr("Donate"), QMessageBox.AcceptRole)
+        box.addButton(tr("Maybe later"), QMessageBox.RejectRole)
+        never = box.addButton(
+            tr("Don't ask again"), QMessageBox.DestructiveRole)
+        box.exec()
+        if box.clickedButton() in (donate, never):
+            obj = self._store.read()
+            obj["donate_nag"] = "never"
+            self._store.write(obj)
+            if box.clickedButton() is donate:
+                self._show_donate()
 
     # ---- update check (logic in update_check.UpdateChecker) ---------------
     def _on_update_result(self, text: str, visible: bool):
