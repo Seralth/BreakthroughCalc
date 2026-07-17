@@ -74,6 +74,16 @@ TRANSLATIONS = {
   "Update available: v{}": "Доступно обновление: v{}",
   "Up to date (v{})": "У вас последняя версия (v{})",
   "Donate ♥": "Поддержать ♥",
+  "Enjoying the calculator?": "Нравится калькулятор?",
+  "This app is free and always will be. If it has been useful, "
+  "you can support development with a donation — sent as an "
+  "in-game voucher gift.":
+      "Это приложение бесплатно и всегда будет бесплатным. Если оно было "
+      "полезным, вы можете поддержать разработку взносом — он отправляется "
+      "как подарочный ваучер в игре.",
+  "Donate": "Сделать взнос",
+  "Maybe later": "Может позже",
+  "Don't ask again": "Больше не спрашивать",
   "Support development by gifting in-game vouchers.":
       "Поддержите разработку, подарив внутриигровые ваучеры.",
   "Theme:": "Тема:", "Language:": "Язык:",
@@ -474,6 +484,16 @@ TRANSLATIONS = {
   "Update available: v{}": "Update verfügbar: v{}",
   "Up to date (v{})": "Auf dem neuesten Stand (v{})",
   "Donate ♥": "Spenden ♥",
+  "Enjoying the calculator?": "Gefällt dir der Rechner?",
+  "This app is free and always will be. If it has been useful, "
+  "you can support development with a donation — sent as an "
+  "in-game voucher gift.":
+      "Diese App ist kostenlos und bleibt es. Wenn sie dir geholfen hat, "
+      "kannst du die Entwicklung mit einer Spende unterstützen — zugestellt "
+      "als Gutschein-Geschenk im Spiel.",
+  "Donate": "Spenden",
+  "Maybe later": "Vielleicht später",
+  "Don't ask again": "Nicht mehr fragen",
   "Support development by gifting in-game vouchers.":
       "Unterstütze die Entwicklung mit In-Game-Gutscheinen.",
   "Theme:": "Design:", "Language:": "Sprache:",
@@ -868,6 +888,16 @@ TRANSLATIONS = {
   "Update available: v{}": "Actualización disponible: v{}",
   "Up to date (v{})": "Actualizado (v{})",
   "Donate ♥": "Donar ♥",
+  "Enjoying the calculator?": "¿Te gusta la calculadora?",
+  "This app is free and always will be. If it has been useful, "
+  "you can support development with a donation — sent as an "
+  "in-game voucher gift.":
+      "Esta aplicación es gratuita y siempre lo será. Si te ha resultado "
+      "útil, puedes apoyar el desarrollo con una donación — se envía como "
+      "un vale de regalo dentro del juego.",
+  "Donate": "Donar",
+  "Maybe later": "Quizá más tarde",
+  "Don't ask again": "No volver a preguntar",
   "Support development by gifting in-game vouchers.":
       "Apoya el desarrollo regalando cupones del juego.",
   "Theme:": "Tema:", "Language:": "Idioma:",
@@ -1268,6 +1298,15 @@ TRANSLATIONS = {
   "Update available: v{}": "有可用更新：v{}",
   "Up to date (v{})": "已是最新版本（v{}）",
   "Donate ♥": "捐献 ♥",
+  "Enjoying the calculator?": "喜欢这个计算器吗？",
+  "This app is free and always will be. If it has been useful, "
+  "you can support development with a donation — sent as an "
+  "in-game voucher gift.":
+      "本应用永久免费。如果它对你有帮助，欢迎通过捐赠支持开发——"
+      "捐赠将以游戏内代金券礼物的形式送达。",
+  "Donate": "捐献",
+  "Maybe later": "以后再说",
+  "Don't ask again": "不再询问",
   "Support development by gifting in-game vouchers.":
       "通过赠送游戏内代金券支持开发。",
   "Theme:": "主题：", "Language:": "语言：",

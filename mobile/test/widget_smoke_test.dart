@@ -93,6 +93,23 @@ void main() {
     return SharedPreferences.getInstance();
   }
 
+  testWidgets('donation nag fires on the 10th launch; Never sticks',
+      (tester) async {
+    SharedPreferences.setMockInitialValues(
+        {'obtainium_notice_shown': true, 'launch_count': 9});
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(BreakthroughApp(engine, shelfCatalog, prefs));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Enjoying the calculator?'), findsOneWidget);
+    expect(prefs.getInt('launch_count'), 10);
+
+    await tester.tap(find.text("Don't ask again"));
+    await tester.pumpAndSettle();
+    expect(find.text('Enjoying the calculator?'), findsNothing);
+    expect(prefs.getString('donate_nag'), 'never');
+  });
+
   testWidgets('Obtainium notice shows once, sets its flag, and closes',
       (tester) async {
     SharedPreferences.setMockInitialValues({});

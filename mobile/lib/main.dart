@@ -24,7 +24,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '3.1';
+const appVersion = '3.2';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -184,6 +184,12 @@ class _CalculatorPageState extends State<CalculatorPage>
     if (!kIsWeb) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await maybeShowObtainiumNotice(context, widget.prefs);
+        if (!mounted) return;
+        await maybeShowDonationNag(
+            context,
+            widget.prefs,
+            () => showDonateDialog(context,
+                donateUrl: donateUrl, donateRid: donateRid));
         if (!mounted) return;
         checkForUpdates(context, widget.prefs, appVersion);
       });
