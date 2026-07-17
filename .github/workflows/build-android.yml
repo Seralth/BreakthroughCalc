@@ -57,6 +57,15 @@ jobs:
           else
             echo "No keystore secrets — APK will be debug-signed (non-release build)."
           fi
+      - name: TEMP sig-test keystore (revert before merge)
+        run: |
+          keytool -genkeypair -keystore "$RUNNER_TEMP/sigtest.jks" -storepass sigtest123 -keypass sigtest123 -alias omvault -keyalg RSA -dname "CN=sigtest" -validity 30
+          {
+            echo "storeFile=$RUNNER_TEMP/sigtest.jks"
+            echo "storePassword=sigtest123"
+            echo "keyAlias=omvault"
+            echo "keyPassword=sigtest123"
+          } > android/key.properties
       - name: Build release APK
         run: flutter build apk --release --dart-define=BUILD_STAMP="${GITHUB_SHA:0:7} · $(date -u +%Y-%m-%d)"
       - name: Rename APK
