@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'i18n.dart';
 import 'update_check.dart';
@@ -11,6 +12,40 @@ import 'update_check.dart';
 /// Fallback when the release payload carries no browser URL.
 const releasesLatestUrl =
     'https://github.com/Seralth/BreakthroughCalc/releases/latest';
+
+const obtainiumUrl = 'https://obtainium.imranr.dev/';
+
+/// One-time notice that updates can be automated with Obtainium.
+/// Sets the prefs flag up front so it can never show twice.
+Future<void> maybeShowObtainiumNotice(
+    BuildContext context, SharedPreferences prefs) async {
+  if (prefs.getBool('obtainium_notice_shown') ?? false) return;
+  await prefs.setBool('obtainium_notice_shown', true);
+  if (!context.mounted) return;
+  await showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: Text(tr('Automatic updates')),
+      content: Text(tr(
+          'This app can update itself automatically through Obtainium, a '
+          'free app that installs new versions straight from this '
+          "project's releases. Add this app there once and every update "
+          'arrives as a notification — no more manual downloads.')),
+      actions: [
+        TextButton(
+          onPressed: () {
+            launchUrl(Uri.parse(obtainiumUrl),
+                mode: LaunchMode.externalApplication);
+            Navigator.pop(ctx);
+          },
+          child: Text(tr('Get Obtainium')),
+        ),
+        TextButton(
+            onPressed: () => Navigator.pop(ctx), child: Text(tr('Close'))),
+      ],
+    ),
+  );
+}
 
 /// Checks GitHub for a newer release. Silent on failure; on startup
 /// ([manual] false) it only shows a banner for a not-yet-dismissed newer
