@@ -8,7 +8,8 @@ user types, chip is informational) and auto (field read-only, shelf-driven).
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import QEvent, Qt, Signal
+from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QGroupBox, QHBoxLayout, QLabel,
     QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget,
@@ -16,6 +17,22 @@ from PySide6.QtWidgets import (
 
 from .i18n import tr
 from .shelf import Derived
+
+# Calculator-wired effect targets (the cultivation bonuses).
+_CULTIVATION_TARGETS = {
+    "pill_effect", "pill_attempts", "respira_attempts", "respira_effect",
+}
+
+
+def _is_cultivation_effect(e: dict) -> bool:
+    """True for effects worth working toward for cultivation: calc-wired
+    pill/Respira bonuses, plus the informational Base Abode Aura and
+    Respira QoL chapters (twin of vault_tab.isCultivationEffect)."""
+    if e.get("target") in _CULTIVATION_TARGETS:
+        return True
+    note = e.get("note", "")
+    return e.get("target") == "info" and (
+        "Abode Aura" in note or "Respira" in note)
 
 
 class ProvenanceChip(QPushButton):
@@ -175,13 +192,18 @@ class _SourceRow(QWidget):
 
 class _BookRow(_SourceRow):
     """A Library book: the tier control plus chapter dots (one per bonus
-    threshold, filled while the owned tier reaches it)."""
+    threshold, filled while the owned tier reaches it; cultivation
+    chapters render in the accent color)."""
 
     def __init__(self, entry: dict, parent=None):
         super().__init__(entry, parent)
         self._thresholds = sorted({e.get("min_level", 1)
                                    for e in entry.get("effects", [])})
+        self._noted = {e.get("min_level", 1)
+                       for e in entry.get("effects", [])
+                       if _is_cultivation_effect(e)}
         self._dots = QLabel()
+        self._dots.setTextFormat(Qt.RichText)
         self.layout().addWidget(self._dots)
         self.changed.connect(self._update_dots)
         self._update_dots()
@@ -189,16 +211,26 @@ class _BookRow(_SourceRow):
     def _update_dots(self):
         owned = self.owned()
         lvl = None if owned is None else (10**9 if owned == -1 else owned)
+        accent = self.palette().color(QPalette.Link).name()
         marks = []
         for ml in self._thresholds:
             on = lvl is not None and (
                 lvl >= (ml if isinstance(ml, int) else 10**9))
-            marks.append("●" if on else "○")
+            dot = "●" if on else "○"
+            if ml in self._noted:
+                dot = f"<span style='color:{accent}'>{dot}</span>"
+            marks.append(dot)
         self._dots.setText(" ".join(marks))
 
     def set_owned(self, value):
         super().set_owned(value)
         self._update_dots()
+
+    def changeEvent(self, ev):
+        super().changeEvent(ev)
+        # Re-render the accent hex when the app theme swaps palettes.
+        if ev.type() == QEvent.PaletteChange:
+            self._update_dots()
 
 
 class _RowsPane(QWidget):
@@ -245,7 +277,9 @@ class _LibraryPane(QWidget):
         intro = QLabel(tr(
             "Set each book's tier once; the bonuses it has unlocked flow to "
             "the calculator on their own. Dots show the book's chapter "
-            "bonuses: filled ones are active at your tier."))
+            "bonuses: filled ones are active at your tier, and colored dots "
+            "mark the cultivation chapters — pill, Respira and abode-aura "
+            "bonuses worth working toward."))
         intro.setWordWrap(True)
         v.addWidget(intro)
         tabs = QTabWidget()

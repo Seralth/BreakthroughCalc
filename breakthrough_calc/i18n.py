@@ -315,8 +315,8 @@ TRANSLATIONS = {
   "Companions": "Спутники",
   "Universal": "Общие",
   "Exclusive": "Эксклюзивные",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире, а цветные отмечают главы культивации — бонусы пилюль, дыхания ци и ауры обители, к которым стоит стремиться.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.",
   "auto": "авто",
@@ -700,8 +700,8 @@ TRANSLATIONS = {
   "Companions": "Gefährten",
   "Universal": "Universell",
   "Exclusive": "Exklusiv",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv, und farbige Punkte markieren die Kultivierungskapitel — Pillen-, Atmungs- und Wohnsitz-Aura-Boni, auf die es sich hinzuarbeiten lohnt.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.",
   "auto": "auto",
@@ -1088,8 +1088,8 @@ TRANSLATIONS = {
   "Companions": "Compañeros",
   "Universal": "Universales",
   "Exclusive": "Exclusivas",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel.",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel, y los puntos de color marcan los capítulos de cultivo — bonos de píldoras, Inhala y aura de la morada por los que vale la pena avanzar.",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "Los manuales de técnica exclusivos solo dan estadísticas de combate, así que aún no se registran. Este estante se completará más adelante.",
   "auto": "auto",
@@ -1444,8 +1444,8 @@ TRANSLATIONS = {
   "Companions": "道友",
   "Universal": "通用",
   "Exclusive": "专属",
-  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier.":
-   "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效。",
+  "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.":
+   "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效，彩色圆点标记修炼相关章节——丹药、吐纳和洞府灵气加成，值得优先追求。",
   "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.":
    "专属功法只提供战斗属性，暂不跟踪。此书架以后会补全。",
   "auto": "自动",
