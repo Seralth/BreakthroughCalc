@@ -1,7 +1,13 @@
 name: Build Android
 
+# Master pushes are path-gated on pubspec.yaml (which every version bump
+# touches, per the release checklist); path filters don't apply to tag
+# pushes, so v* tags always build. The version job auto-creates the
+# vX.Y release on the first push of a new version — no manual tag needed.
 on:
   push:
+    branches: [master]
+    paths: ["mobile/pubspec.yaml"]
     tags: ["v*"]
   workflow_dispatch:
 
@@ -12,8 +18,33 @@ jobs:
   test:
     uses: ./.github/workflows/ci.yml
 
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.decide.outputs.tag }}
+      release: ${{ steps.decide.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: decide
+        name: Decide release tag (auto-release on version bump)
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          else
+            v=$(grep -oP '__version__ = "\K[^"]+' breakthrough_calc/__init__.py)
+            tag="v$v"
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
+            if git ls-remote --exit-code origin "refs/tags/$tag" >/dev/null 2>&1; then
+              echo "release=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "release=true" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
   build-apk:
-    needs: test
+    needs: [test, version]
+    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || needs.version.outputs.release == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -70,9 +101,11 @@ jobs:
           name: BreakthroughCalculator-apk
           path: mobile/BreakthroughCalculator.apk
       - name: Attach to release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: ${{ startsWith(github.ref, 'refs/tags/') || needs.version.outputs.release == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.version.outputs.tag }}
           files: mobile/BreakthroughCalculator.apk
-          prerelease: ${{ contains(github.ref_name, '-') }}
-          body: ${{ contains(github.ref_name, '-') && 'Android app — BETA. Sideload BreakthroughCalculator.apk (enable "install from unknown sources"). Desktop builds are unchanged from the latest stable release.' || '' }}
+          generate_release_notes: ${{ !contains(needs.version.outputs.tag, '-') }}
+          prerelease: ${{ contains(needs.version.outputs.tag, '-') }}
+          body: ${{ contains(needs.version.outputs.tag, '-') && 'Android app — BETA. Sideload BreakthroughCalculator.apk (enable "install from unknown sources"). Desktop builds are unchanged from the latest stable release.' || '' }}
