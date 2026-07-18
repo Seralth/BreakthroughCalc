@@ -15,19 +15,16 @@ and to migrate legacy settings that stored localized display names.
 from __future__ import annotations
 
 import json
-import os
-import sys
+
+from .data_io import resource_path
 
 LANGS = {"en": "English", "ru": "Русский", "de": "Deutsch", "es": "Español", "zh": "中文"}
 
 
 def _load_translations() -> dict:
     """data/i18n.json ({en: {lang: val}}) -> {lang: {en: val}} for tr()."""
-    base = sys._MEIPASS if getattr(sys, "frozen", False) else \
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     try:
-        with open(os.path.join(base, "data", "i18n.json"),
-                  encoding="utf-8") as f:
+        with open(resource_path("data", "i18n.json"), encoding="utf-8") as f:
             raw = json.load(f)
     except (OSError, ValueError):
         return {lang: {} for lang in LANGS if lang != "en"}
