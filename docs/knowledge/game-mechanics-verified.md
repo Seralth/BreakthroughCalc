@@ -8,6 +8,8 @@ Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle 
   2026-07-15) the gem accrues off the HIGHEST path's speed regardless of
   settings, and the claim lands on whichever path is set as "cultivating" —
   swap-to-aux → claim → swap-back transfers the full amount at zero loss.
+  SECOND PIN (2026-07-18, from the 2026-07-17 batch): at speed 159.78/8s the
+  Legendary cap reads 552.21K = 0.24 × (159.78/8) × 32h to the digit.
 - **Passive aura generation follows the "cultivating" toggle** (Seralth
   2026-07-15): whichever path is set as cultivating receives the passive
   aura income. Absorption ratio keys off the HIGHEST stage (dump: "Higher
@@ -25,6 +27,58 @@ Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle 
 - Extractor at highest server Stage: base fruit EXP +50% (= `fruit_highest_rank`). Extractor quality/bonus reset to Common/0 on REALM ascension only — owner-corrected 2026-07-17: e.g. mortal → Spiritual; stage breakthroughs within a realm (Nascent Soul → Incarnation) do NOT reset it. Leftover fruits of the previous realm auto-consume at pre-upgrade rates. (Earlier "main-Stage breakthrough" wording here and in the app docs was wrong; app fixed same day.)
 
 Tests in tests/test_engine.py class ScreenshotGroundTruth2026_07_07 pin all of this. Related: [[fruit-ranks-no-r4-r5]].
+
+## 2026-07-17 screenshot batch (~/Pictures/virya-extractor-techniques-2026-07-17/)
+
+Player state: Nascent Soul (M) Late G3 (secondary), Incarnation (L) Completed
+(primary, No.1), abode 266.30, absorption 40.00% +20.00%, speed 159.78,
+Legendary gem, extractor Mortal World rank / Culti 23 / High Rank 14 /
+Quality 30 / Gush 22.
+
+- **"Next Breakthrough: Year N" display convention (verified)**: N = remaining
+  grade XP ÷ raw cultivation speed, in Taoist Years of **900 s (15 real
+  minutes)** — no gem, no pills. Reproduced exactly: (1,095,950 − 514,390) /
+  (159.78/8) / 900 = 32.353 vs the on-screen "Year 32.353"; two more shots
+  match at their own progress values. Consistent with the artifact-energy rule
+  "1 per Taoist Year" = 1 per 15 min. The figure is a countdown (duration),
+  not an age.
+- **Blessing pp are additive percentage points — now screenshot-verified**:
+  the Cultivation Bonus panel shows "40.00% +20.00%" (Incarnation Late base
+  band + Perfection (C)) and speed = 266.30 × 0.60 = 159.78 exactly (60%,
+  not 40% × 1.2 = 48%). This resolves the tooltip-grade check the blessing
+  section below listed as pending. Composition ORDER vs Strive is NOT
+  distinguishable here (player is No.1 ⇒ Strive 0, both orders coincide);
+  that remains client-string-sourced. Perfection (C) activated between
+  2026-07-15 (speed 103.012, absorption 0.40, abode 257.5) and this batch —
+  which also confirms the primary broke Incarnation Completion this week.
+- **5R pill panel, four qualities**: displayed per-pill XP 124.99K / 62.5K /
+  33.33K / 20.83K = exactly {96,000 / 48,000 / 25,600 / 16,000} × 1.302 —
+  confirming the pill_xp 5R gold/purple/blue values, pinning the player's
+  total pill bonus at +30.2% uniformly, and revealing a FOURTH (green)
+  quality with base 16,000 that the pill_xp table (gold/purple/blue/mythic)
+  does not carry. The engine does not model green pills; at 5R a green is
+  worth 0.625× a blue.
+- **TABLE/LIVE MISMATCH — Nascent LATE G3**: live gauge reads
+  514,390/**1,095,950**; data/breakthrough.json has **1,087,558** (−0.77%).
+  Read directly off two shots (own-eyes verified). No neighboring row
+  matches (G2 911,792 / G4 1,295,214), so it's not a grade offset. The
+  top-bar half-step % (19.4%) is consistent with the table's G1+G2 within
+  display rounding, and Nascent MIDDLE G5 matched to the digit on
+  2026-07-16 — so the drift looks confined to (at least) this LATE row.
+  First observed table/live mismatch. Do NOT patch from a single row:
+  re-verify the LATE ladder per-grade when a path passes through it
+  (G4–G8 denominators are still readable ahead of the M path).
+- **Extractor track caps (owner-stated 2026-07-18, UNVERIFIED on screen)**:
+  the tracks continue past the displayed /25 to level 30 — the "Upon
+  reaching Mythic Lv. 26" tooltip lines are the 26+ band perks (Culti:
+  Mythic Aura Orb EXP +20%; Gush: trigger rate +5%, matching the data
+  table's gush_chance 0.30 → 0.35). PLAUSIBLE INFERENCE (unconfirmed):
+  extractor rarity is keyed to track-level bands (Epic ≤20 / Legendary
+  21–25 / Mythic 26–30 — fits the 2026-07-07 "Epic at Culti 20" and
+  tonight's Legendary-cap gem-adjacent readings). OPEN QUESTIONS for the
+  post-ascension screenshot: does the world reset wipe TRACK LEVELS or
+  only rarity + the +50% bonus ("quality/bonus"), and do unspent souls
+  (upgrade mats; owner income 1,600/week) persist across it?
 
 ## Fruit ranks
 
@@ -285,10 +339,12 @@ it is a permanent absorption modifier, not just a window. Separately, the pills-
 secondary-path projection would see BOTH a bigger flat daily-XP term (better
 pills) and the windowed absorption bonus. ADDITIVE per community consensus (third independent player confirmation
 via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
-absorption ratio (like Virya in the official formula), not ×1.2. Still
-pending one in-game absorption-tooltip reading with a tier active for
-screenshot-grade verification (a 40%-band player with +20% should read
-60%, not 48%). SUPERSEDED on composition (2026-07-15, i18n corpus sweep):
+absorption ratio (like Virya in the official formula), not ×1.2.
+RESOLVED (2026-07-18, see the 2026-07-17 batch section above): the
+absorption panel reads 40.00% +20.00% with speed = abode × 0.60 exactly —
+the pending tooltip-grade check is done (60%, not 48%). Composition order
+vs Strive remains client-string-sourced (the check ran at Strive 0, where
+both orders coincide). SUPERSEDED on composition (2026-07-15, i18n corpus sweep):
 the client's own rules text gives the official formula —
 "Absorption ratio = (base absorption ratio + Virya absorption ratio) x
 (1 + Strive Bonus)" — i.e. blessing/Virya pp join the STAGE BASE inside
