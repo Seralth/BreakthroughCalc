@@ -246,6 +246,30 @@ def apply_deltas(inp: Inputs, deltas: dict, books_now: float,
     return replace(inp, **kw) if kw else None
 
 
+def _cost_key(cand: Candidate, by_id: dict) -> tuple:
+    """Tie-break for equal savings: the cheapest step first. Heuristic
+    order — books before the blessing before friends (books are the
+    cheapest deterministic progress), lower ranks before higher (an R1
+    book costs far less than an R5), then the smaller step."""
+    entry = by_id.get(cand.source_id, {})
+    cat = {"technique_book": 0, "exclusive_book": 0,
+           "blessing": 1, "immortal_friend": 2}.get(entry.get("category"), 3)
+    rank = entry.get("rank")
+    rank_n = 99
+    if isinstance(rank, str) and rank[:1] == "R" and rank[1:].isdigit():
+        rank_n = int(rank[1:])
+    elif isinstance(rank, int):
+        rank_n = rank
+    new = cand.new_owned
+    if isinstance(new, list):
+        mag = sum(int(v) for v in new)
+    elif new == -1:
+        mag = 10**6
+    else:
+        mag = int(new)
+    return (cat, rank_n, mag, cand.name)
+
+
 def _metric_days(r: Results, metric: str) -> float:
     return r.target_days if metric == "target" else r.stage_days
 
@@ -281,6 +305,7 @@ def rank(engine: Engine, inp: Inputs, catalog: dict, shelf: dict) -> Advice:
     books_now = derived.get("respira_effect").total \
         if "respira_effect" in derived else 0.0
     level_now = player_level(catalog, inp.stage, inp.phase)
+    by_id = {s["id"]: s for s in catalog.get("sources", [])}
     plan, draws = [], []
     for cand in candidates(catalog, shelf, level_now):
         inp2 = apply_deltas(inp, cand.deltas, books_now, engine)
@@ -294,7 +319,8 @@ def rank(engine: Engine, inp: Inputs, catalog: dict, shelf: dict) -> Advice:
             continue
         (plan if cand.channel == PLANNED else draws).append(
             Ranked(cand, saved))
-    plan.sort(key=lambda r: (-r.days_saved, r.candidate.name))
-    draws.sort(key=lambda r: (-r.days_saved, r.candidate.name))
+    key = lambda r: (-r.days_saved, *_cost_key(r.candidate, by_id))  # noqa: E731
+    plan.sort(key=key)
+    draws.sort(key=key)
     return Advice(valid=True, metric=metric, baseline_days=base_days,
                   plan=tuple(plan), draws=tuple(draws))

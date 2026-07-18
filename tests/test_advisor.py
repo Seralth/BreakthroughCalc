@@ -31,7 +31,7 @@ class StepTracks(unittest.TestCase):
     def test_tier_walk_covers_every_future_threshold(self):
         longevity = self.by_id["longevity"]
         (track,) = steps(longevity, None)
-        self.assertEqual([a for a, _, _ in track], ["Tier 1", "Tier 2"])
+        self.assertEqual([a for a, _, _ in track], ["Tier 1", "Tier 3"])
         chroma = self.by_id["chroma"]
         (track,) = steps(chroma, 6)
         self.assertTrue(all(lvl > 6 for _, lvl, _ in track))
@@ -79,7 +79,7 @@ class Obtainability(unittest.TestCase):
 
     def test_walk_reaches_past_info_only_thresholds(self):
         ids = {c.source_id: c for c in candidates(self.cat, {"owned": {}})}
-        self.assertEqual(ids["longevity"].action, "Tier 2")
+        self.assertEqual(ids["longevity"].action, "Tier 3")
         self.assertEqual(ids["longevity"].deltas, {"respira_attempts": 1.0})
         self.assertEqual(ids["rejuvenation"].action, "Tier 3")
         self.assertEqual(ids["rejuvenation"].deltas, {"pill_effect": 2.0})
@@ -94,6 +94,15 @@ class Obtainability(unittest.TestCase):
                      for c in candidates(self.cat, {"owned": {}},
                                          current_level=24)}
         self.assertIn("ascension_virya", voidbreak)
+
+    def test_friends_gated_until_voidbreak(self):
+        pre = {c.source_id for c in candidates(self.cat, {"owned": {}},
+                                               current_level=23)}
+        self.assertNotIn("daji", pre)
+        self.assertNotIn("princess_iron_fan", pre)
+        post = {c.source_id for c in candidates(self.cat, {"owned": {}},
+                                                current_level=24)}
+        self.assertIn("daji", post)
 
     def test_r9_books_gated_on_two_r8_books_at_tier_13(self):
         no_r8 = {c.source_id for c in candidates(self.cat, {"owned": {}})}
@@ -221,6 +230,23 @@ class Ranking(unittest.TestCase):
         ids = {r.candidate.source_id for r in adv.plan + adv.draws}
         self.assertIn("dongxuans_cushion", ids)   # +1 attempt on stock 10
         self.assertIn("dongxuans_lantern", ids)   # +10% on the estimate
+
+    def test_ties_break_by_cheapness(self):
+        # At Voidbreak with stock respira, every +1-attempt source saves
+        # the same days; the cheaper acquisition must list first: R1 book
+        # before R3 book before any immortal friend.
+        inp = base_inputs(stage="Voidbreak", phase="EARLY", grade="G1",
+                          culti_speed=208.0, absorption_ratio=1.0,
+                          target_stage="Wholeness")
+        adv = rank(self.engine, inp, self.cat, {"owned": {}})
+        order = [r.candidate.source_id for r in adv.plan]
+        self.assertIn("longevity", order)
+        self.assertIn("cosmic_power", order)
+        self.assertLess(order.index("longevity"), order.index("cosmic_power"))
+        friend_idx = [order.index(i) for i in ("princess_iron_fan", "daji")
+                      if i in order]
+        for fi in friend_idx:
+            self.assertGreater(fi, order.index("cosmic_power"))
 
     def test_invalid_baseline_reports_reason(self):
         adv = rank(self.engine, Inputs(stage="Nascent", phase="LATE",

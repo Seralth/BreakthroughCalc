@@ -295,6 +295,46 @@ Inputs? applyDeltas(Inputs inp, Map<String, double> deltas, double booksNow,
   return changed ? out : null;
 }
 
+/// Tie-break for equal savings: the cheapest step first. Heuristic order —
+/// books before the blessing before friends (books are the cheapest
+/// deterministic progress), lower ranks before higher (an R1 book costs
+/// far less than an R5), then the smaller step. Twin of advisor._cost_key.
+List<Comparable> _costKey(Candidate cand, Map<String, Map> byId) {
+  final entry = byId[cand.sourceId] ?? const {};
+  const catOrder = {
+    'technique_book': 0,
+    'exclusive_book': 0,
+    'blessing': 1,
+    'immortal_friend': 2
+  };
+  final cat = catOrder[entry['category']] ?? 3;
+  final rank = entry['rank'];
+  var rankN = 99;
+  if (rank is String && rank.startsWith('R')) {
+    rankN = int.tryParse(rank.substring(1)) ?? 99;
+  } else if (rank is num) {
+    rankN = rank.toInt();
+  }
+  final dynamic no = cand.newOwned;
+  int mag;
+  if (no is List) {
+    mag = no.fold<int>(0, (a, v) => a + (v as num).toInt());
+  } else if (no == -1) {
+    mag = 1000000;
+  } else {
+    mag = (no as num).toInt();
+  }
+  return [cat, rankN, mag, cand.name];
+}
+
+int _compareKeys(List<Comparable> a, List<Comparable> b) {
+  for (var i = 0; i < a.length; i++) {
+    final c = a[i].compareTo(b[i]);
+    if (c != 0) return c;
+  }
+  return 0;
+}
+
 double _metricDays(Results r, String metric) =>
     metric == 'target' ? r.targetDays : r.stageDays;
 
@@ -342,9 +382,15 @@ Advice rank(Engine engine, Inputs rawInp, Map catalog, Map shelf) {
     if (saved <= 1e-9) continue;
     (cand.channel == planned ? plan : draws).add(RankedStep(cand, saved));
   }
+  final byId = <String, Map>{
+    for (final s in (catalog['sources'] ?? []) as List)
+      (s as Map)['id'] as String: s
+  };
   int cmp(RankedStep a, RankedStep b) {
     final d = b.daysSaved.compareTo(a.daysSaved);
-    return d != 0 ? d : a.candidate.name.compareTo(b.candidate.name);
+    if (d != 0) return d;
+    return _compareKeys(
+        _costKey(a.candidate, byId), _costKey(b.candidate, byId));
   }
 
   plan.sort(cmp);
