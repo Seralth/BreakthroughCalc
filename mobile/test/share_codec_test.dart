@@ -122,6 +122,25 @@ void main() {
       expect((e.data['rarity_names'] as List),
           ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic']);
     });
+    test('phase row order (phasesFor drives the phase index)', () {
+      // Wire stores phase as an index into phasesFor(stage); every
+      // multi-phase stage shares this EARLY/MIDDLE/LATE order (golden's
+      // 'MIDDLE' is index 1). Reorder and every shared phase remaps.
+      expect(e.phasesFor('Incarnation'), ['EARLY', 'MIDDLE', 'LATE']);
+    });
+    test('grade row order (gradesFor drives the grade index)', () {
+      // Wire stores grade as an index into gradesFor(stage, phase); grades
+      // run G1..Gn ascending (golden's 'G3' is index 2). Reorder and every
+      // shared grade remaps.
+      expect(e.gradesFor('Incarnation', 'MIDDLE'),
+          ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9']);
+    });
+    test('starLevels const order (vase/mirror/pearl star index)', () {
+      expect(starLevels, ['0*', '1*', '2*', '3*', '4*', '5*']);
+    });
+    test('vaseInputKinds const order (vase_input index)', () {
+      expect(vaseInputKinds, ['Blue', 'Purple', 'Gold']);
+    });
   });
 
   group('golden vector', () {
