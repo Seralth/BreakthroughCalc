@@ -47,6 +47,17 @@ Cross-check vs `data/sources.json` (in-game verified 2026-07-07):
   per_upgrade 0.2 / 8 upgrades. Star scalar tops at +3.2; 2.6 + 3.2 = 5.8 =
   our verified max. ✓
 - **Dongxuan's Pot** (91115): single upgrade, 8624 = 2 — our flat +2%. ✓
+- **Model fully validated (2026-07-18, 6-curio random sample across
+  rarity tiers):** every reading matched the client tables exactly —
+  star scalars at 0★/3★/4★/5★, percent passives additive in points
+  (YSJ 1.6+1.6=3.2, Ancient Exorcism Ring 2.2+1.2=3.4), flat passives
+  multiplicative (Nine Rank Lotus Throne 6,695,700 HP × 1.40 = the
+  displayed 9.37M; Soulrend Blade 7 × 1.5 = the displayed 10 HP/kill).
+  Stars display 0–5 then AWAKEN (= client levels 0–6; Soulrend at 5★
+  shows an Awaken button); base curios start at 0★ (star params are
+  0-based). "Special" curios (Spirit Seal trio) can't star or upgrade —
+  modeled binary. The 12 cultivation-relevant curio effects are
+  data_status exact on the strength of this sample.
 - **Star mapping RESOLVED (2026-07-18 4★ tooltip):** YSJ at 4 stars +3
   upgrades shows Passive 3.2% with "Star Up Effects +1.6%" — displayed star
   N = client star level N (4★ = level 4 scalar 1.6, basic stats M.PEN 15 /

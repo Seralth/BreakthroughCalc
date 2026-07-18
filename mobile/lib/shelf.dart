@@ -55,9 +55,11 @@ double _modelValue(Map model, dynamic params) {
     var upgrade = (p[1] as num).toInt();
     final stars = (model['stars'] as num).toInt();
     final maxUpgrade = (model['max_upgrade'] as num).toInt();
-    star = star.clamp(1, stars);
+    // Stars are 0-based like the game's display (0..5 + Awakened=6);
+    // star_add[star] is the tooltip's star scalar in percentage points.
+    star = star.clamp(0, stars - 1);
     upgrade = upgrade.clamp(0, maxUpgrade);
-    final starAdd = (model['star_add'] as List)[star - 1] as num;
+    final starAdd = (model['star_add'] as List)[star] as num;
     return (model['base'] as num).toDouble() +
         (model['per_upgrade'] as num).toDouble() * upgrade +
         starAdd.toDouble();
