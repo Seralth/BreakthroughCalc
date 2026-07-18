@@ -9,13 +9,18 @@ is a real page in the matching page set, and the anchor is an
 """
 
 import re
+from collections import defaultdict
 
 import pytest
 
-from breakthrough_calc import theme
 from breakthrough_calc.docs import build_guide_pages, build_reference_pages
 from breakthrough_calc.engine import Engine
 from breakthrough_calc.shelf import load_sources
+
+# docs.py is Qt-free and only reads accent color strings (acc["muted"],
+# acc["bad"]); use a Qt-free stub so this test runs on CI's Qt-less test
+# job instead of importing theme (which pulls PySide6).
+_ACCENTS: dict = defaultdict(lambda: "#888888")
 
 # app://<tree>/<slug> or app://<tree>/<slug>#<anchor>
 _LINK_RE = re.compile(r"app://(ref|guide)/([a-z0-9_-]+)(?:#([a-z0-9_-]+))?")
@@ -28,13 +33,13 @@ def _anchor_present(html: str, anchor: str) -> bool:
 
 @pytest.fixture(scope="module")
 def ref_pages():
-    return build_reference_pages(theme.accents("Seralth"), Engine().data,
+    return build_reference_pages(_ACCENTS, Engine().data,
                                  load_sources())
 
 
 @pytest.fixture(scope="module")
 def guide_pages():
-    return build_guide_pages(theme.accents("Seralth"))
+    return build_guide_pages(_ACCENTS)
 
 
 def _check_page_list(pages):
