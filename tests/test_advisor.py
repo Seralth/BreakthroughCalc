@@ -126,6 +126,21 @@ class Obtainability(unittest.TestCase):
                if c.source_id == "yang_spirit_jade"]
         self.assertEqual([c.action for c in mid], ["Upgrade level 4"])
 
+    def test_book_ranks_gate_by_realm_phase(self):
+        # Rank realm gates: R6 Nascent Late, R7 Inc Early, R8 Inc Middle,
+        # R9 Inc Late (read from one book per rank, applied rank-wide).
+        def ids(level, owned=None):
+            return {c.source_id
+                    for c in candidates(self.cat, {"owned": owned or {}},
+                                        current_level=level)}
+        self.assertNotIn("lions_roar", ids(19))
+        self.assertIn("lions_roar", ids(20))
+        self.assertNotIn("chroma", ids(21))
+        self.assertIn("chroma", ids(22))
+        ready = {"chroma": 13, "zixiao_sutra": 13}
+        self.assertNotIn("laws_of_nature", ids(22, ready))
+        self.assertIn("laws_of_nature", ids(23, ready))
+
     def test_ungated_when_stage_unknown(self):
         shelf = {"owned": {"yang_spirit_jade": [6, 3]}}
         cands = [c for c in candidates(self.cat, shelf, current_level=None)
