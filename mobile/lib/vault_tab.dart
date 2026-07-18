@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'catalog.dart';
 import 'form_widgets.dart';
 import 'i18n.dart';
 
@@ -285,7 +286,7 @@ class _VaultTabState extends State<VaultTab> {
       for (var i = 0; i < thresholds.length; i++)
         TextSpan(
           text: (i == 0 ? '' : ' ') +
-              ((lvl != null && lvl >= thresholds[i]) ? '●' : '○'),
+              (levelOk(thresholds[i], owned, levels) ? '●' : '○'),
           style:
               noted.contains(thresholds[i]) ? TextStyle(color: accent) : null,
         ),
@@ -393,12 +394,7 @@ class _VaultTabState extends State<VaultTab> {
                 ListTile(
                   dense: true,
                   leading: Icon(
-                    cur > 0 &&
-                            (cur == -1 ||
-                                cur >=
-                                    (e['min_level'] is int
-                                        ? e['min_level'] as int
-                                        : 1))
+                    levelOk(e['min_level'], st.owned[id], levels)
                         ? Icons.check_circle
                         : Icons.radio_button_unchecked,
                     size: 18,

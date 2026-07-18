@@ -28,6 +28,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from .catalog import (
+    effect_active, effect_value, level_label, value_model_error,
+)
 from .data_io import _load_catalog
 
 
@@ -55,47 +58,6 @@ class Derived:
     incomplete: bool = False    # an active effect has no recorded value
 
 
-def _level_ok(min_level, owned_level, levels) -> bool:
-    """Is an effect with `min_level` active at `owned_level`?"""
-    if owned_level is None:
-        return False
-    if min_level == "max":
-        mx = levels.get("max")
-        return owned_level == -1 or (mx is not None and owned_level >= mx)
-    if owned_level == -1:       # maxed satisfies every numeric threshold
-        return True
-    return owned_level >= (min_level if min_level is not None else 1)
-
-
-def _model_value(model: dict, params) -> float:
-    if model.get("kind") == "star_upgrade":
-        # Stars are 0-based like the game's display (0..5 + Awakened=6);
-        # star_add[star] is the tooltip's "Increases Curio Passive Stats"
-        # scalar, added in percentage points to the upgrade ladder.
-        star, upgrade = int(params[0]), int(params[1])
-        star = max(0, min(model["stars"] - 1, star))
-        upgrade = max(0, min(model["max_upgrade"], upgrade))
-        return (model["base"] + model["per_upgrade"] * upgrade
-                + model["star_add"][star])
-    raise ValueError(f"unknown value model: {model.get('kind')}")
-
-
-def _level_label(entry: dict, owned) -> str:
-    kind = entry["levels"]["kind"]
-    if kind == "binary":
-        return ""
-    if kind == "ladder":
-        labels = entry["levels"]["labels"]
-        i = max(1, min(len(labels), int(owned)))
-        return labels[i - 1]
-    if kind == "custom":
-        return "/".join(str(int(p)) for p in owned)
-    if owned == -1:
-        return "max"
-    prefix = "Tier " if kind == "tier" else "lv "
-    return f"{prefix}{int(owned)}"
-
-
 def derive(catalog: dict, shelf: dict) -> dict:
     """shelf = {"owned": {id: level|params}, "custom": {target: [[label, v]]}}
     -> {target_id: Derived} for every raw_additive/informational target that
@@ -118,25 +80,16 @@ def derive(catalog: dict, shelf: dict) -> dict:
             mode = targets.get(tid, {}).get("mode")
             if mode == "display_embedded":
                 continue                  # guarded: never derives a value
-            if levels["kind"] == "custom":
-                active = True             # owning a parametric source is binary
-            else:
-                active = _level_ok(eff.get("min_level"), owned, levels)
-            if not active:
+            if not effect_active(levels, eff.get("min_level"), owned):
                 continue
-            if "value_model" in eff:
-                value = _model_value(eff["value_model"], owned)
-            elif eff.get("value") is None:
-                if mode == "raw_additive":
-                    incomplete[tid] = True
-                value = None
-            else:
-                value = float(eff["value"])
+            value = effect_value(eff, owned)
+            if value is None and mode == "raw_additive":
+                incomplete[tid] = True
             if mode != "raw_additive":
                 continue                  # info effects carry no numbers
             buckets.setdefault(tid, []).append(Contribution(
                 source_id=sid, name=entry["name"],
-                level_label=_level_label(entry, owned),
+                level_label=level_label(entry, owned),
                 value=value if value is not None else 0.0,
                 data_status=eff.get("data_status", entry.get("data_status", "exact")),
                 note=eff.get("note", "")))
@@ -292,10 +245,7 @@ def validate_catalog(catalog: dict) -> list:
                     errors.append(f"{sid}: conditions may only decorate "
                                   "bless_window_pp (the engine owns windows)")
             if has_model:
-                m = eff["value_model"]
-                if m.get("kind") != "star_upgrade":
-                    errors.append(f"{sid}: unknown value_model kind")
-                elif len(m["star_add"]) != m["stars"] or \
-                        sorted(m["star_add"]) != m["star_add"]:
-                    errors.append(f"{sid}: malformed star_add")
+                msg = value_model_error(eff["value_model"])
+                if msg:
+                    errors.append(f"{sid}: {msg}")
     return errors
