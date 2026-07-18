@@ -125,7 +125,6 @@
      "target": "respira_attempts",
      "value": 1,
      "min_level": 3,
-     "data_status": "community",
      "note": "Tier 3: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
     }
    ],
@@ -136,7 +135,7 @@
      "implies_level": 3
     }
    ],
-   "data_status": "community"
+   "data_status": "exact"
   },
   {
    "id": "energy_unification",
