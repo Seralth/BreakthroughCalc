@@ -70,3 +70,23 @@ Key recoveries:
   see the calculator's Reference → Combat & Gear / Advanced tabs, sourced from
   cfg_us_attrib / cfg_us_equipment / cfg_us_equip_ten_lv_affix / cfg_us_helper_tip /
   equip_suit / level_equip (all in om/decompiled/).
+
+## UPDATE 2026-07-18: curio (gubao) tooltips & effect ladders ARE client-side
+
+Second correction to the "nothing useful in the client" conclusion: the whole
+Curio system ships in the client config Lua. `cfg_us_gubao` (819 curios: zh
+names + lore descs), `cfg_us_gubao_levels`/`_upgrade` (per-star and
+per-upgrade effect ladders as [[affix_id, value]] pairs), `cfg_us_gubao_suit`
+(127 set bonuses), `benyuan_gubao` (+levels; 157 Origin curios), `gubao_evol`
+(2 evolved). Affix ids resolve via `cfg_us_affix` (zh name + engine attrib +
+unit); zh→EN via the i18n tables.
+
+Cross-checked against in-game-verified data: Yang Spirit Jade upgrade ladder
+1.0→2.6 (+0.2/step, affix 8624 extra_exp_ashram_drug) + star scalar max 3.2
+= 5.8 max — exactly the sources.json values. One open discrepancy at star 4
+(client 1.6/2.0 vs in-game 2.2 reading).
+
+Extraction: `apk_analysis/curio/` (dump_table.lua executes bytecode under
+system luajit with a stubbed CONFIG, no decompile needed; extract_curios.py
+joins + localizes → curio_tooltips.json). Full writeup:
+docs/knowledge/curio-effects.md.
