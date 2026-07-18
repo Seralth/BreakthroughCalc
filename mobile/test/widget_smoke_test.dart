@@ -187,11 +187,12 @@ void main() {
     expect(find.text('Treasury'), findsOneWidget);
     expect(find.text('Longevity'), findsOneWidget);
 
-    // "Max shelf" on R1 marks Longevity owned (its dot fills).
+    // "Max shelf" on R1 sets Longevity to its final tier (tier book like
+    // the rest of the Library).
     await tester.tap(find.text('Max shelf').first);
     await tester.pumpAndSettle();
     final vaultBlob = prefs.getString('shelf_v1')!;
-    expect(vaultBlob, contains('"longevity":1'));
+    expect(vaultBlob, contains('"longevity":4'));
 
     // The Exclusive shelf lists the exclusive manuals; maxing it records
     // them at tier 6.

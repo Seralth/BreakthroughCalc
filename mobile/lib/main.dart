@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'advisor_page.dart';
 import 'app_dialogs.dart';
 import 'doc_nav.dart';
 import 'engine.dart';
@@ -24,7 +25,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '3.4';
+const appVersion = '3.6';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -349,6 +350,15 @@ class _CalculatorPageState extends State<CalculatorPage>
             onChanged: _onVaultChanged)));
   }
 
+  void _openAdvisor() {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => AdvisorPage(
+            engine: engine,
+            catalog: widget.shelfCatalog,
+            getInputs: () => inp,
+            getShelf: () => _vault.toMap())));
+  }
+
   /// One-line summary of what the Vault currently contributes.
   String _vaultSummary() {
     final d = derive(widget.shelfCatalog, _vault.toMap());
@@ -466,6 +476,11 @@ class _CalculatorPageState extends State<CalculatorPage>
               icon: const Icon(Icons.menu_book_outlined),
               tooltip: tr('Vault'),
               onPressed: _openVault,
+            ),
+            IconButton(
+              icon: const Icon(Icons.insights_outlined),
+              tooltip: tr('Advisor'),
+              onPressed: _openAdvisor,
             ),
             IconButton(
               icon: const Icon(Icons.favorite_outline),

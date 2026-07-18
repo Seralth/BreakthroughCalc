@@ -29,6 +29,9 @@ KNOWN_IDS = [
     "jiang_ziya", "taotie", "crane_boy", "white_astra", "princess_adalinda",
     "leizhenzi", "ascension_virya", "yang_spirit_jade", "dongxuans_pot",
     "pisces_pendant",
+    # Curios wired to raw targets (catalog_version 3, from the full roster).
+    "dongxuans_lantern", "dongxuans_cushion", "northern_mirror",
+    "spirit_seal_bowl", "spirit_seal_gourd",
 ]
 
 _BANNED_PROSE = ("verified", "screenshot", "confirmed", "dump",

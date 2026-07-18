@@ -12,7 +12,8 @@ from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtGui import QPalette
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDoubleSpinBox, QGroupBox, QHBoxLayout, QLabel,
-    QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget,
+    QLineEdit, QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout,
+    QWidget,
 )
 
 from .i18n import tr
@@ -242,7 +243,11 @@ class _RowsPane(QWidget):
     def __init__(self, catalog: dict, categories: tuple, parent=None):
         super().__init__(parent)
         self.rows: dict[str, _SourceRow] = {}
-        v = QVBoxLayout(self)
+        self._groups: list[tuple[QGroupBox, list[_SourceRow]]] = []
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        content = QWidget()
+        v = QVBoxLayout(content)
         by_cat: dict[str, list] = {}
         for s in catalog.get("sources", []):
             by_cat.setdefault(s["category"], []).append(s)
@@ -254,13 +259,30 @@ class _RowsPane(QWidget):
                 continue
             box = QGroupBox(tr(cat["label"]))
             bv = QVBoxLayout(box)
+            group_rows = []
             for entry in entries:
                 row = _SourceRow(entry)
                 row.changed.connect(self.changed)
                 self.rows[entry["id"]] = row
+                group_rows.append(row)
                 bv.addWidget(row)
+            self._groups.append((box, group_rows))
             v.addWidget(box)
         v.addStretch(1)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(content)
+        outer.addWidget(scroll)
+
+    def filter(self, text: str):
+        needle = text.strip().lower()
+        for box, rows in self._groups:
+            visible = 0
+            for row in rows:
+                hit = not needle or needle in row.entry["name"].lower()
+                row.setVisible(hit)
+                visible += hit
+            box.setVisible(visible > 0)
 
 
 class _LibraryPane(QWidget):
@@ -273,6 +295,8 @@ class _LibraryPane(QWidget):
     def __init__(self, catalog: dict, parent=None):
         super().__init__(parent)
         self.rows: dict[str, _SourceRow] = {}
+        self._shelves: list[tuple[QGroupBox, list[_BookRow]]] = []
+        self._loose_rows: list[_BookRow] = []
         v = QVBoxLayout(self)
         intro = QLabel(tr(
             "Set each book's tier once; the bonuses it has unlocked flow to "
@@ -312,11 +336,14 @@ class _LibraryPane(QWidget):
                 lambda _=False, r=rank: self._max_shelf(by_rank[r]))
             head.addWidget(max_btn)
             sv.addLayout(head)
+            shelf_rows = []
             for entry in by_rank[rank]:
                 row = _BookRow(entry)
                 row.changed.connect(self.changed)
                 self.rows[entry["id"]] = row
+                shelf_rows.append(row)
                 sv.addWidget(row)
+            self._shelves.append((shelf, shelf_rows))
             uv.addWidget(shelf)
         uv.addStretch(1)
         scroll = QScrollArea()
@@ -352,6 +379,7 @@ class _LibraryPane(QWidget):
                 row = _BookRow(entry)
                 row.changed.connect(self.changed)
                 self.rows[entry["id"]] = row
+                self._loose_rows.append(row)
                 ev.addWidget(row)
         ev.addStretch(1)
         ex_scroll = QScrollArea()
@@ -359,16 +387,33 @@ class _LibraryPane(QWidget):
         ex_scroll.setWidget(exclusive)
         tabs.addTab(ex_scroll, tr("Exclusive"))
 
+    def filter(self, text: str):
+        needle = text.strip().lower()
+        for shelf, rows in self._shelves:
+            visible = 0
+            for row in rows:
+                hit = not needle or needle in row.entry["name"].lower()
+                row.setVisible(hit)
+                visible += hit
+            shelf.setVisible(visible > 0)
+        for row in self._loose_rows:
+            row.setVisible(not needle or needle in row.entry["name"].lower())
+
     def _max_shelf(self, entries: list):
         for entry in entries:
+            row = self.rows[entry["id"]]
+            if row.isHidden():
+                continue  # search filter active: bulk edits touch only hits
             levels = entry["levels"]
             mx = 1 if levels["kind"] == "binary" else levels.get("max") or 1
-            self.rows[entry["id"]].set_owned(mx)
+            row.set_owned(mx)
         self.changed.emit()
 
     def _empty_shelf(self, entries: list):
         for entry in entries:
-            self.rows[entry["id"]].set_owned(None)
+            row = self.rows[entry["id"]]
+            if not row.isHidden():
+                row.set_owned(None)
         self.changed.emit()
 
 
@@ -391,6 +436,12 @@ class ShelfPage(QWidget):
         intro.setWordWrap(True)
         v.addWidget(intro)
 
+        self._search = QLineEdit()
+        self._search.setPlaceholderText(tr("Search the Vault…"))
+        self._search.setClearButtonEnabled(True)
+        self._search.textChanged.connect(self._apply_filter)
+        v.addWidget(self._search)
+
         # Ascension Virya (category "blessing") is deliberately NOT here:
         # its ladder is cultivation progression, so its selector lives in
         # the Calculator's Cultivation Base group (same shelf state).
@@ -406,6 +457,10 @@ class ShelfPage(QWidget):
             self._rows.update(pane.rows)
             tabs.addTab(pane, label)
         v.addWidget(tabs, 1)
+
+    def _apply_filter(self, text: str):
+        for pane, _label in self._panes:
+            pane.filter(text)
 
     def owned(self) -> dict:
         out = {}

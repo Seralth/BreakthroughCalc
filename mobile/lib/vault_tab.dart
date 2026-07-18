@@ -101,11 +101,19 @@ class VaultTab extends StatefulWidget {
 
 class _VaultTabState extends State<VaultTab> {
   VaultState get st => widget.state;
+  String _query = '';
 
   List<Map> _byCategory(String cat) => [
         for (final s in (widget.catalog['sources'] ?? []) as List)
           if ((s as Map)['category'] == cat) s
       ];
+
+  bool _matches(Map s) =>
+      _query.isEmpty ||
+      (s['name'] as String).toLowerCase().contains(_query);
+
+  List<Map> _found(String cat) =>
+      [for (final s in _byCategory(cat)) if (_matches(s)) s];
 
   void _edit(void Function() f) {
     setState(f);
@@ -117,6 +125,19 @@ class _VaultTabState extends State<VaultTab> {
     return DefaultTabController(
       length: 3,
       child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: tr('Search the Vault…'),
+              prefixIcon: const Icon(Icons.search, size: 20),
+              isDense: true,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (v) =>
+                setState(() => _query = v.trim().toLowerCase()),
+          ),
+        ),
         TabBar(tabs: [
           Tab(text: tr('Library')),
           Tab(text: tr('Treasury')),
@@ -135,7 +156,7 @@ class _VaultTabState extends State<VaultTab> {
 
   // ---- Library: rank shelves of technique books --------------------------
   Widget _library(BuildContext context) {
-    final books = _byCategory('technique_book');
+    final books = _found('technique_book');
     final byRank = <String, List<Map>>{};
     for (final b in books) {
       byRank.putIfAbsent((b['rank'] ?? '?') as String, () => []).add(b);
@@ -205,7 +226,7 @@ class _VaultTabState extends State<VaultTab> {
   }
 
   Widget _exclusiveShelf(BuildContext context) {
-    final books = _byCategory('exclusive_book');
+    final books = _found('exclusive_book');
     return ListView(padding: const EdgeInsets.all(8), children: [
       Padding(
         padding: const EdgeInsets.all(8),
@@ -400,9 +421,12 @@ class _VaultTabState extends State<VaultTab> {
   // ladder is cultivation progression, so its selector lives on the
   // Calculator in Cultivation Base (same shelf state).
   Widget _treasury(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(8), children: [
-      for (final c in _byCategory('curio')) _curioRow(context, c),
-    ]);
+    final curios = _found('curio');
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: curios.length,
+      itemBuilder: (context, i) => _curioRow(context, curios[i]),
+    );
   }
 
   Widget _curioRow(BuildContext context, Map entry) {
@@ -422,9 +446,11 @@ class _VaultTabState extends State<VaultTab> {
         SwitchListTile(
           dense: true,
           title: Text(entry['name'] as String),
-          subtitle: Text(notes,
-              style: const TextStyle(fontSize: 12), maxLines: 2,
-              overflow: TextOverflow.ellipsis),
+          subtitle: notes.isEmpty
+              ? null
+              : Text(notes,
+                  style: const TextStyle(fontSize: 12), maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
           value: owned != null,
           onChanged: (v) => _edit(() {
             if (v) {
@@ -459,9 +485,11 @@ class _VaultTabState extends State<VaultTab> {
     return SwitchListTile(
       dense: true,
       title: Text(entry['name'] as String),
-      subtitle: Text(notes,
-          style: const TextStyle(fontSize: 12), maxLines: 2,
-          overflow: TextOverflow.ellipsis),
+      subtitle: notes.isEmpty
+          ? null
+          : Text(notes,
+              style: const TextStyle(fontSize: 12), maxLines: 2,
+              overflow: TextOverflow.ellipsis),
       value: owned != null,
       onChanged: (v) => _edit(() {
         if (v) {
@@ -476,7 +504,7 @@ class _VaultTabState extends State<VaultTab> {
   // ---- Companions: immortal friends ---------------------------------------
   Widget _companions(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(8), children: [
-      for (final f in _byCategory('immortal_friend')) _friendRow(context, f),
+      for (final f in _found('immortal_friend')) _friendRow(context, f),
     ]);
   }
 
