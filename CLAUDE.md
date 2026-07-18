@@ -38,9 +38,15 @@ The two apps are deliberately parallel; module layouts mirror each other.
   changes must land in BOTH engines + regenerate expected.json; data-table
   KEY ORDER is part of the OMV2 wire format (pinned by share_codec_test).
 - Known duplication that is NOT engine-parity: translations (i18n.py vs
-  i18n.dart, drifted) and Reference/Guide prose (docs.py vs reference_tab/
+  i18n.dart) and Reference/Guide prose (docs.py vs reference_tab/
   guide_tab.dart) are hand-maintained twice — unification is a planned
-  follow-up; keep edits mirrored manually until then.
+  follow-up; keep edits mirrored manually until then. The translation
+  drift is now ratcheted: `test_i18n.py::CrossPlatformDrift` fails if a
+  key shared by both files disagrees beyond the 80 pairs grandfathered in
+  `tests/i18n_drift_baseline.json`. Those 80 need a human language-QA pass
+  (automated reconciliation degrades quality — the game glossary carries
+  wrong homonyms and each platform holds some better game-term matches);
+  fixing a pair means removing it from the baseline.
 
 ## Critical mechanics rules (violating these = wrong math)
 

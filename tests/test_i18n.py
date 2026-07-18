@@ -151,3 +151,69 @@ class DurationFormatting(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CrossPlatformDrift(unittest.TestCase):
+    """Ratchet: desktop (i18n.py) and mobile (i18n.dart) hand-maintain the
+    same translations, so a key present on both should translate the same.
+    80 existing disagreements are grandfathered in i18n_drift_baseline.json
+    (they need a human language-QA pass — automated reconciliation degrades
+    quality, since the game glossary carries wrong homonyms and each
+    platform holds some better game-term matches). This test fails only if
+    NEW drift appears, or if a baselined pair is fixed but not removed from
+    the baseline — keeping the debt visible and strictly non-growing."""
+
+    _DART = os.path.join(REPO, "mobile", "lib", "i18n.dart")
+    _BASELINE = os.path.join(os.path.dirname(__file__),
+                             "i18n_drift_baseline.json")
+    _LANGS = ("ru", "de", "es", "zh")
+
+    def _mobile_map(self) -> dict:
+        import re
+        src = open(self._DART, encoding="utf-8").read()
+        body = re.search(
+            r"const Map<String, Map<String, String>> _t = \{(.*)\};",
+            src, re.S).group(1)
+
+        def unq(s):
+            return ast.literal_eval(s.replace("\n", " "))
+        out = {}
+        for k, inner in re.findall(
+                r"\n  ((?:'(?:[^'\\]|\\.)*')|(?:\"(?:[^\"\\]|\\.)*\")):"
+                r"\s*\{([^}]*)\}", body):
+            key = unq(k)
+            d = {}
+            for lk, lv in re.findall(
+                    r"'(\w+)':\s*((?:'(?:[^'\\]|\\.)*')"
+                    r"|(?:\"(?:[^\"\\]|\\.)*\"))", inner):
+                d[lk] = unq(lv)
+            out[key] = d
+        return out
+
+    def _current_drift(self) -> set:
+        mobile = self._mobile_map()
+        py = {}
+        for lang in self._LANGS:
+            for en, v in i18n.TRANSLATIONS.get(lang, {}).items():
+                py.setdefault(en, {})[lang] = v
+        drift = set()
+        for en in set(py) & set(mobile):
+            for lang in self._LANGS:
+                a, b = py[en].get(lang), mobile[en].get(lang)
+                if a is not None and b is not None and a != b:
+                    drift.add((en, lang))
+        return drift
+
+    def test_no_new_cross_platform_drift(self):
+        baseline = {(en, lang) for en, lang in
+                    __import__("json").load(open(self._BASELINE,
+                                                 encoding="utf-8"))}
+        drift = self._current_drift()
+        new = drift - baseline
+        self.assertFalse(new, "NEW desktop/mobile translation drift — make "
+                         "the two i18n files agree for these (key, lang): "
+                         f"{sorted(new)}")
+        stale = baseline - drift
+        self.assertFalse(stale, "These baselined drifts are now fixed — "
+                         "remove them from tests/i18n_drift_baseline.json: "
+                         f"{sorted(stale)}")
