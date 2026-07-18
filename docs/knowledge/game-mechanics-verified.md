@@ -58,16 +58,17 @@ Quality 30 / Gush 22.
   quality with base 16,000 that the pill_xp table (gold/purple/blue/mythic)
   does not carry. The engine does not model green pills; at 5R a green is
   worth 0.625× a blue.
-- **TABLE/LIVE MISMATCH — Nascent LATE G3**: live gauge reads
-  514,390/**1,095,950**; data/breakthrough.json has **1,087,558** (−0.77%).
-  Read directly off two shots (own-eyes verified). No neighboring row
-  matches (G2 911,792 / G4 1,295,214), so it's not a grade offset. The
-  top-bar half-step % (19.4%) is consistent with the table's G1+G2 within
-  display rounding, and Nascent MIDDLE G5 matched to the digit on
-  2026-07-16 — so the drift looks confined to (at least) this LATE row.
-  First observed table/live mismatch. Do NOT patch from a single row:
-  re-verify the LATE ladder per-grade when a path passes through it
-  (G4–G8 denominators are still readable ahead of the M path).
+- **Nascent LATE ladder — TABLE CONFIRMED (2026-07-18)**: the flat gauge
+  at Nascent Soul (M) Late **G4** read **7946/1295213**;
+  data/breakthrough.json has **1,295,214** — a match to the digit (±1
+  rounding). Nascent MIDDLE G5 also matched on 2026-07-16, so the Late
+  ladder is NOT drifting and the table stands. The earlier G3 note (live
+  1,095,950 vs table 1,087,558, −0.77%) is now treated as a one-off
+  misread: G3/G2 = 1.193 and G4/G3 = 1.191 form a smooth progression that
+  1,095,950 would break (it implies 1.202 then 1.182). No patch — the
+  table was right. Tip for future spot-checks: the home-screen progress
+  display toggles between % and the flat current/total EXP (tap it); the
+  flat form is what verifies a denominator.
 - **Extractor track caps (owner-stated 2026-07-18, UNVERIFIED on screen)**:
   the tracks continue past the displayed /25 to level 30 — the "Upon
   reaching Mythic Lv. 26" tooltip lines are the 26+ band perks (Culti:
