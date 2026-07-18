@@ -180,6 +180,12 @@ const Map<String, Map<String, String>> _t = {
   'Reference': {'ru': 'Справка', 'de': 'Referenz', 'es': 'Referencia', 'zh': '参考'},
   'Guide': {'ru': 'Гайд', 'de': 'Anleitung', 'es': 'Guía', 'zh': '指南'},
   'Vault': {'ru': 'Хранилище', 'de': 'Tresor', 'es': 'Bóveda', 'zh': '宝库'},
+  'Search the Vault…': {
+    'ru': 'Поиск по Хранилищу…',
+    'de': 'Tresor durchsuchen…',
+    'es': 'Buscar en la Bóveda…',
+    'zh': '搜索宝库…'
+  },
   'Library': {'ru': 'Библиотека', 'de': 'Bibliothek', 'es': 'Biblioteca', 'zh': '藏书阁'},
   'Treasury': {'ru': 'Сокровищница', 'de': 'Schatzkammer', 'es': 'Tesorería', 'zh': '珍宝阁'},
   'Companions': {'ru': 'Спутники', 'de': 'Gefährten', 'es': 'Compañeros', 'zh': '道友'},

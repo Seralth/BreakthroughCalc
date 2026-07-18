@@ -107,3 +107,26 @@ def test_legacy_profile_migrates_once_with_identical_values(window):
     inp = w._inputs()
     assert abs(inp.pill_effect - 0.06) < 1e-9
     assert inp.respira_per_day == 12.0
+
+
+def test_vault_search_filters_rows_and_scopes_bulk_edits(window):
+    w = window
+    page = w.shelf_page
+    lib, treasury, _companions = (p for p, _ in page._panes)
+    page._apply_filter("dongxuan")
+    vis = [r.entry["name"] for r in treasury.rows.values()
+           if not r.isHidden()]
+    assert sorted(vis) == ["Dongxuan's Cushion", "Dongxuan's Lantern",
+                           "Dongxuan's Pot"]
+    # every Library shelf hides once no book matches
+    assert all(box.isHidden() for box, _ in lib._shelves)
+    # bulk shelf edits touch only the visible (matching) rows
+    page._apply_filter("chroma")
+    shelf_rows = next(rows for box, rows in lib._shelves
+                      if not box.isHidden())
+    lib._max_shelf([r.entry for r in shelf_rows])
+    assert set(page.owned()) == {"chroma"}
+    # clearing the query restores everything
+    page._apply_filter("")
+    assert not any(r.isHidden() for r in treasury.rows.values())
+    assert not any(box.isHidden() for box, _ in lib._shelves)
