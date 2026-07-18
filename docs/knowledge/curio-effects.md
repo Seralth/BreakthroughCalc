@@ -63,9 +63,9 @@ the Vault catalog: Yang Spirit Jade (5.8 pill effect), Dongxuan's Pot
 (2 pill effect), Pisces Pendant (accessory system, not gubao — its
 "Base Abode Aura +3% in Mortal World" tooltip confirmed in i18n).
 
-**Not yet in `data/sources.json`** (client-exact ladders in
-curio_tooltips.json; treat as plausible until an in-game tooltip confirms —
-see the star-4 discrepancy above):
+**Not yet in `data/sources.json`** as of this extraction (the 3.5 catalog
+branch ships them all; client-exact ladders in curio_tooltips.json, held at
+data_status community until an in-game tooltip confirms each):
 
 | Curio | Affix (engine attrib) | Max |
 |---|---|---|
