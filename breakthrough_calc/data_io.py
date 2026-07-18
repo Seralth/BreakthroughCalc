@@ -15,7 +15,17 @@ if getattr(sys, "frozen", False):
     _BASE = sys._MEIPASS  # PyInstaller bundle
 else:
     _BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_DATA_PATH = os.path.join(_BASE, "data", "breakthrough.json")
+
+
+def resource_path(*parts: str) -> str:
+    """Absolute path to a bundled resource under the app base, resolving the
+    frozen-app root (PyInstaller's sys._MEIPASS) vs the dev checkout. The one
+    home for the frozen-vs-dev base path — i18n and the GUI icon lookup route
+    through here so the sys._MEIPASS fallback lives in exactly one place."""
+    return os.path.join(_BASE, *parts)
+
+
+_DATA_PATH = resource_path("data", "breakthrough.json")
 
 
 def load_data(path: str | None = None) -> dict:
@@ -39,7 +49,7 @@ def load_respira_sources() -> list:
 
 def _load_catalog(fname: str) -> list:
     try:
-        with open(os.path.join(_BASE, "data", fname)) as f:
+        with open(resource_path("data", fname)) as f:
             return json.load(f)
     except (OSError, ValueError):
         return []
