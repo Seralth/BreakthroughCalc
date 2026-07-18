@@ -1,4 +1,4 @@
-__version__ = "3.5"
+__version__ = "3.6"
 
 
 def parse_version(s: str):
