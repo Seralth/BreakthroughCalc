@@ -1,0 +1,2150 @@
+{
+ "  · Strive above 120% — normal in later realms (overcap); cap tables beyond the mortal world aren't modeled.": {
+  "de": "  · Streben über 120% — in späteren Reichen normal (Überkappung); Obergrenzen-Tabellen jenseits der sterblichen Welt sind nicht modelliert.",
+  "es": "  · Esfuerzo por encima del 120% — normal en reinos posteriores (sobretope); las tablas de topes más allá del mundo mortal no están modeladas.",
+  "ru": "  · Стремление выше 120% — нормально в поздних царствах (сверх предела); таблицы пределов за смертным миром не моделируются.",
+  "zh": "  · 奋起超过120% — 在后期境界属正常（超上限）；人间界之后的上限表未建模。"
+ },
+ "  — entered speed {} is {}% off; one of the readings is stale": {
+  "de": "  — eingetragenes Tempo {} weicht um {}% ab; einer der Werte ist veraltet",
+  "es": "  — la velocidad introducida {} difiere un {}%; una de las lecturas está desactualizada",
+  "ru": "  — введённая скорость {} отличается на {}%; одно из значений устарело",
+  "zh": "  — 填入的速度 {} 偏差 {}%；某个读数已过期"
+ },
+ "  ⚠ Strive over the 120% cap": {
+  "de": "  ⚠ Streben über der 120%-Obergrenze",
+  "es": "  ⚠ Esfuerzo por encima del tope del 120%",
+  "ru": "  ⚠ Стремление выше предела 120%",
+  "zh": "  ⚠ 奋起超过120%上限"
+ },
+ "  ⚠ below base": {
+  "de": "  ⚠ unter der Basis",
+  "es": "  ⚠ por debajo de la base",
+  "ru": "  ⚠ ниже базы",
+  "zh": "  ⚠ 低于基础值"
+ },
+ "  ⚠ below base — Strive can't be negative": {
+  "de": "  ⚠ unter der Basis — Streben kann nicht negativ sein",
+  "es": "  ⚠ por debajo de la base — el Esfuerzo no puede ser negativo",
+  "ru": "  ⚠ ниже базы — Стремление не может быть отрицательным",
+  "zh": "  ⚠ 低于基础值 — 奋起不能为负"
+ },
+ "  ⚠ over limit — extra pills won't count": {
+  "de": "  ⚠ über dem Limit — zusätzliche Pillen zählen nicht",
+  "es": "  ⚠ sobre el límite — las píldoras extra no contarán",
+  "ru": "  ⚠ сверх лимита — лишние пилюли не засчитаются",
+  "zh": "  ⚠ 超出上限 — 多余丹药不生效"
+ },
+ " days": {
+  "de": " Tage",
+  "es": " días",
+  "ru": " дн.",
+  "zh": " 天"
+ },
+ "(best {} / worst {})": {
+  "de": "(bester {} / schlechtester {})",
+  "es": "(mejor {} / peor {})",
+  "ru": "(лучший {} / худший {})",
+  "zh": "（最好 {} / 最差 {}）"
+ },
+ "(none)": {
+  "de": "(keine)",
+  "es": "(ninguna)",
+  "ru": "(нет)",
+  "zh": "（无）"
+ },
+ "1. Open the SEAGM OverMortal voucher page": {
+  "de": "1. Öffnen Sie die SEAGM-OverMortal-Gutscheinseite",
+  "es": "1. Abre la página de vales de OverMortal en SEAGM",
+  "ru": "1. Откройте страницу ваучеров OverMortal на SEAGM",
+  "zh": "1. 打开SEAGM的OverMortal代金券页面"
+ },
+ "2. Pick any voucher amount": {
+  "de": "2. Wählen Sie einen beliebigen Gutscheinbetrag",
+  "es": "2. Elige cualquier importe de vale",
+  "ru": "2. Выберите любую сумму ваучера",
+  "zh": "2. 选择任意代金券金额"
+ },
+ "3. Paste the RID below into the site's RID field": {
+  "de": "3. Fügen Sie die RID unten in das RID-Feld der Seite ein",
+  "es": "3. Pega el RID de abajo en el campo RID del sitio",
+  "ru": "3. Вставьте RID ниже в поле RID на сайте",
+  "zh": "3. 将下方RID粘贴到网站的RID栏"
+ },
+ "Abode Aura": {
+  "de": "Wohnsitz-Aura",
+  "es": "Aura de la morada",
+  "ru": "Аура обители",
+  "zh": "洞府灵气"
+ },
+ "Abode Aura (implied)": {
+  "de": "Wohnsitz-Aura (impliziert)",
+  "es": "Aura de la morada (implícita)",
+  "ru": "Аура обители (расчётная)",
+  "zh": "洞府灵气（推算）"
+ },
+ "Absorption Ratio": {
+  "de": "Absorptionsverhältnis",
+  "es": "Relación de absorción",
+  "ru": "Эфф. поглощения",
+  "zh": "吸收率"
+ },
+ "Absorption Ratio (%)": {
+  "de": "Absorptionsverhältnis (%)",
+  "es": "Relación de absorción (%)",
+  "ru": "Эфф. поглощения (%)",
+  "zh": "吸收率 (%)"
+ },
+ "Absorption ratio must exceed the blessing bonus.": {
+  "de": "Die Absorptionsrate muss den Segensbonus übersteigen.",
+  "es": "El índice de absorción debe superar el bono de la bendición.",
+  "ru": "Коэффициент поглощения должен превышать бонус благословения.",
+  "zh": "吸收率必须高于福泽加成。"
+ },
+ "Add": {
+  "de": "Hinzufügen",
+  "es": "Agregar",
+  "ru": "Добавить",
+  "zh": "添加"
+ },
+ "Add a pill-effect source (a technique book, a curio, …). Their percentages sum.": {
+  "de": "Füge eine Pillenwirkungs-Quelle hinzu (Technikbuch, Kuriosität, …). Die Prozente summieren sich.",
+  "es": "Añade una fuente de efecto de píldora (un libro de técnica, una curiosidad, …). Sus porcentajes se suman.",
+  "ru": "Добавьте источник эффекта пилюль (книга техник, древность, …). Их проценты суммируются.",
+  "zh": "添加一个丹药效果来源（功法书、古宝等）。百分比相加。"
+ },
+ "Advisor": {
+  "de": "Berater",
+  "es": "Asesor",
+  "ru": "Советник",
+  "zh": "顾问"
+ },
+ "Already used today's pills/respira": {
+  "de": "Heutige Pillen/Atmung bereits genutzt",
+  "es": "Píldoras/Inhala de hoy ya usadas",
+  "ru": "Сегодняшние пилюли/дыхание ци уже использованы",
+  "zh": "今日丹药/吐纳已用完"
+ },
+ "Amount or unlock tier not exactly established.": {
+  "de": "Wert oder Freischalt-Stufe nicht exakt belegt.",
+  "es": "Cantidad o nivel de desbloqueo no establecidos con exactitud.",
+  "ru": "Величина или тир открытия не до конца установлены.",
+  "zh": "数值或解锁品阶尚未完全确定。"
+ },
+ "Apply to Cultivation Speed": {
+  "de": "Auf Anbaugeschwindigkeit anwenden",
+  "es": "Aplicar a la velocidad de cultivo",
+  "ru": "Применить к скорости совершенствования",
+  "zh": "应用到修炼速度"
+ },
+ "Artifact": {
+  "de": "Artefakt",
+  "es": "Artefacto",
+  "ru": "Артефакт",
+  "zh": "至宝"
+ },
+ "Ascension Virya blessing: persistent absorption-ratio bonus in percentage points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the Absorption Ratio above as displayed in-game: it already includes this.": {
+  "de": "Aufstiegs-Virya-Segen: dauerhafter Absorptionsraten-Bonus in Prozentpunkten (Perfektion (C) +20 und Perfekt +20 — mit beiden 40 eingeben). Die Absorptionsrate oben wie im Spiel angezeigt eingeben: sie enthält diesen Bonus bereits.",
+  "es": "Bendición Virya de ascensión: bono permanente al índice de absorción en puntos porcentuales (Perfección (C) +20 y Perfecto +20 — con ambos, introduce 40). Introduce arriba el índice de absorción tal como lo muestra el juego: ya incluye este bono.",
+  "ru": "Благословение вирьи вознесения: постоянный бонус к коэффициенту поглощения в процентных пунктах (Совершенство (C) +20 и Идеал +20 — с обоими введите 40). Коэффициент поглощения выше вводите как показано в игре: он уже включает этот бонус.",
+  "zh": "飞升福泽（精进）：吸收率的永久加成，按百分点计（大乘 (C) +20 与圆满 +20——两者都有请输入 40）。上方的吸收率请按游戏内显示填写：其中已包含此加成。"
+ },
+ "Ascension blessing": {
+  "de": "Aufstiegssegen",
+  "es": "Bendición de ascensión",
+  "ru": "Благословение вознесения",
+  "zh": "飞升福泽"
+ },
+ "Ascension blessing (%)": {
+  "de": "Aufstiegssegen (%)",
+  "es": "Bendición de ascensión (%)",
+  "ru": "Благословение вознесения (%)",
+  "zh": "飞升福泽 (%)"
+ },
+ "Ascension blessings": {
+  "de": "Aufstiegssegen",
+  "es": "Bendiciones de ascensión",
+  "ru": "Благословения вознесения",
+  "zh": "飞升福泽"
+ },
+ "At timegate": {
+  "de": "Am Zeittor",
+  "es": "En la puerta temporal",
+  "ru": "К вратам времени",
+  "zh": "开门时"
+ },
+ "Attempts / day": {
+  "de": "Versuche / Tag",
+  "es": "Intentos / día",
+  "ru": "Попыток в день",
+  "zh": "每日次数"
+ },
+ "Attempts and Base EXP fill themselves — attempts from the game's base 10 plus your Vault bonuses, Base EXP from your Stage estimate times your Vault's book bonuses. Overwrite either with your in-game reading (clear a field to go back to the estimate). Most Respira give the same small EXP — that is the base; 2×/5×/10× crits are handled automatically.": {
+  "de": "Versuche und Basis-EXP füllen sich selbst — Versuche aus den 10 Basisversuchen des Spiels plus deinen Tresor-Boni, Basis-EXP aus der Stufenschätzung mal deinen Buch-Boni aus dem Tresor. Überschreibe beides mit deinem Spielwert (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.",
+  "es": "Los intentos y la EXP base se rellenan solos — los intentos desde los 10 básicos del juego más los bonos de tu Bóveda, la EXP base desde la estimación de tu Etapa multiplicada por los bonos de libros de la Bóveda. Sobrescribe cualquiera con tu lectura del juego (vacía el campo para volver a la estimación). La mayoría de Respira dan la misma EXP pequeña — esa es la base; los críticos 2×/5×/10× se manejan automáticamente.",
+  "ru": "Попытки и базовый опыт заполняются сами — попытки из базовых 10 игры плюс бонусы Хранилища, базовый опыт из оценки по Стадии, умноженной на книжные бонусы Хранилища. Впишите свои игровые значения, чтобы переопределить (очистите поле, чтобы вернуть оценку). Большинство респир дают одинаковый малый опыт — это база; криты 2×/5×/10× учитываются автоматически.",
+  "zh": "次数与基础经验会自动填充——次数来自游戏基础的10次加上宝库加成，基础经验来自阶段估算乘以宝库的功法加成。可用游戏内读数覆盖（清空字段即恢复估算）。大多数吐纳给出相同的小额经验——那就是基础值；2×/5×/10×暴击会自动计入。"
+ },
+ "Attempts used: {} / {} (shared; vase red pills exempt)": {
+  "de": "Versuche genutzt: {} / {} (geteilt; rote Vasen-Pillen ausgenommen)",
+  "es": "Intentos usados: {} / {} (compartidos; píldoras rojas del jarrón exentas)",
+  "ru": "Использовано попыток: {} / {} (общие; красные пилюли из вазы не считаются)",
+  "zh": "已用次数：{} / {}（共享；净瓶红丹不计入）"
+ },
+ "Aura Extractor": {
+  "de": "Aura-Extraktor",
+  "es": "Extractora de Aura",
+  "ru": "Извлекатель ауры",
+  "zh": "化灵台"
+ },
+ "Aura Extractor quality": {
+  "de": "Qualität des Aura-Extraktors",
+  "es": "Calidad de la Extractora de Aura",
+  "ru": "Качество извлекателя ауры",
+  "zh": "化灵台品质"
+ },
+ "Aura Gem": {
+  "de": "Aura-Juwel",
+  "es": "Gema de aura",
+  "ru": "Самоцвет ауры",
+  "zh": "纳灵石"
+ },
+ "Aura Gem rarity. In-game it's claimable storage that accrues gem% of your cultivation speed (up to 18-32h per claim); modeled as a continuous speed multiplier on cultivation only — pills/Respira are flat XP and are NOT boosted by the gem.": {
+  "de": "Seltenheit des Aura-Juwels. Im Spiel ein abholbarer Speicher, der Juwel-% deiner Anbaugeschwindigkeit ansammelt (bis 18-32 h pro Abholung); modelliert als dauerhafter Tempomultiplikator nur auf die Kultivierung — Pillen/Atmung sind Fix-EXP und werden vom Juwel NICHT verstärkt.",
+  "es": "Rareza de la Gema de aura. En el juego es un almacén reclamable que acumula el % de la gema de tu velocidad de cultivo (hasta 18-32 h por reclamo); se modela como un multiplicador de velocidad continuo solo sobre el cultivo — las píldoras/Inhala son EXP fija y NO se ven potenciadas por la gema.",
+  "ru": "Редкость самоцвета ауры. В игре это накопитель, собирающий процент вашей скорости совершенствования (до 18-32 ч на сбор); моделируется как постоянный множитель скорости только для совершенствования — пилюли/дыхание ци дают фиксированный опыт и самоцветом НЕ усиливаются.",
+  "zh": "纳灵石品质。游戏内它是可领取的储存，按纳灵石百分比累积你的修炼速度（每次可存18-32小时）；此处模拟为仅作用于修炼的持续速度乘数 — 丹药/吐纳是固定修为，不受纳灵石加成。"
+ },
+ "Auto": {
+  "de": "Auto",
+  "es": "Auto",
+  "ru": "Авто",
+  "zh": "自动"
+ },
+ "Auto-fill calculator fields": {
+  "de": "Rechnerfelder automatisch füllen",
+  "es": "Autocompletar campos de la calculadora",
+  "ru": "Автозаполнение полей калькулятора",
+  "zh": "自动填充计算器字段"
+ },
+ "Auto-fill from Stage": {
+  "de": "Automatisch aus Stufe füllen",
+  "es": "Autorrellenar según la etapa",
+  "ru": "Автозаполнение по ступени",
+  "zh": "按境界自动填充"
+ },
+ "Automatic updates": {
+  "de": "Automatische Updates",
+  "es": "Actualizaciones automáticas",
+  "ru": "Автоматические обновления",
+  "zh": "自动更新"
+ },
+ "Base Absorption: {}%  (Strive unlocks at Nascent Soul)": {
+  "de": "Basis-Absorption: {}%  (Streben schaltet sich bei Werdende Seele frei)",
+  "es": "Absorción base: {}%  (el Esfuerzo se desbloquea en Alma Naciente)",
+  "ru": "Базовое поглощение: {}%  (Стремление открывается на Пробуждении)",
+  "zh": "基础吸收：{}%（奋起于元婴解锁）"
+ },
+ "Base Absorption: {}%  ·  Strive: {}%": {
+  "de": "Basis-Absorption: {}%  ·  Streben: {}%",
+  "es": "Absorción base: {}%  ·  Esfuerzo: {}%",
+  "ru": "Базовое поглощение: {}%  ·  Стремление: {}%",
+  "zh": "基础吸收：{}%  ·  奋起：{}%"
+ },
+ "Base EXP / attempt": {
+  "de": "Basis-EXP / Versuch",
+  "es": "EXP base / intento",
+  "ru": "Базовый опыт за попытку",
+  "zh": "每次基础修为"
+ },
+ "Base EXP fills itself from your Stage; overwrite it with your in-game reading for exact numbers (clear it to go back to the estimate). Most Respira give the same small EXP — that is the base; 2×/5×/10× crits are handled automatically.": {
+  "de": "Basis-EXP füllt sich selbst aus deiner Stufe; überschreibe sie mit deinem Spielwert für exakte Zahlen (Feld leeren stellt die Schätzung wieder her). Die meisten Respira geben dieselbe kleine EXP — das ist die Basis; 2×/5×/10×-Crits werden automatisch berücksichtigt.",
+  "es": "La EXP base se rellena sola según tu Etapa; sobrescríbela con tu lectura del juego para cifras exactas (vacía el campo para volver a la estimación). La mayoría de Respira dan la misma EXP pequeña — esa es la base; los críticos 2×/5×/10× se manejan automáticamente.",
+  "ru": "Базовый опыт заполняется сам по вашей Стадии; впишите своё игровое значение для точных чисел (очистите поле, чтобы вернуть оценку). Большинство респир дают одинаковый малый опыт — это база; криты 2×/5×/10× учитываются автоматически.",
+  "zh": "基础经验会根据你的阶段自动填充；想要精确数字可用游戏内读数覆盖（清空即恢复估算）。大多数吐纳给出相同的小额经验——那就是基础值；2×/5×/10×暴击会自动计入。"
+ },
+ "Base absorption (grade)": {
+  "de": "Basis-Absorption (Grad)",
+  "es": "Absorción base (rango)",
+  "ru": "Базовое поглощение (ступень)",
+  "zh": "基础吸收率（品阶）"
+ },
+ "Base values (before sources)": {
+  "de": "Basiswerte (vor Quellen)",
+  "es": "Valores base (antes de fuentes)",
+  "ru": "Базовые значения (без источников)",
+  "zh": "基础值（不含来源）"
+ },
+ "Blessing before Voidbreak Middle": {
+  "de": "Segen vor Leerenbruch (Mitte)",
+  "es": "Bendición antes de Ruptura del Vacío (Intermedio)",
+  "ru": "Благословение до Преодоления (Средняя)",
+  "zh": "万象破虚中期前的福泽"
+ },
+ "Blessing before Voidbreak Middle (%)": {
+  "de": "Segen vor Leerenbruch (Mitte) (%)",
+  "es": "Bendición antes de Ruptura del Vacío (Intermedio) (%)",
+  "ru": "Благословение до Преодоления (Средняя) (%)",
+  "zh": "万象破虚中期前的福泽 (%)"
+ },
+ "Blessings": {
+  "de": "Segen",
+  "es": "Bendiciones",
+  "ru": "Благословения",
+  "zh": "祝福"
+ },
+ "Blue": {
+  "de": "Blau",
+  "es": "Azul",
+  "ru": "Синяя",
+  "zh": "蓝"
+ },
+ "Blue/White": {
+  "de": "Blau/Weiß",
+  "es": "Azul/blanca",
+  "ru": "Синяя/белая",
+  "zh": "蓝/白"
+ },
+ "Bonuses the calculator does not model — combat stats, Spiritium, Abode Aura already inside your readings — are not ranked.": {
+  "de": "Boni, die der Rechner nicht modelliert — Kampfwerte, Spiritium, Refugium-Aura, die bereits in deinen Werten steckt — werden nicht gereiht.",
+  "es": "Los bonos que la calculadora no modela — estadísticas de combate, Spiritium, el aura de morada ya incluida en tus lecturas — no se clasifican.",
+  "ru": "Бонусы, которые калькулятор не моделирует — боевые характеристики, Спиритий, аура обители, уже входящая в ваши показания, — не ранжируются.",
+  "zh": "计算器未建模的加成——战斗属性、灵石收益、已包含在读数中的洞府灵气——不参与排序。"
+ },
+ "Breakthrough": {
+  "de": "Durchbruch",
+  "es": "Adelante",
+  "ru": "Переход",
+  "zh": "突破"
+ },
+ "Breakthrough Calculator": {
+  "de": "Durchbruch-Rechner",
+  "es": "Calculadora de avance",
+  "ru": "Калькулятор переходов",
+  "zh": "突破计算器"
+ },
+ "Build code copied": {
+  "de": "Build-Code kopiert",
+  "es": "Código de build copiado",
+  "ru": "Код билда скопирован",
+  "zh": "配置代码已复制"
+ },
+ "Build imported": {
+  "de": "Build importiert",
+  "es": "Build importado",
+  "ru": "Билд импортирован",
+  "zh": "配置已导入"
+ },
+ "Calculator": {
+  "de": "Rechner",
+  "es": "Calculadora",
+  "ru": "Калькулятор",
+  "zh": "计算器"
+ },
+ "Cancel": {
+  "de": "Abbrechen",
+  "es": "Cancelar",
+  "ru": "Отмена",
+  "zh": "取消"
+ },
+ "Catalog": {
+  "de": "Katalog",
+  "es": "Catálogo",
+  "ru": "Каталог",
+  "zh": "目录"
+ },
+ "Celestial": {
+  "de": "Himmlisch",
+  "es": "Celestial",
+  "ru": "Небесный",
+  "zh": "象"
+ },
+ "Charge": {
+  "de": "Aufladung",
+  "es": "Cargar",
+  "ru": "Зарядить",
+  "zh": "充能"
+ },
+ "Check for updates": {
+  "de": "Nach Updates suchen",
+  "es": "Buscar actualizaciones",
+  "ru": "Проверить обновления",
+  "zh": "检查更新"
+ },
+ "Check if you've already taken today's daily pills and Respira. The projection then defers that boost to the next daily reset (today runs at base speed). Mainly affects short estimates.": {
+  "de": "Ankreuzen, wenn die heutigen Pillen und Atmung bereits genutzt sind. Die Prognose verschiebt den Schub dann auf den nächsten Tagesreset (heute läuft Basistempo). Betrifft vor allem kurze Schätzungen.",
+  "es": "Marca si ya tomaste las píldoras diarias y el Inhala de hoy. La proyección aplaza entonces ese impulso hasta el próximo reinicio diario (hoy corre a velocidad base). Afecta sobre todo a las estimaciones cortas.",
+  "ru": "Отметьте, если сегодняшние пилюли и дыхание ци уже использованы. Тогда прогноз отложит этот прирост до следующего ежедневного сброса (сегодня — базовая скорость). Влияет в основном на короткие оценки.",
+  "zh": "如果今天的丹药和吐纳已用完请勾选。预测会把这部分收益推迟到下次每日刷新（今天按基础速度计算）。主要影响短期估算。"
+ },
+ "Clear A": {
+  "de": "A löschen",
+  "es": "Borrar A",
+  "ru": "Очистить A",
+  "zh": "清除A"
+ },
+ "Click to let the shelf fill this field.": {
+  "de": "Klicken, damit das Regal dieses Feld füllt.",
+  "es": "Haz clic para que el estante rellene este campo.",
+  "ru": "Нажмите, чтобы полка заполняла это поле.",
+  "zh": "点击后由书架自动填写此栏。"
+ },
+ "Close": {
+  "de": "Schließen",
+  "es": "Cerrar",
+  "ru": "Закрыть",
+  "zh": "关闭"
+ },
+ "Common": {
+  "de": "Gemeinsam",
+  "es": "Común",
+  "ru": "Обыч.",
+  "zh": "荒废"
+ },
+ "Companions": {
+  "de": "Gefährten",
+  "es": "Compañeros",
+  "ru": "Спутники",
+  "zh": "道友"
+ },
+ "Connection": {
+  "de": "Verbindung",
+  "es": "Conexión",
+  "ru": "Подключение",
+  "zh": "练气"
+ },
+ "Copied ✓": {
+  "de": "Kopiert ✓",
+  "es": "Copiado ✓",
+  "ru": "Скопировано ✓",
+  "zh": "已复制 ✓"
+ },
+ "Copies": {
+  "de": "Kopien",
+  "es": "Copias",
+  "ru": "Копии",
+  "zh": "数量"
+ },
+ "Copy RID": {
+  "de": "RID kopieren",
+  "es": "Copiar RID",
+  "ru": "Скопировать RID",
+  "zh": "复制 RID"
+ },
+ "Copy link": {
+  "de": "Link kopieren",
+  "es": "Copiar enlace",
+  "ru": "Скопировать ссылку",
+  "zh": "复制链接"
+ },
+ "Copy results": {
+  "de": "Ergebnisse kopieren",
+  "es": "Copiar resultados",
+  "ru": "Скопировать результаты",
+  "zh": "复制结果"
+ },
+ "Creation Artifacts": {
+  "de": "Schöpfungsartefakte",
+  "es": "Artefactos de la Creación",
+  "ru": "Артефакты творения",
+  "zh": "造化至宝"
+ },
+ "Culti level": {
+  "de": "Kultivierungsstufe",
+  "es": "Nivel de cultivo",
+  "ru": "Уровень совершенствования",
+  "zh": "修炼等级"
+ },
+ "Cultivation Base": {
+  "de": "Kultivierungsbasis",
+  "es": "Base de cultivo",
+  "ru": "Основа совершенствования",
+  "zh": "修为基础"
+ },
+ "Cultivation EXP granted by one elixir (item tooltip).": {
+  "de": "Kultivierungs-EXP eines Elixiers (Gegenstands-Tooltip).",
+  "es": "EXP de cultivación de un elixir (descripción del objeto).",
+  "ru": "Опыт совершенствования за один эликсир (из описания предмета).",
+  "zh": "单个灵药提供的修为（物品说明）。"
+ },
+ "Cultivation Pill": {
+  "de": "Kultivierungspille",
+  "es": "Píldora de cultivo",
+  "ru": "Пилюля дао",
+  "zh": "道行丹"
+ },
+ "Cultivation Pill Effect": {
+  "de": "Wirkung der Kultivierungspille",
+  "es": "Efecto de la Píldora de Cultivo",
+  "ru": "Эффект пилюли дао",
+  "zh": "修为丹服用效果"
+ },
+ "Cultivation Pill Effect: {}%": {
+  "de": "Wirkung der Kultivierungspille: {}%",
+  "es": "Efecto de la Píldora de Cultivo: {}%",
+  "ru": "Эффект пилюли дао: {}%",
+  "zh": "修为丹服用效果：{}%"
+ },
+ "Cultivation Pills": {
+  "de": "Kultivierungspillen",
+  "es": "Píldoras de cultivo",
+  "ru": "Пилюли дао",
+  "zh": "道行丹"
+ },
+ "Cultivation Speed": {
+  "de": "Anbaugeschwindigkeit",
+  "es": "Velocidad de cultivo",
+  "ru": "Скорость совершенствования",
+  "zh": "修炼速度"
+ },
+ "Cultivation Speed (XP / Cosmoapsis)": {
+  "de": "Anbaugeschwindigkeit (EXP / Cosmoapsis)",
+  "es": "Velocidad de cultivo (EXP / Cosmoapsis)",
+  "ru": "Скорость совершенствования (опыт за фазу инь-ян)",
+  "zh": "修炼速度（修为/周天）"
+ },
+ "Cultivation XP / day": {
+  "de": "Anbau-EXP / Tag",
+  "es": "EXP de cultivo / día",
+  "ru": "Опыт дао в день",
+  "zh": "每日修炼修为"
+ },
+ "Cultivation pill effect": {
+  "de": "Wirkung der Kultivierungspille",
+  "es": "Efecto de la Píldora de Cultivo",
+  "ru": "Эффект пилюли дао",
+  "zh": "修为丹服用效果"
+ },
+ "Cultivation speed and absorption ratio must be > 0.": {
+  "de": "Anbaugeschwindigkeit und Absorptionsverhältnis müssen > 0 sein.",
+  "es": "La velocidad de cultivo y la relación de absorción deben ser > 0.",
+  "ru": "Скорость совершенствования и эфф. поглощения должны быть > 0.",
+  "zh": "修炼速度和吸收率必须大于0。"
+ },
+ "Curios": {
+  "de": "Kuriositäten",
+  "es": "Curiosidades",
+  "ru": "Диковинки",
+  "zh": "珍宝"
+ },
+ "Current build": {
+  "de": "Aktueller Build",
+  "es": "Compilación actual",
+  "ru": "Текущая сборка",
+  "zh": "当前版本"
+ },
+ "Daily Energy Charge: 30 Fateum/Destium adds 100 Energy to this artifact, once per day. Check if you use it every day.": {
+  "de": "Tägliche Energieaufladung: 30 Fateum/Destium geben diesem Artefakt einmal täglich 100 Energie. Ankreuzen, wenn du sie jeden Tag nutzt.",
+  "es": "Carga diaria de Energía: 30 Fateum/Destium añaden 100 de Energía a este artefacto, una vez al día. Marca si la usas cada día.",
+  "ru": "Ежедневная зарядка: 30 фатеума/дестиума добавляют 100 энергии этому артефакту, раз в день. Отметьте, если пользуетесь каждый день.",
+  "zh": "每日充能：花费30机缘玉/天机玉为该至宝增加100能量，每天一次。如果每天都用请勾选。"
+ },
+ "Daily Respira attempts before any owned source. The game grants 10 by default.": {
+  "de": "Tägliche Atmungsversuche ohne Quellen. Das Spiel gewährt standardmäßig 10.",
+  "es": "Intentos diarios de Inhala sin fuentes. El juego concede 10 por defecto.",
+  "ru": "Дневные попытки дыхания ци без учёта источников. По умолчанию игра даёт 10.",
+  "zh": "不含任何来源的每日吐纳次数。游戏默认给予 10 次。"
+ },
+ "Daily XP share (daily flat XP / gem)": {
+  "de": "Tages-EXP-Anteil (fixe EXP / Juwel)",
+  "es": "Cuota de EXP diaria (EXP fija / gema)",
+  "ru": "Доля дневного опыта (фиксированный опыт / самоцвет)",
+  "zh": "每日修为占比（固定修为 / 纳灵石）"
+ },
+ "Daily XP share (pills+Respira / gem)": {
+  "de": "Tages-EXP-Anteil (Pillen+Atmung / Juwel)",
+  "es": "Cuota de EXP diaria (píldoras+Inhala / gema)",
+  "ru": "Доля дневного опыта (пилюли+дыхание ци / самоцвет)",
+  "zh": "每日修为占比（丹药+吐纳 / 纳灵石）"
+ },
+ "Daily charge": {
+  "de": "Tägliche Aufladung",
+  "es": "Carga diaria",
+  "ru": "Ежедн. зарядка",
+  "zh": "每日充能"
+ },
+ "Daily pill attempts": {
+  "de": "Tägliche Pillenversuche",
+  "es": "Intentos de píldora diarios",
+  "ru": "Пилюль в день (лимит)",
+  "zh": "每日丹药次数"
+ },
+ "Daily pill attempts (shared)": {
+  "de": "Tägliche Pillenversuche (geteilt)",
+  "es": "Intentos diarios de píldoras (compartidos)",
+  "ru": "Дневные попытки пилюль (общие)",
+  "zh": "每日丹药次数（共享）"
+ },
+ "Daily pill limit": {
+  "de": "Tägliches Pillenlimit",
+  "es": "Límite diario de píldoras",
+  "ru": "Дневной лимит пилюль",
+  "zh": "每日丹药上限"
+ },
+ "Daily pill limit before any owned source.": {
+  "de": "Tägliches Pillenlimit ohne Quellen.",
+  "es": "Límite diario de píldoras sin fuentes.",
+  "ru": "Дневной лимит пилюль без учёта источников.",
+  "zh": "不含任何来源的每日丹药上限。"
+ },
+ "Daily pill-use limit that caps Gold/Purple/Blue usage.": {
+  "de": "Tägliches Pillenlimit, das Gold/Lila/Blau begrenzt.",
+  "es": "Límite diario de píldoras que restringe el uso de doradas/moradas/azules.",
+  "ru": "Дневной лимит пилюль, ограничивающий золотые/фиолетовые/синие.",
+  "zh": "限制橙/紫/蓝丹药使用的每日次数上限。"
+ },
+ "Delete": {
+  "de": "Löschen",
+  "es": "Eliminar",
+  "ru": "Удалить",
+  "zh": "删除"
+ },
+ "Dismiss": {
+  "de": "Ausblenden",
+  "es": "Descartar",
+  "ru": "Скрыть",
+  "zh": "忽略"
+ },
+ "Do a few Respira: most give the same small EXP (the base — enter that); some give 2×/5×/10× (crits — ignore, handled automatically).": {
+  "de": "Führe einige Atmungen aus: die meisten geben dieselbe kleine EXP (die Basis — diese eintragen); manche geben 2×/5×/10× (Krits — ignorieren, wird automatisch verrechnet).",
+  "es": "Haz varios Inhala: la mayoría da la misma EXP pequeña (la base — introduce esa); algunos dan 2×/5×/10× (críticos — ignóralos, se manejan automáticamente).",
+  "ru": "Сделайте несколько дыханий ци: большинство даёт одинаковый малый опыт (это база — введите её); некоторые дают 2×/5×/10× (криты — игнорируйте, учитываются автоматически).",
+  "zh": "多做几次吐纳：大多数给相同的较小修为（即基础值 — 填这个）；偶尔出现2×/5×/10×（暴击 — 忽略，程序会自动处理）。"
+ },
+ "Don't ask again": {
+  "de": "Nicht mehr fragen",
+  "es": "No volver a preguntar",
+  "ru": "Больше не спрашивать",
+  "zh": "不再询问"
+ },
+ "Donate": {
+  "de": "Spenden",
+  "es": "Donar",
+  "ru": "Сделать взнос",
+  "zh": "捐献"
+ },
+ "Donate ♥": {
+  "de": "Spenden ♥",
+  "es": "Donar ♥",
+  "ru": "Поддержать ♥",
+  "zh": "捐献 ♥"
+ },
+ "Dual-Star Mirror": {
+  "de": "Doppelsternspiegel",
+  "es": "Espejo de Dos Estrellas",
+  "ru": "Зеркало двузведья",
+  "zh": "双星镜"
+ },
+ "EXP per 10 energy": {
+  "de": "EXP pro 10 Energie",
+  "es": "EXP por 10 de energía",
+  "ru": "Опыт за 10 энергии",
+  "zh": "每10能量的修为"
+ },
+ "EXP per elixir": {
+  "de": "EXP pro Elixier",
+  "es": "EXP por elixir",
+  "ru": "Опыт за эликсир",
+  "zh": "每个灵药的修为"
+ },
+ "Early": {
+  "de": "Früh",
+  "es": "Inicial",
+  "ru": "Начальная",
+  "zh": "前期"
+ },
+ "Effective XP / day": {
+  "de": "Effektive EXP / Tag",
+  "es": "EXP efectiva / día",
+  "ru": "Эффективный опыт в день",
+  "zh": "每日有效修为"
+ },
+ "Elixir XP / day": {
+  "de": "Elixier-EXP / Tag",
+  "es": "EXP de elixires / día",
+  "ru": "Опыт с эликсиров / день",
+  "zh": "灵药修为 / 天"
+ },
+ "Elixir effectiveness": {
+  "de": "Elixier-Wirksamkeit",
+  "es": "Eficacia del elixir",
+  "ru": "Эффективность эликсира",
+  "zh": "灵药效果"
+ },
+ "Elixir effectiveness (%)": {
+  "de": "Elixier-Wirksamkeit (%)",
+  "es": "Eficacia del elixir (%)",
+  "ru": "Эффективность эликсира (%)",
+  "zh": "灵药效果 (%)"
+ },
+ "Elixir effectiveness percent after elixir tolerance (100 = full effect).": {
+  "de": "Elixier-Wirksamkeit in Prozent nach Elixiertoleranz (100 = volle Wirkung).",
+  "es": "Eficacia del elixir en porcentaje tras la tolerancia (100 = efecto completo).",
+  "ru": "Эффективность эликсира в процентах с учётом толерантности (100 = полный эффект).",
+  "zh": "灵药效果百分比（计入灵药耐受后；100 = 完整效果）。"
+ },
+ "Elixirs": {
+  "de": "Elixiere",
+  "es": "Elixires",
+  "ru": "Эликсиры",
+  "zh": "灵液"
+ },
+ "Empty shelf": {
+  "de": "Regal leeren",
+  "es": "Vaciar estante",
+  "ru": "Очистить полку",
+  "zh": "整层清空"
+ },
+ "Enjoying the calculator?": {
+  "de": "Gefällt dir der Rechner?",
+  "es": "¿Te gusta la calculadora?",
+  "ru": "Нравится калькулятор?",
+  "zh": "喜欢这个计算器吗？"
+ },
+ "Enter what you own once; each pet row then shows the copies and rarity you could reach by going all-in on that pet.": {
+  "de": "Trage einmal ein, was du besitzt; jede Zeile zeigt dann, wie viele Kopien und welche Seltenheit erreichbar sind, wenn alles in dieses Haustier fließt.",
+  "es": "Indica una vez lo que posees; cada fila muestra cuántas copias y qué rareza podrías alcanzar apostándolo todo a esa mascota.",
+  "ru": "Укажите один раз, что у вас есть; каждая строка покажет, сколько копий и какую редкость можно получить, вложив всё в этого питомца.",
+  "zh": "填写一次你拥有的数量；每行显示若全力培养该灵宠可达到的数量与稀有度。"
+ },
+ "Epic": {
+  "de": "Epos",
+  "es": "Épico",
+  "ru": "Эпич.",
+  "zh": "紫色"
+ },
+ "Epic (Purple) / day": {
+  "de": "Epos (Lila) / Tag",
+  "es": "Épico (Morada) / día",
+  "ru": "Эпич. (фиолетовые) / день",
+  "zh": "紫色（紫）/ 天"
+ },
+ "Epic (Purple) used / day": {
+  "de": "Epos (Lila) pro Tag",
+  "es": "Épicas (moradas) al día",
+  "ru": "Эпич. (фиолетовых) в день",
+  "zh": "每日使用紫色丹药"
+ },
+ "Eternal": {
+  "de": "Ewig",
+  "es": "Eterno",
+  "ru": "Бессмертие",
+  "zh": "金仙境"
+ },
+ "Exclusive": {
+  "de": "Exklusiv",
+  "es": "Exclusivas",
+  "ru": "Эксклюзивные",
+  "zh": "专属"
+ },
+ "Exclusive manuals give combat stats, so they do not feed the calculator — track them here to keep your whole collection in one place.": {
+  "de": "Exklusive Handbücher geben Kampfwerte und fließen nicht in den Rechner — verfolge sie hier, damit die ganze Sammlung an einem Ort ist.",
+  "es": "Los manuales exclusivos dan estadísticas de combate y no alimentan la calculadora — regístralos aquí para tener toda la colección en un solo lugar.",
+  "ru": "Эксклюзивные техники дают боевые характеристики и не влияют на калькулятор — отмечайте их здесь, чтобы вся коллекция была в одном месте.",
+  "zh": "专属功法提供战斗属性，不影响计算器——在这里记录，让整个收藏集中在一处。"
+ },
+ "Exclusive technique manuals give combat stats only, so they are not tracked yet. This shelf will fill in later.": {
+  "de": "Exklusive Technikhandbücher geben nur Kampfwerte und werden daher noch nicht erfasst. Dieses Regal füllt sich später.",
+  "es": "Los manuales de técnica exclusivos solo dan estadísticas de combate, así que aún no se registran. Este estante se completará más adelante.",
+  "ru": "Эксклюзивные техники дают только боевые характеристики, поэтому пока не отслеживаются. Эта полка заполнится позже.",
+  "zh": "专属功法只提供战斗属性，暂不跟踪。此书架以后会补全。"
+ },
+ "Expected speed: {} / Cosmoapsis": {
+  "de": "Erwartetes Tempo: {} / Cosmoapsis",
+  "es": "Velocidad esperada: {} / Cosmoapsis",
+  "ru": "Ожидаемая скорость: {} за фазу инь-ян",
+  "zh": "预期速度：{} / 周天"
+ },
+ "Export": {
+  "de": "Export",
+  "es": "Exportar",
+  "ru": "Экспорт",
+  "zh": "导出"
+ },
+ "Export copies a text code of ALL your inputs to the clipboard — send it to someone and they can import it to see exactly what you entered.": {
+  "de": "Export kopiert einen Textcode ALLER Eingaben in die Zwischenablage — verschicke ihn, und der Empfänger kann ihn importieren und genau sehen, was du eingegeben hast.",
+  "es": "Exportar copia un código de texto con TODAS tus entradas al portapapeles — envíaselo a alguien y podrá importarlo para ver exactamente lo que ingresaste.",
+  "ru": "Экспорт копирует текстовый код ВСЕХ ваших вводов в буфер обмена — отправьте его кому-нибудь, и он сможет импортировать его и увидеть точно, что вы ввели.",
+  "zh": "导出会将你所有输入的文本代码复制到剪贴板——发送给他人，对方导入后即可看到你输入的全部内容。"
+ },
+ "Extra attempts today": {
+  "de": "Zusätzliche Versuche heute",
+  "es": "Intentos extra hoy",
+  "ru": "Доп. попытки сегодня",
+  "zh": "今日额外次数"
+ },
+ "Extractor quality": {
+  "de": "Aura-Extraktor-Qualität",
+  "es": "Calidad de la Extractora de Aura",
+  "ru": "Качество извлекателя ауры",
+  "zh": "化灵台品质"
+ },
+ "Fill Base EXP from your Stage's Respira base (measured for Nascent Soul and Incarnation, extrapolated ×2.0225 per Stage elsewhere) times (1 + Respira Effect books %).": {
+  "de": "Basis-EXP aus der Atmungs-Basis Ihrer Stufe füllen (gemessen für Werdende Seele und Inkarnation, sonst ×2,0225 pro Stufe extrapoliert), multipliziert mit (1 + Atmungseffekt-Bücher-%).",
+  "es": "Rellena la EXP base con la base de Inhala de tu etapa (medida para Alma Naciente e Encarnación, extrapolada ×2,0225 por etapa en el resto) por (1 + % de libros de efecto de Inhala).",
+  "ru": "Заполнить базовый опыт по базе дыхания ци вашей ступени (измерено для Зарождения души и Перевоплощения, для остальных экстраполяция ×2,0225 за ступень), умноженной на (1 + % книг эффекта дыхания ци).",
+  "zh": "按当前境界的吐纳基础值填充基础修为（元婴与化神为实测，其余按每境界×2.0225外推），再乘以（1 + 吐纳效果典籍%）。"
+ },
+ "Fill in the Calculator first — the advisor prices improvements against your current projection.": {
+  "de": "Fülle zuerst den Rechner aus — der Berater bewertet Verbesserungen gegen deine aktuelle Prognose.",
+  "es": "Rellena primero la Calculadora — el asesor valora mejoras contra tu proyección actual.",
+  "ru": "Сначала заполните Калькулятор — советник оценивает улучшения относительно текущего прогноза.",
+  "zh": "请先填写计算器——顾问基于当前推算为改进定价。"
+ },
+ "Foundation": {
+  "de": "Stiftung",
+  "es": "Fundación",
+  "ru": "Фундамент",
+  "zh": "筑基"
+ },
+ "Fruit rank": {
+  "de": "Fruchtrang",
+  "es": "Rango de fruta",
+  "ru": "Ранг фрукта",
+  "zh": "果实品阶"
+ },
+ "Fruit time saved": {
+  "de": "Durch Früchte gesparte Zeit",
+  "es": "Tiempo ahorrado por frutas",
+  "ru": "Экономия времени от фруктов",
+  "zh": "果实节省时间"
+ },
+ "Get Obtainium": {
+  "de": "Obtainium holen",
+  "es": "Obtener Obtainium",
+  "ru": "Установить Obtainium",
+  "zh": "获取 Obtainium"
+ },
+ "Going all-in on one pet": {
+  "de": "Alles auf ein Haustier setzen",
+  "es": "Apostarlo todo a una mascota",
+  "ru": "Если вложить всё в одного питомца",
+  "zh": "全力培养一只灵宠"
+ },
+ "Gold": {
+  "de": "Gold",
+  "es": "Oro",
+  "ru": "Золотая",
+  "zh": "金"
+ },
+ "Gold (Legendary)": {
+  "de": "Gold (Legendär)",
+  "es": "Dorada (legendaria)",
+  "ru": "Золотая (легендарн.)",
+  "zh": "橙色丹（金）"
+ },
+ "Grade": {
+  "de": "Grad",
+  "es": "Rango",
+  "ru": "Ступень",
+  "zh": "阶"
+ },
+ "Grade progress": {
+  "de": "Grad-Fortschritt",
+  "es": "Progreso del rango",
+  "ru": "Прогресс ступени",
+  "zh": "小境界进度"
+ },
+ "Grade progress (%)": {
+  "de": "Grad-Fortschritt (%)",
+  "es": "Progreso del rango (%)",
+  "ru": "Прогресс ступени (%)",
+  "zh": "品阶进度 (%)"
+ },
+ "Guide": {
+  "de": "Leitfaden",
+  "es": "Guía",
+  "ru": "Гид",
+  "zh": "指南"
+ },
+ "Gush": {
+  "de": "Schwall",
+  "es": "Oleada",
+  "ru": "Поток",
+  "zh": "灵涌"
+ },
+ "Gush level": {
+  "de": "Schwall-Stufe",
+  "es": "Nivel de oleada",
+  "ru": "Уровень потока",
+  "zh": "灵涌等级"
+ },
+ "Half-step": {
+  "de": "Halber Schritt zu",
+  "es": "A mitad de camino de",
+  "ru": "Половина",
+  "zh": "半步"
+ },
+ "Half-step breakthrough in": {
+  "de": "Halber-Schritt-Durchbruch in",
+  "es": "Avance de media etapa en",
+  "ru": "Переход половины через",
+  "zh": "半步突破还需"
+ },
+ "Highest rank (+50%)": {
+  "de": "Höchster Rang (+50%)",
+  "es": "Rango máximo (+50%)",
+  "ru": "Высший ранг (+50%)",
+  "zh": "最高品阶（+50%）"
+ },
+ "Hours until the game's daily reset. Only used when the box above is checked: the projection runs the window until the reset without the daily pill/Respira XP (and defers event Respira to the reset), then resumes the normal daily routine.": {
+  "de": "Stunden bis zum Tagesreset des Spiels. Nur genutzt, wenn das Kästchen oben angekreuzt ist: die Prognose läuft bis zum Reset ohne die tägliche Pillen-/Atmungs-EXP (Event-Atmung wird auf den Reset verschoben) und nimmt dann die normale Tagesroutine auf.",
+  "es": "Horas hasta el reinicio diario del juego. Solo se usa con la casilla de arriba marcada: la proyección corre hasta el reinicio sin la EXP diaria de píldoras/Inhala (y aplaza el Inhala de evento al reinicio), y luego retoma la rutina diaria normal.",
+  "ru": "Часов до ежедневного сброса в игре. Учитывается только при отмеченной галочке выше: прогноз до сброса идёт без опыта от пилюль/дыхания ци (событийное дыхание ци откладывается до сброса), затем возобновляется обычный дневной режим.",
+  "zh": "距游戏每日刷新的小时数。仅在勾选上方选项时生效：刷新前的时间段不计每日丹药/吐纳修为（活动吐纳推迟到刷新后），之后恢复正常的每日安排。"
+ },
+ "How far into the current Grade you are, as a percent.": {
+  "de": "Wie weit du im aktuellen Grad bist, in Prozent.",
+  "es": "Cuánto has avanzado en el Rango actual, en porcentaje.",
+  "ru": "Насколько вы продвинулись по текущей ступени, в процентах.",
+  "zh": "当前小境界的完成度，按百分比。"
+ },
+ "If the calculator saves you time, you can support development by gifting in-game vouchers:": {
+  "de": "Wenn der Rechner Ihnen Zeit spart, können Sie die Entwicklung mit In-Game-Gutscheinen unterstützen:",
+  "es": "Si la calculadora te ahorra tiempo, puedes apoyar el desarrollo regalando vales del juego:",
+  "ru": "Если калькулятор экономит вам время, вы можете поддержать разработку, подарив внутриигровые ваучеры:",
+  "zh": "如果计算器为您节省了时间，可以通过赠送游戏代金券支持开发："
+ },
+ "If the calculator saves you time, you can support development by gifting in-game vouchers:<ol><li>Open <a href='{}'>SEAGM — OverMortal vouchers</a></li><li>Pick any voucher amount</li><li>Paste the RID below into the site's <b>RID</b> field</li></ol>": {
+  "de": "Wenn dir der Rechner Zeit spart, kannst du die Entwicklung mit In-Game-Gutscheinen unterstützen:<ol><li>Öffne <a href='{}'>SEAGM — OverMortal-Gutscheine</a></li><li>Wähle einen beliebigen Gutscheinbetrag</li><li>Füge die RID unten in das <b>RID</b>-Feld der Seite ein</li></ol>",
+  "es": "Si la calculadora te ahorra tiempo, puedes apoyar el desarrollo regalando cupones del juego:<ol><li>Abre <a href='{}'>SEAGM — cupones de OverMortal</a></li><li>Elige cualquier importe</li><li>Pega el RID de abajo en el campo <b>RID</b> del sitio</li></ol>",
+  "ru": "Если калькулятор экономит вам время, вы можете поддержать разработку, подарив внутриигровые ваучеры:<ol><li>Откройте <a href='{}'>SEAGM — ваучеры OverMortal</a></li><li>Выберите любой номинал</li><li>Вставьте RID ниже в поле <b>RID</b> на сайте</li></ol>",
+  "zh": "如果本计算器为你节省了时间，可以通过赠送游戏内代金券支持开发：<ol><li>打开 <a href='{}'>SEAGM — OverMortal 代金券</a></li><li>选择任意面额</li><li>把下方的 RID 粘贴到网站的 <b>RID</b> 栏</li></ol>"
+ },
+ "Immortal friends": {
+  "de": "Unsterbliche Freunde",
+  "es": "Amigos inmortales",
+  "ru": "Бессмертные друзья",
+  "zh": "仙友"
+ },
+ "Implied Strive": {
+  "de": "Impliziertes Streben",
+  "es": "Esfuerzo implícito",
+  "ru": "Расчетное Стремление",
+  "zh": "推算奋起"
+ },
+ "Implied total aura bonus: {}%  (Abode = 130 × {})": {
+  "de": "Implizierter Gesamt-Aurabonus: {}%  (Wohnsitz = 130 × {})",
+  "es": "Bono total de aura implícito: {}%  (morada = 130 × {})",
+  "ru": "Расчётный общий бонус ауры: {}%  (обитель = 130 × {})",
+  "zh": "推算总灵气加成：{}%（洞府 = 130 × {}）"
+ },
+ "Import": {
+  "de": "Import",
+  "es": "Importar",
+  "ru": "Импорт",
+  "zh": "导入"
+ },
+ "Incarnation": {
+  "de": "Menschwerdung",
+  "es": "Encarnación",
+  "ru": "Формирование",
+  "zh": "化神期"
+ },
+ "Installed: v{}. Checks the latest GitHub release.": {
+  "de": "Installiert: v{}. Prüft das neueste GitHub-Release.",
+  "es": "Instalado: v{}. Comprueba la última versión en GitHub.",
+  "ru": "Установлено: v{}. Проверяет последний релиз на GitHub.",
+  "zh": "已安装：v{}。检查 GitHub 最新版本。"
+ },
+ "Invalid build code": {
+  "de": "Ungültiger Build-Code",
+  "es": "Código de build no válido",
+  "ru": "Неверный код билда",
+  "zh": "配置代码无效"
+ },
+ "Known Respira bonus sources. Checkable entries add/remove daily attempts from the field. Greyed entries are informational only: Respira EXP bonuses are already inside your in-game EXP tooltip, and pill-attempt bonuses belong in the Daily pill attempts input.": {
+  "de": "Bekannte Atmungs-Bonusquellen. Ankreuzbare Einträge fügen dem Feld tägliche Versuche hinzu bzw. entfernen sie. Ausgegraute Einträge sind nur informativ: Atmungs-EXP-Boni stecken bereits im EXP-Tooltip des Spiels, und Pillenversuchs-Boni gehören ins Feld der täglichen Pillenversuche.",
+  "es": "Fuentes conocidas de bonos de Inhala. Las entradas marcables añaden o quitan intentos diarios del campo. Las entradas en gris son solo informativas: los bonos de EXP de Inhala ya están dentro de tu descripción de EXP del juego, y los bonos de intentos de píldoras van en el campo de intentos diarios de píldoras.",
+  "ru": "Известные источники бонусов дыхания ци. Отмечаемые пункты добавляют/убирают дневные попытки в поле. Серые пункты — только для справки: бонусы опыта дыхания ци уже входят в игровую подсказку опыта, а бонусы попыток пилюль вводятся в поле дневных попыток пилюль.",
+  "zh": "已知的吐纳加成来源。可勾选项会在输入框中增减每日次数。灰色项仅供参考：吐纳修为加成已包含在游戏内修为提示中，丹药次数加成请填到每日丹药次数一栏。"
+ },
+ "Known pill-effect sources from the game data. Click to add (prefilled, editable); already-added sources are hidden.": {
+  "de": "Bekannte Pillenwirkungs-Quellen aus den Spieldaten. Anklicken zum Hinzufügen (vorausgefüllt, editierbar); bereits hinzugefügte Quellen sind ausgeblendet.",
+  "es": "Fuentes de efecto de píldora conocidas de los datos del juego. Pulsa para añadir (prellenado, editable); las fuentes ya añadidas se ocultan.",
+  "ru": "Известные источники эффекта пилюль из данных игры. Нажмите, чтобы добавить (предзаполнено, можно править); уже добавленные источники скрыты.",
+  "zh": "游戏数据中已知的丹药效果来源。点击添加（已预填，可编辑）；已添加的来源会隐藏。"
+ },
+ "Language": {
+  "de": "Sprache",
+  "es": "Idioma",
+  "ru": "Язык",
+  "zh": "语言"
+ },
+ "Language:": {
+  "de": "Sprache:",
+  "es": "Idioma:",
+  "ru": "Язык:",
+  "zh": "语言："
+ },
+ "Late": {
+  "de": "Spät",
+  "es": "Fase final",
+  "ru": "(Поздняя)",
+  "zh": "后期"
+ },
+ "Legendary": {
+  "de": "Legendär",
+  "es": "Legendario",
+  "ru": "Легендарн.",
+  "zh": "橙色"
+ },
+ "Legendary (Gold) / day": {
+  "de": "Legendär (Gold) / Tag",
+  "es": "Legendario (Oro) / día",
+  "ru": "Легендарн. (золотые) / день",
+  "zh": "橙色（金）/ 天"
+ },
+ "Legendary (Gold) used / day": {
+  "de": "Legendär (Gold) pro Tag",
+  "es": "Legendarias (doradas) al día",
+  "ru": "Легендарн. (золотых) в день",
+  "zh": "每日使用橙色（金）丹药"
+ },
+ "Library": {
+  "de": "Bibliothek",
+  "es": "Biblioteca",
+  "ru": "Библиотека",
+  "zh": "藏书阁"
+ },
+ "Link copied": {
+  "de": "Link kopiert",
+  "es": "Enlace copiado",
+  "ru": "Ссылка скопирована",
+  "zh": "链接已复制"
+ },
+ "Mature server (world 30+)": {
+  "de": "Reifer Server (Welt 30+)",
+  "es": "Servidor maduro (mundo 30+)",
+  "ru": "Зрелый сервер (мир 30+)",
+  "zh": "成熟服务器（世界30+）"
+ },
+ "Mature server (world level 30+)": {
+  "de": "Reifer Server (Weltstufe 30+)",
+  "es": "Servidor maduro (nivel de mundo 30+)",
+  "ru": "Зрелый сервер (уровень мира 30+)",
+  "zh": "成熟服务器（世界等级30+）"
+ },
+ "Max": {
+  "de": "Max",
+  "es": "Máx",
+  "ru": "Макс",
+  "zh": "满"
+ },
+ "Max shelf": {
+  "de": "Regal maxen",
+  "es": "Maximizar estante",
+  "ru": "Макс. полка",
+  "zh": "整层拉满"
+ },
+ "Maxed": {
+  "de": "Maximiert",
+  "es": "Al máximo",
+  "ru": "Максимум",
+  "zh": "已满级"
+ },
+ "Maybe later": {
+  "de": "Vielleicht später",
+  "es": "Quizá más tarde",
+  "ru": "Может позже",
+  "zh": "以后再说"
+ },
+ "Middle": {
+  "de": "Mitte",
+  "es": "Intermedio",
+  "ru": "Средняя",
+  "zh": "中期"
+ },
+ "More": {
+  "de": "Mehr",
+  "es": "Más",
+  "ru": "Ещё",
+  "zh": "更多"
+ },
+ "Myrimon Fruit": {
+  "de": "Myrimon-Frucht",
+  "es": "Fruta Myrimon",
+  "ru": "Фрукт Миримона",
+  "zh": "万妖果"
+ },
+ "Mythic": {
+  "de": "Mythisch",
+  "es": "Mítico",
+  "ru": "Мифич.",
+  "zh": "超越仙品"
+ },
+ "Mythic pills / day": {
+  "de": "Mythische Pillen / Tag",
+  "es": "Píldoras míticas / día",
+  "ru": "Мифич. пилюль в день",
+  "zh": "每日红丹数"
+ },
+ "N/A": {
+  "de": "N/A",
+  "es": "N/A",
+  "ru": "Н/Д",
+  "zh": "空"
+ },
+ "Nascent": {
+  "de": "Werdende Seele",
+  "es": "Alma Naciente",
+  "ru": "Пробуждение",
+  "zh": "元婴/元武/元罡/元冥"
+ },
+ "Nascent Soul": {
+  "de": "Werdende Seele",
+  "es": "Alma Naciente",
+  "ru": "Пробуждение",
+  "zh": "元婴"
+ },
+ "New / Save As": {
+  "de": "Neu / Speichern unter",
+  "es": "Nuevo / Guardar como",
+  "ru": "Новый / Сохранить как",
+  "zh": "新建 / 另存为"
+ },
+ "New / Save As…": {
+  "de": "Neu / Speichern unter…",
+  "es": "Nuevo / Guardar como…",
+  "ru": "Новый / Сохранить как…",
+  "zh": "新建 / 另存为…"
+ },
+ "Next step": {
+  "de": "Nächster Schritt",
+  "es": "Siguiente paso",
+  "ru": "Следующий шаг",
+  "zh": "下一步"
+ },
+ "Nirvana": {
+  "de": "Nirwana",
+  "es": "Nirvana",
+  "ru": "Нирвана",
+  "zh": "脱胎"
+ },
+ "No. of Myrimon Fruits": {
+  "de": "Anzahl Myrimon-Früchte",
+  "es": "N.º de Frutas Myrimon",
+  "ru": "Кол-во фруктов Миримона",
+  "zh": "万妖果数量"
+ },
+ "No. of fruits": {
+  "de": "Anzahl Früchte",
+  "es": "N.º de frutas",
+  "ru": "Кол-во фруктов",
+  "zh": "果实数量"
+ },
+ "None": {
+  "de": "Keiner",
+  "es": "Ninguno",
+  "ru": "Нет",
+  "zh": "无"
+ },
+ "Not learned": {
+  "de": "Nicht erlernt",
+  "es": "No aprendido",
+  "ru": "Не изучено",
+  "zh": "未学习"
+ },
+ "Note: Strive (the catch-up bonus, from Nascent Soul) fades as you close the gap to your server's #1. Set \"Server #1's Stage\" above to model that drop-off (estimated); leave it blank to hold Strive constant. Low/zero-strive players are unaffected either way.": {
+  "de": "Hinweis: Das Streben (der Aufhol-Bonus, ab Werdende Seele) schwindet, während du zum Server-Ersten aufschließt. Setze oben die „Bühne der Server-Nr. 1“, um diesen Abfall zu modellieren (geschätzt); leer lassen, um das Streben konstant zu halten. Spieler mit niedrigem/keinem Streben sind so oder so unberührt.",
+  "es": "Nota: el Esfuerzo (el bono de alcance, desde Alma Naciente) se desvanece a medida que reduces la distancia con el n.º 1 de tu servidor. Fija arriba la «Etapa del n.º 1 del servidor» para modelar esa caída (estimado); déjalo vacío para mantener el Esfuerzo constante. Los jugadores con Esfuerzo bajo o nulo no se ven afectados.",
+  "ru": "Примечание: Стремление (догоняющий бонус, с Пробуждения) убывает по мере сокращения отставания от №1 сервера. Задайте выше «Стадию №1 сервера», чтобы смоделировать это убывание (оценка); оставьте пустым, чтобы Стремление не менялось. На игроков с низким/нулевым Стремлением это не влияет.",
+  "zh": "注：奋起（追赶加成，元婴起解锁）会随着你与本服第一名差距缩小而衰减。在上方设置「服务器第一名的境界」可模拟这一衰减（估算）；留空则奋起保持不变。奋起低/为零的玩家不受影响。"
+ },
+ "Nothing here helps right now.": {
+  "de": "Hier hilft gerade nichts.",
+  "es": "Nada de aquí ayuda ahora mismo.",
+  "ru": "Сейчас здесь ничто не поможет.",
+  "zh": "目前这里没有能帮上忙的。"
+ },
+ "Novice": {
+  "de": "Anfänger",
+  "es": "Principiante",
+  "ru": "Неофит",
+  "zh": "凡躯"
+ },
+ "Number of Myrimon Fruits processed through the Aura Extractor.": {
+  "de": "Anzahl der im Aura-Extraktor verarbeiteten Myrimon-Früchte.",
+  "es": "Número de Frutas Myrimon procesadas en la Extractora de Aura.",
+  "ru": "Число фруктов Миримона, обработанных извлекателем ауры.",
+  "zh": "通过化灵台处理的万妖果数量。"
+ },
+ "OK": {
+  "de": "OK",
+  "es": "Aceptar",
+  "ru": "ОК",
+  "zh": "确定"
+ },
+ "One-off extra Respira attempts available today only (event/item). Credited once, not as a daily rate.": {
+  "de": "Einmalige zusätzliche Atmungsversuche nur für heute (Event/Gegenstand). Wird einmal gutgeschrieben, nicht als Tagesrate.",
+  "es": "Intentos extra de Inhala de una sola vez, solo para hoy (evento/objeto). Se acreditan una vez, no como tasa diaria.",
+  "ru": "Разовые дополнительные попытки дыхания ци только на сегодня (событие/предмет). Засчитываются один раз, а не как дневная норма.",
+  "zh": "仅限今日的一次性额外吐纳次数（活动/道具）。只计一次，不按每日计算。"
+ },
+ "Open this link in your browser to download the release:": {
+  "de": "Öffnen Sie diesen Link im Browser, um die Version herunterzuladen:",
+  "es": "Abre este enlace en tu navegador para descargar la versión:",
+  "ru": "Откройте эту ссылку в браузере, чтобы скачать релиз:",
+  "zh": "在浏览器中打开此链接以下载新版本："
+ },
+ "Optional: a future Stage to time your arrival at.": {
+  "de": "Optional: eine künftige Bühne, deren Erreichen berechnet wird.",
+  "es": "Opcional: una Etapa futura para calcular tu llegada.",
+  "ru": "Необязательно: будущая стадия, до которой считать время.",
+  "zh": "可选：计算到达某个未来境界的时间。"
+ },
+ "Optional: a grade within the target half-step. Blank = start of the half-step.": {
+  "de": "Optional: ein Grad innerhalb des Ziel-Halbschritts. Leer = Beginn des halben Schritts.",
+  "es": "Opcional: un rango dentro del medio paso objetivo. Vacío = inicio del medio paso.",
+  "ru": "Необязательно: ступень внутри целевой половины. Пусто = начало половины.",
+  "zh": "可选：目标半步内的阶。留空 = 半步开始处。"
+ },
+ "Optional: a half-step within the target Stage. Blank = start of the Stage.": {
+  "de": "Optional: ein halber Schritt innerhalb der Ziel-Bühne. Leer = Beginn der Bühne.",
+  "es": "Opcional: un medio paso dentro de la etapa objetivo. Vacío = inicio de la etapa.",
+  "ru": "Необязательно: половина внутри целевой стадии. Пусто = начало стадии.",
+  "zh": "可选：目标境界内的半步。留空 = 境界开始处。"
+ },
+ "Optional: days until the world-level timegate lifts (shown in-game once someone reaches the last half-step). Compared against the prestock time. Reminder: use Myrimon fruits BEFORE the gate — the gate unlocks the next realm, so they lose the +50% highest-realm bonus.": {
+  "de": "Optional: Tage bis das Welt-Zeittor öffnet (im Spiel sichtbar, sobald jemand den letzten Halbschritt erreicht). Wird mit der Vorratszeit verglichen. Erinnerung: Myrimon-Früchte VOR dem Tor verwenden — das Tor schaltet das nächste Reich frei, wodurch sie den +50%-Höchstreich-Bonus verlieren.",
+  "es": "Opcional: días hasta que abra la puerta temporal del mundo (visible en el juego cuando alguien alcanza el último medio paso). Se compara con el tiempo de reserva. Recordatorio: usa las frutas Myrimon ANTES de la puerta — al abrir se desbloquea el siguiente reino y pierden el bono de +50% de reino máximo.",
+  "ru": "Необязательно: дней до открытия мировых врат времени (видно в игре, когда кто-то достигает последней половины). Сравнивается со временем накопления запаса. Напоминание: используйте плоды Миримон ДО врат — врата открывают следующий мир, и плоды теряют бонус +50% высшего мира.",
+  "zh": "可选：距世界时间之门开启的天数（有人到达最后半步后游戏内可见）。与预存时间对比。提醒：请在开门前使用弥力蒙果——开门解锁下一境界后，果实将失去 +50% 最高境界加成。"
+ },
+ "Optional: your server's #1 cultivator's Stage. Models your Strive stepping DOWN as you break through toward them (estimated; assumes #1 stays put; live value is server-computed hourly). Leave blank to hold Strive constant.": {
+  "de": "Optional: die Bühne des besten Kultivierenden deines Servers. Modelliert, wie dein Streben SINKT, während du zu ihm aufschließt (geschätzt; nimmt an, dass Nr. 1 stehen bleibt; der Live-Wert wird stündlich serverseitig berechnet). Leer lassen, um das Streben konstant zu halten.",
+  "es": "Opcional: la Etapa del cultivador n.º 1 de tu servidor. Modela cómo tu Esfuerzo BAJA a medida que te acercas a él (estimado; supone que el n.º 1 no avanza; el valor real lo calcula el servidor cada hora). Déjalo vacío para mantener el Esfuerzo constante.",
+  "ru": "Необязательно: стадия лучшего культиватора вашего сервера. Моделирует СНИЖЕНИЕ вашего Стремления по мере приближения к нему (оценка; предполагается, что №1 стоит на месте; реальное значение сервер пересчитывает ежечасно). Оставьте пустым, чтобы Стремление не менялось.",
+  "zh": "可选：本服第一名修士的境界。用于模拟你在追赶过程中奋起逐步下降（估算；假设第一名不动；实际值由服务器每小时计算）。留空则奋起保持不变。"
+ },
+ "Overcap needed for the target, in the game's own display convention (XP since the start of the final half-step ÷ that half-step's total), and the time to stock it. While timegated you stay parked at the Stage cap, so XP accrues at your CURRENT speed — no future-grade speedups. Slower than the ungated 'Target reached in'.": {
+  "de": "Benötigter Überlauf fürs Ziel im Anzeigeformat des Spiels (EP seit Beginn des letzten Halbschritts ÷ dessen Gesamt-EP) und die Zeit zum Ansparen. Während des Zeittors stehst du am Stufen-Limit, EP läuft mit AKTUELLER Geschwindigkeit — ohne die Beschleunigung späterer Grade. Langsamer als das ungegatete „Ziel-Bühne erreicht in“.",
+  "es": "Exceso necesario para el objetivo en el formato del juego (EXP desde el inicio del último medio paso ÷ su total) y el tiempo para reservarlo. Durante la puerta permaneces en el tope de la etapa, la EXP avanza a tu velocidad ACTUAL — sin las mejoras de rangos futuros. Más lento que «Etapa objetivo alcanzada en» sin puerta.",
+  "ru": "Необходимый избыток для цели в игровом формате (опыт с начала последней половины ÷ её общий объём) и время его накопления. Во время врат вы стоите на пределе стадии, опыт идёт с ТЕКУЩЕЙ скоростью — без ускорений будущих ступеней. Медленнее, чем «Целевая стадия через» без врат.",
+  "zh": "达到目标所需的溢出百分比（按游戏显示方式：自最后半步开始累计的经验 ÷ 该半步总量）及预存所需时间。被时间之门限制时停在境界上限，经验按当前速度累积——没有未来阶的加速。比无门的“达到目标境界还需”更慢。"
+ },
+ "Own": {
+  "de": "Besitzen",
+  "es": "Obtener",
+  "ru": "Получить",
+  "zh": "获得"
+ },
+ "Paste a build code to import": {
+  "de": "Build-Code zum Import einfügen",
+  "es": "Pega un código de build para importar",
+  "ru": "Вставьте код билда для импорта",
+  "zh": "粘贴配置代码以导入"
+ },
+ "Pearl EXP per 10 energy": {
+  "de": "Perlen-EXP pro 10 Energie",
+  "es": "EXP de perla por 10 de energía",
+  "ru": "Опыт жемчужины за 10 энергии",
+  "zh": "逆尘珠每10能量经验"
+ },
+ "Pearl XP / day": {
+  "de": "Perlen-EXP / Tag",
+  "es": "EXP de la perla / día",
+  "ru": "Опыт от жемчужины в день",
+  "zh": "每日逆尘珠修为"
+ },
+ "Perfection": {
+  "de": "Perfektion",
+  "es": "Perfección",
+  "ru": "Совершенство",
+  "zh": "大乘"
+ },
+ "Pet": {
+  "de": "Haustier",
+  "es": "Mascota",
+  "ru": "Питомец",
+  "zh": "灵宠"
+ },
+ "Pet planner": {
+  "de": "Haustier-Planer",
+  "es": "Planificador de mascotas",
+  "ru": "Планировщик питомцев",
+  "zh": "灵宠规划"
+ },
+ "Pet realm": {
+  "de": "Haustier-Stufe",
+  "es": "Reino de la mascota",
+  "ru": "Царство питомца",
+  "zh": "灵宠境界"
+ },
+ "Pets": {
+  "de": "Haustiere",
+  "es": "Mascotas",
+  "ru": "Питомцы",
+  "zh": "灵宠"
+ },
+ "Pets owned": {
+  "de": "Vorhandene Haustiere",
+  "es": "Mascotas en posesión",
+  "ru": "Питомцы в наличии",
+  "zh": "拥有的灵宠"
+ },
+ "Pill XP / day": {
+  "de": "Pillen-EXP / Tag",
+  "es": "EXP de píldoras / día",
+  "ru": "Опыт от пилюль в день",
+  "zh": "每日丹药修为"
+ },
+ "Pill effect total": {
+  "de": "Pilleneffekt gesamt",
+  "es": "Efecto de píldora total",
+  "ru": "Эффект пилюль всего",
+  "zh": "丹药效果合计"
+ },
+ "Pill rank": {
+  "de": "Pillenrang",
+  "es": "Rango de píldora",
+  "ru": "Ранг пилюли",
+  "zh": "丹药品阶"
+ },
+ "Pill-effect source": {
+  "de": "Quelle des Pilleneffekts",
+  "es": "Fuente de efecto de píldora",
+  "ru": "Источник эффекта пилюль",
+  "zh": "丹药效果来源"
+ },
+ "Pin as A": {
+  "de": "Als A anheften",
+  "es": "Fijar como A",
+  "ru": "Закрепить как A",
+  "zh": "固定为A"
+ },
+ "Pinned A": {
+  "de": "Angeheftet A",
+  "es": "Fijado A",
+  "ru": "Закреплено A",
+  "zh": "已固定A"
+ },
+ "Plan — level or learn next": {
+  "de": "Plan — als Nächstes leveln oder lernen",
+  "es": "Plan — subir o aprender ahora",
+  "ru": "План — что качать или изучать дальше",
+  "zh": "计划——接下来升级或学习"
+ },
+ "Prestock for target (overcap)": {
+  "de": "Vorrat fürs Ziel (Überlauf)",
+  "es": "Reserva para el objetivo (exceso)",
+  "ru": "Запас до цели (избыток)",
+  "zh": "目标预存（溢出）"
+ },
+ "Profile name:": {
+  "de": "Profilname:",
+  "es": "Nombre del perfil:",
+  "ru": "Имя профиля:",
+  "zh": "配置名称："
+ },
+ "Profile:": {
+  "de": "Profil:",
+  "es": "Perfil:",
+  "ru": "Профиль:",
+  "zh": "配置："
+ },
+ "Purple": {
+  "de": "Lila",
+  "es": "Morada",
+  "ru": "Фиолетовая",
+  "zh": "紫"
+ },
+ "Purple (Epic)": {
+  "de": "Lila (Epos)",
+  "es": "Morada (épica)",
+  "ru": "Фиолетовая (эпич.)",
+  "zh": "紫色丹"
+ },
+ "Quality": {
+  "de": "Qualität",
+  "es": "Calidad",
+  "ru": "Качество",
+  "zh": "品质"
+ },
+ "Quality level": {
+  "de": "Qualitätsstufe",
+  "es": "Nivel de calidad",
+  "ru": "Уровень качества",
+  "zh": "品质等级"
+ },
+ "RID copied": {
+  "de": "RID kopiert",
+  "es": "RID copiado",
+  "ru": "RID скопирован",
+  "zh": "RID已复制"
+ },
+ "Random draws — worth pulling for": {
+  "de": "Zufallsziehungen — wofür sich Ziehen lohnt",
+  "es": "Sorteos aleatorios — por qué vale la pena tirar",
+  "ru": "Случайные розыгрыши — ради чего стоит крутить",
+  "zh": "随机抽取——值得抽的目标"
+ },
+ "Rank again": {
+  "de": "Neu berechnen",
+  "es": "Recalcular",
+  "ru": "Пересчитать",
+  "zh": "重新排序"
+ },
+ "Ranking: days to finish the current Stage.": {
+  "de": "Reihung: Tage bis zum Ende der aktuellen Stufe.",
+  "es": "Clasificación: días para terminar la Etapa actual.",
+  "ru": "Ранжирование: дни до конца текущей Стадии.",
+  "zh": "排序依据：完成当前阶段的天数。"
+ },
+ "Ranking: days until your target Stage.": {
+  "de": "Reihung: Tage bis zur Ziel-Stufe.",
+  "es": "Clasificación: días hasta tu Etapa objetivo.",
+  "ru": "Ранжирование: дни до целевой Стадии.",
+  "zh": "排序依据：距目标阶段的天数。"
+ },
+ "Rare": {
+  "de": "Selten",
+  "es": "Raro",
+  "ru": "Редк.",
+  "zh": "蓝色"
+ },
+ "Rare (Blue) / day": {
+  "de": "Selten (Blau) / Tag",
+  "es": "Raro (Azul) / día",
+  "ru": "Редк. (синие) / день",
+  "zh": "蓝色（蓝）/ 天"
+ },
+ "Rare (Blue) used / day": {
+  "de": "Selten (Blau) pro Tag",
+  "es": "Raras (azules) al día",
+  "ru": "Редк. (синих) в день",
+  "zh": "每日使用蓝色丹药"
+ },
+ "Rare essences owned": {
+  "de": "Vorhandene seltene Essenzen",
+  "es": "Esencias raras en posesión",
+  "ru": "Редкие эссенции в наличии",
+  "zh": "拥有的稀有精华"
+ },
+ "Rarity": {
+  "de": "Seltenheit",
+  "es": "Rareza",
+  "ru": "Редкость",
+  "zh": "稀有度"
+ },
+ "Record what you own once; fields with a shelf chip can then fill themselves.": {
+  "de": "Erfasse deinen Besitz einmal; Felder mit Regal-Chip können sich dann selbst ausfüllen.",
+  "es": "Registra lo que posees una vez; los campos con chip de estante podrán rellenarse solos.",
+  "ru": "Запишите то, чем владеете, один раз; поля с меткой полки смогут заполняться сами.",
+  "zh": "把你拥有的内容记录一次；带书架标记的字段即可自动填充。"
+ },
+ "Record what you own once; fields with a shelf chip can then fill themselves. Entries marked * carry amounts that are not exactly established.": {
+  "de": "Einmal eintragen, was Sie besitzen; Felder mit Regal-Chip füllen sich dann selbst. Mit * markierte Einträge haben nicht exakt belegte Werte.",
+  "es": "Registra una vez lo que posees; los campos con chip del estante podrán rellenarse solos. Las entradas con * tienen cantidades no establecidas con exactitud.",
+  "ru": "Отметьте один раз, чем вы владеете; поля с меткой полки смогут заполняться сами. Записи со * содержат не до конца установленные величины.",
+  "zh": "只需登记一次你拥有的内容；带书架标记的输入栏即可自动填写。带 * 的条目数值尚未完全确定。"
+ },
+ "Reference": {
+  "de": "Referenz",
+  "es": "Referencia",
+  "ru": "Справка",
+  "zh": "参考"
+ },
+ "Reset": {
+  "de": "Zurücksetzen",
+  "es": "Restablecer",
+  "ru": "Сбросить",
+  "zh": "重置"
+ },
+ "Reset in (h)": {
+  "de": "Reset in (h)",
+  "es": "Reinicio en (h)",
+  "ru": "Сброс через (ч)",
+  "zh": "距刷新（小时）"
+ },
+ "Respira": {
+  "de": "Atmung",
+  "es": "Inhala",
+  "ru": "Дыхание ци",
+  "zh": "吐纳"
+ },
+ "Respira Effect books": {
+  "de": "Atmungseffekt-Bücher",
+  "es": "Libros de efecto de Inhala",
+  "ru": "Книги эффекта дыхания ци",
+  "zh": "吐纳效果典籍"
+ },
+ "Respira Effect books (%)": {
+  "de": "Atmungseffekt-Bücher (%)",
+  "es": "Libros de efecto de Inhala (%)",
+  "ru": "Книги эффекта дыхания ци (%)",
+  "zh": "吐纳效果典籍 (%)"
+ },
+ "Respira XP / day": {
+  "de": "Atmungs-EXP / Tag",
+  "es": "EXP de Inhala / día",
+  "ru": "Опыт дыхания ци в день",
+  "zh": "每日吐纳修为"
+ },
+ "Respira attempts / day": {
+  "de": "Atmungsversuche / Tag",
+  "es": "Intentos de Inhala / día",
+  "ru": "Попытки дыхания ци / день",
+  "zh": "每日吐纳次数"
+ },
+ "Respira sources": {
+  "de": "Atmungsquellen",
+  "es": "Fuentes de Inhala",
+  "ru": "Источники дыхания ци",
+  "zh": "吐纳来源"
+ },
+ "Results (current)": {
+  "de": "Ergebnisse (aktuell)",
+  "es": "Resultados (actuales)",
+  "ru": "Результаты (текущие)",
+  "zh": "结果（当前）"
+ },
+ "Search the Vault…": {
+  "de": "Tresor durchsuchen…",
+  "es": "Buscar en la Bóveda…",
+  "ru": "Поиск по Хранилищу…",
+  "zh": "搜索宝库…"
+ },
+ "Select a valid stage / phase / grade.": {
+  "de": "Wähle gültige Bühne / Phase / Grad.",
+  "es": "Selecciona una etapa / fase / rango válidos.",
+  "ru": "Выберите корректные стадию / половину / ступень.",
+  "zh": "请选择有效的境界 / 半步 / 小境界。"
+ },
+ "Server #1 Stage (Strive)": {
+  "de": "Bühne des Server-Ersten (Streben)",
+  "es": "Etapa del n.º 1 del servidor (Esfuerzo)",
+  "ru": "Стадия №1 сервера (Стремление)",
+  "zh": "全服第一期（奋起）"
+ },
+ "Server #1's Stage (Strive)": {
+  "de": "Bühne der Server-Nr. 1 (Streben)",
+  "es": "Etapa del n.º 1 del servidor (Esfuerzo)",
+  "ru": "Стадия №1 сервера (Стремление)",
+  "zh": "服务器第一名的境界（奋起）"
+ },
+ "Server age changes how Strive is computed. Mature servers (world level 30+, the common case) use finer level-gap tiers plus a realm-gap bonus (cap ~120%); young servers use the plain realm-gap table (cap 70%). Only used when Server #1's Stage is set.": {
+  "de": "Das Serveralter ändert die Streben-Berechnung. Reife Server (Weltstufe 30+, der Normalfall) nutzen feinere Stufenabstands-Staffeln plus einen Reichsabstands-Bonus (Obergrenze ~120%); junge Server die einfache Reichsabstands-Tabelle (Obergrenze 70%). Wird nur genutzt, wenn die Bühne der Server-Nr. 1 gesetzt ist.",
+  "es": "La edad del servidor cambia cómo se calcula el Esfuerzo. Los servidores maduros (nivel de mundo 30+, el caso habitual) usan tramos más finos de diferencia de nivel más un bono por diferencia de reino (tope ~120%); los servidores jóvenes usan la tabla simple de diferencia de reino (tope 70%). Solo se usa si se fija la Etapa del n.º 1 del servidor.",
+  "ru": "Возраст сервера влияет на расчёт Стремления. Зрелые серверы (уровень мира 30+, обычный случай) используют более точные уровневые ступени плюс бонус за разницу царств (предел ~120%); молодые серверы — простую таблицу разницы царств (предел 70%). Учитывается только если задана стадия №1 сервера.",
+  "zh": "服务器年龄会影响奋起的计算方式。成熟服务器（世界等级30+，常见情况）使用更细的等级差档位加境界差加成（上限约120%）；新服务器使用简单的境界差表（上限70%）。仅在设置了服务器第一名的境界时生效。"
+ },
+ "Set each book's tier once; the bonuses it has unlocked flow to the calculator on their own. Dots show the book's chapter bonuses: filled ones are active at your tier, and colored dots mark the cultivation chapters — pill, Respira and abode-aura bonuses worth working toward.": {
+  "de": "Lege die Stufe jedes Buchs einmal fest; die freigeschalteten Boni fließen von selbst in den Rechner. Punkte zeigen die Kapitelboni des Buchs: gefüllte sind auf deiner Stufe aktiv, und farbige Punkte markieren die Kultivierungskapitel — Pillen-, Atmungs- und Wohnsitz-Aura-Boni, auf die es sich hinzuarbeiten lohnt.",
+  "es": "Fija el nivel de cada libro una sola vez; los bonos desbloqueados llegan solos a la calculadora. Los puntos muestran los bonos por capítulo del libro: los rellenos están activos en tu nivel, y los puntos de color marcan los capítulos de cultivo — bonos de píldoras, Inhala y aura de la morada por los que vale la pena avanzar.",
+  "ru": "Задайте тир каждой книги один раз; открытые ею бонусы сами попадут в калькулятор. Точки показывают бонусы глав книги: закрашенные активны на вашем тире, а цветные отмечают главы культивации — бонусы пилюль, дыхания ци и ауры обители, к которым стоит стремиться.",
+  "zh": "每本书的品阶只需设置一次；已解锁的加成会自动进入计算器。圆点表示书的章节加成：实心的在你当前品阶已生效，彩色圆点标记修炼相关章节——丹药、吐纳和洞府灵气加成，值得优先追求。"
+ },
+ "Set every book on this shelf back to not learned.": {
+  "de": "Setzt jedes Buch in diesem Regal auf „nicht erlernt“ zurück.",
+  "es": "Devuelve todos los libros de este estante a «no aprendido».",
+  "ru": "Вернуть всем книгам на этой полке статус «не изучено».",
+  "zh": "将此书架上所有书恢复为未学习。"
+ },
+ "Set every book on this shelf to its final tier.": {
+  "de": "Setzt jedes Buch in diesem Regal auf die letzte Stufe.",
+  "es": "Pone todos los libros de este estante en su nivel final.",
+  "ru": "Установить всем книгам на этой полке последний тир.",
+  "zh": "将此书架上所有书设为最终品阶。"
+ },
+ "Share build": {
+  "de": "Build teilen",
+  "es": "Compartir build",
+  "ru": "Поделиться билдом",
+  "zh": "分享配置"
+ },
+ "Share of your effective daily XP that comes from flat sources (pills + Respira + elixirs), and the Aura Gem's speed bonus on cultivation. Flat XP does not scale with grade EXP, so a high share means slower progress at higher grades than raw speed suggests.": {
+  "de": "Anteil der effektiven Tages-EXP aus fixen Quellen (Pillen + Atmung + Elixiere) und der Geschwindigkeitsbonus des Aura-Juwels auf die Kultivierung. Fixe EXP skalieren nicht mit den Stufen-EXP; ein hoher Anteil bedeutet auf höheren Stufen langsameren Fortschritt, als die reine Geschwindigkeit nahelegt.",
+  "es": "Parte de tu EXP diaria efectiva que proviene de fuentes fijas (píldoras + Inhala + elixires), y el bono de velocidad de la gema de aura a la cultivación. La EXP fija no escala con la EXP de los grados: una cuota alta implica un progreso más lento en grados altos de lo que sugiere la velocidad.",
+  "ru": "Доля эффективного дневного опыта из фиксированных источников (пилюли + дыхание ци + эликсиры) и бонус скорости самоцвета ауры к совершенствованию. Фиксированный опыт не растёт с опытом ступеней, поэтому высокая доля означает более медленный прогресс на высоких ступенях, чем предполагает чистая скорость.",
+  "zh": "有效每日修为中来自固定来源（丹药 + 吐纳 + 灵药）的占比，以及纳灵石对修炼速度的加成。固定修为不随境界修为增长，占比越高，高境界的实际进度就越慢于速度所示。"
+ },
+ "Share of your effective daily XP that comes from flat sources (pills + Respira), and the Aura Gem's speed bonus on cultivation. Flat XP does not scale with grade EXP, so a high share means slower progress at higher grades than raw speed suggests.": {
+  "de": "Anteil deiner effektiven Tages-EXP aus Fixquellen (Pillen + Atmung) und der Tempobonus des Aura-Juwels auf die Kultivierung. Fix-EXP skaliert nicht mit der Grad-EXP; ein hoher Anteil bedeutet also langsameren Fortschritt in höheren Graden, als das reine Tempo vermuten lässt.",
+  "es": "Parte de tu EXP diaria efectiva que viene de fuentes fijas (píldoras + Inhala) y el bono de velocidad de la Gema de aura sobre el cultivo. La EXP fija no escala con la EXP del rango, así que una cuota alta implica un progreso más lento en rangos altos de lo que sugiere la velocidad bruta.",
+  "ru": "Доля эффективного дневного опыта из фиксированных источников (пилюли + дыхание ци) и бонус скорости самоцвета ауры к совершенствованию. Фиксированный опыт не растёт с опытом ступеней, поэтому высокая доля означает более медленный прогресс на высоких ступенях, чем предполагает чистая скорость.",
+  "zh": "有效每日修为中来自固定来源（丹药+吐纳）的占比，以及纳灵石对修炼的速度加成。固定修为不随小境界所需修为增长，占比越高，高境界的实际进度就越慢于纯速度的预期。"
+ },
+ "Shared daily attempt limit for all cultivation pills (vase red pills are exempt).": {
+  "de": "Geteiltes tägliches Versuchslimit für alle Kultivierungspillen (rote Vasen-Pillen ausgenommen).",
+  "es": "Límite diario compartido de intentos para todas las píldoras de cultivo (las píldoras rojas del jarrón están exentas).",
+  "ru": "Общий дневной лимит попыток для всех пилюль дао (красные пилюли из вазы не считаются).",
+  "zh": "所有道行丹共享的每日次数上限（净瓶红丹不计入）。"
+ },
+ "Shelf-managed. Click to edit manually.": {
+  "de": "Vom Regal verwaltet. Klicken, um manuell zu bearbeiten.",
+  "es": "Gestionado por el estante. Haz clic para editarlo a mano.",
+  "ru": "Заполняется полкой. Нажмите, чтобы редактировать вручную.",
+  "zh": "由书架管理。点击改为手动编辑。"
+ },
+ "Site link copied": {
+  "de": "Seitenlink kopiert",
+  "es": "Enlace del sitio copiado",
+  "ru": "Ссылка на сайт скопирована",
+  "zh": "网站链接已复制"
+ },
+ "Skin": {
+  "de": "Haut",
+  "es": "Apariencia",
+  "ru": "Облик",
+  "zh": "装扮"
+ },
+ "Some owned sources have unrecorded amounts.": {
+  "de": "Bei einigen Quellen ist die Höhe noch nicht erfasst.",
+  "es": "Algunas fuentes que posees tienen cantidades sin registrar.",
+  "ru": "У некоторых источников величина ещё не записана.",
+  "zh": "部分已拥有的来源数值尚未记录。"
+ },
+ "Source": {
+  "de": "Quelle",
+  "es": "Fuente",
+  "ru": "Источник",
+  "zh": "来源"
+ },
+ "Sources": {
+  "de": "Quellen",
+  "es": "Fuentes",
+  "ru": "Источники",
+  "zh": "来源"
+ },
+ "Sources…": {
+  "de": "Quellen…",
+  "es": "Fuentes…",
+  "ru": "Источники…",
+  "zh": "来源…"
+ },
+ "Stage": {
+  "de": "Bühne",
+  "es": "Etapa",
+  "ru": "Стадия",
+  "zh": "期"
+ },
+ "Stage breakthrough in": {
+  "de": "Bühnen-Durchbruch in",
+  "es": "Avance de Etapa en",
+  "ru": "Переход стадии через",
+  "zh": "境界突破还需"
+ },
+ "Star": {
+  "de": "Stern",
+  "es": "Estrella",
+  "ru": "Звезда",
+  "zh": "星级"
+ },
+ "Star Mark": {
+  "de": "Stern Mark",
+  "es": "Marca Estelar",
+  "ru": "Звездная метка",
+  "zh": "星痕"
+ },
+ "Star Mark: Blue (+ratio)": {
+  "de": "Stern Mark: Blau (+Anteil)",
+  "es": "Marca Estelar: Azul (+proporción)",
+  "ru": "Звездная метка: синяя (+доля)",
+  "zh": "星痕：蓝（+比例）"
+ },
+ "Star Mark: Gold (+ratio)": {
+  "de": "Stern Mark: Gold (+Anteil)",
+  "es": "Marca Estelar: Oro (+proporción)",
+  "ru": "Звездная метка: золотая (+доля)",
+  "zh": "星痕：金（+比例）"
+ },
+ "Star Mark: Purple (+ratio)": {
+  "de": "Stern Mark: Lila (+Anteil)",
+  "es": "Marca Estelar: Morada (+proporción)",
+  "ru": "Звездная метка: фиолетовая (+доля)",
+  "zh": "星痕：紫（+比例）"
+ },
+ "Star Marks (+XP ratio)": {
+  "de": "Stern-Marken (+EXP-Verhältnis)",
+  "es": "Marcas Estelares (+EXP, proporción)",
+  "ru": "Звездные метки (+опыт, доля)",
+  "zh": "星痕（+修为比例）"
+ },
+ "Starsea Vase": {
+  "de": "Starsea-Vase",
+  "es": "Jarrón del Mar Estelar",
+  "ru": "Ваза астроморья",
+  "zh": "星海瓶"
+ },
+ "Strive": {
+  "de": "Streben",
+  "es": "Esfuerzo",
+  "ru": "Стремление",
+  "zh": "奋起"
+ },
+ "Strive above 120% — normal in later realms (overcap); later cap tables not modeled.": {
+  "de": "Streben über 120% — in späteren Reichen normal (Overcap); spätere Grenztabellen nicht modelliert.",
+  "es": "Esfuerzo sobre 120% — normal en reinos tardíos (sobre el tope); tablas de topes tardías no modeladas.",
+  "ru": "Стремление выше 120% — нормально в поздних мирах (сверх лимита); поздние таблицы лимитов не смоделированы.",
+  "zh": "奋起超过120%——在后期境界属正常（超上限）；后期上限表未建模。"
+ },
+ "Support development by gifting in-game vouchers.": {
+  "de": "Unterstütze die Entwicklung mit In-Game-Gutscheinen.",
+  "es": "Apoya el desarrollo regalando cupones del juego.",
+  "ru": "Поддержите разработку, подарив внутриигровые ваучеры.",
+  "zh": "通过赠送游戏内代金券支持开发。"
+ },
+ "Support the calculator": {
+  "de": "Den Rechner unterstützen",
+  "es": "Apoyar la calculadora",
+  "ru": "Поддержать калькулятор",
+  "zh": "支持本计算器"
+ },
+ "Supreme": {
+  "de": "Höchste",
+  "es": "Supremo",
+  "ru": "Высш.",
+  "zh": "至尊"
+ },
+ "T": {
+  "de": "T",
+  "es": "N",
+  "ru": "Т",
+  "zh": "阶"
+ },
+ "Target Stage": {
+  "de": "Ziel-Bühne",
+  "es": "Etapa objetivo",
+  "ru": "Целевая стадия",
+  "zh": "目标境界"
+ },
+ "Target Stage reached in": {
+  "de": "Ziel-Bühne erreicht in",
+  "es": "Etapa objetivo alcanzada en",
+  "ru": "Целевая стадия через",
+  "zh": "达到目标境界还需"
+ },
+ "Target grade": {
+  "de": "Ziel-Grad",
+  "es": "Rango objetivo",
+  "ru": "Целевая ступень",
+  "zh": "目标阶"
+ },
+ "Target half-step": {
+  "de": "Ziel-Halbschritt",
+  "es": "Medio paso objetivo",
+  "ru": "Целевая половина",
+  "zh": "目标半步"
+ },
+ "Target must be after your current grade.": {
+  "de": "Das Ziel muss nach dem aktuellen Grad liegen.",
+  "es": "El objetivo debe estar después del rango actual.",
+  "ru": "Цель должна быть после текущей ступени.",
+  "zh": "目标必须在当前阶之后。"
+ },
+ "Target reached in": {
+  "de": "Ziel erreicht in",
+  "es": "Objetivo alcanzado en",
+  "ru": "Цель будет достигнута через",
+  "zh": "达成目标还需"
+ },
+ "Technique books": {
+  "de": "Technikbücher",
+  "es": "Libros de técnica",
+  "ru": "Книги техник",
+  "zh": "功法典籍"
+ },
+ "The Guide's Pets page explains which pet to pick and why.": {
+  "de": "Die Guide-Seite „Haustiere“ erklärt, welches Haustier man wählt und warum.",
+  "es": "La página «Mascotas» de la guía explica qué mascota elegir y por qué.",
+  "ru": "Страница «Питомцы» в руководстве объясняет, какого питомца выбрать и почему.",
+  "zh": "指南中的灵宠页面解释了选哪只灵宠及原因。"
+ },
+ "The base (non-crit) Cultivation EXP from one Respira attempt — see the note below the field.": {
+  "de": "Die Basis-Anbau-EXP (ohne Krit) eines Atmungsversuchs — siehe Hinweis unter dem Feld.",
+  "es": "La EXP de Cultivo base (sin crítico) de un intento de Inhala — mira la nota bajo el campo.",
+  "ru": "Базовый (без крита) опыт дао за одну попытку дыхания ци — см. примечание под полем.",
+  "zh": "一次吐纳的基础（非暴击）境界修为 — 见输入框下方说明。"
+ },
+ "The conditional blessing tier (+20 percentage points) that the game removes at Voidbreak Middle. Kept separate so projections past Voidbreak Middle drop it.": {
+  "de": "Die bedingte Segensstufe (+20 Prozentpunkte), die das Spiel bei Leerenbruch (Mitte) entfernt. Separat geführt, damit Prognosen über diesen Punkt hinaus sie fallen lassen.",
+  "es": "El nivel condicional de la bendición (+20 puntos porcentuales) que el juego retira en Ruptura del Vacío (Intermedio). Se introduce aparte para que las proyecciones más allá de ese punto lo descarten.",
+  "ru": "Условный уровень благословения (+20 процентных пунктов), который игра убирает на Преодолении (Средняя). Вводится отдельно, чтобы прогнозы дальше этой точки его не учитывали.",
+  "zh": "条件福泽（+20 个百分点），到万象破虚中期时被移除。单独填写，以便超过该点的预测不再计入。"
+ },
+ "The in-game Cultivation Speed: XP gained per 8-second Cosmoapsis tick.": {
+  "de": "Die Anbaugeschwindigkeit im Spiel: EXP pro 8-Sekunden-Cosmoapsis-Tick.",
+  "es": "La velocidad de cultivo del juego: EXP ganada por cada tic de Cosmoapsis de 8 segundos.",
+  "ru": "Внутриигровая скорость совершенствования: опыт за 8-секундный такт (фаза инь-ян).",
+  "zh": "游戏内修炼速度：每8秒一个周天获得的修为。"
+ },
+ "Theme": {
+  "de": "Design",
+  "es": "Tema",
+  "ru": "Тема",
+  "zh": "主题"
+ },
+ "Theme:": {
+  "de": "Design:",
+  "es": "Tema:",
+  "ru": "Тема:",
+  "zh": "主题："
+ },
+ "This app is free and always will be. If it has been useful, you can support development with a donation — sent as an in-game voucher gift.": {
+  "de": "Diese App ist kostenlos und bleibt es. Wenn sie dir geholfen hat, kannst du die Entwicklung mit einer Spende unterstützen — zugestellt als Gutschein-Geschenk im Spiel.",
+  "es": "Esta aplicación es gratuita y siempre lo será. Si te ha resultado útil, puedes apoyar el desarrollo con una donación — se envía como un vale de regalo dentro del juego.",
+  "ru": "Это приложение бесплатно и всегда будет бесплатным. Если оно было полезным, вы можете поддержать разработку взносом — он отправляется как подарочный ваучер в игре.",
+  "zh": "本应用永久免费。如果它对你有帮助，欢迎通过捐赠支持开发——捐赠将以游戏内代金券礼物的形式送达。"
+ },
+ "Tier ": {
+  "de": "Stufe ",
+  "es": "Nivel ",
+  "ru": "Уровень ",
+  "zh": "第"
+ },
+ "Time saved": {
+  "de": "Zeitersparnis",
+  "es": "Tiempo ahorrado",
+  "ru": "Экономия времени",
+  "zh": "节省时间"
+ },
+ "Timegate lifts in": {
+  "de": "Zeittor öffnet in",
+  "es": "La puerta temporal abre en",
+  "ru": "Врата времени откроются через",
+  "zh": "时间之门开启于"
+ },
+ "Timegate lifts in (days)": {
+  "de": "Zeittor öffnet in (Tage)",
+  "es": "La puerta temporal abre en (días)",
+  "ru": "Врата времени откроются через (дн.)",
+  "zh": "时间之门开启于（天）"
+ },
+ "Timereversal Pearl": {
+  "de": "Zeitumkehrperle",
+  "es": "Perla de Inversión Temporal",
+  "ru": "Жемчужина обращения времени",
+  "zh": "逆尘珠"
+ },
+ "Timereversal Pearl: EXP granted per 10 energy.": {
+  "de": "Zeitumkehrperle: EXP pro 10 Energie.",
+  "es": "Perla de Inversión Temporal: EXP otorgada por 10 de energía.",
+  "ru": "Жемчужина обращения времени: опыт за 10 энергии.",
+  "zh": "逆尘珠：每10能量获得的修为。"
+ },
+ "Total: {} %": {
+  "de": "Gesamt: {} %",
+  "es": "Total: {} %",
+  "ru": "Итого: {} %",
+  "zh": "合计：{} %"
+ },
+ "Track your books, curios and companions once; the bonuses flow to the calculator.": {
+  "de": "Erfasse Bücher, Kuriositäten und Gefährten einmal; die Boni fließen in den Rechner.",
+  "es": "Registra tus libros, curiosidades y compañeros una vez; los bonos llegan a la calculadora.",
+  "ru": "Запишите книги, диковинки и спутников один раз; бонусы сами попадут в калькулятор.",
+  "zh": "一次性记录你的功法、珍宝与道友，加成会自动进入计算器。"
+ },
+ "Transmog skin: Duplication consumes 10% less Energy": {
+  "de": "Skin: Vervielfältigung verbraucht 10% weniger Energie",
+  "es": "Apariencia: el Duplicado consume 10% menos de Energía",
+  "ru": "Облик: дублирование потребляет на 10% меньше энергии",
+  "zh": "装扮：增殖消耗能量-10%"
+ },
+ "Transmog skin: Timereversal Pearl Energy Cost -10%": {
+  "de": "Skin: Energiekosten der Zeitumkehrperle -10%",
+  "es": "Apariencia: Costo de Energía de la Perla de Inversión Temporal -10%",
+  "ru": "Облик: стоимость энергии жемчужины обращения времени -10%",
+  "zh": "装扮：逆尘珠消耗能量-10%"
+ },
+ "Transmog skin: refined pills give +8% Cultivation EXP": {
+  "de": "Skin: veredelte Pillen geben +8% Anbau-EXP",
+  "es": "Apariencia: las píldoras refinadas dan +8% de EXP de Cultivo",
+  "ru": "Облик: очищенные пилюли дают +8% опыта дао",
+  "zh": "装扮：炼化的丹药+8%境界修为"
+ },
+ "Treasury": {
+  "de": "Schatzkammer",
+  "es": "Tesorería",
+  "ru": "Сокровищница",
+  "zh": "珍宝阁"
+ },
+ "Uncommon": {
+  "de": "Ungewöhnlich",
+  "es": "Poco común",
+  "ru": "Необыч.",
+  "zh": "绿色"
+ },
+ "Universal": {
+  "de": "Universell",
+  "es": "Universales",
+  "ru": "Общие",
+  "zh": "通用"
+ },
+ "Up to date": {
+  "de": "Auf dem neuesten Stand",
+  "es": "Actualizado",
+  "ru": "У вас последняя версия",
+  "zh": "已是最新版本"
+ },
+ "Up to date (v{})": {
+  "de": "Auf dem neuesten Stand (v{})",
+  "es": "Actualizado (v{})",
+  "ru": "У вас последняя версия (v{})",
+  "zh": "已是最新版本（v{}）"
+ },
+ "Update available": {
+  "de": "Update verfügbar",
+  "es": "Actualización disponible",
+  "ru": "Доступно обновление",
+  "zh": "有可用更新"
+ },
+ "Update available: v{}": {
+  "de": "Update verfügbar: v{}",
+  "es": "Actualización disponible: v{}",
+  "ru": "Доступно обновление: v{}",
+  "zh": "有可用更新：v{}"
+ },
+ "Update check failed": {
+  "de": "Update-Prüfung fehlgeschlagen",
+  "es": "Error al buscar actualizaciones",
+  "ru": "Не удалось проверить обновления",
+  "zh": "检查更新失败"
+ },
+ "Update check failed — are you online?": {
+  "de": "Updateprüfung fehlgeschlagen — sind Sie online?",
+  "es": "Error al buscar actualizaciones — ¿estás conectado?",
+  "ru": "Не удалось проверить обновления — есть ли подключение к сети?",
+  "zh": "检查更新失败——请检查网络连接"
+ },
+ "Upgrade level": {
+  "de": "Verbesserungsstufe",
+  "es": "Nivel de mejora",
+  "ru": "Уровень улучшения",
+  "zh": "升级等级"
+ },
+ "Vase input pill": {
+  "de": "Vasen-Eingabepille",
+  "es": "Píldora de entrada del jarrón",
+  "ru": "Входная пилюля вазы",
+  "zh": "净瓶投入丹药"
+ },
+ "Vault": {
+  "de": "Tresor",
+  "es": "Bóveda",
+  "ru": "Хранилище",
+  "zh": "宝库"
+ },
+ "View": {
+  "de": "Ansehen",
+  "es": "Ver",
+  "ru": "Просмотр",
+  "zh": "查看"
+ },
+ "Virtuoso": {
+  "de": "Virtuoso",
+  "es": "Virtuoso",
+  "ru": "Сотворение",
+  "zh": "练腑"
+ },
+ "Voidbreak": {
+  "de": "Leerenbruch",
+  "es": "Ruptura del Vacío",
+  "ru": "Преодоление",
+  "zh": "万象破虚"
+ },
+ "What to work on next, priced in days saved on your current projection. The plan lists steps you can simply go do; curios come from random draws, so those rank separately as what a lucky pull would be worth.": {
+  "de": "Woran als Nächstes arbeiten — bepreist in Tagen, die deine aktuelle Prognose spart. Der Plan listet Schritte, die du einfach angehen kannst; Kuriositäten kommen aus Zufallsziehungen und werden separat gereiht — als Wert eines Glückszugs.",
+  "es": "En qué trabajar ahora, valorado en días ahorrados sobre tu proyección actual. El plan lista pasos que puedes simplemente ir a hacer; las curiosidades salen de sorteos aleatorios, así que se clasifican aparte — como el valor de una tirada afortunada.",
+  "ru": "Что качать дальше — в днях, сэкономленных на текущем прогнозе. В плане — шаги, которые можно просто пойти и сделать; диковинки выпадают из случайных розыгрышей, поэтому они ранжируются отдельно — как ценность удачной выпадки.",
+  "zh": "接下来该练什么——以当前推算节省的天数计价。计划列出可以直接去做的步骤；珍宝来自随机抽取，因此单独排序——按抽中一件的价值计算。"
+ },
+ "Whether your stocked XP reaches the target before the timegate lifts.": {
+  "de": "Ob dein EP-Vorrat das Ziel erreicht, bevor das Zeittor öffnet.",
+  "es": "Si tu EXP reservada alcanza el objetivo antes de que abra la puerta temporal.",
+  "ru": "Достигнет ли ваш запас опыта цели до открытия врат времени.",
+  "zh": "你的预存经验能否在时间之门开启前达到目标。"
+ },
+ "Which pill quality you refine into red pills. Refines are discounted by input quality (Epic -5%, Legendary -20% Energy), so feeding gold pills yields extra red pills over time. Base cost also depends on pill rank (75-100 energy).": {
+  "de": "Welche Pillenqualität du zu roten Pillen veredelst. Die Veredelung wird mit der Eingabequalität günstiger (Epos -5%, Legendär -20% Energie), Goldpillen bringen also mit der Zeit mehr rote Pillen. Die Basiskosten hängen zudem vom Pillenrang ab (75-100 Energie).",
+  "es": "Qué calidad de píldora refinas en píldoras rojas. El refinado se abarata según la calidad de entrada (épica -5%, legendaria -20% de Energía), así que alimentar píldoras doradas produce más rojas con el tiempo. El costo base también depende del rango de la píldora (75-100 de energía).",
+  "ru": "Какое качество пилюль вы очищаете в красные. Очистка дешевеет с качеством входа (эпич. -5%, легендарн. -20% энергии), поэтому золотые пилюли со временем дают больше красных. Базовая стоимость также зависит от ранга пилюли (75-100 энергии).",
+  "zh": "你炼化成红丹的丹药品质。投入品质越高炼化越省能量（紫色-5%，橙色-20%），长期来看投入金丹能多出红丹。基础消耗还取决于丹药品阶（75-100能量）。"
+ },
+ "Wholeness": {
+  "de": "Ganzheit",
+  "es": "Plenitud",
+  "ru": "Слияние",
+  "zh": "合"
+ },
+ "Writes the Vault's totals into pill effect, attempts and Respira fields whenever the Vault changes.": {
+  "de": "Schreibt die Tresor-Summen bei jeder Änderung in die Felder für Pilleneffekt, Versuche und Respira.",
+  "es": "Escribe los totales de la Bóveda en los campos de efecto de píldora, intentos y Respira cada vez que cambia.",
+  "ru": "При каждом изменении Хранилища записывает его итоги в поля эффекта пилюль, попыток и респиры.",
+  "zh": "宝库变化时，自动把合计写入丹药效果、次数和吐纳字段。"
+ },
+ "XP elixirs / day": {
+  "de": "EXP-Elixiere / Tag",
+  "es": "Elixires de EXP / día",
+  "ru": "Эликсиров опыта / день",
+  "zh": "每日经验灵药"
+ },
+ "XP elixirs consumed per day.": {
+  "de": "Pro Tag verbrauchte EXP-Elixiere.",
+  "es": "Elixires de EXP consumidos al día.",
+  "ru": "Эликсиров опыта, используемых в день.",
+  "zh": "每日使用的经验灵药数量。"
+ },
+ "XP from fruits": {
+  "de": "EXP aus Früchten",
+  "es": "EXP de frutas",
+  "ru": "Опыт от фруктов",
+  "zh": "果实修为"
+ },
+ "Your Abode Aura as shown on the Cultivation Bonus screen. With Absorption Ratio entered, Cultivation Speed = Abode Aura × Absorption Ratio.": {
+  "de": "Deine Wohnsitz-Aura wie im Anbaubonus-Bildschirm angezeigt. Mit eingetragenem Absorptionsverhältnis gilt: Anbaugeschwindigkeit = Wohnsitz-Aura × Absorptionsverhältnis.",
+  "es": "Tu Aura de la morada tal como aparece en la pantalla de Bono de cultivo. Con la Relación de absorción introducida, velocidad de cultivo = Aura de la morada × Relación de absorción.",
+  "ru": "Аура обители, как показано на экране «Бонус совершенствования». Если введена эфф. поглощения, то скорость совершенствования = аура обители × эфф. поглощения.",
+  "zh": "修炼增幅界面显示的洞府灵气。填入吸收率后，修炼速度 = 洞府灵气 × 吸收率。"
+ },
+ "Your Absorption Ratio as a percent (e.g. 27.5). Shown below is the Stage's base for the selected Grade.": {
+  "de": "Dein Absorptionsverhältnis in Prozent (z. B. 27.5). Darunter steht die Basis der Bühne für den gewählten Grad.",
+  "es": "Tu Relación de absorción en porcentaje (p. ej. 27.5). Abajo se muestra la base de la Etapa para el Rango seleccionado.",
+  "ru": "Ваша эфф. поглощения в процентах (напр., 27.5). Ниже показана база стадии для выбранной ступени.",
+  "zh": "你的吸收率百分比（如27.5）。下方显示所选小境界的基础值。"
+ },
+ "Your daily Respira attempt limit as shown in-game (base + permanent bonus attempts). The base limit is 10/day. Leave out temporary event attempts.": {
+  "de": "Dein tägliches Atmungs-Versuchslimit wie im Spiel angezeigt (Basis + permanente Bonusversuche). Das Basislimit beträgt 10/Tag. Temporäre Event-Versuche weglassen.",
+  "es": "Tu límite diario de intentos de Inhala como aparece en el juego (base + intentos extra permanentes). El límite base es 10/día. No incluyas los intentos temporales de evento.",
+  "ru": "Ваш дневной лимит попыток дыхания ци, как показано в игре (базовые + постоянные бонусные попытки). Базовый лимит — 10 в день. Временные событийные попытки не учитывайте.",
+  "zh": "游戏内显示的每日吐纳次数上限（基础+永久加成次数）。基础上限为每天10次。不含临时活动次数。"
+ },
+ "Your in-game 'Cultivation Pill EXP Bonus' for this pill rarity (mainly from Constellation Altar Star Marks). Entered as a ratio: 0.10 = +10%.": {
+  "de": "Dein In-Game-EXP-Bonus für Kultivierungspillen dieser Seltenheit (v. a. von Sternbild-Altar-Stern-Marken). Als Verhältnis eingeben: 0.10 = +10%.",
+  "es": "Tu bono de EXP de píldoras de cultivo del juego para esta rareza (principalmente de las Marcas Estelares del Altar de constelaciones). Se introduce como proporción: 0.10 = +10%.",
+  "ru": "Ваш внутриигровой бонус опыта пилюль дао для этой редкости (в основном от звездных меток Алтаря созвездий). Вводится долей: 0.10 = +10%.",
+  "zh": "该品质丹药在游戏内的修为加成（主要来自星宿坛星痕）。按比例填写：0.10 = +10%。"
+ },
+ "Your total ACTIVE 'Respira Effect' percent from technique books. Only used by the Auto button: Base EXP = Stage base × (1 + this %).": {
+  "de": "Ihr gesamter AKTIVER 'Atmungseffekt'-Prozentsatz aus Technikbüchern. Nur vom Auto-Knopf verwendet: Basis-EXP = Stufenbasis × (1 + dieser %).",
+  "es": "Tu porcentaje ACTIVO total de 'efecto de Inhala' de los libros de técnica. Solo lo usa el botón Auto: EXP base = base de la etapa × (1 + este %).",
+  "ru": "Суммарный АКТИВНЫЙ процент «эффекта дыхания ци» из книг техник. Используется только кнопкой «Авто»: базовый опыт = база ступени × (1 + этот %).",
+  "zh": "功法典籍中当前生效的「吐纳效果」总百分比。仅供「自动」按钮使用：基础修为 = 境界基础值 ×（1 + 该百分比）。"
+ },
+ "attempts": {
+  "de": "Versuche",
+  "es": "intentos",
+  "ru": "попыток",
+  "zh": "次数"
+ },
+ "auto": {
+  "de": "auto",
+  "es": "auto",
+  "ru": "авто",
+  "zh": "自动"
+ },
+ "below base; Strive can't be negative": {
+  "de": "unter der Basis; Streben kann nicht negativ sein",
+  "es": "bajo la base; el Esfuerzo no puede ser negativo",
+  "ru": "ниже базы; Стремление не может быть отрицательным",
+  "zh": "低于基础值；奋起不能为负"
+ },
+ "best": {
+  "de": "best",
+  "es": "mejor",
+  "ru": "лучш.",
+  "zh": "最佳"
+ },
+ "info": {
+  "de": "Info",
+  "es": "info",
+  "ru": "справка",
+  "zh": "说明"
+ },
+ "lv": {
+  "de": "St",
+  "es": "nv",
+  "ru": "ур",
+  "zh": "级"
+ },
+ "over 120% cap (stale reading?)": {
+  "de": "über der 120%-Grenze (veralteter Wert?)",
+  "es": "sobre el tope de 120% (¿lectura obsoleta?)",
+  "ru": "выше лимита 120% (устаревшее значение?)",
+  "zh": "超过120%上限（数据过期？）"
+ },
+ "pill effect": {
+  "de": "Pilleneffekt",
+  "es": "efecto de píldora",
+  "ru": "эффект пилюль",
+  "zh": "丹药效果"
+ },
+ "pill input": {
+  "de": "Pillen-Einsatz",
+  "es": "entrada de píldoras",
+  "ru": "вход пилюль",
+  "zh": "投入丹药"
+ },
+ "pill limit": {
+  "de": "Pillenlimit",
+  "es": "límite de píldoras",
+  "ru": "лимит пилюль",
+  "zh": "丹药次数"
+ },
+ "shelf": {
+  "de": "Regal",
+  "es": "estante",
+  "ru": "полка",
+  "zh": "书架"
+ },
+ "short by {}": {
+  "de": "fehlen {}",
+  "es": "faltan {}",
+  "ru": "не хватает {}",
+  "zh": "还差 {}"
+ },
+ "source (e.g. technique book, curio)": {
+  "de": "Quelle (z. B. Technikbuch, Kuriosität)",
+  "es": "fuente (p. ej. libro de técnica, curiosidad)",
+  "ru": "источник (напр., книга техник, древность)",
+  "zh": "来源（如功法书、古宝）"
+ },
+ "speed": {
+  "de": "Tempo",
+  "es": "velocidad",
+  "ru": "скорость",
+  "zh": "速度"
+ },
+ "stocked {} early": {
+  "de": "{} vor dem Tor fertig",
+  "es": "reserva lista {} antes",
+  "ru": "запас готов за {} до врат",
+  "zh": "提前 {} 存满"
+ },
+ "varies": {
+  "de": "variiert",
+  "es": "varía",
+  "ru": "варьируется",
+  "zh": "不定"
+ },
+ "worst": {
+  "de": "schlechtest",
+  "es": "peor",
+  "ru": "худш.",
+  "zh": "最差"
+ },
+ "{}% of daily XP / +{}% speed": {
+  "de": "{}% der Tages-EXP / +{}% Tempo",
+  "es": "{}% de la EXP diaria / +{}% de velocidad",
+  "ru": "{}% дневного опыта / +{}% скорости",
+  "zh": "占每日修为{}% / 速度+{}%"
+ },
+ "← Back": {
+  "de": "← Zurück",
+  "es": "← Atrás",
+  "ru": "← Назад",
+  "zh": "← 返回"
+ },
+ "＋ Add source": {
+  "de": "＋ Quelle hinzufügen",
+  "es": "＋ Añadir fuente",
+  "ru": "＋ Добавить источник",
+  "zh": "＋ 添加来源"
+ },
+ "＋ From catalog": {
+  "de": "＋ Aus Katalog",
+  "es": "＋ Del catálogo",
+  "ru": "＋ Из каталога",
+  "zh": "＋ 从目录添加"
+ }
+}

@@ -74,3 +74,25 @@ class DataAssetList(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SharedTranslations(unittest.TestCase):
+    """Translations are one shared file (data/i18n.json) that both apps load
+    at runtime — so desktop and mobile can never drift. Guard the wiring:
+    neither platform may re-hardcode a translation table."""
+
+    def test_desktop_loads_from_the_shared_json(self):
+        from breakthrough_calc import i18n
+        shared = json.loads(read("data", "i18n.json"))
+        # every shared entry is reachable through the desktop table
+        for en, row in list(shared.items())[:50]:
+            for lang, val in row.items():
+                self.assertEqual(i18n.TRANSLATIONS.get(lang, {}).get(en), val)
+
+    def test_mobile_loads_the_shared_asset_not_a_literal(self):
+        dart = read("mobile", "lib", "i18n.dart")
+        self.assertIn("void loadTranslations(", dart)
+        self.assertNotIn("const Map<String, Map<String, String>> _t", dart)
+        main = read("mobile", "lib", "main.dart")
+        self.assertIn("assets/data/i18n.json", main)
+        self.assertIn("loadTranslations(", main)
