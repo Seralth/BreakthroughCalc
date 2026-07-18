@@ -22,8 +22,8 @@ void main() {
   test('slug maps preserve the pre-split order (link targets are durable)',
       () {
     expect(refSlugs, {
-      'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3, 'artifacts': 4,
-      'combat': 5, 'affixes': 6, 'systems': 7, 'advanced': 8,
+      'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3, 'curios': 4,
+      'artifacts': 5, 'combat': 6, 'affixes': 7, 'systems': 8, 'advanced': 9,
     });
     expect(guideSlugs, {
       'paths': 0, 'server': 1, 'routine': 2, 'novice': 3, 'virtuoso': 4,

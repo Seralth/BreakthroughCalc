@@ -20,6 +20,49 @@ typedef RefPageBuilder = Widget Function(
 /// [[source name, bonus summary], ...] for every Vault entry with an
 /// effect aimed at one of [wanted]'s target ids ({target: unit suffix}).
 /// Twin of docs.py _vault_bonus_rows — renders from the Vault's catalog.
+/// [[curio name, cultivation effect summary], ...] for cultivation-helping
+/// curios. Twin of docs._curio_bonus_rows. Sorted by name.
+List<List<String>> curioBonusRows(Map<String, dynamic> shelfCatalog) {
+  const cult = {
+    'pill_effect', 'pill_attempts', 'respira_attempts', 'respira_effect'
+  };
+  final rows = <List<String>>[];
+  for (final sRaw in (shelfCatalog['sources'] ?? []) as List) {
+    final s = sRaw as Map;
+    if (s['category'] != 'curio') continue;
+    final parts = <String>[];
+    for (final eRaw in (s['effects'] ?? []) as List) {
+      final e = eRaw as Map;
+      final tid = e['target'] as String?;
+      final note = (e['note'] as String?) ?? '';
+      if (tid == 'info') {
+        if (note.contains('Abode Aura') ||
+            note.contains('Aura Gem') ||
+            note.contains('Respira') ||
+            note.contains('Auxiliary')) {
+          parts.add(note.split(' (inside')[0].replaceAll(RegExp(r'\.$'), ''));
+        }
+        continue;
+      }
+      if (!cult.contains(tid)) continue;
+      if (e.containsKey('value_model')) {
+        final m = e['value_model'] as Map;
+        parts.add('Cultivation Pill Effect +${m['base']}% to '
+            '+${m['max_value']}% by star and upgrade');
+      } else if (e['value'] != null) {
+        parts.add(note.isEmpty
+            ? '+${fmtNum((e['value'] as num).toDouble())}'
+            : note.replaceAll(RegExp(r'\.$'), ''));
+      }
+    }
+    if (parts.isNotEmpty) {
+      rows.add([s['name'] as String, {for (final p in parts) p: 1}.keys.join('; ')]);
+    }
+  }
+  rows.sort((a, b) => a[0].compareTo(b[0]));
+  return rows;
+}
+
 List<List<String>> vaultBonusRows(
     Map<String, dynamic> shelfCatalog, Map<String, String> wanted) {
   final rows = <List<String>>[];
@@ -69,6 +112,7 @@ const List<RefSection> refSections = [
   RefSection('pills', 'Pills & Respira', _pillsPage),
   RefSection('elixirs', 'Elixirs & Stat Pills', _elixirsPage),
   RefSection('myrimon', 'Myrimon & Extractor', _myrimonPage),
+  RefSection('curios', 'Curios', _curiosPage),
   RefSection('artifacts', 'Artifacts & Gems', _artifactsPage),
   RefSection('combat', 'Combat & Gear', _combatPage),
   RefSection('affixes', 'Affixes', _affixesPage),
@@ -419,6 +463,46 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
     Text('Timegate penalty', style: h3),
     para('Fruits lose 50% of their EXP once the realm\'s timegate passes — eat '
         'the stockpile before the timegate.'),
+  ], footerText: _refFooterText);
+}
+
+Widget _curiosPage(BuildContext context, Engine engine, Map<String, dynamic> catalog) {
+  final h3 = Theme.of(context).textTheme.titleMedium;
+  Widget para(String s) => docPara(context, s);
+  Widget table(String title, List<String> headers,
+          List<List<String>> rows, [String? note]) =>
+      docTable(context, title, headers, rows, note);
+  return docPage(context, [
+    para('Curios (the Treasury half of the Vault) are passive relics. Most '
+        'give combat stats, but a handful help cultivation directly — pill '
+        'effect, Respira, and abode aura — and those are the ones worth '
+        'chasing for breakthrough speed.'),
+    Text('They come from random draws', style: h3),
+    para('You don\'t buy a specific curio. New curios and the shards that star '
+        'them up come from draws, so a particular curio landing is luck, not a '
+        'plan. That\'s why the Advisor lists curios separately as "worth '
+        'pulling for" rather than mixing them into the plannable steps — it '
+        'tells you which curio, if you drew it, would save the most time, '
+        'without pretending you can just go get it.'),
+    Text('Stars and upgrades', style: h3),
+    para('A curio\'s cultivation bonus grows two ways. Upgrade level raises '
+        'the base value in small steps; stars add a scalar on top (shown in '
+        'game as "Increases Curio Passive Stats"). Stars run 0 to 5 and then '
+        'Awaken. For a percentage cultivation bonus the two add in percentage '
+        'points — e.g. Yang Spirit Jade at 4 stars, upgrade 3 reads 3.2% (1.6 '
+        'from the upgrade + 1.6 from the star scalar). Record the star and '
+        'upgrade in the Vault and the pill / Respira fields fill themselves.'),
+    para('A few cultivation curios are Special — the Spirit Seal set, for '
+        'instance — and can\'t be starred or upgraded; they give one fixed '
+        'bonus.'),
+    table(
+      'Cultivation curios',
+      ['Curio', 'What it gives'],
+      curioBonusRows(catalog),
+      'Set stars and upgrade levels in the Vault\'s Treasury; only these '
+      'curios feed the calculator. Abode-aura curios are already inside your '
+      'entered Abode Aura reading — they\'re listed so you know which to keep.',
+    ),
   ], footerText: _refFooterText);
 }
 

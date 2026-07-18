@@ -54,6 +54,41 @@ def _vault_bonus_rows(shelf_catalog: dict, wanted: dict) -> list:
     return rows
 
 
+def _curio_bonus_rows(shelf_catalog: dict) -> list:
+    """[[curio name, cultivation effect summary], ...] for every curio that
+    helps cultivation (pill effect, Respira, abode aura, Aura Gem gains,
+    auxiliary path). Renders from the catalog so it can't drift. Sorted by
+    name."""
+    cult = {"pill_effect", "pill_attempts", "respira_attempts",
+            "respira_effect"}
+    rows = []
+    for s in (shelf_catalog or {}).get("sources", []):
+        if s.get("category") != "curio":
+            continue
+        parts = []
+        for e in s.get("effects", []):
+            tid = e.get("target")
+            note = e.get("note", "")
+            if tid == "info":
+                if "Abode Aura" in note or "Aura Gem" in note \
+                        or "Respira" in note or "Auxiliary" in note:
+                    parts.append(note.split(" (inside")[0].rstrip("."))
+                continue
+            if tid not in cult:
+                continue
+            if "value_model" in e:
+                m = e["value_model"]
+                parts.append(f'Cultivation Pill Effect '
+                             f'+{m["base"]:g}% to +{m["max_value"]:g}% '
+                             f'by star and upgrade')
+            elif e.get("value") is not None:
+                parts.append(note.rstrip(".") or f'+{e["value"]:g}')
+        if parts:
+            rows.append([s["name"], "; ".join(dict.fromkeys(parts))])
+    rows.sort(key=lambda r: r[0])
+    return rows
+
+
 def build_reference_pages(acc: dict, engine_data: dict,
                           shelf_catalog: dict) -> list:
     """Read-only reference, split into topic sub-tabs. Tables render from
@@ -187,6 +222,41 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "custom row. Quality-specific bonuses (Star Marks, Daozu treasures, "
         "Lotus Throne) apply only to pills of that color — enter those in "
         "the Star Marks fields.")
+
+    # ---- Curios --------------------------------------------------------
+    curios = "<h2>Curios</h2>"
+    curios += (
+        "<p>Curios (the Treasury half of the Vault) are passive relics. Most "
+        "give combat stats, but a handful help cultivation directly — pill "
+        "effect, Respira, and abode aura — and those are the ones worth "
+        "chasing for breakthrough speed.</p>"
+        "<a name='acquisition'></a><h3>They come from random draws</h3>"
+        "<p>You don't buy a specific curio. New curios and the shards that "
+        "star them up come from draws, so a particular curio landing is luck, "
+        "not a plan. That's why the Advisor lists curios separately as "
+        "\"worth pulling for\" rather than mixing them into the plannable "
+        "steps — it tells you which curio, if you drew it, would save the "
+        "most time, without pretending you can just go get it.</p>"
+        "<a name='starup'></a><h3>Stars and upgrades</h3>"
+        "<p>A curio's cultivation bonus grows two ways. <b>Upgrade level</b> "
+        "raises the base value in small steps; <b>stars</b> add a scalar on "
+        "top (shown in game as \"Increases Curio Passive Stats\"). Stars run "
+        "0 to 5 and then <b>Awaken</b>. For a percentage cultivation bonus "
+        "the two add in percentage points — e.g. Yang Spirit Jade at 4 stars, "
+        "upgrade 3 reads 3.2% (1.6 from the upgrade + 1.6 from the star "
+        "scalar). Record the star and upgrade in the Vault and the pill / "
+        "Respira fields fill themselves.</p>"
+        "<p>A few cultivation curios are <b>Special</b> — the Spirit Seal "
+        "set, for instance — and can't be starred or upgraded; they give "
+        "one fixed bonus.</p>")
+    curios += table(
+        "Cultivation curios",
+        ["Curio", "What it gives"],
+        _curio_bonus_rows(shelf_catalog),
+        "Set stars and upgrade levels in the Vault's Treasury; only these "
+        "curios feed the calculator. Abode-aura curios are already inside "
+        "your entered Abode Aura reading — they're listed so you know which "
+        "ones to keep.")
 
     # ---- Artifacts & Gems ----------------------------------------------
     artifacts = "<h2>Artifacts &amp; Gems</h2>"
@@ -1073,6 +1143,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         ("pills", "Pills & Respira", pills),
         ("elixirs", "Elixirs & Stat Pills", elixirs),
         ("myrimon", "Myrimon & Extractor", myrimon),
+        ("curios", "Curios", curios),
         ("artifacts", "Artifacts & Gems", artifacts),
         ("combat", "Combat & Gear", combat),
         ("affixes", "Affixes", affixes),
