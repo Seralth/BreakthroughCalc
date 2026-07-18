@@ -113,7 +113,7 @@
    "rank": "R1",
    "levels": {
     "kind": "tier",
-    "max": 2
+    "max": 4
    },
    "effects": [
     {
@@ -124,18 +124,19 @@
     {
      "target": "respira_attempts",
      "value": 1,
-     "min_level": 2,
-     "note": "Tier 2: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
+     "min_level": 3,
+     "data_status": "community",
+     "note": "Tier 3: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
     }
    ],
    "legacy": [
     {
      "catalog": "respira",
      "name": "Longevity (technique)",
-     "implies_level": 2
+     "implies_level": 3
     }
    ],
-   "data_status": "exact"
+   "data_status": "community"
   },
   {
    "id": "energy_unification",
@@ -2766,7 +2767,10 @@
      "implies_level": 36
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "daji",
@@ -2791,7 +2795,10 @@
      "implies_level": 73
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "shen_gongbao",
@@ -2816,7 +2823,10 @@
      "implies_level": 117
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "six_eared_macaque",
@@ -2835,7 +2845,10 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "jiang_ziya",
@@ -2860,7 +2873,10 @@
      "implies_level": 116
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "taotie",
@@ -2885,7 +2901,10 @@
      "implies_level": 117
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "crane_boy",
@@ -2911,7 +2930,10 @@
      "implies_level": -1
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "white_astra",
@@ -2930,7 +2952,10 @@
     }
    ],
    "legacy": [],
-   "data_status": "unknown"
+   "data_status": "unknown",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "princess_adalinda",
@@ -2949,7 +2974,10 @@
     }
    ],
    "legacy": [],
-   "data_status": "unknown"
+   "data_status": "unknown",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "leizhenzi",
@@ -2968,7 +2996,10 @@
     }
    ],
    "legacy": [],
-   "data_status": "unknown"
+   "data_status": "unknown",
+   "requires": {
+    "stage": "Voidbreak"
+   }
   },
   {
    "id": "ascension_virya",
