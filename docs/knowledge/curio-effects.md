@@ -47,13 +47,14 @@ Cross-check vs `data/sources.json` (in-game verified 2026-07-07):
   per_upgrade 0.2 / 8 upgrades. Star scalar tops at +3.2; 2.6 + 3.2 = 5.8 =
   our verified max. ✓
 - **Dongxuan's Pot** (91115): single upgrade, 8624 = 2 — our flat +2%. ✓
-- **Discrepancy (unresolved):** client star scalar ladder is
-  [0, 0.4, 0.8, 1.2, 1.6, 2.0, 3.2] over levels 0–6, while sources.json
-  star_add (5 in-game stars) is [0, 0.8, 1.2, 2.2, 3.2]. Stars 2, 3, 5 match
-  client levels 2, 3, 6; the in-game star-4 reading of +2.2 matches no client
-  level (1.6 / 2.0 nearby). Either the star→level mapping is nonlinear, the
-  client table drifted from the server, or our star-4 reading was off.
-  In-game evidence wins until re-verified — sources.json stays as-is.
+- **Star mapping RESOLVED (2026-07-18 4★ tooltip):** YSJ at 4 stars +3
+  upgrades shows Passive 3.2% with "Star Up Effects +1.6%" — displayed star
+  N = client star level N (4★ = level 4 scalar 1.6, basic stats M.PEN 15 /
+  M.Block 60 = the level-4 attribs row). The old sources.json star-4 value
+  (+2.2) was wrong; the corrected model is 6 stars, star_add
+  [0, 0.8, 1.2, 1.6, 2.0, 3.2] (client ladder anchored in-game at stars
+  1/2/3/4 and the 5.8 max). Displayed stars = client star levels − 1 for
+  the generic roster too (7 levels = 6 stars).
 
 ## Cultivation-relevant curios (max values from client ladders)
 
@@ -87,11 +88,25 @@ effect (Archdemon Pearl 30), Daemonfae cultivation (Integration Pendant 5),
 clone exploration time (Fate Insight Compass −30), Celestial Jade / citizen
 affixes on Origin curios.
 
+## Related client-exact recoveries (2026-07-18)
+
+- **realm_levels** (shipped in data/sources.json): exact player-level index
+  per Stage from the client's `level_job` config — Novice 1, Connection
+  2–11, then three per Stage (Foundation 12–14 … Voidbreak 24–26 …
+  Supreme 42–44; Sublime/Cosmic Prime 45–50 pre-recorded for issue #4).
+  Sub-level 1/2/3 = Early/Middle/Late. This makes the curio
+  `upgrade_requires_level` ladders (gubao_upgrade `require_level`)
+  realm-gateable: e.g. YSJ upgrade 8 needs level 26 = Voidbreak Late.
+- **Technique-book activation requirements are server-side**: the full
+  1363-asset client config bundle contains no book config at all (names
+  are i18n-only). The client ships only the "Activation Requirements and
+  Costs" tooltip title, the `'%s Techniques reach %s: %s'` fill-in
+  template, and one baked string ("Longevity reaches Tier 2"). The R9
+  gate (2× R8 books at Tier 13) is screenshot-verified; R2–R8
+  requirements need an in-game activation-tooltip pass.
+
 ## Notes
 
-- The 5-star display vs 7 client star-levels question also affects how
-  `star_upgrade` value models in sources.json should be read from
-  curio_tooltips.json — map by matching values, not by index.
 - Curio shards enumerate the acquirable roster: 637 "Used to combine or star
   up the Curio: X." strings in i18n vs 819 table rows (rest are unreleased /
   event/skin variants).
