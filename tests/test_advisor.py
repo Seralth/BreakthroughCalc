@@ -213,11 +213,14 @@ class Ranking(unittest.TestCase):
         adv = rank(self.engine, self.inp, self.cat, {"owned": owned})
         self.assertLess(len(adv.draws), len(empty.draws))
 
-    def test_attempt_bonus_without_reading_is_not_ranked(self):
+    def test_blank_respira_fields_floor_to_the_stock_minimum(self):
+        # Respira is never empty: blank fields assume 10 stock attempts and
+        # the Stage's base EXP estimate, so respira sources still price.
         inp = base_inputs(target_stage="Incarnation")
         adv = rank(self.engine, inp, self.cat, {"owned": {}})
         ids = {r.candidate.source_id for r in adv.plan + adv.draws}
-        self.assertNotIn("dongxuans_cushion", ids)
+        self.assertIn("dongxuans_cushion", ids)   # +1 attempt on stock 10
+        self.assertIn("dongxuans_lantern", ids)   # +10% on the estimate
 
     def test_invalid_baseline_reports_reason(self):
         adv = rank(self.engine, Inputs(stage="Nascent", phase="LATE",

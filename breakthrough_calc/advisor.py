@@ -250,7 +250,27 @@ def _metric_days(r: Results, metric: str) -> float:
     return r.target_days if metric == "target" else r.stage_days
 
 
+def _with_respira_floor(engine: Engine, inp: Inputs, derived: dict) -> Inputs:
+    """Respira never counts as empty: blank fields assume the game's stock
+    minimum — 10 daily attempts plus the Vault's permanent bonuses, and the
+    Stage's base EXP estimate times the Vault's Respira Effect percent —
+    so respira sources always price instead of silently vanishing."""
+    kw = {}
+    if inp.respira_per_day <= 0:
+        attempts = derived.get("respira_attempts")
+        kw["respira_per_day"] = 10.0 + (attempts.total if attempts else 0.0)
+    if inp.respira_exp <= 0:
+        est = engine.respira_base_estimate(inp.stage)
+        if est:
+            books = derived.get("respira_effect")
+            pct = books.total if books else 0.0
+            kw["respira_exp"] = est * (1.0 + pct / 100.0)
+    return replace(inp, **kw) if kw else inp
+
+
 def rank(engine: Engine, inp: Inputs, catalog: dict, shelf: dict) -> Advice:
+    derived = derive(catalog, shelf)
+    inp = _with_respira_floor(engine, inp, derived)
     base = engine.calculate(inp)
     if not base.valid:
         return Advice(valid=False, reason=base.error)
@@ -258,7 +278,6 @@ def rank(engine: Engine, inp: Inputs, catalog: dict, shelf: dict) -> Advice:
     base_days = _metric_days(base, metric)
     if base_days <= 0:
         return Advice(valid=False, reason="nothing left to shorten")
-    derived = derive(catalog, shelf)
     books_now = derived.get("respira_effect").total \
         if "respira_effect" in derived else 0.0
     level_now = player_level(catalog, inp.stage, inp.phase)
