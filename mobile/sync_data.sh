@@ -4,5 +4,5 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 mkdir -p assets/data
-cp ../data/breakthrough.json ../data/sources.json ../data/pets.json assets/data/
+cp ../data/breakthrough.json ../data/sources.json ../data/pets.json ../data/i18n.json assets/data/
 echo "synced data -> mobile/assets/data"
