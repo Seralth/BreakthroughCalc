@@ -135,6 +135,11 @@ class Obtainability(unittest.TestCase):
                                         current_level=level)}
         self.assertNotIn("lions_roar", ids(19))
         self.assertIn("lions_roar", ids(20))
+        # extrapolated lower ranks: level = rank + 14
+        self.assertNotIn("longevity", ids(14))        # R1 needs Virtuoso E
+        self.assertIn("longevity", ids(15))
+        self.assertNotIn("cosmic_power", ids(16))     # R3 needs Virtuoso L
+        self.assertIn("cosmic_power", ids(17))
         self.assertNotIn("chroma", ids(21))
         self.assertIn("chroma", ids(22))
         ready = {"chroma": 13, "zixiao_sutra": 13}

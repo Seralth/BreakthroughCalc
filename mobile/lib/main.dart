@@ -25,7 +25,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '3.7';
+const appVersion = '3.8';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
