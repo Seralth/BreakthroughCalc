@@ -143,6 +143,13 @@ add combat attribs.
 top out at gate 26; the 27/29 gates exist only on the 500 curios with
 11-step flat ladders.
 
+**Upgrade costs (cfg_us_gubao_upgrade `material`):** currency 65002 median
+per index 5k / 10k / 30k / 80k / 200k / 600k / 800k / 1M (combat ladders
+continue 1.5M / 2M), plus tiered mats (30 then 100 of each tier, e.g. YSJ
+73007 → 73008 → 73009 → 100× 73016 cap mat). For a constant-step % ladder
+that's a ~200× cost spread for identical +0.2% bumps — %-per-currency is
+entirely front-loaded, mirroring stars.
+
 **Costs break upward faster than power.** Own-shard star-up cost roughly
 doubles per star with a 3× spike at awakening (purple medians
 30/60/120/180/300, then 900 + 750 any-quality shards). Marginal %-per-shard
