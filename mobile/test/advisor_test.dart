@@ -39,7 +39,7 @@ void main() {
 
     test('tier walk covers every future threshold', () {
       final tracks = steps(byId('longevity'), null);
-      expect([for (final s in tracks.single) s.action], ['Tier 1', 'Tier 2']);
+      expect([for (final s in tracks.single) s.action], ['Tier 1', 'Tier 3']);
     });
 
     test('parametric curio tracks carry upgrade requirements', () {
@@ -93,6 +93,19 @@ void main() {
           c.sourceId
       };
       expect(ready, contains('laws_of_nature'));
+    });
+
+    test('friends gated until Voidbreak', () {
+      final pre = {
+        for (final c in candidates(catalog, {'owned': {}}, currentLevel: 23))
+          c.sourceId
+      };
+      expect(pre, isNot(contains('daji')));
+      final post = {
+        for (final c in candidates(catalog, {'owned': {}}, currentLevel: 24))
+          c.sourceId
+      };
+      expect(post, contains('daji'));
     });
 
     test('curio upgrades gate on realm level', () {
@@ -152,6 +165,23 @@ void main() {
           ..sort((a, b) => b.compareTo(a));
         expect(saved, sorted);
       }
+    });
+
+    test('ties break by cheapness: R1 book above R3 above friends', () {
+      final vb = Inputs.fromMap({
+        'stage': 'Voidbreak',
+        'phase': 'EARLY',
+        'grade': 'G1',
+        'culti_speed': 208.0,
+        'absorption_ratio': 1.0,
+        'target_stage': 'Wholeness',
+      });
+      final adv = rank(engine, vb, catalog, {'owned': {}});
+      final order = [for (final r in adv.plan) r.candidate.sourceId];
+      expect(order, contains('longevity'));
+      expect(order, contains('cosmic_power'));
+      expect(order.indexOf('longevity'),
+          lessThan(order.indexOf('cosmic_power')));
     });
 
     test('blank respira fields floor to the stock minimum', () {
