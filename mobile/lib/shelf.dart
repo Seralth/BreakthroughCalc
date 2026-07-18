@@ -6,6 +6,8 @@
 /// taxonomy and owned-map shapes.
 library;
 
+import 'catalog.dart';
+
 class Contribution {
   final String sourceId;
   final String name;
@@ -36,54 +38,6 @@ class Derived {
   });
 }
 
-bool _levelOk(dynamic minLevel, dynamic ownedLevel, Map levels) {
-  if (ownedLevel == null) return false;
-  final owned = ownedLevel as num;
-  if (minLevel == 'max') {
-    final mx = levels['max'];
-    return owned == -1 || (mx != null && owned >= (mx as num));
-  }
-  if (owned == -1) return true; // maxed satisfies every numeric threshold
-  final ml = minLevel == null ? 1 : (minLevel as num);
-  return owned >= ml;
-}
-
-double _modelValue(Map model, dynamic params) {
-  if (model['kind'] == 'star_upgrade') {
-    final p = params as List;
-    var star = (p[0] as num).toInt();
-    var upgrade = (p[1] as num).toInt();
-    final stars = (model['stars'] as num).toInt();
-    final maxUpgrade = (model['max_upgrade'] as num).toInt();
-    // Stars are 0-based like the game's display (0..5 + Awakened=6);
-    // star_add[star] is the tooltip's star scalar in percentage points.
-    star = star.clamp(0, stars - 1);
-    upgrade = upgrade.clamp(0, maxUpgrade);
-    final starAdd = (model['star_add'] as List)[star] as num;
-    return (model['base'] as num).toDouble() +
-        (model['per_upgrade'] as num).toDouble() * upgrade +
-        starAdd.toDouble();
-  }
-  throw ArgumentError('unknown value model: ${model['kind']}');
-}
-
-String _levelLabel(Map entry, dynamic owned) {
-  final levels = entry['levels'] as Map;
-  final kind = levels['kind'];
-  if (kind == 'binary') return '';
-  if (kind == 'ladder') {
-    final labels = levels['labels'] as List;
-    final i = (owned as num).toInt().clamp(1, labels.length);
-    return labels[i - 1] as String;
-  }
-  if (kind == 'custom') {
-    return (owned as List).map((p) => (p as num).toInt().toString()).join('/');
-  }
-  if (owned == -1) return 'max';
-  final prefix = kind == 'tier' ? 'Tier ' : 'lv ';
-  return '$prefix${(owned as num).toInt()}';
-}
-
 /// shelf = {'owned': {id: level|params}, 'custom': {target: [[label, v]]}}
 /// -> {targetId: Derived}. Mirrors shelf.py derive() exactly.
 Map<String, Derived> derive(Map catalog, Map shelf) {
@@ -110,24 +64,14 @@ Map<String, Derived> derive(Map catalog, Map shelf) {
       final tid = eff['target'] as String;
       final mode = ((targets[tid] ?? {}) as Map)['mode'];
       if (mode == 'display_embedded') continue; // guarded
-      final active = levels['kind'] == 'custom'
-          ? true // owning a parametric source is binary
-          : _levelOk(eff['min_level'], ownedLevel, levels);
-      if (!active) continue;
-      double? value;
-      if (eff.containsKey('value_model')) {
-        value = _modelValue(eff['value_model'] as Map, ownedLevel);
-      } else if (eff['value'] == null) {
-        if (mode == 'raw_additive') incomplete[tid] = true;
-        value = null;
-      } else {
-        value = (eff['value'] as num).toDouble();
-      }
+      if (!effectActive(levels, eff['min_level'], ownedLevel)) continue;
+      final value = effectValue(eff, ownedLevel);
+      if (value == null && mode == 'raw_additive') incomplete[tid] = true;
       if (mode != 'raw_additive') continue; // info carries no numbers
       buckets.putIfAbsent(tid, () => []).add(Contribution(
             sourceId: sid as String,
             name: entry['name'] as String,
-            levelLabel: _levelLabel(entry, ownedLevel),
+            levelLabel: levelLabel(entry, ownedLevel),
             value: value ?? 0.0,
             dataStatus: (eff['data_status'] ??
                 entry['data_status'] ??

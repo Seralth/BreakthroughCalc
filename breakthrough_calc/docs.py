@@ -9,6 +9,8 @@ targets used for cross-references.
 
 from __future__ import annotations
 
+from .catalog import model_range
+
 _ISSUES_URL = "https://github.com/Seralth/BreakthroughCalc/issues"
 
 
@@ -31,8 +33,8 @@ def _vault_bonus_rows(shelf_catalog: dict, wanted: dict) -> list:
             if tid not in wanted:
                 continue
             if "value_model" in e:
-                m = e["value_model"]
-                parts.append(f'{m["base"]:g}–{m["max_value"]:g}'
+                lo, hi = model_range(e["value_model"])
+                parts.append(f'{lo:g}–{hi:g}'
                              f'{wanted[tid]} by star/upgrade')
                 continue
             if e.get("value") is None:
@@ -77,9 +79,9 @@ def _curio_bonus_rows(shelf_catalog: dict) -> list:
             if tid not in cult:
                 continue
             if "value_model" in e:
-                m = e["value_model"]
+                lo, hi = model_range(e["value_model"])
                 parts.append(f'Cultivation Pill Effect '
-                             f'+{m["base"]:g}% to +{m["max_value"]:g}% '
+                             f'+{lo:g}% to +{hi:g}% '
                              f'by star and upgrade')
             elif e.get("value") is not None:
                 parts.append(note.rstrip(".") or f'+{e["value"]:g}')
