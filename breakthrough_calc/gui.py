@@ -7,8 +7,8 @@ import re
 import sys
 import time
 
-from PySide6.QtCore import Qt, QTimer, QUrl
-from PySide6.QtGui import QDesktopServices, QGuiApplication, QIcon
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtWidgets import (
     QAbstractSpinBox, QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFormLayout, QGroupBox, QGridLayout, QHBoxLayout,
@@ -19,6 +19,8 @@ from PySide6.QtWidgets import (
 )
 
 from . import __version__, theme, i18n
+from .data_io import resource_path
+from .doc_nav import DocController
 from .docs import build_guide_pages, build_reference_pages
 from .engine import (
     BASE_ENERGY, STRIVE_CAP_MORTAL, Engine, Inputs, fmt_days,
@@ -77,8 +79,8 @@ class MainWindow(QMainWindow):
         self._store = ProfileStore(settings_path())
         self._loading = True
         # Non-widget UI state, initialized once: _respira_checked survives the
-        # language-switch full rebuild; _doc_history is cleared by _build_ui
-        # together with the doc widgets it indexes.
+        # language-switch full rebuild. Doc-nav state lives in self._doc (a
+        # DocController), recreated by _build_ui with the doc widgets it indexes.
         self._respira_checked = set()
         self._respira_exp_auto = None       # last self-filled Base EXP
         self._respira_attempts_auto = None  # last self-filled Attempts/day
@@ -86,7 +88,6 @@ class MainWindow(QMainWindow):
         self._shelf = {"owned": {}, "bases": {}, "auto": []}
         self._pets_catalog = load_pets()
         self._pets = {"owned": {}, "essences": {}}
-        self._doc_history = []
         store = self._store.read()
         self._theme = store.get("theme", "Seralth")
         if self._theme not in theme.THEMES:  # unknown persisted name -> default
@@ -156,15 +157,15 @@ class MainWindow(QMainWindow):
         tabs.addTab(self.advisor_page, tr("Advisor"))
         tabs.addTab(self._build_pets_tab(), tr("Pets"))
         self._tabs = tabs
-        # doc history points into the doc tabs rebuilt below — start it fresh
-        self._doc_history.clear()
-        # Doc-tree registry: top-level tab index per tree, populated where the
-        # tabs are inserted (slug -> sub-tab maps live in _ref/_guide_slugs).
-        self._doc_tab_index = {}
-        self._doc_tab_index["ref"] = tabs.count()
-        tabs.addTab(self._build_reference_tab(), tr("Reference"))
-        self._doc_tab_index["guide"] = tabs.count()
-        tabs.addTab(self._build_guide_tab(), tr("Guide"))
+        # Doc-tree navigation (history, cross-links, back button) lives in the
+        # DocController; a fresh one per _build_ui starts with an empty history
+        # and re-registers the doc widgets built just below. Each tree's
+        # top-level index is captured before its tab is inserted.
+        self._doc = DocController(tabs)
+        ref_idx = tabs.count()
+        tabs.addTab(self._build_reference_tab(ref_idx), tr("Reference"))
+        guide_idx = tabs.count()
+        tabs.addTab(self._build_guide_tab(guide_idx), tr("Guide"))
         self.setCentralWidget(tabs)
 
     def _build_cultivation_group(self) -> QGroupBox:
@@ -385,96 +386,22 @@ class MainWindow(QMainWindow):
         self.pin_box.setVisible(False)
         return self.pin_box
 
+    # ---- doc trees (navigation state/logic lives in DocController) --------
     def _rebuild_doc_tabs(self):
         # Rebuild the Reference and Guide tabs (all sub-tab browsers) so accent
         # colors baked into the HTML follow theme changes; keep the sub-tabs.
-        sub = self._ref_tabs.currentIndex() if getattr(self, "_ref_tabs", None) else 0
-        gsub = self._guide_tabs.currentIndex() if getattr(self, "_guide_tabs", None) else 0
-        ref_idx = self._doc_tab_index["ref"]
-        guide_idx = self._doc_tab_index["guide"]
+        sub = self._doc.sub_index("ref")
+        gsub = self._doc.sub_index("guide")
+        ref_idx = self._doc.tab_index["ref"]
+        guide_idx = self._doc.tab_index["guide"]
         self._tabs.removeTab(guide_idx)
         self._tabs.removeTab(ref_idx)
-        self._tabs.insertTab(ref_idx, self._build_reference_tab(), tr("Reference"))
-        self._tabs.insertTab(guide_idx, self._build_guide_tab(), tr("Guide"))
-        self._ref_tabs.setCurrentIndex(sub)
-        self._guide_tabs.setCurrentIndex(gsub)
-        self._update_back_buttons()
+        self._tabs.insertTab(ref_idx, self._build_reference_tab(ref_idx), tr("Reference"))
+        self._tabs.insertTab(guide_idx, self._build_guide_tab(guide_idx), tr("Guide"))
+        self._doc.set_sub_index("ref", sub)
+        self._doc.set_sub_index("guide", gsub)
+        self._doc.update_back_buttons()
         self.resize(1180, 680)  # note: re-triggers on every theme change
-
-    def _doc_sub_tabs(self) -> dict:
-        """Top-level tab index -> that doc tree's sub-QTabWidget."""
-        return {self._doc_tab_index["ref"]: self._ref_tabs,
-                self._doc_tab_index["guide"]: self._guide_tabs}
-
-    # Internal link scheme for Reference/Guide cross-references:
-    # app://ref/<slug> and app://guide/<slug>. The slug -> sub-tab maps are
-    # derived by enumerating the docs.py page lists, so they cannot drift
-    # from the tab order.
-    def _open_doc_link(self, url: QUrl):
-        if url.scheme() != "app":
-            QDesktopServices.openUrl(url)
-            return
-        tree, slug = url.host(), url.path().strip("/")
-        anchor = url.fragment()
-        if tree == "ref" and slug in self._ref_slugs:
-            self._push_doc_history()
-            self._tabs.setCurrentIndex(self._doc_tab_index["ref"])
-            self._ref_tabs.setCurrentIndex(self._ref_slugs[slug])
-            self._scroll_to_anchor(self._ref_tabs, anchor)
-        elif tree == "guide" and slug in self._guide_slugs:
-            self._push_doc_history()
-            self._tabs.setCurrentIndex(self._doc_tab_index["guide"])
-            self._guide_tabs.setCurrentIndex(self._guide_slugs[slug])
-            self._scroll_to_anchor(self._guide_tabs, anchor)
-
-    @staticmethod
-    def _scroll_to_anchor(sub, anchor):
-        # Land on the relevant section (app://ref/<slug>#<anchor>); without
-        # an anchor, start the destination page from the top.
-        w = sub.currentWidget()
-        if not isinstance(w, QTextBrowser):
-            return
-        if anchor:
-            w.scrollToAnchor(anchor)
-        else:
-            w.verticalScrollBar().setValue(0)
-
-    # Back-navigation for the app:// cross-links: each link click pushes the
-    # (tab, sub-tab, scroll) the reader left, so the Back button in the tab
-    # corner returns them to the exact spot they were reading.
-    def _doc_location(self):
-        idx = self._tabs.currentIndex()
-        sub = self._doc_sub_tabs().get(idx)
-        if sub is None:
-            return None
-        w = sub.currentWidget()
-        scroll = w.verticalScrollBar().value() if isinstance(w, QTextBrowser) else 0
-        return (idx, sub.currentIndex(), scroll)
-
-    def _push_doc_history(self):
-        loc = self._doc_location()
-        if loc:
-            self._doc_history.append(loc)
-            self._update_back_buttons()
-
-    def _go_back(self):
-        if not self._doc_history:
-            return
-        idx, sub_idx, scroll = self._doc_history.pop()
-        self._tabs.setCurrentIndex(idx)
-        sub = self._doc_sub_tabs()[idx]
-        sub.setCurrentIndex(sub_idx)
-        w = sub.currentWidget()
-        if isinstance(w, QTextBrowser):
-            w.verticalScrollBar().setValue(scroll)
-        self._update_back_buttons()
-
-    def _update_back_buttons(self):
-        show = bool(self._doc_history)
-        for tabs in (getattr(self, "_ref_tabs", None),
-                     getattr(self, "_guide_tabs", None)):
-            if tabs is not None and tabs.cornerWidget() is not None:
-                tabs.cornerWidget().setVisible(show)
 
     def _build_doc_tab(self, pages) -> QTabWidget:
         """Wrap ordered (slug, title, html) pages in QTextBrowser sub-tabs
@@ -483,27 +410,29 @@ class MainWindow(QMainWindow):
         for _slug, title, html in pages:
             b = QTextBrowser()
             b.setOpenLinks(False)
-            b.anchorClicked.connect(self._open_doc_link)
+            b.anchorClicked.connect(self._doc.open_link)
             b.setHtml(html)
             # Escape & so QTabWidget doesn't eat it as a mnemonic marker
             tabs.addTab(b, title.replace("&", "&&"))
         back = QPushButton(tr("← Back"))
-        back.clicked.connect(self._go_back)
+        back.clicked.connect(self._doc.go_back)
         back.setVisible(False)
         tabs.setCornerWidget(back)
         return tabs
 
-    def _build_reference_tab(self) -> QWidget:
+    def _build_reference_tab(self, top_index: int) -> QWidget:
         pages = build_reference_pages(self._acc, self.engine.data,
                                       self._shelf_catalog)
-        self._ref_slugs = {slug: i for i, (slug, _, _) in enumerate(pages)}
-        self._ref_tabs = tabs = self._build_doc_tab(pages)
+        slugs = {slug: i for i, (slug, _, _) in enumerate(pages)}
+        tabs = self._build_doc_tab(pages)
+        self._doc.register_tree("ref", top_index, tabs, slugs)
         return tabs
 
-    def _build_guide_tab(self) -> QWidget:
+    def _build_guide_tab(self, top_index: int) -> QWidget:
         pages = build_guide_pages(self._acc)
-        self._guide_slugs = {slug: i for i, (slug, _, _) in enumerate(pages)}
-        self._guide_tabs = tabs = self._build_doc_tab(pages)
+        slugs = {slug: i for i, (slug, _, _) in enumerate(pages)}
+        tabs = self._build_doc_tab(pages)
+        self._doc.register_tree("guide", top_index, tabs, slugs)
         return tabs
 
     # ---- signal wiring ---------------------------------------------------
@@ -1264,9 +1193,8 @@ class MainWindow(QMainWindow):
 
 
 def _icon_path() -> str:
-    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    for p in (os.path.join(base, "breakthrough-calc.png"),
-              os.path.join(base, "packaging", "breakthrough-calc.png")):
+    for p in (resource_path("breakthrough-calc.png"),
+              resource_path("packaging", "breakthrough-calc.png")):
         if os.path.exists(p):
             return p
     return ""
