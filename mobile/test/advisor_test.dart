@@ -116,6 +116,8 @@ void main() {
           };
       expect(ids(19), isNot(contains('lions_roar')));
       expect(ids(20), contains('lions_roar'));
+      expect(ids(14), isNot(contains('longevity')));
+      expect(ids(15), contains('longevity'));
       expect(ids(21), isNot(contains('chroma')));
       expect(ids(22), contains('chroma'));
       final ready = {'chroma': 13, 'zixiao_sutra': 13};

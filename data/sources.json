@@ -125,7 +125,7 @@
      "target": "respira_attempts",
      "value": 1,
      "min_level": 3,
-     "note": "Tier 3: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
+     "note": "Tier 3: +1 daily Respira attempt."
     }
    ],
    "legacy": [
@@ -135,7 +135,11 @@
      "implies_level": 3
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "energy_unification",
@@ -167,7 +171,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "rejuvenation",
@@ -205,7 +213,11 @@
      "implies_level": 3
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "yang",
@@ -236,7 +248,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "LATE"
+   }
   },
   {
    "id": "lifeboom",
@@ -275,7 +291,11 @@
      "implies_level": 1
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "LATE"
+   }
   },
   {
    "id": "cosmic_power",
@@ -314,7 +334,11 @@
      "implies_level": 1
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Virtuoso",
+    "phase": "LATE"
+   }
   },
   {
    "id": "focus",
@@ -363,7 +387,11 @@
      "implies_level": 1
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "golden_core",
@@ -409,7 +437,11 @@
      "implies_level": 4
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "soul_drain",
@@ -446,7 +478,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "astrology",
@@ -485,7 +521,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "bloodization",
@@ -522,7 +562,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "taiyin_meridian",
@@ -560,7 +604,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "solarics",
@@ -597,7 +645,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "lunarics",
@@ -634,7 +686,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "ninefall",
@@ -678,7 +734,11 @@
      "implies_level": 2
     }
    ],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "unbound_blade",
