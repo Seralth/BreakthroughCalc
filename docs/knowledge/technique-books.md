@@ -22,6 +22,16 @@ that previously lived in `docs/design/sources-shelf-inventory.md`.
 - Unlock requirements exist (stage + prior-rank tier counts + a
   book-specific condition) but are deliberately NOT modeled — out of scope.
 
+## Activation realm requirements (owner-read 2026-07-18, exact)
+
+Per rank, applied rank-wide (read from one still-visible book per rank —
+Lion's Roar / Bulwark / No-Thought Sutra / Way of Creation):
+R6 Nascent Soul Late · R7 Incarnation Early · R8 Incarnation Middle ·
+R9 Incarnation Late (R9 additionally needs 2 R8 techniques at Tier 13).
+Completed books no longer display their activation tooltip, so the
+R2-R5 realm gates are unrecordable on this account — do NOT list them as
+open questions.
+
 ## Tier-label caveat
 
 Books the account has **completed** display every bonus as "[Activated]"

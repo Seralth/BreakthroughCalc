@@ -166,8 +166,11 @@ def candidates(catalog: dict, shelf: dict, current_level=None) -> list:
         req_stage = req.get("stage")
         if req_stage and current_level is not None:
             band = realm.get(req_stage)
-            if band and current_level < band[0]:
-                continue
+            if band:
+                offset = {"EARLY": 0, "MIDDLE": 1,
+                          "LATE": 2}.get(req.get("phase"), 0)
+                if current_level < min(band[0] + offset, band[1]):
+                    continue
         rb = req.get("rank_books")
         if rb:
             have = 0

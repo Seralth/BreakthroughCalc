@@ -108,6 +108,21 @@ void main() {
       expect(post, contains('daji'));
     });
 
+    test('book ranks gate by realm phase', () {
+      Set<String> ids(int level, [Map? owned]) => {
+            for (final c in candidates(catalog, {'owned': owned ?? {}},
+                currentLevel: level))
+              c.sourceId
+          };
+      expect(ids(19), isNot(contains('lions_roar')));
+      expect(ids(20), contains('lions_roar'));
+      expect(ids(21), isNot(contains('chroma')));
+      expect(ids(22), contains('chroma'));
+      final ready = {'chroma': 13, 'zixiao_sutra': 13};
+      expect(ids(22, ready), isNot(contains('laws_of_nature')));
+      expect(ids(23, ready), contains('laws_of_nature'));
+    });
+
     test('curio upgrades gate on realm level', () {
       final shelf = {
         'owned': {
