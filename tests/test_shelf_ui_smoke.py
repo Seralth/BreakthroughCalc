@@ -107,3 +107,54 @@ def test_legacy_profile_migrates_once_with_identical_values(window):
     inp = w._inputs()
     assert abs(inp.pill_effect - 0.06) < 1e-9
     assert inp.respira_per_day == 12.0
+
+
+def test_vault_search_filters_rows_and_scopes_bulk_edits(window):
+    w = window
+    page = w.shelf_page
+    lib, treasury, _companions = (p for p, _ in page._panes)
+    page._apply_filter("dongxuan")
+    vis = [r.entry["name"] for r in treasury.rows.values()
+           if not r.isHidden()]
+    assert sorted(vis) == ["Dongxuan's Cushion", "Dongxuan's Lantern",
+                           "Dongxuan's Pot"]
+    # every Library shelf hides once no book matches
+    assert all(box.isHidden() for box, _ in lib._shelves)
+    # bulk shelf edits touch only the visible (matching) rows
+    page._apply_filter("chroma")
+    shelf_rows = next(rows for box, rows in lib._shelves
+                      if not box.isHidden())
+    lib._max_shelf([r.entry for r in shelf_rows])
+    assert set(page.owned()) == {"chroma"}
+    # clearing the query restores everything
+    page._apply_filter("")
+    assert not any(r.isHidden() for r in treasury.rows.values())
+    assert not any(box.isHidden() for box, _ in lib._shelves)
+
+
+def test_advisor_page_ranks_and_splits_channels(window, app):
+    from breakthrough_calc.advisor_ui import AdvisorPage
+    from breakthrough_calc.engine import Engine, Inputs
+    from breakthrough_calc.shelf import load_sources
+
+    # default (empty) inputs: invalid baseline -> guidance text, empty tree
+    w = window
+    w.advisor_page.refresh()
+    assert w.advisor_page._tree.topLevelItemCount() == 0
+    assert "Calculator" in w.advisor_page._status.text()
+
+    # a valid projection populates both channel groups
+    inp = Inputs(stage="Nascent", phase="LATE", grade="G5",
+                 culti_speed=57.22, absorption_ratio=0.275,
+                 target_stage="Incarnation", pill_rank="4R", pill_limit=4,
+                 gold_per_day=4, respira_per_day=10, respira_exp=4041.0)
+    page = AdvisorPage(Engine(), load_sources(), lambda: inp,
+                       lambda: {"owned": {"chroma": 6}})
+    page.refresh()
+    tree = page._tree
+    assert tree.topLevelItemCount() == 2
+    plan, draws = tree.topLevelItem(0), tree.topLevelItem(1)
+    assert plan.childCount() > 0 and draws.childCount() > 0
+    draw_names = {draws.child(i).text(0) for i in range(draws.childCount())}
+    assert "Dongxuan's Lantern" in draw_names
+    page.deleteLater()

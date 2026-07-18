@@ -53,7 +53,13 @@ lines are recorded but stay informational (aura is embedded in the user's
 in-game aura reading; Sense has no engine input).
 
 ### R1
-- **Longevity**: learn → Base Abode Aura +1%; ? → Respira Attempts +1
+- **Longevity**: learn → Base Abode Aura +1%; T2 → Respira Attempts +1.
+  Only two chapters — NO tech-stats capstone (owner-read 2026-07-18);
+  max tier 2. ("Longevity reaches Tier 2" is also the one hardcoded
+  activation-requirement string in the client i18n — all other book
+  requirements are server-data filled into the
+  '%s Techniques reach %s: %s' template, so they need tooltip
+  screenshots to record.)
 
 ### R2
 - **Energy Unification**: learn → Respira Effect +1%; T3 → Base Abode Aura +2%; T6 → Technique Stats +100%

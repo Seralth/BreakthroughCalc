@@ -180,6 +180,78 @@ const Map<String, Map<String, String>> _t = {
   'Reference': {'ru': 'Справка', 'de': 'Referenz', 'es': 'Referencia', 'zh': '参考'},
   'Guide': {'ru': 'Гайд', 'de': 'Anleitung', 'es': 'Guía', 'zh': '指南'},
   'Vault': {'ru': 'Хранилище', 'de': 'Tresor', 'es': 'Bóveda', 'zh': '宝库'},
+  'Advisor': {
+    'ru': 'Советник',
+    'de': 'Berater',
+    'es': 'Asesor',
+    'zh': '顾问'
+  },
+  'What to work on next, priced in days saved on your current projection. The plan lists steps you can simply go do; curios come from random draws, so those rank separately as what a lucky pull would be worth.': {
+    'ru': 'Что качать дальше — в днях, сэкономленных на текущем прогнозе. В плане — шаги, которые можно просто пойти и сделать; диковинки выпадают из случайных розыгрышей, поэтому они ранжируются отдельно — как ценность удачной выпадки.',
+    'de': 'Woran als Nächstes arbeiten — bepreist in Tagen, die deine aktuelle Prognose spart. Der Plan listet Schritte, die du einfach angehen kannst; Kuriositäten kommen aus Zufallsziehungen und werden separat gereiht — als Wert eines Glückszugs.',
+    'es': 'En qué trabajar ahora, valorado en días ahorrados sobre tu proyección actual. El plan lista pasos que puedes simplemente ir a hacer; las curiosidades salen de sorteos aleatorios, así que se clasifican aparte — como el valor de una tirada afortunada.',
+    'zh': '接下来该练什么——以当前推算节省的天数计价。计划列出可以直接去做的步骤；珍宝来自随机抽取，因此单独排序——按抽中一件的价值计算。'
+  },
+  'Bonuses the calculator does not model — combat stats, Spiritium, Abode Aura already inside your readings — are not ranked.': {
+    'ru': 'Бонусы, которые калькулятор не моделирует — боевые характеристики, Спиритий, аура обители, уже входящая в ваши показания, — не ранжируются.',
+    'de': 'Boni, die der Rechner nicht modelliert — Kampfwerte, Spiritium, Refugium-Aura, die bereits in deinen Werten steckt — werden nicht gereiht.',
+    'es': 'Los bonos que la calculadora no modela — estadísticas de combate, Spiritium, el aura de morada ya incluida en tus lecturas — no se clasifican.',
+    'zh': '计算器未建模的加成——战斗属性、灵石收益、已包含在读数中的洞府灵气——不参与排序。'
+  },
+  'Fill in the Calculator first — the advisor prices improvements against your current projection.': {
+    'ru': 'Сначала заполните Калькулятор — советник оценивает улучшения относительно текущего прогноза.',
+    'de': 'Fülle zuerst den Rechner aus — der Berater bewertet Verbesserungen gegen deine aktuelle Prognose.',
+    'es': 'Rellena primero la Calculadora — el asesor valora mejoras contra tu proyección actual.',
+    'zh': '请先填写计算器——顾问基于当前推算为改进定价。'
+  },
+  'Ranking: days until your target Stage.': {
+    'ru': 'Ранжирование: дни до целевой Стадии.',
+    'de': 'Reihung: Tage bis zur Ziel-Stufe.',
+    'es': 'Clasificación: días hasta tu Etapa objetivo.',
+    'zh': '排序依据：距目标阶段的天数。'
+  },
+  'Ranking: days to finish the current Stage.': {
+    'ru': 'Ранжирование: дни до конца текущей Стадии.',
+    'de': 'Reihung: Tage bis zum Ende der aktuellen Stufe.',
+    'es': 'Clasificación: días para terminar la Etapa actual.',
+    'zh': '排序依据：完成当前阶段的天数。'
+  },
+  'Plan — level or learn next': {
+    'ru': 'План — что качать или изучать дальше',
+    'de': 'Plan — als Nächstes leveln oder lernen',
+    'es': 'Plan — subir o aprender ahora',
+    'zh': '计划——接下来升级或学习'
+  },
+  'Random draws — worth pulling for': {
+    'ru': 'Случайные розыгрыши — ради чего стоит крутить',
+    'de': 'Zufallsziehungen — wofür sich Ziehen lohnt',
+    'es': 'Sorteos aleatorios — por qué vale la pena tirar',
+    'zh': '随机抽取——值得抽的目标'
+  },
+  'Nothing here helps right now.': {
+    'ru': 'Сейчас здесь ничто не поможет.',
+    'de': 'Hier hilft gerade nichts.',
+    'es': 'Nada de aquí ayuda ahora mismo.',
+    'zh': '目前这里没有能帮上忙的。'
+  },
+  'Rank again': {
+    'ru': 'Пересчитать',
+    'de': 'Neu berechnen',
+    'es': 'Recalcular',
+    'zh': '重新排序'
+  },
+  'Own': {
+    'ru': 'Получить',
+    'de': 'Besitzen',
+    'es': 'Obtener',
+    'zh': '获得'
+  },
+  'Search the Vault…': {
+    'ru': 'Поиск по Хранилищу…',
+    'de': 'Tresor durchsuchen…',
+    'es': 'Buscar en la Bóveda…',
+    'zh': '搜索宝库…'
+  },
   'Library': {'ru': 'Библиотека', 'de': 'Bibliothek', 'es': 'Biblioteca', 'zh': '藏书阁'},
   'Treasury': {'ru': 'Сокровищница', 'de': 'Schatzkammer', 'es': 'Tesorería', 'zh': '珍宝阁'},
   'Companions': {'ru': 'Спутники', 'de': 'Gefährten', 'es': 'Compañeros', 'zh': '道友'},

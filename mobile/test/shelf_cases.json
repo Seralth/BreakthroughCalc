@@ -13,7 +13,11 @@
 
  {"name": "yang spirit jade star 4 upgrade 8: parametric value model",
   "shelf": {"owned": {"yang_spirit_jade": [4, 8]}},
-  "expect": {"pill_effect": 4.8}},
+  "expect": {"pill_effect": 4.2}},
+
+ {"name": "yang spirit jade 4 stars upgrade 3: pins the star-4 tooltip",
+  "shelf": {"owned": {"yang_spirit_jade": [4, 3]}},
+  "expect": {"pill_effect": 3.2}},
 
  {"name": "crane boy maxed sentinel grants the pill attempt",
   "shelf": {"owned": {"crane_boy": -1}},
@@ -57,5 +61,20 @@
 
  {"name": "exclusive books are tracking-only: no raw targets at max tier",
   "shelf": {"owned": {"heavenly_scripture": 6, "whirling_fish_mystery": 6}},
+  "expect": {}},
+
+ {"name": "respira curios: effect and attempt bonuses stack across the trio",
+  "shelf": {"owned": {"dongxuans_lantern": 1, "northern_mirror": 1,
+                      "dongxuans_cushion": 1}},
+  "expect": {"respira_effect": 18.0, "respira_attempts": 1.0}},
+
+ {"name": "spirit seal set: bowl and gourd wire respira, pearl stays info",
+  "shelf": {"owned": {"spirit_seal_bowl": 1, "spirit_seal_gourd": 1,
+                      "spirit_seal_pearl": 1}},
+  "expect": {"respira_effect": 2.0, "respira_attempts": 1.0}},
+
+ {"name": "collection curios are tracking-only: no raw targets when owned",
+  "shelf": {"owned": {"auraseep_seal": 1, "wisdom_confluence": 1,
+                      "chaos_bell": 1}},
   "expect": {}}
 ]
