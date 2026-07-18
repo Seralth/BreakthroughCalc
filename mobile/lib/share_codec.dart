@@ -2,11 +2,14 @@
 // Enum-ish fields (stage/phase/grade, gem, ranks, stars, rarity) are stored
 // as indexes into the engine's own data tables, fields still at their
 // defaults are omitted, and the result is deflated. Catalog source names in
-// P/R are kept as full strings so codes survive catalog reordering.
+// P/R and the Vault ids in S are kept as full strings so codes survive
+// catalog reordering.
 //
 // decodeBuildCode returns the long-key map (same shape as the persisted
 // 'inputs_v1' prefs blob, incl. pe_sources/respira_sources) or null if the
-// code is unreadable.
+// code is unreadable. Codes carrying the Vault ('S', since 3.4) add one
+// extra 'shelf_owned' key on top of that shape; the caller strips it before
+// treating the rest as an inputs blob.
 //
 // FORWARD COMPATIBILITY — adding a new input feature:
 // 1. Give it a fresh short key: add one _F entry to _fields below (the
@@ -100,8 +103,8 @@ const List<_F> _fields = [
   _F('ef', 'elixir_effect', 'd'),
 ];
 
-Map<String, dynamic> _compact(
-    Engine e, Inputs inp, List<List<dynamic>> pe, Set<String> respira) {
+Map<String, dynamic> _compact(Engine e, Inputs inp, List<List<dynamic>> pe,
+    Set<String> respira, Map<String, dynamic> shelfOwned) {
   final long = inp.toMap();
   final m = <String, dynamic>{
     's': e.stages().indexOf(inp.stage),
@@ -125,6 +128,12 @@ Map<String, dynamic> _compact(
       },
     'P': pe,
     'R': respira.toList()..sort(),
+    // Vault ownership: sorted [id, level] pairs. Ids are frozen strings and
+    // levels absolute values (never catalog indexes), so codes survive
+    // catalog reordering and version skew; unknown ids round-trip.
+    'S': [
+      for (final k in shelfOwned.keys.toList()..sort()) [k, shelfOwned[k]]
+    ],
   };
   return m;
 }
@@ -139,9 +148,10 @@ Inputs _defaultInputs(Engine e) {
 }
 
 String encodeBuildCode(
-    Engine e, Inputs inp, List<List<dynamic>> pe, Set<String> respira) {
-  final m = _compact(e, inp, pe, respira);
-  final def = _compact(e, _defaultInputs(e), [], {});
+    Engine e, Inputs inp, List<List<dynamic>> pe, Set<String> respira,
+    {Map<String, dynamic> shelfOwned = const {}}) {
+  final m = _compact(e, inp, pe, respira, shelfOwned);
+  final def = _compact(e, _defaultInputs(e), [], {}, const {});
   def.forEach((k, v) {
     if (jsonEncode(m[k]) == jsonEncode(v)) m.remove(k);
   });
@@ -214,5 +224,22 @@ Map<String, dynamic> _expand(Engine e, Map<String, dynamic> m) {
 
   out['pe_sources'] = m['P'] as List? ?? [];
   out['respira_sources'] = m['R'] as List? ?? [];
+
+  // Vault ownership ('S', absent in pre-3.4 codes). Emitted as a
+  // 'shelf_owned' map ONLY when the key is on the wire — the caller uses
+  // its presence to decide whether to adopt the sender's Vault, and must
+  // then drop the sender's synthetic Vault pe row (it is regenerated
+  // locally, so vault contributions are never double-counted). Ill-shaped
+  // pairs are skipped, not fatal; unknown ids are kept as passengers so a
+  // re-share is lossless across app versions.
+  final s = m['S'];
+  if (s is List) {
+    out['shelf_owned'] = <String, dynamic>{
+      for (final p in s)
+        if (p is List && p.length == 2 && p[0] is String &&
+            (p[1] is num || p[1] is List))
+          p[0] as String: p[1],
+    };
+  }
   return out;
 }

@@ -173,6 +173,16 @@ Engine stays pure-numeric and untouched — the shelf is strictly an input-layer
 
 ## 5. OMV2 encoding
 
+> **Shipped (3.4)** — mobile carries `'S'` (owned pairs) per this section,
+> with three implementation divergences, documented in
+> docs/knowledge/share-code-format.md: `'C'`/`'O'` are not encoded (custom
+> pe rows already travel in `'P'`, and the shipped Vault has residual
+> `bases` instead of per-field overrides — they are re-anchored from the
+> imported field totals on decode); dual-emit needs no extra code (the
+> synthetic Vault pe row and vault-inflated attempts ARE the legacy
+> emission); and an old code without `'S'` leaves the receiver's Vault
+> untouched instead of running the §6 migration mapper on `'P'`/`'R'`.
+
 Three new string-keyed (order-safe, reorder-proof) keys; defaults (empty) omitted as usual:
 
 ```
