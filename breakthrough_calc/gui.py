@@ -30,6 +30,7 @@ from .labels import (
     vase_input_disp,
 )
 from .pets import load_pets
+from .advisor_ui import AdvisorPage
 from .pets_ui import PetsPage
 from .profiles import ProfileStore, settings_path
 from .shelf import derive as shelf_derive, load_sources, migrate_legacy
@@ -149,6 +150,10 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
         tabs.addTab(central, tr("Calculator"))
         tabs.addTab(self._build_shelf_tab(), tr("Vault"))
+        self.advisor_page = AdvisorPage(
+            self.engine, self._shelf_catalog, self._inputs,
+            lambda: self._shelf)
+        tabs.addTab(self.advisor_page, tr("Advisor"))
         tabs.addTab(self._build_pets_tab(), tr("Pets"))
         self._tabs = tabs
         # doc history points into the doc tabs rebuilt below — start it fresh
