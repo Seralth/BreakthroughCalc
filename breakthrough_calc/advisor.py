@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from .catalog import has_max_effect, int_thresholds
 from .engine import Engine, Inputs, Results
 from .shelf import derive
 
@@ -69,11 +70,6 @@ class Advice:
 
 def channel_for(entry: dict) -> str:
     return _CHANNEL_BY_CATEGORY.get(entry.get("category"), PLANNED)
-
-
-def _int_thresholds(entry: dict) -> list:
-    return sorted({e.get("min_level", 1) for e in entry.get("effects", [])
-                   if isinstance(e.get("min_level", 1), int)})
 
 
 def player_level(catalog: dict, stage: str, phase: str):
@@ -132,8 +128,8 @@ def steps(entry: dict, owned) -> list:
     cur = int(owned) if owned else 0
     prefix = "Tier " if kind == "tier" else "lv "
     track = [(f"{prefix}{t}", t, None)
-             for t in _int_thresholds(entry) if t > cur]
-    if any(e.get("min_level") == "max" for e in entry.get("effects", [])):
+             for t in int_thresholds(entry) if t > cur]
+    if has_max_effect(entry):
         track.append(("max", -1, None))
     return [track] if track else []
 
