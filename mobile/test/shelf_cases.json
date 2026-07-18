@@ -13,7 +13,11 @@
 
  {"name": "yang spirit jade star 4 upgrade 8: parametric value model",
   "shelf": {"owned": {"yang_spirit_jade": [4, 8]}},
-  "expect": {"pill_effect": 4.8}},
+  "expect": {"pill_effect": 4.2}},
+
+ {"name": "yang spirit jade 4 stars upgrade 3: pins the star-4 tooltip",
+  "shelf": {"owned": {"yang_spirit_jade": [4, 3]}},
+  "expect": {"pill_effect": 3.2}},
 
  {"name": "crane boy maxed sentinel grants the pill attempt",
   "shelf": {"owned": {"crane_boy": -1}},

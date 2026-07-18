@@ -113,7 +113,7 @@
    "rank": "R1",
    "levels": {
     "kind": "tier",
-    "max": 6
+    "max": 2
    },
    "effects": [
     {
@@ -124,19 +124,18 @@
     {
      "target": "respira_attempts",
      "value": 1,
-     "min_level": 6,
-     "data_status": "community",
-     "note": "Tier 6: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
+     "min_level": 2,
+     "note": "Tier 2: +1 daily Respira attempt. Cheapest before the Foundation breakthrough."
     }
    ],
    "legacy": [
     {
      "catalog": "respira",
      "name": "Longevity (technique)",
-     "implies_level": 6
+     "implies_level": 2
     }
    ],
-   "data_status": "community"
+   "data_status": "exact"
   },
   {
    "id": "energy_unification",
@@ -1790,7 +1789,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "harvest_god_secret",
@@ -1836,7 +1842,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "zhurong_mantra",
@@ -1880,7 +1893,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "divine_water",
@@ -1924,7 +1944,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "mara_incarnation",
@@ -1968,7 +1995,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "heartless",
@@ -2013,7 +2047,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "gold_smasher",
@@ -2057,7 +2098,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "seven_star_blade",
@@ -2101,7 +2149,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "way_of_creation",
@@ -2145,7 +2200,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "eight_nine_method",
@@ -2189,7 +2251,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "honored_origin",
@@ -2233,7 +2302,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "wordless_scripture",
@@ -2277,7 +2353,14 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "rank_books": {
+     "rank": "R8",
+     "tier": 13,
+     "count": 2
+    }
+   }
   },
   {
    "id": "heavenly_scripture",
@@ -2943,7 +3026,7 @@
    "data_status": "community",
    "note": "Blessing bonuses are per cultivation path.",
    "requires": {
-    "stage": "Incarnation"
+    "stage": "Voidbreak"
    }
   },
   {
@@ -2957,7 +3040,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 5
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -2975,12 +3058,13 @@
       "base": 1.0,
       "per_upgrade": 0.2,
       "max_upgrade": 8,
-      "stars": 5,
+      "stars": 6,
       "star_add": [
        0.0,
        0.8,
        1.2,
-       2.2,
+       1.6,
+       2.0,
        3.2
       ],
       "max_value": 5.8
@@ -3058,7 +3142,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3097,7 +3181,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3134,7 +3218,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3171,7 +3255,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -3201,7 +3285,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3246,7 +3330,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3283,7 +3367,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3320,7 +3404,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3355,7 +3439,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3392,7 +3476,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3431,7 +3515,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3482,7 +3566,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3521,7 +3605,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3556,7 +3640,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3593,7 +3677,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3630,7 +3714,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3667,7 +3751,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3704,7 +3788,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3739,7 +3823,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -3776,7 +3860,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -3813,7 +3897,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -3850,7 +3934,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -3887,7 +3971,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3922,7 +4006,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -3942,7 +4026,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -3981,7 +4065,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4018,7 +4102,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4055,7 +4139,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4094,7 +4178,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4129,7 +4213,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4168,7 +4252,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4205,7 +4289,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -4233,7 +4317,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -4270,7 +4354,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4307,7 +4391,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4346,7 +4430,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4383,7 +4467,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4420,7 +4504,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -4448,7 +4532,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4495,7 +4579,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4544,7 +4628,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4583,7 +4667,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4620,7 +4704,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4657,7 +4741,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4694,7 +4778,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4733,7 +4817,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4780,7 +4864,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4815,7 +4899,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4852,7 +4936,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4891,7 +4975,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -4926,7 +5010,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -4977,7 +5061,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5012,7 +5096,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5051,7 +5135,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5090,7 +5174,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5129,7 +5213,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5166,7 +5250,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5205,7 +5289,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5242,7 +5326,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5279,7 +5363,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5316,7 +5400,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5355,7 +5439,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5394,7 +5478,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5431,7 +5515,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5470,7 +5554,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5509,7 +5593,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5548,7 +5632,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5585,7 +5669,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5622,7 +5706,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5659,7 +5743,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5694,7 +5778,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5752,7 +5836,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5799,7 +5883,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5838,7 +5922,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5875,7 +5959,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5912,7 +5996,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5947,7 +6031,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -5986,7 +6070,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6033,7 +6117,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6072,7 +6156,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6121,7 +6205,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6160,7 +6244,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6199,7 +6283,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6236,7 +6320,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6275,7 +6359,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6312,7 +6396,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6351,7 +6435,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6398,7 +6482,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6437,7 +6521,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6493,7 +6577,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6542,7 +6626,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6579,7 +6663,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6618,7 +6702,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6657,7 +6741,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6696,7 +6780,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6742,7 +6826,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6781,7 +6865,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6830,7 +6914,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6869,7 +6953,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6906,7 +6990,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -6945,7 +7029,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -6963,7 +7047,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7000,7 +7084,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7066,7 +7150,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7103,7 +7187,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7142,7 +7226,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7179,7 +7263,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7216,7 +7300,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7253,7 +7337,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7300,7 +7384,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7359,7 +7443,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7398,7 +7482,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7435,7 +7519,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7474,7 +7558,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7521,7 +7605,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7570,7 +7654,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7609,7 +7693,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7646,7 +7730,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7685,7 +7769,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7722,7 +7806,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7761,7 +7845,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -7832,7 +7916,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7871,7 +7955,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7910,7 +7994,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7947,7 +8031,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -7984,7 +8068,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8021,7 +8105,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8070,7 +8154,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -8088,7 +8172,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8125,7 +8209,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -8221,7 +8305,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8256,7 +8340,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8291,7 +8375,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8330,7 +8414,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8367,7 +8451,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8418,7 +8502,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8455,7 +8539,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8492,7 +8576,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8531,7 +8615,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8568,7 +8652,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8607,7 +8691,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8644,7 +8728,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8683,7 +8767,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8720,7 +8804,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8773,7 +8857,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8812,7 +8896,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8849,7 +8933,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -8867,7 +8951,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8906,7 +8990,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -8945,7 +9029,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9020,7 +9104,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -9038,7 +9122,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9088,7 +9172,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9127,7 +9211,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9162,7 +9246,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9201,7 +9285,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9240,7 +9324,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9277,7 +9361,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9314,7 +9398,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9353,7 +9437,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -9371,7 +9455,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9406,7 +9490,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9443,7 +9527,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9490,7 +9574,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9527,7 +9611,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9566,7 +9650,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9605,7 +9689,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9640,7 +9724,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9691,7 +9775,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9728,7 +9812,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9763,7 +9847,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9800,7 +9884,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9837,7 +9921,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9876,7 +9960,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9913,7 +9997,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9950,7 +10034,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -9987,7 +10071,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10026,7 +10110,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10063,7 +10147,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10102,7 +10186,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10139,7 +10223,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10176,7 +10260,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10211,7 +10295,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10250,7 +10334,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10287,7 +10371,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10334,7 +10418,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      },
      {
       "id": "upgrade",
@@ -10373,7 +10457,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10412,7 +10496,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -10430,7 +10514,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10469,7 +10553,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10506,7 +10590,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10543,7 +10627,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10580,7 +10664,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10615,7 +10699,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10657,7 +10741,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10692,7 +10776,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10729,7 +10813,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10766,7 +10850,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10803,7 +10887,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10838,7 +10922,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -10856,7 +10940,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10895,7 +10979,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10934,7 +11018,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -10983,7 +11067,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11020,7 +11104,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11057,7 +11141,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -11087,7 +11171,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 3
+      "max": 2
      }
     ]
    },
@@ -11105,7 +11189,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11142,7 +11226,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11179,7 +11263,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11216,7 +11300,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11255,7 +11339,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11294,7 +11378,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11331,7 +11415,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11370,7 +11454,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11407,7 +11491,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11446,7 +11530,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11485,7 +11569,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11524,7 +11608,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11563,7 +11647,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11600,7 +11684,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11637,7 +11721,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11672,7 +11756,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11709,7 +11793,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11748,7 +11832,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11787,7 +11871,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11822,7 +11906,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11870,7 +11954,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11907,7 +11991,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11946,7 +12030,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -11983,7 +12067,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12020,7 +12104,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12059,7 +12143,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12108,7 +12192,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12145,7 +12229,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12184,7 +12268,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12221,7 +12305,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12260,7 +12344,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12297,7 +12381,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12336,7 +12420,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12375,7 +12459,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12426,7 +12510,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12465,7 +12549,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12504,7 +12588,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12539,7 +12623,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12578,7 +12662,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12617,7 +12701,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12652,7 +12736,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12687,7 +12771,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12722,7 +12806,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12761,7 +12845,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12798,7 +12882,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -12816,7 +12900,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -12834,7 +12918,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12871,7 +12955,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12940,7 +13024,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -12992,7 +13076,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13041,7 +13125,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13080,7 +13164,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13119,7 +13203,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13156,7 +13240,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13193,7 +13277,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13230,7 +13314,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13265,7 +13349,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13302,7 +13386,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13341,7 +13425,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13378,7 +13462,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13415,7 +13499,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13450,7 +13534,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13489,7 +13573,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13526,7 +13610,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13563,7 +13647,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13598,7 +13682,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13635,7 +13719,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13672,7 +13756,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13709,7 +13793,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13746,7 +13830,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13785,7 +13869,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13822,7 +13906,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13861,7 +13945,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13900,7 +13984,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13937,7 +14021,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -13976,7 +14060,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -13994,7 +14078,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14033,7 +14117,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14070,7 +14154,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14107,7 +14191,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14144,7 +14228,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14181,7 +14265,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14218,7 +14302,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14253,7 +14337,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14302,7 +14386,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14339,7 +14423,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14374,7 +14458,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14421,7 +14505,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14458,7 +14542,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14503,7 +14587,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -14521,7 +14605,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14558,7 +14642,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14597,7 +14681,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -14615,7 +14699,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14666,7 +14750,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14705,7 +14789,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -14723,7 +14807,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -14781,7 +14865,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14820,7 +14904,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14857,7 +14941,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14896,7 +14980,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14935,7 +15019,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -14974,7 +15058,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15013,7 +15097,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15052,7 +15136,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15087,7 +15171,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15132,7 +15216,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -15150,7 +15234,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15189,7 +15273,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15226,7 +15310,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15263,7 +15347,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15300,7 +15384,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15339,7 +15423,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15376,7 +15460,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -15394,7 +15478,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15433,7 +15517,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15470,7 +15554,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15507,7 +15591,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15546,7 +15630,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15581,7 +15665,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15618,7 +15702,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15657,7 +15741,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15694,7 +15778,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15733,7 +15817,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15768,7 +15852,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15807,7 +15891,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15844,7 +15928,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15883,7 +15967,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15918,7 +16002,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15957,7 +16041,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -15994,7 +16078,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16031,7 +16115,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16070,7 +16154,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16109,7 +16193,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16148,7 +16232,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16185,7 +16269,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16220,7 +16304,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -16238,7 +16322,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16275,7 +16359,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16314,7 +16398,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16351,7 +16435,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16398,7 +16482,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16445,7 +16529,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 14
+      "max": 13
      },
      {
       "id": "upgrade",
@@ -16484,7 +16568,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16523,7 +16607,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16562,7 +16646,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16599,7 +16683,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16634,7 +16718,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16671,7 +16755,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16708,7 +16792,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16745,7 +16829,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16808,7 +16892,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16843,7 +16927,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16882,7 +16966,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16919,7 +17003,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16956,7 +17040,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -16995,7 +17079,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17034,7 +17118,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17073,7 +17157,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17112,7 +17196,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17151,7 +17235,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17186,7 +17270,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17225,7 +17309,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17262,7 +17346,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17295,7 +17379,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17334,7 +17418,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17371,7 +17455,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17410,7 +17494,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17447,7 +17531,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17484,7 +17568,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17533,7 +17617,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17570,7 +17654,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17609,7 +17693,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17646,7 +17730,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17683,7 +17767,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17718,7 +17802,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17757,7 +17841,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17794,7 +17878,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -17812,7 +17896,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17851,7 +17935,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17888,7 +17972,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17925,7 +18009,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -17972,7 +18056,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18009,7 +18093,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18046,7 +18130,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18095,7 +18179,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18132,7 +18216,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18171,7 +18255,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18208,7 +18292,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18245,7 +18329,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18282,7 +18366,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18319,7 +18403,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18356,7 +18440,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18393,7 +18477,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18496,7 +18580,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18535,7 +18619,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18572,7 +18656,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18609,7 +18693,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18646,7 +18730,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18685,7 +18769,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18724,7 +18808,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18763,7 +18847,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18802,7 +18886,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18837,7 +18921,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18886,7 +18970,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18925,7 +19009,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -18964,7 +19048,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19001,7 +19085,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19038,7 +19122,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19075,7 +19159,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19112,7 +19196,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19151,7 +19235,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19202,7 +19286,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19241,7 +19325,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19280,7 +19364,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19317,7 +19401,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19354,7 +19438,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19391,7 +19475,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19430,7 +19514,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19469,7 +19553,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19508,7 +19592,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19545,7 +19629,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19582,7 +19666,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19617,7 +19701,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19654,7 +19738,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19689,7 +19773,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19726,7 +19810,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19763,7 +19847,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19800,7 +19884,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19835,7 +19919,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19872,7 +19956,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19909,7 +19993,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19946,7 +20030,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -19983,7 +20067,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20022,7 +20106,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20059,7 +20143,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20098,7 +20182,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20137,7 +20221,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20174,7 +20258,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20211,7 +20295,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20250,7 +20334,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -20268,7 +20352,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20305,7 +20389,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20342,7 +20426,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20381,7 +20465,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -20399,7 +20483,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20436,7 +20520,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20471,7 +20555,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20508,7 +20592,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20547,7 +20631,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20586,7 +20670,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20625,7 +20709,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20662,7 +20746,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20697,7 +20781,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20732,7 +20816,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20771,7 +20855,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20810,7 +20894,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20849,7 +20933,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20888,7 +20972,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20939,7 +21023,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -20978,7 +21062,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21017,7 +21101,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21056,7 +21140,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21095,7 +21179,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21134,7 +21218,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21173,7 +21257,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21210,7 +21294,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21249,7 +21333,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21286,7 +21370,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21325,7 +21409,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21362,7 +21446,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21401,7 +21485,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21436,7 +21520,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21471,7 +21555,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21508,7 +21592,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21545,7 +21629,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21580,7 +21664,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21619,7 +21703,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21656,7 +21740,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21703,7 +21787,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21740,7 +21824,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21777,7 +21861,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -21805,7 +21889,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21842,7 +21926,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21877,7 +21961,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21916,7 +22000,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -21953,7 +22037,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22003,7 +22087,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22042,7 +22126,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22079,7 +22163,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22116,7 +22200,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22151,7 +22235,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22190,7 +22274,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22227,7 +22311,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22264,7 +22348,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22303,7 +22387,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22352,7 +22436,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22427,7 +22511,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22466,7 +22550,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22505,7 +22589,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22544,7 +22628,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22579,7 +22663,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22616,7 +22700,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22655,7 +22739,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22694,7 +22778,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22733,7 +22817,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22770,7 +22854,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22807,7 +22891,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22844,7 +22928,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22881,7 +22965,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22920,7 +23004,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22959,7 +23043,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -22998,7 +23082,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23035,7 +23119,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23072,7 +23156,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23123,7 +23207,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23183,7 +23267,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23222,7 +23306,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23259,7 +23343,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23296,7 +23380,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23334,7 +23418,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23371,7 +23455,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23408,7 +23492,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23457,7 +23541,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23492,7 +23576,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23529,7 +23613,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23566,7 +23650,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23605,7 +23689,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23654,7 +23738,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23691,7 +23775,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23728,7 +23812,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23767,7 +23851,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23806,7 +23890,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23843,7 +23927,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23880,7 +23964,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23917,7 +24001,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23956,7 +24040,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -23993,7 +24077,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24028,7 +24112,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24065,7 +24149,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24104,7 +24188,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24141,7 +24225,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24190,7 +24274,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24259,7 +24343,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24306,7 +24390,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -24324,7 +24408,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24432,7 +24516,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24469,7 +24553,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24506,7 +24590,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24543,7 +24627,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24592,7 +24676,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24631,7 +24715,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24668,7 +24752,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24707,7 +24791,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24744,7 +24828,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24781,7 +24865,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24828,7 +24912,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24867,7 +24951,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24904,7 +24988,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24941,7 +25025,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -24978,7 +25062,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25015,7 +25099,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25052,7 +25136,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25091,7 +25175,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25148,7 +25232,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25187,7 +25271,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25226,7 +25310,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25263,7 +25347,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25312,7 +25396,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25359,7 +25443,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25408,7 +25492,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25445,7 +25529,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25480,7 +25564,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -25510,7 +25594,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25559,7 +25643,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25596,7 +25680,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25633,7 +25717,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25672,7 +25756,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25709,7 +25793,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25748,7 +25832,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25787,7 +25871,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25826,7 +25910,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25865,7 +25949,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25902,7 +25986,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25939,7 +26023,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -25976,7 +26060,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26013,7 +26097,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26050,7 +26134,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26089,7 +26173,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26126,7 +26210,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26161,7 +26245,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26200,7 +26284,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26237,7 +26321,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26272,7 +26356,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26309,7 +26393,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26346,7 +26430,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26383,7 +26467,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26420,7 +26504,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26457,7 +26541,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26494,7 +26578,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26533,7 +26617,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26572,7 +26656,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26609,7 +26693,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 6
+      "max": 5
      }
     ]
    },
@@ -26627,7 +26711,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26664,7 +26748,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26715,7 +26799,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26762,7 +26846,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26799,7 +26883,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26838,7 +26922,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26886,7 +26970,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26923,7 +27007,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -26962,7 +27046,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27001,7 +27085,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27040,7 +27124,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27089,7 +27173,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27128,7 +27212,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27175,7 +27259,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27210,7 +27294,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27249,7 +27333,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -27267,7 +27351,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27314,7 +27398,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27351,7 +27435,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27390,7 +27474,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27427,7 +27511,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27466,7 +27550,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27503,7 +27587,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27542,7 +27626,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27581,7 +27665,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27620,7 +27704,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27657,7 +27741,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27696,7 +27780,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27735,7 +27819,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27774,7 +27858,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27813,7 +27897,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27852,7 +27936,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -27877,7 +27961,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27916,7 +28000,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27953,7 +28037,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -27992,7 +28076,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28031,7 +28115,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28070,7 +28154,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28107,7 +28191,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28146,7 +28230,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28183,7 +28267,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28220,7 +28304,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      }
     ]
    },
@@ -28238,7 +28322,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28277,7 +28361,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28314,7 +28398,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28351,7 +28435,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28390,7 +28474,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28427,7 +28511,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",
@@ -28466,7 +28550,7 @@
       "id": "star",
       "label": "Star",
       "min": 1,
-      "max": 7
+      "max": 6
      },
      {
       "id": "upgrade",

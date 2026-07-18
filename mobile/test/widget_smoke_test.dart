@@ -192,7 +192,7 @@ void main() {
     await tester.tap(find.text('Max shelf').first);
     await tester.pumpAndSettle();
     final vaultBlob = prefs.getString('shelf_v1')!;
-    expect(vaultBlob, contains('"longevity":6'));
+    expect(vaultBlob, contains('"longevity":2'));
 
     // The Exclusive shelf lists the exclusive manuals; maxing it records
     // them at tier 6.
