@@ -192,7 +192,12 @@ List<Candidate> candidates(Map catalog, Map shelf, {int? currentLevel}) {
     final reqStage = req['stage'];
     if (reqStage != null && currentLevel != null) {
       final band = realm[reqStage];
-      if (band != null && currentLevel < (band[0] as num).toInt()) continue;
+      if (band != null) {
+        const offsets = {'EARLY': 0, 'MIDDLE': 1, 'LATE': 2};
+        final lo = (band[0] as num).toInt() + (offsets[req['phase']] ?? 0);
+        final hi = (band[1] as num).toInt();
+        if (currentLevel < (lo > hi ? hi : lo)) continue;
+      }
     }
     final rb = req['rank_books'] as Map?;
     if (rb != null) {
