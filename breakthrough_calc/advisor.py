@@ -30,14 +30,13 @@ RANDOM = "random"
 _CHANNEL_BY_CATEGORY = {"curio": RANDOM}
 
 # raw_additive target -> (Inputs attr, catalog-unit -> Inputs-unit scale).
-# respira_effect is handled separately: it is embedded in the respira_exp
-# reading, so a delta rescales that reading instead of adding to a field.
+# respira_effect and the blessing targets are handled separately: both are
+# embedded in an entered reading (respira_exp / the absorption total), so a
+# delta rescales that reading instead of adding to a field.
 _APPLY = {
     "pill_effect": ("pill_effect", 0.01),
     "pill_attempts": ("pill_limit", 1.0),
     "respira_attempts": ("respira_per_day", 1.0),
-    "bless_pp": ("bless_pp", 1.0),
-    "bless_window_pp": ("bless_window_pp", 1.0),
 }
 
 
@@ -77,45 +76,66 @@ def _int_thresholds(entry: dict) -> list:
                    if isinstance(e.get("min_level", 1), int)})
 
 
-def steps(entry: dict, owned) -> list:
-    """The next step(s) for one source: [] when maxed or nothing to unlock.
+def player_level(catalog: dict, stage: str, phase: str):
+    """The player's realm-level index (the client's gating unit), from the
+    catalog's realm_levels table. Early/Middle/Late are the sub-levels of a
+    Stage; multi-sub Stages (Connection) resolve to the entry level. None
+    when the Stage is unknown — gating then stays permissive."""
+    band = (catalog.get("realm_levels") or {}).get(stage)
+    if not band:
+        return None
+    lo, hi = band
+    offset = {"EARLY": 0, "MIDDLE": 1, "LATE": 2}.get(phase, 0)
+    return min(lo + offset, hi)
 
-    Steps target the next EFFECT threshold, not the next raw level — a
-    recommendation must change something the calculator can price.
+
+def steps(entry: dict, owned) -> list:
+    """Upgrade tracks for one source: a list of tracks, each an ordered
+    list of (action, new_owned, require_level) future steps. A candidate is
+    the first step on a track that changes something the calculator can
+    price; require_level (or None) is the realm-level gate for that step.
     """
     levels = entry["levels"]
     kind = levels["kind"]
     if not entry.get("effects"):
         return []
     if kind == "binary":
-        return [] if owned is not None else [("Own", 1)]
+        return [] if owned is not None else [[("Own", 1, None)]]
     if kind == "custom":
         params = levels["params"]
+        reqs = entry.get("upgrade_requires_level")
         if owned is None:
-            return [("Own", [int(p["min"]) for p in params])]
+            return [[("Own", [int(p["min"]) for p in params], None)]]
         vals = [int(v) for v in owned]
-        out = []
+        tracks = []
         for i, p in enumerate(params):
-            if vals[i] < int(p["max"]):
+            track = []
+            for nv in range(vals[i] + 1, int(p["max"]) + 1):
                 nxt = list(vals)
-                nxt[i] += 1
-                out.append((f"{p['label']} {nxt[i]}", nxt))
-        return out
+                nxt[i] = nv
+                req = None
+                if p.get("id") == "upgrade" and reqs and nv < len(reqs):
+                    req = reqs[nv]
+                track.append((f"{p['label']} {nv}", nxt, req))
+            if track:
+                tracks.append(track)
+        return tracks
     if kind == "ladder":
         labels = levels["labels"]
         cur = int(owned) if owned else 0
-        return [(labels[cur], cur + 1)] if cur < len(labels) else []
-    # tier / level: the next effect threshold above the current level.
+        return [[(labels[i], i + 1, None)
+                 for i in range(cur, len(labels))]] if cur < len(labels) \
+            else []
+    # tier / level: walk the effect thresholds above the current level.
     if owned == -1:
         return []
     cur = int(owned) if owned else 0
-    for t in _int_thresholds(entry):
-        if t > cur:
-            prefix = "Tier " if kind == "tier" else "lv "
-            return [(f"{prefix}{t}", t)]
+    prefix = "Tier " if kind == "tier" else "lv "
+    track = [(f"{prefix}{t}", t, None)
+             for t in _int_thresholds(entry) if t > cur]
     if any(e.get("min_level") == "max" for e in entry.get("effects", [])):
-        return [("max", -1)]
-    return []
+        track.append(("max", -1, None))
+    return [track] if track else []
 
 
 def _totals(derived: dict, targets: dict) -> dict:
@@ -123,34 +143,79 @@ def _totals(derived: dict, targets: dict) -> dict:
             if targets.get(tid, {}).get("mode") == "raw_additive"}
 
 
-def candidates(catalog: dict, shelf: dict) -> list:
-    """Every next step with a nonzero raw-target delta, unranked."""
+def candidates(catalog: dict, shelf: dict, current_level=None) -> list:
+    """Every obtainable next step with a nonzero raw-target delta.
+
+    Per track, the first step that changes a raw target becomes the
+    candidate; steps whose realm-level requirement exceeds current_level
+    are unobtainable and end their track. Sources gated by requires.stage
+    the player has not reached are skipped entirely.
+    """
     targets = catalog.get("targets", {})
+    realm = catalog.get("realm_levels") or {}
     owned = shelf.get("owned") or {}
     before = _totals(derive(catalog, shelf), targets)
     out = []
     for entry in catalog.get("sources", []):
         sid = entry["id"]
-        for action, new_owned in steps(entry, owned.get(sid)):
-            shelf2 = dict(shelf)
-            shelf2["owned"] = {**owned, sid: new_owned}
-            after = _totals(derive(catalog, shelf2), targets)
-            deltas = {}
-            for tid in after.keys() | before.keys():
-                dv = after.get(tid, 0.0) - before.get(tid, 0.0)
-                if abs(dv) > 1e-12:
-                    deltas[tid] = dv
-            if deltas:
-                out.append(Candidate(sid, entry["name"], entry["category"],
-                                     channel_for(entry), action, new_owned,
-                                     deltas))
+        req_stage = (entry.get("requires") or {}).get("stage")
+        if req_stage and current_level is not None:
+            band = realm.get(req_stage)
+            if band and current_level < band[0]:
+                continue
+        for track in steps(entry, owned.get(sid)):
+            for action, new_owned, req_level in track:
+                if (req_level is not None and current_level is not None
+                        and current_level < req_level):
+                    break                 # steps beyond this stay locked too
+                shelf2 = dict(shelf)
+                shelf2["owned"] = {**owned, sid: new_owned}
+                after = _totals(derive(catalog, shelf2), targets)
+                deltas = {}
+                for tid in after.keys() | before.keys():
+                    dv = after.get(tid, 0.0) - before.get(tid, 0.0)
+                    if abs(dv) > 1e-12:
+                        deltas[tid] = dv
+                if deltas:
+                    out.append(Candidate(sid, entry["name"],
+                                         entry["category"],
+                                         channel_for(entry), action,
+                                         new_owned, deltas))
+                    break                 # first priced step wins the track
     return out
 
 
-def apply_deltas(inp: Inputs, deltas: dict, books_now: float) -> Inputs | None:
+def apply_deltas(inp: Inputs, deltas: dict, books_now: float,
+                 engine: Engine | None = None) -> Inputs | None:
     """A copy of `inp` with the candidate's bonuses landed, or None when
     nothing the engine models would change."""
     kw = {}
+    bless_dv = deltas.get("bless_pp", 0.0)
+    window_dv = deltas.get("bless_window_pp", 0.0)
+    if bless_dv or window_dv:
+        # The absorption reading is (row base + blessing pp) x (1 + Strive).
+        # Acquiring a tier raises the reading; Strive stays what it was, so
+        # the counterfactual rescales by the blessed-base ratio. Without the
+        # row's base the gain cannot be priced — skip rather than misprice.
+        if engine is None:
+            return None
+        base = engine.base_low(inp.stage, inp.phase, inp.grade)
+        if base is None or base <= 0 or inp.absorption_ratio <= 0:
+            return None
+        in_window = engine.blessing_applies(inp.stage, inp.phase, inp.grade)
+        blessed = base + inp.bless_pp + \
+            (inp.bless_window_pp if in_window else 0.0)
+        now_dv = bless_dv + (window_dv if in_window else 0.0)
+        if now_dv and blessed > 0:
+            factor = (blessed + now_dv) / blessed
+            kw["absorption_ratio"] = inp.absorption_ratio * factor
+            # Abode Aura is speed / absorption and a blessing leaves it
+            # untouched, so the current XP/tick rises with the ratio.
+            kw["culti_speed"] = inp.culti_speed * factor
+        if bless_dv:
+            kw["bless_pp"] = inp.bless_pp + bless_dv
+        if window_dv:
+            kw["bless_window_pp"] = inp.bless_window_pp + window_dv
     for tid, dv in deltas.items():
         if tid == "respira_effect":
             # The respira_exp reading already contains today's book/curio
@@ -182,9 +247,10 @@ def rank(engine: Engine, inp: Inputs, catalog: dict, shelf: dict) -> Advice:
     derived = derive(catalog, shelf)
     books_now = derived.get("respira_effect").total \
         if "respira_effect" in derived else 0.0
+    level_now = player_level(catalog, inp.stage, inp.phase)
     plan, draws = [], []
-    for cand in candidates(catalog, shelf):
-        inp2 = apply_deltas(inp, cand.deltas, books_now)
+    for cand in candidates(catalog, shelf, level_now):
+        inp2 = apply_deltas(inp, cand.deltas, books_now, engine)
         if inp2 is None:
             continue
         r2 = engine.calculate(inp2)
