@@ -13,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:breakthrough_calc/engine.dart';
 import 'package:breakthrough_calc/main.dart';
+import 'package:breakthrough_calc/share_codec.dart';
+import 'package:breakthrough_calc/shelf.dart';
 
 Engine loadEngine() => Engine(jsonDecode(
         File('../data/breakthrough.json').readAsStringSync())
@@ -207,6 +209,74 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(find.textContaining('attempts'), findsWidgets);
+  });
+
+  testWidgets('importing a code that carries the Vault adopts it',
+      (tester) async {
+    // Sender: owns lifeboom + full Virya, 16 Respira/day, and a code whose
+    // synthetic Vault row carries a deliberately wrong value — the
+    // receiver must regenerate that row from the adopted ownership, never
+    // trust (or double-count) the flattened copy.
+    const owned = <String, dynamic>{'ascension_virya': 3, 'lifeboom': 3};
+    final senderInp = Inputs.fromMap(<String, dynamic>{});
+    senderInp.stage = engine.stages().first;
+    senderInp.respiraPerDay = 16.0;
+    senderInp.pillLimit = 9.0;
+    final code = encodeBuildCode(
+        engine,
+        senderInp,
+        [
+          ['Vault (books & curios)', 999.0],
+          ['Event buff', 2.0],
+        ],
+        {},
+        shelfOwned: owned);
+
+    // Receiver starts with a DIFFERENT vault; import must replace it.
+    final prefs = await mockPrefs({
+      'shelf_v1': jsonEncode({
+        'owned': {'longevity': 1},
+        'bases': {'respira_attempts': 10.0, 'pill_attempts': 0.0},
+        'auto': true,
+      }),
+    });
+    await tester.pumpWidget(BreakthroughApp(engine, shelfCatalog, prefs));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.ios_share));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+        find.descendant(
+            of: find.byType(AlertDialog), matching: find.byType(TextField)),
+        code);
+    await tester.tap(find.text('Import'));
+    await tester.pumpAndSettle();
+    expect(find.text('Build imported'), findsOneWidget);
+
+    final vault =
+        jsonDecode(prefs.getString('shelf_v1')!) as Map<String, dynamic>;
+    expect(vault['owned'], equals(owned));
+
+    final d = derive(shelfCatalog, {'owned': owned});
+    final peTotal = d['pill_effect']?.total ?? 0.0;
+    expect(peTotal, greaterThan(0));
+    final attempts = d['respira_attempts']?.total ?? 0.0;
+    expect((vault['bases'] as Map)['respira_attempts'], 16.0 - attempts);
+
+    final blob =
+        jsonDecode(prefs.getString('inputs_v1')!) as Map<String, dynamic>;
+    final peRows = (blob['pe_sources'] as List)
+        .where((r) => (r as List)[0] == 'Vault (books & curios)')
+        .toList();
+    expect(peRows, hasLength(1),
+        reason: 'exactly one synthetic Vault row after import');
+    expect((peRows.single as List)[1], peTotal,
+        reason: 'row value must be locally derived, not the sender copy');
+    expect(blob['respira_per_day'], 16.0,
+        reason: 're-anchored bases must reproduce the imported value');
+    expect((blob['pe_sources'] as List).any(
+            (r) => (r as List)[0] == 'Event buff'),
+        isTrue);
   });
 
   testWidgets('persisted inputs blob pins the exact key set', (tester) async {
