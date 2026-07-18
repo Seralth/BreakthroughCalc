@@ -24,7 +24,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '3.3';
+const appVersion = '3.4';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -369,14 +369,47 @@ class _CalculatorPageState extends State<CalculatorPage>
   // ---- shareable build string -------------------------------------------
   // Compact copy-paste export of every input, so users can share their
   // setup for troubleshooting. See share_codec.dart for the format.
-  String _exportString() => encodeBuildCode(engine, inp, _peSources, _respiraSources);
+  String _exportString() => encodeBuildCode(
+      engine, inp, _peSources, _respiraSources,
+      shelfOwned: _vault.owned);
 
   bool _importString(String s) {
     final m = decodeBuildCode(engine, s);
-    if (m == null || !_applyInputsMap(m)) return false;
+    if (m == null) return false;
+    // Not part of the inputs blob — pull it out before validation.
+    final shelfOwned = m.remove('shelf_owned') as Map?;
+    if (!_applyInputsMap(m)) return false;
+    if (shelfOwned != null) {
+      _adoptImportedVault(shelfOwned.cast<String, dynamic>());
+    }
     _syncControllers();
     _recalc();
     return true;
+  }
+
+  /// A code that carries the Vault replaces ours: adopt the sender's
+  /// ownership, re-anchor the untracked remainders so the imported
+  /// attempts/limit values are reproduced exactly (base = imported total −
+  /// what the adopted Vault derives here), and drop the sender's synthetic
+  /// Vault pe row — _onVaultChanged regenerates it from the adopted state,
+  /// so vault contributions are never double-counted. Codes without 'S'
+  /// (pre-3.4) leave the local Vault untouched; their flattened values
+  /// still import as plain fields.
+  void _adoptImportedVault(Map<String, dynamic> owned) {
+    _vault = VaultState(owned: owned, auto: owned.isNotEmpty);
+    final d = derive(widget.shelfCatalog, _vault.toMap());
+    _vault.bases = {
+      'respira_attempts': inp.respiraPerDay > 0
+          ? (inp.respiraPerDay - (d['respira_attempts']?.total ?? 0.0))
+              .clamp(0.0, double.infinity)
+          : 10.0,
+      'pill_attempts':
+          (inp.pillLimit - (d['pill_attempts']?.total ?? 0.0))
+              .clamp(0.0, double.infinity),
+    };
+    final i = _peSources.indexWhere((s) => s[0] == _vaultPeRow);
+    if (i >= 0) _removePeSource(i);
+    _onVaultChanged();
   }
 
   void _recalc() {
