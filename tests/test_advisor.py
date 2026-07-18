@@ -1,5 +1,15 @@
-"""Advisor: step tracks, obtainability gating, and engine-diff ranking."""
+"""Advisor: step tracks, obtainability gating, and engine-diff ranking.
 
+The end-to-end rank() behavior lives in the shared fixture
+mobile/test/advisor_cases.json, which the Dart twin
+(mobile/test/advisor_test.dart) runs too — the two advisor implementations
+can only drift if one of these suites goes red. The classes below keep the
+platform-specific unit coverage the fixture cannot express (step tracks,
+candidate gating, and the apply_deltas unit math).
+"""
+
+import json
+import os
 import unittest
 
 from breakthrough_calc.advisor import (
@@ -8,6 +18,9 @@ from breakthrough_calc.advisor import (
 )
 from breakthrough_calc.engine import Engine, Inputs
 from breakthrough_calc.shelf import load_sources
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CASES = os.path.join(ROOT, "mobile", "test", "advisor_cases.json")
 
 
 def base_inputs(**kw):
@@ -273,6 +286,47 @@ class Ranking(unittest.TestCase):
                                        grade="G5"), self.cat, {"owned": {}})
         self.assertFalse(adv.valid)
         self.assertTrue(adv.reason)
+
+
+class SharedFixture(unittest.TestCase):
+    """Cross-platform parity layer: the same rank() scenarios the Dart twin
+    asserts (mobile/test/advisor_test.dart), pinning the plan/draws split,
+    realm gating, cheapest-first tie ordering and the respira stock floor.
+    Only values identical across both engines are pinned — the ordered
+    source_id lists, channels, valid and metric — never raw day-savings."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = Engine()
+        cls.cat = load_sources()
+        with open(CASES) as f:
+            cls.cases = json.load(f)
+
+    def test_cases_match_the_dart_twin(self):
+        for case in self.cases:
+            name = case["name"]
+            adv = rank(self.engine, Inputs(**case["inputs"]),
+                       self.cat, case["shelf"])
+            exp = case["expect"]
+            self.assertEqual(adv.valid, exp["valid"], name)
+            if not exp["valid"]:
+                self.assertEqual(adv.plan, (), name)
+                self.assertEqual(adv.draws, (), name)
+                self.assertTrue(adv.reason, name)
+                continue
+            self.assertEqual(adv.metric, exp["metric"], name)
+            self.assertEqual([r.candidate.source_id for r in adv.plan],
+                             exp["plan_ids"], name)
+            self.assertEqual([r.candidate.source_id for r in adv.draws],
+                             exp["draws_ids"], name)
+            # Channel-of-each plus the positive-and-sorted savings invariant,
+            # both platform-agnostic properties of every ranked group.
+            for group, chan in ((adv.plan, PLANNED), (adv.draws, RANDOM)):
+                saved = [r.days_saved for r in group]
+                self.assertTrue(all(s > 0 for s in saved), name)
+                self.assertEqual(saved, sorted(saved, reverse=True), name)
+                for r in group:
+                    self.assertEqual(r.candidate.channel, chan, name)
 
 
 if __name__ == "__main__":

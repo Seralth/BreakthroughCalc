@@ -28,6 +28,55 @@ void main() {
       .cast<Map>()
       .firstWhere((s) => s['id'] == id));
 
+  // Cross-platform parity layer: the same rank() scenarios the Python twin
+  // asserts (tests/test_advisor.py). The advisors can only drift if one of
+  // these suites goes red. Only values identical across both engines are
+  // pinned — the ordered source_id lists, channels, valid and metric —
+  // never raw day-savings.
+  group('shared fixture (twin of tests/test_advisor.py)', () {
+    final cases =
+        jsonDecode(File('test/advisor_cases.json').readAsStringSync()) as List;
+    for (final caseRaw in cases) {
+      final c = caseRaw as Map;
+      test(c['name'] as String, () {
+        final adv = rank(
+            engine,
+            Inputs.fromMap((c['inputs'] as Map).cast<String, dynamic>()),
+            catalog,
+            c['shelf'] as Map);
+        final exp = c['expect'] as Map;
+        expect(adv.valid, exp['valid']);
+        if (exp['valid'] != true) {
+          expect(adv.plan, isEmpty);
+          expect(adv.draws, isEmpty);
+          expect(adv.reason, isNotEmpty);
+          return;
+        }
+        expect(adv.metric, exp['metric']);
+        expect([for (final r in adv.plan) r.candidate.sourceId],
+            exp['plan_ids']);
+        expect([for (final r in adv.draws) r.candidate.sourceId],
+            exp['draws_ids']);
+        // Channel-of-each plus the positive-and-sorted savings invariant.
+        for (final entry in [
+          [adv.plan, planned],
+          [adv.draws, random]
+        ]) {
+          final grp = entry[0] as List<RankedStep>;
+          final chan = entry[1] as String;
+          final saved = [for (final r in grp) r.daysSaved];
+          expect(saved.every((s) => s > 0), isTrue);
+          final sortedDesc = List<double>.from(saved)
+            ..sort((a, b) => b.compareTo(a));
+          expect(saved, sortedDesc);
+          for (final r in grp) {
+            expect(r.candidate.channel, chan);
+          }
+        }
+      });
+    }
+  });
+
   group('step tracks (twin of tests/test_advisor.py)', () {
     test('binary curio owned vs not', () {
       final lantern = byId('dongxuans_lantern');
