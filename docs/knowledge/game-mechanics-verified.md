@@ -218,6 +218,11 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   Blessing Rewards +1; privilege "First Esotability". The restriction
   removal is what lets higher-stage Cultivation Pills be fed to the LOWER
   secondary path to catch it up (community-explained use).
+  Auto-transmogrification is a SEPARATE privilege (owner-adjudicated
+  2026-07-17): it lets BREAKTHROUGH pills of one path be used on the other
+  — physical → magical or magical → physical. It is not about lower-path
+  feeding: rank-appropriate ("normal") pills already work on a lower path
+  with no privilege at all.
 - Tier **Perfection (C)** (reqs: primary at Incarnation (L) Completion;
   secondary at Nascent Soul (L) Late; clear Outer Realm Mighty Monster
   Amethyst Fiend in Myrimon Wonder): "Incarnation (L) Aura Absorption Ratio

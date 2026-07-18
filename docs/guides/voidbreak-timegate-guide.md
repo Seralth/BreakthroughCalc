@@ -65,8 +65,10 @@ one. Tiers unlock from your primary and secondary paths together:
   not blocked by the timegate — the gate blocks only the ascension into
   Voidbreak — so take it the moment the gauge fills. It removes realm
   restrictions on cultivation pills (higher-rank pills can feed a lower
-  secondary path) and unlocks pill auto-transmogrification, which is
-  what makes the secondary rush below possible.
+  secondary path; rank-appropriate pills already work there without it)
+  and unlocks pill auto-transmogrification, which lets breakthrough
+  pills of one path be used on the other (physical ↔ magical). Together
+  these make the secondary rush below possible.
 - **Perfection** — primary at Incarnation Completion, secondary at
   Nascent Soul Late, clear Amethyst Fiend in Myrimon Wonder:
   **+20 points** absorption.
