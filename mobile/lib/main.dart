@@ -25,7 +25,7 @@ import 'vault_tab.dart';
 /// App version. Release tagging must bump this alongside pubspec.yaml's
 /// `version:` field — the update checker compares it against the latest
 /// GitHub release tag.
-const appVersion = '3.9';
+const appVersion = '3.10';
 
 /// Commit + date stamped by CI (--dart-define=BUILD_STAMP=...); 'dev' locally.
 /// Shown in-app so it's obvious whether a deploy has actually been picked up.
@@ -42,6 +42,7 @@ Future<void> main() async {
   final raw = await rootBundle.loadString('assets/data/breakthrough.json');
   final engine = Engine(jsonDecode(raw) as Map<String, dynamic>);
   final shelfCatalog = await loadShelfCatalog('assets/data/sources.json');
+  loadTranslations(await rootBundle.loadString('assets/data/i18n.json'));
   final prefs = await SharedPreferences.getInstance();
   final savedLang = prefs.getString('lang');
   if (savedLang != null && langs.containsKey(savedLang)) currentLang = savedLang;
