@@ -68,6 +68,17 @@ Quality 30 / Gush 22.
   First observed table/live mismatch. Do NOT patch from a single row:
   re-verify the LATE ladder per-grade when a path passes through it
   (G4–G8 denominators are still readable ahead of the M path).
+- **Extractor track caps (owner-stated 2026-07-18, UNVERIFIED on screen)**:
+  the tracks continue past the displayed /25 to level 30 — the "Upon
+  reaching Mythic Lv. 26" tooltip lines are the 26+ band perks (Culti:
+  Mythic Aura Orb EXP +20%; Gush: trigger rate +5%, matching the data
+  table's gush_chance 0.30 → 0.35). PLAUSIBLE INFERENCE (unconfirmed):
+  extractor rarity is keyed to track-level bands (Epic ≤20 / Legendary
+  21–25 / Mythic 26–30 — fits the 2026-07-07 "Epic at Culti 20" and
+  tonight's Legendary-cap gem-adjacent readings). OPEN QUESTIONS for the
+  post-ascension screenshot: does the world reset wipe TRACK LEVELS or
+  only rarity + the +50% bonus ("quality/bonus"), and do unspent souls
+  (upgrade mats; owner income 1,600/week) persist across it?
 
 ## Fruit ranks
 
