@@ -69,11 +69,14 @@ def _level_ok(min_level, owned_level, levels) -> bool:
 
 def _model_value(model: dict, params) -> float:
     if model.get("kind") == "star_upgrade":
+        # Stars are 0-based like the game's display (0..5 + Awakened=6);
+        # star_add[star] is the tooltip's "Increases Curio Passive Stats"
+        # scalar, added in percentage points to the upgrade ladder.
         star, upgrade = int(params[0]), int(params[1])
-        star = max(1, min(model["stars"], star))
+        star = max(0, min(model["stars"] - 1, star))
         upgrade = max(0, min(model["max_upgrade"], upgrade))
         return (model["base"] + model["per_upgrade"] * upgrade
-                + model["star_add"][star - 1])
+                + model["star_add"][star])
     raise ValueError(f"unknown value model: {model.get('kind')}")
 
 

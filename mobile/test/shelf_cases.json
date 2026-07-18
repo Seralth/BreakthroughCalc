@@ -19,6 +19,14 @@
   "shelf": {"owned": {"yang_spirit_jade": [4, 3]}},
   "expect": {"pill_effect": 3.2}},
 
+ {"name": "yang spirit jade base form: zero stars zero upgrades = 1.0",
+  "shelf": {"owned": {"yang_spirit_jade": [0, 0]}},
+  "expect": {"pill_effect": 1.0}},
+
+ {"name": "yang spirit jade one star: the 0.4 rung the 1-based model missed",
+  "shelf": {"owned": {"yang_spirit_jade": [1, 0]}},
+  "expect": {"pill_effect": 1.4}},
+
  {"name": "crane boy maxed sentinel grants the pill attempt",
   "shelf": {"owned": {"crane_boy": -1}},
   "expect": {"pill_attempts": 1.0}},
