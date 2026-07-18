@@ -2995,7 +2995,18 @@
      "parametric": true
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "upgrade_requires_level": [
+    1,
+    10,
+    12,
+    15,
+    18,
+    21,
+    23,
+    24,
+    26
+   ]
   },
   {
    "id": "dongxuans_pot",
