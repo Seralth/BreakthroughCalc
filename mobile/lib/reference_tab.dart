@@ -9,6 +9,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'catalog.dart';
 import 'doc_nav.dart';
 import 'doc_widgets.dart';
 import 'engine.dart';
@@ -46,9 +47,9 @@ List<List<String>> curioBonusRows(Map<String, dynamic> shelfCatalog) {
       }
       if (!cult.contains(tid)) continue;
       if (e.containsKey('value_model')) {
-        final m = e['value_model'] as Map;
-        parts.add('Cultivation Pill Effect +${m['base']}% to '
-            '+${m['max_value']}% by star and upgrade');
+        final (lo, hi) = modelRange(e['value_model'] as Map);
+        parts.add('Cultivation Pill Effect +$lo% to '
+            '+$hi% by star and upgrade');
       } else if (e['value'] != null) {
         parts.add(note.isEmpty
             ? '+${fmtNum((e['value'] as num).toDouble())}'
@@ -74,8 +75,8 @@ List<List<String>> vaultBonusRows(
       final tid = e['target'] as String?;
       if (tid == null || !wanted.containsKey(tid)) continue;
       if (e.containsKey('value_model')) {
-        final m = e['value_model'] as Map;
-        parts.add('${m['base']}–${m['max_value']}'
+        final (lo, hi) = modelRange(e['value_model'] as Map);
+        parts.add('$lo–$hi'
             '${wanted[tid]} by star/upgrade');
         continue;
       }

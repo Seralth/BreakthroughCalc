@@ -14,6 +14,7 @@
 /// in a separate draws list instead of pretending they are plannable.
 library;
 
+import 'catalog.dart';
 import 'engine.dart';
 import 'shelf.dart';
 
@@ -75,16 +76,6 @@ int? playerLevel(Map catalog, String stage, String phase) {
   const offsets = {'EARLY': 0, 'MIDDLE': 1, 'LATE': 2};
   final v = lo + (offsets[phase] ?? 0);
   return v > hi ? hi : v;
-}
-
-List<int> _intThresholds(Map entry) {
-  final set = <int>{};
-  for (final e in (entry['effects'] ?? []) as List) {
-    final ml = (e as Map)['min_level'] ?? 1;
-    if (ml is int) set.add(ml);
-  }
-  final out = set.toList()..sort();
-  return out;
 }
 
 class Step {
@@ -153,15 +144,10 @@ List<List<Step>> steps(Map entry, dynamic owned) {
   final cur = owned == null ? 0 : (owned as num).toInt();
   final prefix = kind == 'tier' ? 'Tier ' : 'lv ';
   final track = <Step>[
-    for (final t in _intThresholds(entry))
+    for (final t in intThresholds(entry))
       if (t > cur) Step('$prefix$t', t, null)
   ];
-  for (final e in (entry['effects'] ?? []) as List) {
-    if ((e as Map)['min_level'] == 'max') {
-      track.add(const Step('max', -1, null));
-      break;
-    }
-  }
+  if (hasMaxEffect(entry)) track.add(const Step('max', -1, null));
   return track.isEmpty ? [] : [track];
 }
 

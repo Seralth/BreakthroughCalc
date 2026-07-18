@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .catalog import level_ok
 from .i18n import tr
 from .shelf import Derived
 
@@ -211,12 +212,11 @@ class _BookRow(_SourceRow):
 
     def _update_dots(self):
         owned = self.owned()
-        lvl = None if owned is None else (10**9 if owned == -1 else owned)
+        levels = self.entry["levels"]
         accent = self.palette().color(QPalette.Link).name()
         marks = []
         for ml in self._thresholds:
-            on = lvl is not None and (
-                lvl >= (ml if isinstance(ml, int) else 10**9))
+            on = level_ok(ml, owned, levels)
             dot = "●" if on else "○"
             if ml in self._noted:
                 dot = f"<span style='color:{accent}'>{dot}</span>"
