@@ -71,6 +71,9 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/elixir-sense-mechanics.md` — elixir tolerance ladders, pill
   taxonomy (3 distinct "pill" meanings), alchemy, Sense stat; has OPEN
   QUESTIONS — check before writing reference sections
+- `docs/knowledge/curio-effects.md` — curio (gubao) tooltips + star/upgrade
+  effect ladders ARE client-side (unlike balance tables); extraction pipeline
+  (apk_analysis/curio/), verified effect model, Vault catalog gap list
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
