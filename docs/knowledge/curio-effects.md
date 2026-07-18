@@ -99,6 +99,64 @@ effect (Archdemon Pearl 30), Daemonfae cultivation (Integration Pendant 5),
 clone exploration time (Fate Insight Compass −30), Celestial Jade / citizen
 affixes on Origin curios.
 
+## Scaling shape: linear vs breakpoints (client-ladder census 2026-07-18)
+
+Aggregated across all 819 roster curios' client ladders (star
+`special_affix_add`, star `attribs`, upgrade `affix` values, and the
+`material` star-up costs in `cfg_us_gubao_levels`). Client-exact tier —
+same extraction as above; the red-trio ladders below haven't had an
+in-game tooltip read yet, so their displayed-star alignment inherits the
+resolved YSJ mapping.
+
+**Percent-unit passives (every cultivation-relevant affix) are linear in
+upgrades; stars are linear until awakening.**
+
+- Upgrade ladders with `%` units: 152/177 exactly constant-step (YSJ
+  1.0 → 2.6 in +0.2s), 25 mildly progressive (≤3× step drift, e.g. Casual
+  Whip 0.6 → 1.8). Zero exponential % ladders exist.
+- Star scalar, dominant pattern (546 of 687 curios that have one): five
+  equal steps then a **3× awakening step** — awakening holds a median 38%
+  of the max star scalar (YSJ [0, .4, .8, 1.2, 1.6, 2, 3.2]). 126 curios
+  are pure-linear instead (89% have EN names, so not just unreleased CN
+  rows).
+- Star flat combat attribs: 1356/1400 series are linear with a 2×
+  awakening step.
+
+**Exception — the red r4 cultivation curios have bespoke mid-loaded star
+ladders; awakening adds almost nothing to their passive:**
+
+| Curio | Client star ladder | Awaken step (share of scalar) |
+|---|---|---|
+| Auraseep Seal | [0, 3, 7, 16, 26, 36, 40] | +4 (10%) |
+| Jade of Respira | [0, 3.5, 7, 14, 21, 26, 28] | +2 (7%) |
+| Wisdom Confluence | [0, 2, 4, 8, 12, 16, 17] | +1 (6%) |
+
+Their sweet zone is stars 2→5 (steps of +9/+10 for Auraseep vs +3/+4
+early). Dongxuan's Lantern and Classic of Mountains and Seas have NO star
+scalar at all — single upgrade, effect is binary on ownership; stars only
+add combat attribs.
+
+**Flat-unit combat stats (HP/ATK) are strongly super-linear in upgrades:**
+467/475 ladders; the last two upgrades — realm-gated at levels 27/29
+(Wholeness Early/Late) — hold a **median 74% of the max value**
+(Orientation Sword 20…140, 212, 273, 710, 1065). Cultivation % curios
+top out at gate 26; the 27/29 gates exist only on the 500 curios with
+11-step flat ladders.
+
+**Costs break upward faster than power.** Own-shard star-up cost roughly
+doubles per star with a 3× spike at awakening (purple medians
+30/60/120/180/300, then 900 + 750 any-quality shards). Marginal %-per-shard
+on the standard pattern falls ~10× across the stars: YSJ 1.33%/100 shards
+at 1★ → 0.13 at 5★; awakening matches 5★'s own-shard rate but adds the
+large any-quality bill.
+
+Practical read: % passives have no power breakpoint to chase — early stars
+are the cheapest %s in the system and efficiency only degrades; awakening
+is the single biggest power step for standard-pattern curios but the worst
+shards-per-%; for the red trio above, stop at 5★ — awakening is a combat-
+stat/set-bonus play only. Flat combat power is dominated by the two
+final realm-gated upgrades.
+
 ## Related client-exact recoveries (2026-07-18)
 
 - **realm_levels** (shipped in data/sources.json): exact player-level index
