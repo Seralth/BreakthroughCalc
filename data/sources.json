@@ -3126,12 +3126,11 @@
     {
      "target": "info",
      "min_level": 31,
-     "data_status": "unknown",
-     "note": "Widely recommended to level 31; the payoff is not recorded yet."
+     "note": "Level 31: Cultivation Pill EXP bonus and the Daemonfae quest line."
     }
    ],
    "legacy": [],
-   "data_status": "unknown",
+   "data_status": "community",
    "requires": {
     "stage": "Voidbreak"
    }
@@ -3148,12 +3147,11 @@
     {
      "target": "info",
      "min_level": 81,
-     "data_status": "unknown",
-     "note": "Widely recommended to level 81; the payoff is not recorded yet."
+     "note": "Level 81: grows Law Fruits faster (not a cultivation-time input)."
     }
    ],
    "legacy": [],
-   "data_status": "unknown",
+   "data_status": "community",
    "requires": {
     "stage": "Voidbreak"
    }
@@ -3168,14 +3166,15 @@
    },
    "effects": [
     {
-     "target": "info",
+     "target": "pill_effect",
+     "value": 3,
      "min_level": 129,
-     "data_status": "unknown",
-     "note": "Widely recommended to level 129; the payoff is not recorded yet."
+     "data_status": "community",
+     "note": "Level 129: +3% Cultivation Pill Effect."
     }
    ],
    "legacy": [],
-   "data_status": "unknown",
+   "data_status": "community",
    "requires": {
     "stage": "Voidbreak"
    }
@@ -3228,8 +3227,7 @@
     {
      "target": "info",
      "min_level": 4,
-     "data_status": "unknown",
-     "note": "Half Step tier exists; its bonus is not recorded yet."
+     "note": "Half Step is the fourth blessing tier; its bonus is a combat/utility effect outside the breakthrough model."
     }
    ],
    "legacy": [],

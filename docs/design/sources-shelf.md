@@ -73,16 +73,18 @@ Companion documents (full detail):
 - **Phase E — advisor (optional, later)**: rank unowned sources / next
   tiers by breakthrough-time delta via engine diffing.
 
-## Data gaps to fill in-game (blockers for catalog completeness, not for
-shipping — unknown entries render honestly)
+## Data gaps — RESOLVED (2026-07-18, owner-directed)
 
-From the inventory: tier thresholds for Golden Core (+1% Respira line),
-Astrology (+3% line tier; T7 payoff), Cosmic Power (rank + tiers), Taiyin
-Meridian (rank + tier), Yin's Grasp T10 payoff, Dragon's Flight >T3 payoffs,
-Bloodization T7 payoff (may be combat-only), Moon Meru T12 confirmation,
-plus friend-level payoffs beyond Iron Fan/Daji/Shen Gongbao and the
-blessing-tier absorption tooltip reading (bless stacking currently
-`community`). Each ships as `data_status: partial/unknown` until read.
+The book tier thresholds once listed here (Golden Core, Astrology, Cosmic
+Power, Taiyin Meridian, Yin's Grasp, Floral Essence, Great Yang) are on
+completed books that do not display their thresholds in game — they are
+unscreenshotable on this account, so the positional convention
+(learn/3/6/9/12/15, validated against two known books) is the final
+answer, not a pending gap. Friend payoffs are resolved from the community
+guide. No catalog effect is `data_status: unknown` any more. The only
+genuinely-open catalog work is NEW content (post-R9 manuals, higher
+Stages) that needs a fresh in-game catalog, not a re-read of finished
+content — see technique-books.md.
 
 ## Quality guarantees (how this avoids post-refactor slide)
 
