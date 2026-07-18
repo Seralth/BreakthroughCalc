@@ -261,12 +261,28 @@ left unexpanded in the apps).
   Origin A (bought for aura); Heartless A (corp PvP); Laws of Nature B
   ("grab the first node")
 
-## Open questions
+## Threshold resolution (settled — not open questions)
 
-- R1–R5 max tiers and mid thresholds (see caveat above).
-- Post-R9 manuals: the priority sheet above gives partial names, five
-  node bonuses and ratings, but NOT complete per-rank catalogs, max
-  tiers/thresholds, capstone nodes or confirmed in-game names — all
-  required before the Vault shelves extend past R9.
-- R10 manual names (sheet: "MUST TAKE" only; community guide names just
-  Immortal Ascension).
+Every shipped book's tier thresholds are the positional convention
+(learn / T3 / T6 / T9 / T12 / T15), which was validated against the two
+books whose thresholds were independently known (Dragon Flight pill +2%
+@ T3, Great Yang Manual pill +4% @ T9 — both matched). Owner-directed
+2026-07-18: **these are the answers.** Completed books do not display
+their thresholds in game, so they are unscreenshotable on this account —
+the positional inference stands as final, not pending verification. Do
+NOT re-list Golden Core / Astrology / Cosmic Power / Taiyin Meridian /
+Yin's Grasp / Floral Essence / Great Yang (or any completed book) as a
+data gap. If a fresh account ever surfaces a contradicting tooltip, that
+is the only thing that reopens it.
+
+Friend payoffs are likewise resolved from the community guide (White
+Astra 31 pill-EXP + Daemonfae quest, Adalinda 81 Law-Fruit growth,
+Leizhenzi 129 pill +3%, and the Iron Fan / Daji / Macaque / Jiang Ziya /
+Taotie / Shen Gongbao / Crane Boy lines already in the catalog).
+
+## Still genuinely open (R10+, needs a fresh in-game catalog, not a gap
+in completed content)
+
+- Post-R9 manuals: complete per-rank catalogs, max tiers, capstone nodes
+  and confirmed in-game names — required before the Vault extends past R9.
+- R10 manual names (community guide names only Immortal Ascension).
