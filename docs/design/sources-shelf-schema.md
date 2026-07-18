@@ -309,7 +309,7 @@ Three new string-keyed (order-safe, reorder-proof) keys; defaults (empty) omitte
     "levels": {"kind": "ladder", "labels": ["Completion", "Perfection (C)", "Perfect"]},
     "effects": [
       {"target": "info", "value": null, "min_level": 1,
-       "note": "Removes realm restrictions for Cultivation Pills; pill auto-transmogrification."},
+       "note": "Removes realm restrictions for Cultivation Pills; auto-transmogrification lets breakthrough pills of one path be used on the other (physical ↔ magical)."},
       {"target": "bless_pp", "value": 0.20, "min_level": 2,
        "note": "Incarnation Aura Absorption Ratio +20%. Persists after Incarnation."},
       {"target": "bless_pp", "value": 0.20, "min_level": 3,
