@@ -1,0 +1,395 @@
+[
+ {
+  "name": "nascent -> incarnation, stock respira: plan/draws split",
+  "note": "books rank in plan, curios in draws; blessing hidden pre-Voidbreak",
+  "inputs": {
+   "stage": "Nascent",
+   "phase": "LATE",
+   "grade": "G5",
+   "culti_speed": 57.22,
+   "absorption_ratio": 0.275,
+   "target_stage": "Incarnation",
+   "pill_rank": "4R",
+   "pill_limit": 4,
+   "pill_effect": 0.04,
+   "gold_per_day": 4,
+   "respira_per_day": 10,
+   "respira_exp": 4041.0
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "longevity",
+    "cosmic_power",
+    "rejuvenation",
+    "ninefall",
+    "dragon_flight",
+    "yins_grasp",
+    "lifeboom",
+    "focus",
+    "astrology",
+    "taiyin_meridian",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "dongxuans_pot",
+    "yang_spirit_jade",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "nascent -> incarnation, blank respira: stock-minimum floor still prices curios",
+  "note": "blank respira floors to 10 attempts + base estimate; respira curios rank",
+  "inputs": {
+   "stage": "Nascent",
+   "phase": "LATE",
+   "grade": "G5",
+   "culti_speed": 57.22,
+   "absorption_ratio": 0.275,
+   "target_stage": "Incarnation"
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "longevity",
+    "cosmic_power",
+    "yins_grasp",
+    "astrology",
+    "taiyin_meridian",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "nascent -> incarnation, lantern owned: owned curio leaves the draw pool",
+  "note": "dongxuans_lantern owned -> no longer a draw candidate",
+  "inputs": {
+   "stage": "Nascent",
+   "phase": "LATE",
+   "grade": "G5",
+   "culti_speed": 57.22,
+   "absorption_ratio": 0.275,
+   "target_stage": "Incarnation",
+   "pill_rank": "4R",
+   "pill_limit": 4,
+   "pill_effect": 0.04,
+   "gold_per_day": 4,
+   "respira_per_day": 10,
+   "respira_exp": 4041.0
+  },
+  "shelf": {
+   "owned": {
+    "dongxuans_lantern": 1
+   }
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "longevity",
+    "cosmic_power",
+    "rejuvenation",
+    "ninefall",
+    "dragon_flight",
+    "yins_grasp",
+    "lifeboom",
+    "focus",
+    "astrology",
+    "taiyin_meridian",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "northern_mirror",
+    "dongxuans_pot",
+    "yang_spirit_jade",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "voidbreak -> wholeness, stock respira: blessing ranks once ascended",
+  "note": "ascension_virya now obtainable and tops the plan",
+  "inputs": {
+   "stage": "Voidbreak",
+   "phase": "EARLY",
+   "grade": "G1",
+   "culti_speed": 208.0,
+   "absorption_ratio": 1.0,
+   "target_stage": "Wholeness",
+   "respira_per_day": 10,
+   "respira_exp": 12900.0
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "ascension_virya",
+    "longevity",
+    "cosmic_power",
+    "moon_meru",
+    "princess_iron_fan",
+    "daji",
+    "shen_gongbao",
+    "yins_grasp",
+    "great_yang_manual",
+    "purify_cleanse",
+    "astrology",
+    "taiyin_meridian",
+    "floral_essence",
+    "cauldron_refinement",
+    "six_eared_macaque",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "voidbreak -> wholeness, blank respira: cheapest-first tie ordering",
+  "note": "equal-saving +1-attempt sources sort R1 book < R3 book < friends",
+  "inputs": {
+   "stage": "Voidbreak",
+   "phase": "EARLY",
+   "grade": "G1",
+   "culti_speed": 208.0,
+   "absorption_ratio": 1.0,
+   "target_stage": "Wholeness"
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "ascension_virya",
+    "longevity",
+    "cosmic_power",
+    "moon_meru",
+    "princess_iron_fan",
+    "daji",
+    "shen_gongbao",
+    "yins_grasp",
+    "great_yang_manual",
+    "purify_cleanse",
+    "astrology",
+    "taiyin_meridian",
+    "floral_essence",
+    "cauldron_refinement",
+    "six_eared_macaque",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "voidbreak -> wholeness, no R8 books: R9 books stay gated",
+  "note": "no two R8 at tier 13 -> heartless/harvest_god_secret absent",
+  "inputs": {
+   "stage": "Voidbreak",
+   "phase": "EARLY",
+   "grade": "G1",
+   "culti_speed": 208.0,
+   "absorption_ratio": 1.0,
+   "target_stage": "Wholeness",
+   "respira_per_day": 10,
+   "respira_exp": 12900.0
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "ascension_virya",
+    "longevity",
+    "cosmic_power",
+    "moon_meru",
+    "princess_iron_fan",
+    "daji",
+    "shen_gongbao",
+    "yins_grasp",
+    "great_yang_manual",
+    "purify_cleanse",
+    "astrology",
+    "taiyin_meridian",
+    "floral_essence",
+    "cauldron_refinement",
+    "six_eared_macaque",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "voidbreak -> wholeness, two R8 at tier 13: R9 books unlock",
+  "note": "chroma+zixiao at tier 13 -> R9 books become candidates",
+  "inputs": {
+   "stage": "Voidbreak",
+   "phase": "EARLY",
+   "grade": "G1",
+   "culti_speed": 208.0,
+   "absorption_ratio": 1.0,
+   "target_stage": "Wholeness",
+   "respira_per_day": 10,
+   "respira_exp": 12900.0
+  },
+  "shelf": {
+   "owned": {
+    "chroma": 13,
+    "zixiao_sutra": 13
+   }
+  },
+  "expect": {
+   "valid": true,
+   "metric": "target",
+   "plan_ids": [
+    "ascension_virya",
+    "longevity",
+    "cosmic_power",
+    "moon_meru",
+    "heartless",
+    "princess_iron_fan",
+    "daji",
+    "shen_gongbao",
+    "yins_grasp",
+    "great_yang_manual",
+    "purify_cleanse",
+    "astrology",
+    "taiyin_meridian",
+    "floral_essence",
+    "cauldron_refinement",
+    "harvest_god_secret",
+    "six_eared_macaque",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "nascent, no target: metric falls back to current-stage days",
+  "note": "no target_stage -> metric is 'stage', ranking still works",
+  "inputs": {
+   "stage": "Nascent",
+   "phase": "LATE",
+   "grade": "G5",
+   "culti_speed": 57.22,
+   "absorption_ratio": 0.275,
+   "pill_rank": "4R",
+   "pill_limit": 4,
+   "pill_effect": 0.04,
+   "gold_per_day": 4,
+   "respira_per_day": 10,
+   "respira_exp": 4041.0
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": true,
+   "metric": "stage",
+   "plan_ids": [
+    "longevity",
+    "cosmic_power",
+    "rejuvenation",
+    "ninefall",
+    "dragon_flight",
+    "yins_grasp",
+    "lifeboom",
+    "focus",
+    "astrology",
+    "taiyin_meridian",
+    "energy_unification",
+    "golden_core",
+    "lions_roar"
+   ],
+   "draws_ids": [
+    "spirit_seal_gourd",
+    "dongxuans_cushion",
+    "dongxuans_lantern",
+    "northern_mirror",
+    "dongxuans_pot",
+    "yang_spirit_jade",
+    "spirit_seal_bowl"
+   ]
+  }
+ },
+ {
+  "name": "invalid baseline: no speed/absorption is not rankable",
+  "note": "unpriceable baseline -> valid is false, no plan/draws",
+  "inputs": {
+   "stage": "Nascent",
+   "phase": "LATE",
+   "grade": "G5"
+  },
+  "shelf": {
+   "owned": {}
+  },
+  "expect": {
+   "valid": false
+  }
+ }
+]
