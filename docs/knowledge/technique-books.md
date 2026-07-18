@@ -22,15 +22,21 @@ that previously lived in `docs/design/sources-shelf-inventory.md`.
 - Unlock requirements exist (stage + prior-rank tier counts + a
   book-specific condition) but are deliberately NOT modeled — out of scope.
 
-## Activation realm requirements (owner-read 2026-07-18, exact)
+## Activation realm requirements (rank-wide)
 
-Per rank, applied rank-wide (read from one still-visible book per rank —
-Lion's Roar / Bulwark / No-Thought Sutra / Way of Creation):
-R6 Nascent Soul Late · R7 Incarnation Early · R8 Incarnation Middle ·
-R9 Incarnation Late (R9 additionally needs 2 R8 techniques at Tier 13).
-Completed books no longer display their activation tooltip, so the
-R2-R5 realm gates are unrecordable on this account — do NOT list them as
-open questions.
+Owner-read anchors (2026-07-18, exact): R6 Nascent Soul Late (Lion's
+Roar) · R7 Incarnation Early (Bulwark, independently confirmed by
+Ninefall Hoarfrost) · R8 Incarnation Middle (No-Thought Sutra,
+independently confirmed by Astral Arcanum) · R9 Incarnation Late (Way of
+Creation; plus the 2× R8-at-Tier-13 pair). Two same-rank books matching
+pins the requirement as per-RANK, not per-book.
+
+The pattern is exactly realm level = rank + 14, one phase per rank.
+R1-R5 are EXTRAPOLATED from it (owner-directed 2026-07-18): R1 Virtuoso
+Early · R2 Virtuoso Middle · R3 Virtuoso Late · R4 Nascent Early · R5
+Nascent Middle. Completed books hide their activation tooltip, so these
+cannot be read on this account — the extrapolation stands unless a fresh
+account ever contradicts it.
 
 ## Tier-label caveat
 
