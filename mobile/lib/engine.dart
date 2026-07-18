@@ -447,6 +447,24 @@ class Engine {
     return rowIndex(stage, phase, grade);
   }
 
+  /// Base absorption band low for a row; null for an unknown row.
+  /// (Twin of engine.py base_low.)
+  double? baseLow(String stage, String phase, String grade) {
+    final i = rowIndex(stage, phase, grade);
+    if (i < 0) return null;
+    final v = rows[i]['low'];
+    return v == null ? null : _num(v);
+  }
+
+  /// Whether the conditional (before Voidbreak MIDDLE) blessing tier still
+  /// applies at a row; true when the boundary is not in the data.
+  /// (Twin of engine.py blessing_applies.)
+  bool blessingApplies(String stage, String phase, String grade) {
+    final i = rowIndex(stage, phase, grade);
+    final vbm = targetStartIndex('Voidbreak', 'MIDDLE', '');
+    return i >= 0 && (vbm < 0 || i < vbm);
+  }
+
   List<double> _starRow(String key) {
     final star = data['star'] as Map<String, dynamic>;
     final v = star[key];
