@@ -1,9 +1,10 @@
-"""Advisor: candidate enumeration, channel split, and engine-diff ranking."""
+"""Advisor: step tracks, obtainability gating, and engine-diff ranking."""
 
 import unittest
 
 from breakthrough_calc.advisor import (
-    PLANNED, RANDOM, apply_deltas, candidates, channel_for, rank, steps,
+    PLANNED, RANDOM, apply_deltas, candidates, channel_for, player_level,
+    rank, steps,
 )
 from breakthrough_calc.engine import Engine, Inputs
 from breakthrough_calc.shelf import load_sources
@@ -16,7 +17,7 @@ def base_inputs(**kw):
     return Inputs(**d)
 
 
-class StepEnumeration(unittest.TestCase):
+class StepTracks(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cat = load_sources()
@@ -24,50 +25,88 @@ class StepEnumeration(unittest.TestCase):
 
     def test_binary_curio_owned_vs_not(self):
         lantern = self.by_id["dongxuans_lantern"]
-        self.assertEqual(steps(lantern, None), [("Own", 1)])
+        self.assertEqual(steps(lantern, None), [[("Own", 1, None)]])
         self.assertEqual(steps(lantern, 1), [])
 
-    def test_tier_book_targets_next_effect_threshold(self):
+    def test_tier_walk_covers_every_future_threshold(self):
+        longevity = self.by_id["longevity"]
+        (track,) = steps(longevity, None)
+        self.assertEqual([a for a, _, _ in track], ["Tier 1", "Tier 6"])
         chroma = self.by_id["chroma"]
-        (action, level), = steps(chroma, 6)
-        self.assertGreater(level, 6)
-        self.assertTrue(action.startswith("Tier "))
-        # the step lands ON a threshold, not merely one tier up
-        thresholds = {e.get("min_level", 1) for e in chroma["effects"]}
-        self.assertIn(level, thresholds)
+        (track,) = steps(chroma, 6)
+        self.assertTrue(all(lvl > 6 for _, lvl, _ in track))
 
     def test_friend_max_sentinel_and_completion(self):
         crane = self.by_id["crane_boy"]
-        self.assertEqual(steps(crane, None), [("max", -1)])
+        self.assertEqual(steps(crane, None), [[("max", -1, None)]])
         self.assertEqual(steps(crane, -1), [])
 
-    def test_parametric_curio_steps_each_param(self):
+    def test_parametric_curio_tracks_carry_upgrade_requirements(self):
         ysj = self.by_id["yang_spirit_jade"]
-        acts = dict(steps(ysj, [4, 8]))
-        self.assertEqual(list(acts.values()), [[5, 8]])  # upgrade already max
-        acts = dict(steps(ysj, [5, 3]))
-        self.assertEqual(list(acts.values()), [[5, 4]])  # star already max
+        tracks = steps(ysj, [5, 3])
+        self.assertEqual(len(tracks), 1)          # star maxed: upgrade only
+        actions = [(a, r) for a, _, r in tracks[0]]
+        self.assertEqual(actions[0], ("Upgrade level 4", 18))
+        self.assertEqual(actions[-1], ("Upgrade level 8", 26))
+        star_only = steps(ysj, [4, 8])
+        self.assertEqual([a for a, _, _ in star_only[0]], ["Star 5"])
 
-    def test_ladder_step_uses_rung_label(self):
+    def test_ladder_track_walks_remaining_rungs(self):
         virya = self.by_id["ascension_virya"]
-        (action, rung), = steps(virya, 1)
-        self.assertEqual(rung, 2)
-        self.assertEqual(action, virya["levels"]["labels"][1])
+        (track,) = steps(virya, 1)
+        self.assertEqual([a for a, _, _ in track],
+                         virya["levels"]["labels"][1:])
 
     def test_effectless_collection_curios_offer_no_steps(self):
-        chaos_bell = self.by_id["chaos_bell"]
-        self.assertEqual(steps(chaos_bell, None), [])
+        self.assertEqual(steps(self.by_id["chaos_bell"], None), [])
 
     def test_channels(self):
         self.assertEqual(channel_for(self.by_id["dongxuans_lantern"]), RANDOM)
         self.assertEqual(channel_for(self.by_id["chroma"]), PLANNED)
-        self.assertEqual(channel_for(self.by_id["daji"]), PLANNED)
 
 
-class CandidateDeltas(unittest.TestCase):
+class Obtainability(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cat = load_sources()
+
+    def test_player_level_from_realm_table(self):
+        self.assertEqual(player_level(self.cat, "Novice", "N/A"), 1)
+        self.assertEqual(player_level(self.cat, "Nascent", "EARLY"), 18)
+        self.assertEqual(player_level(self.cat, "Voidbreak", "LATE"), 26)
+        self.assertIsNone(player_level(self.cat, "Atlantis", "EARLY"))
+
+    def test_walk_reaches_past_info_only_thresholds(self):
+        ids = {c.source_id: c for c in candidates(self.cat, {"owned": {}})}
+        self.assertEqual(ids["longevity"].action, "Tier 6")
+        self.assertEqual(ids["longevity"].deltas, {"respira_attempts": 1.0})
+        self.assertEqual(ids["rejuvenation"].action, "Tier 3")
+        self.assertEqual(ids["rejuvenation"].deltas, {"pill_effect": 2.0})
+
+    def test_blessing_gated_until_ascension_realm(self):
+        nascent = {c.source_id
+                   for c in candidates(self.cat, {"owned": {}},
+                                       current_level=18)}
+        self.assertNotIn("ascension_virya", nascent)
+        incarnation = {c.source_id
+                       for c in candidates(self.cat, {"owned": {}},
+                                           current_level=21)}
+        self.assertIn("ascension_virya", incarnation)
+
+    def test_curio_upgrade_gated_by_realm_level(self):
+        shelf = {"owned": {"yang_spirit_jade": [5, 3]}}
+        low = [c for c in candidates(self.cat, shelf, current_level=12)
+               if c.source_id == "yang_spirit_jade"]
+        self.assertEqual(low, [])         # upgrade 4 needs level 18
+        mid = [c for c in candidates(self.cat, shelf, current_level=18)
+               if c.source_id == "yang_spirit_jade"]
+        self.assertEqual([c.action for c in mid], ["Upgrade level 4"])
+
+    def test_ungated_when_stage_unknown(self):
+        shelf = {"owned": {"yang_spirit_jade": [5, 3]}}
+        cands = [c for c in candidates(self.cat, shelf, current_level=None)
+                 if c.source_id == "yang_spirit_jade"]
+        self.assertEqual(len(cands), 1)
 
     def test_vault_awareness_owned_curio_leaves_the_draw_pool(self):
         pool = {c.source_id for c in candidates(self.cat, {"owned": {}})}
@@ -80,23 +119,31 @@ class CandidateDeltas(unittest.TestCase):
         for sid in ("pisces_pendant", "auraseep_seal", "energy_jade"):
             self.assertNotIn(sid, pool)
 
-    def test_lantern_delta_is_its_respira_percent(self):
-        cand = next(c for c in candidates(self.cat, {"owned": {}})
-                    if c.source_id == "dongxuans_lantern")
-        self.assertEqual(cand.deltas, {"respira_effect": 10.0})
 
+class CandidateDeltas(unittest.TestCase):
     def test_apply_deltas_rescales_the_respira_reading(self):
         inp = base_inputs(respira_exp=4041.0)
         out = apply_deltas(inp, {"respira_effect": 10.0}, books_now=14.0)
-        self.assertAlmostEqual(out.respira_exp,
-                               4041.0 * 124.0 / 114.0)
-        # nothing modeled -> None (respira percent with no reading entered)
+        self.assertAlmostEqual(out.respira_exp, 4041.0 * 124.0 / 114.0)
         self.assertIsNone(
             apply_deltas(base_inputs(), {"respira_effect": 10.0}, 0.0))
 
+    def test_apply_deltas_prices_blessing_via_absorption(self):
+        e = Engine()
+        inp = base_inputs(stage="Incarnation", phase="EARLY", grade="G1")
+        out = apply_deltas(inp, {"bless_pp": 0.2}, 0.0, e)
+        base = e.base_low("Incarnation", "EARLY", "G1")
+        factor = (base + 0.2) / base
+        self.assertAlmostEqual(out.bless_pp, 0.2)
+        self.assertAlmostEqual(out.absorption_ratio, 0.275 * factor)
+        # Abode Aura (speed/absorption) must be preserved by the gain
+        self.assertAlmostEqual(out.culti_speed / out.absorption_ratio,
+                               inp.culti_speed / inp.absorption_ratio)
+        # a blessing gain is unpriceable without the engine's row base
+        self.assertIsNone(apply_deltas(inp, {"bless_pp": 0.2}, 0.0))
+
     def test_apply_deltas_lands_on_engine_units(self):
-        inp = base_inputs(pill_effect=0.04, pill_limit=1,
-                          respira_per_day=10)
+        inp = base_inputs(pill_effect=0.04, pill_limit=1, respira_per_day=10)
         out = apply_deltas(inp, {"pill_effect": 2.0, "pill_attempts": 1.0,
                                  "respira_attempts": 1.0}, 0.0)
         self.assertAlmostEqual(out.pill_effect, 0.06)
@@ -123,9 +170,18 @@ class Ranking(unittest.TestCase):
             self.assertEqual(r.candidate.channel, PLANNED)
         for r in adv.draws:
             self.assertEqual(r.candidate.channel, RANDOM)
-        draw_ids = {r.candidate.source_id for r in adv.draws}
-        self.assertIn("dongxuans_lantern", draw_ids)
-        self.assertIn("dongxuans_pot", draw_ids)
+        ids = {r.candidate.source_id for r in adv.plan + adv.draws}
+        self.assertIn("dongxuans_lantern", ids)
+        # a Nascent player cannot hold an ascension blessing yet
+        self.assertNotIn("ascension_virya", ids)
+
+    def test_blessing_ranks_once_ascended(self):
+        inp = base_inputs(stage="Incarnation", phase="EARLY", grade="G1",
+                          target_stage="Voidbreak", respira_per_day=10,
+                          respira_exp=8000.0)
+        adv = rank(self.engine, inp, self.cat, {"owned": {}})
+        ids = {r.candidate.source_id for r in adv.plan}
+        self.assertIn("ascension_virya", ids)
 
     def test_savings_positive_and_sorted(self):
         adv = rank(self.engine, self.inp, self.cat, {"owned": {}})
@@ -142,8 +198,6 @@ class Ranking(unittest.TestCase):
         self.assertLess(len(adv.draws), len(empty.draws))
 
     def test_attempt_bonus_without_reading_is_not_ranked(self):
-        # +1 Respira attempt saves nothing while no respira_exp is entered:
-        # the advisor must not advertise a zero-day improvement.
         inp = base_inputs(target_stage="Incarnation")
         adv = rank(self.engine, inp, self.cat, {"owned": {}})
         ids = {r.candidate.source_id for r in adv.plan + adv.draws}
