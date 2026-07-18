@@ -31,7 +31,7 @@ class StepTracks(unittest.TestCase):
     def test_tier_walk_covers_every_future_threshold(self):
         longevity = self.by_id["longevity"]
         (track,) = steps(longevity, None)
-        self.assertEqual([a for a, _, _ in track], ["Tier 1", "Tier 6"])
+        self.assertEqual([a for a, _, _ in track], ["Tier 1", "Tier 2"])
         chroma = self.by_id["chroma"]
         (track,) = steps(chroma, 6)
         self.assertTrue(all(lvl > 6 for _, lvl, _ in track))
@@ -43,13 +43,14 @@ class StepTracks(unittest.TestCase):
 
     def test_parametric_curio_tracks_carry_upgrade_requirements(self):
         ysj = self.by_id["yang_spirit_jade"]
-        tracks = steps(ysj, [5, 3])
+        tracks = steps(ysj, [6, 3])
         self.assertEqual(len(tracks), 1)          # star maxed: upgrade only
         actions = [(a, r) for a, _, r in tracks[0]]
         self.assertEqual(actions[0], ("Upgrade level 4", 18))
         self.assertEqual(actions[-1], ("Upgrade level 8", 26))
         star_only = steps(ysj, [4, 8])
-        self.assertEqual([a for a, _, _ in star_only[0]], ["Star 5"])
+        self.assertEqual([a for a, _, _ in star_only[0]],
+                         ["Star 5", "Star 6"])
 
     def test_ladder_track_walks_remaining_rungs(self):
         virya = self.by_id["ascension_virya"]
@@ -78,23 +79,37 @@ class Obtainability(unittest.TestCase):
 
     def test_walk_reaches_past_info_only_thresholds(self):
         ids = {c.source_id: c for c in candidates(self.cat, {"owned": {}})}
-        self.assertEqual(ids["longevity"].action, "Tier 6")
+        self.assertEqual(ids["longevity"].action, "Tier 2")
         self.assertEqual(ids["longevity"].deltas, {"respira_attempts": 1.0})
         self.assertEqual(ids["rejuvenation"].action, "Tier 3")
         self.assertEqual(ids["rejuvenation"].deltas, {"pill_effect": 2.0})
 
-    def test_blessing_gated_until_ascension_realm(self):
-        nascent = {c.source_id
+    def test_blessing_gated_until_incarnation_late_completed(self):
+        for lvl in (18, 21, 23):    # Nascent .. Incarnation Late (in progress)
+            ids = {c.source_id
                    for c in candidates(self.cat, {"owned": {}},
-                                       current_level=18)}
-        self.assertNotIn("ascension_virya", nascent)
-        incarnation = {c.source_id
-                       for c in candidates(self.cat, {"owned": {}},
-                                           current_level=21)}
-        self.assertIn("ascension_virya", incarnation)
+                                       current_level=lvl)}
+            self.assertNotIn("ascension_virya", ids, lvl)
+        voidbreak = {c.source_id
+                     for c in candidates(self.cat, {"owned": {}},
+                                         current_level=24)}
+        self.assertIn("ascension_virya", voidbreak)
+
+    def test_r9_books_gated_on_two_r8_books_at_tier_13(self):
+        no_r8 = {c.source_id for c in candidates(self.cat, {"owned": {}})}
+        self.assertNotIn("laws_of_nature", no_r8)
+        ready = {"chroma": 13, "zixiao_sutra": 13}
+        with_r8 = {c.source_id
+                   for c in candidates(self.cat, {"owned": ready})}
+        self.assertIn("laws_of_nature", with_r8)
+        one_short = {c.source_id
+                     for c in candidates(self.cat,
+                                         {"owned": {"chroma": 13,
+                                                    "zixiao_sutra": 12}})}
+        self.assertNotIn("laws_of_nature", one_short)
 
     def test_curio_upgrade_gated_by_realm_level(self):
-        shelf = {"owned": {"yang_spirit_jade": [5, 3]}}
+        shelf = {"owned": {"yang_spirit_jade": [6, 3]}}
         low = [c for c in candidates(self.cat, shelf, current_level=12)
                if c.source_id == "yang_spirit_jade"]
         self.assertEqual(low, [])         # upgrade 4 needs level 18
@@ -103,7 +118,7 @@ class Obtainability(unittest.TestCase):
         self.assertEqual([c.action for c in mid], ["Upgrade level 4"])
 
     def test_ungated_when_stage_unknown(self):
-        shelf = {"owned": {"yang_spirit_jade": [5, 3]}}
+        shelf = {"owned": {"yang_spirit_jade": [6, 3]}}
         cands = [c for c in candidates(self.cat, shelf, current_level=None)
                  if c.source_id == "yang_spirit_jade"]
         self.assertEqual(len(cands), 1)
@@ -176,9 +191,10 @@ class Ranking(unittest.TestCase):
         self.assertNotIn("ascension_virya", ids)
 
     def test_blessing_ranks_once_ascended(self):
-        inp = base_inputs(stage="Incarnation", phase="EARLY", grade="G1",
-                          target_stage="Voidbreak", respira_per_day=10,
-                          respira_exp=8000.0)
+        inp = base_inputs(stage="Voidbreak", phase="EARLY", grade="G1",
+                          culti_speed=208.0, absorption_ratio=1.0,
+                          target_stage="Wholeness", respira_per_day=10,
+                          respira_exp=12900.0)
         adv = rank(self.engine, inp, self.cat, {"owned": {}})
         ids = {r.candidate.source_id for r in adv.plan}
         self.assertIn("ascension_virya", ids)

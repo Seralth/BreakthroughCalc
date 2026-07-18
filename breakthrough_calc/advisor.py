@@ -154,14 +154,28 @@ def candidates(catalog: dict, shelf: dict, current_level=None) -> list:
     targets = catalog.get("targets", {})
     realm = catalog.get("realm_levels") or {}
     owned = shelf.get("owned") or {}
+    by_rank: dict = {}
+    for s in catalog.get("sources", []):
+        if s["category"] == "technique_book" and s.get("rank"):
+            by_rank.setdefault(s["rank"], []).append(s["id"])
     before = _totals(derive(catalog, shelf), targets)
     out = []
     for entry in catalog.get("sources", []):
         sid = entry["id"]
-        req_stage = (entry.get("requires") or {}).get("stage")
+        req = entry.get("requires") or {}
+        req_stage = req.get("stage")
         if req_stage and current_level is not None:
             band = realm.get(req_stage)
             if band and current_level < band[0]:
+                continue
+        rb = req.get("rank_books")
+        if rb:
+            have = 0
+            for bid in by_rank.get(rb["rank"], []):
+                lvl = owned.get(bid)
+                if lvl == -1 or (isinstance(lvl, int) and lvl >= rb["tier"]):
+                    have += 1
+            if have < rb["count"]:
                 continue
         for track in steps(entry, owned.get(sid)):
             for action, new_owned, req_level in track:
