@@ -717,7 +717,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "conflagration",
@@ -756,7 +760,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "lions_roar",
@@ -796,7 +804,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "thunder_winds",
@@ -838,7 +850,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "yins_grasp",
@@ -882,7 +898,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "community"
+   "data_status": "community",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "dragon_flight",
@@ -930,7 +950,11 @@
      "implies_level": 3
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Nascent",
+    "phase": "LATE"
+   }
   },
   {
    "id": "floral_essence",
@@ -978,7 +1002,11 @@
      "implies_level": 6
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "purify_cleanse",
@@ -1026,7 +1054,11 @@
      "implies_level": 6
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "vajra",
@@ -1065,7 +1097,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "dragonsound",
@@ -1104,7 +1140,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "bulwark",
@@ -1143,7 +1183,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "aqua_power",
@@ -1184,7 +1228,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "great_yang_manual",
@@ -1233,7 +1281,11 @@
      "implies_level": 9
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "ninefall_hoarfrost",
@@ -1272,7 +1324,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "sunset_halberd_dance",
@@ -1311,7 +1367,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "EARLY"
+   }
   },
   {
    "id": "tao_of_taiqing",
@@ -1355,7 +1415,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "origin_scripture",
@@ -1399,7 +1463,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "no_thought_sutra",
@@ -1443,7 +1511,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "moon_meru",
@@ -1488,7 +1560,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "dracophant",
@@ -1532,7 +1608,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "cauldron_refinement",
@@ -1577,7 +1657,11 @@
     }
    ],
    "legacy": [],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "astral_arcanum",
@@ -1628,7 +1712,11 @@
      "implies_level": 3
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "zixiao_sutra",
@@ -1679,7 +1767,11 @@
      "implies_level": 1
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "chroma",
@@ -1743,7 +1835,11 @@
      "implies_level": 3
     }
    ],
-   "data_status": "exact"
+   "data_status": "exact",
+   "requires": {
+    "stage": "Incarnation",
+    "phase": "MIDDLE"
+   }
   },
   {
    "id": "laws_of_nature",
@@ -1795,7 +1891,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -1848,7 +1946,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -1899,7 +1999,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -1950,7 +2052,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2001,7 +2105,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2053,7 +2159,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2104,7 +2212,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2155,7 +2265,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2206,7 +2318,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2257,7 +2371,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2308,7 +2424,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
@@ -2359,7 +2477,9 @@
      "rank": "R8",
      "tier": 13,
      "count": 2
-    }
+    },
+    "stage": "Incarnation",
+    "phase": "LATE"
    }
   },
   {
