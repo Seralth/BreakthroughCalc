@@ -392,8 +392,14 @@ scaler **and** the cheapest to advance — advance it first.
 2. **Word of Kindness** — 25% M.DEF 8s + shield + 50 gen
 3. **Discordant Verse** — 3-tgt splash + Crescendo shield-pierce + Focus + 25 gen
 4. **Unleashed Ink** — ST ghost-killer, top throughput (438→~916% @+5, 13s CD) + 50 gen
-5. **Painted Cranes** — ST ghost-killer #2, 534% + Summit max-MP chunk
-6. **Lotus Dreamscape** — 2-tgt splash + Purify + 50 gen
+5. **Lotus Dreamscape** — 2-tgt splash + Purify (taunt-strip) + 50 gen
+6. **Painted Cranes** — biggest ST nuke; lowest priority so it yields ties to the
+   pierce/splash/gen casts (still fires every CD)
+
+Curios (blindfire, 60s, once-per-fight — order low-stakes): Dragonpit → Fire Lotus →
+Cosmic Demon Spire. Relics: keep the 5 Primeval Inkstones high (2-tgt → leak onto the
+player through taunt + 25 gen each, §8) alongside the Brush. Literal Reality auto-fires
+at 300 (not orderable). Targeting mode: highest-HP% (§7).
 
 Cut vs §10: Hidden Hook (Scorch premise dead under blind-fire), Master's Hand (silence
 hijacked onto ghosts), Spiritual Wall (Magicka eso auto-covers emergency shields),
