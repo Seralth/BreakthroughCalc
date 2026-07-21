@@ -137,6 +137,9 @@ class Inputs {
   // Ascension Virya blessings: additive percentage-point bonuses on the
   // absorption ratio; the conditional tier applies only before Voidbreak
   // MIDDLE. The entered absorption is the on-screen total (includes them).
+  // blessPp is a flat +0.20 in Incarnation (tiers do not stack); blessWindowPp
+  // is dormant in Incarnation and its Voidbreak value is not yet established,
+  // so the shelf leaves it 0 — enter it manually once read in-game.
   double blessPp;
   double blessWindowPp;
 

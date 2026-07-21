@@ -7,9 +7,9 @@
   "shelf": {"owned": {"purify_cleanse": 9, "six_eared_macaque": 17}},
   "expect": {"respira_effect": 14.0, "respira_attempts": 1.0}},
 
- {"name": "virya ladder Perfection implies Eminence: pp stack, window live",
+ {"name": "virya ladder Perfection = Eminence in Incarnation: flat +20, tiers don't stack, window unmodeled",
   "shelf": {"owned": {"ascension_virya": 3}},
-  "expect": {"bless_pp": 0.4, "bless_window_pp": 0.2}},
+  "expect": {"bless_pp": 0.2}},
 
  {"name": "yang spirit jade star 4 upgrade 8: parametric value model",
   "shelf": {"owned": {"yang_spirit_jade": [4, 8]}},
