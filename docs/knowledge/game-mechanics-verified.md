@@ -259,117 +259,103 @@ Alignments that fall out exactly:
   Looks like a catch-up/transfer-adjacent server event; unmapped, owner
   unsure too (2026-07-17). Not referenced anywhere user-facing.
 
-### Ascension Virya blessings tied to Completed/Perfected (2026-07-15, screenshots)
+### Ascension Virya blessings (2026-07-15 screenshots; stacking corrected 2026-07-20)
 
-SCREENSHOT-VERIFIED (2026-07-15, ~/Pictures/respira-books-2026-07-15/
-Screenshot_20260715-0333*.png — "Ascension Virya" screen, player at
-Incarnation (L) Late G12, blessing ranking No.1 → 6 reward vases). Dump
-strings corroborate (圆满后境界精进可增加福泽奖励; templates '%s Absorption
-Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
+Provenance: "Ascension Virya" screen (2026-07-15, Incarnation (L) Late G12,
+blessing rank No.1 → 6 reward vases); dump strings corroborate
+(圆满后境界精进可增加福泽奖励; templates '%s Absorption Ratio + %s%%',
+'Absorption Ratio Before %s: + %s%%'); live absorption reading 2026-07-20
+(Cultivation Bonus panel, Abode 270.20 × 0.60 = Speed 162.12).
 
-- Tier **Completion** (req: "Reach Incarnation (L) Late 100% and break
-  through"): "Remove Realm Restrictions for Taking Cultivation Pills";
-  "Activate the Cultivation Pill Auto-Transmogrification Privilege";
-  Blessing Rewards +1; privilege "First Esotability". The restriction
-  removal is what lets higher-stage Cultivation Pills be fed to the LOWER
-  secondary path to catch it up (community-explained use).
-  Auto-transmogrification is a SEPARATE privilege (owner-adjudicated
-  2026-07-17): it lets BREAKTHROUGH pills of one path be used on the other
-  — physical → magical or magical → physical. It is not about lower-path
-  feeding: rank-appropriate ("normal") pills already work on a lower path
-  with no privilege at all.
-- Tier **Perfection (C)** (reqs: primary at Incarnation (L) Completion;
-  secondary at Nascent Soul (L) Late; clear Outer Realm Mighty Monster
-  Amethyst Fiend in Myrimon Wonder): "Incarnation (L) Aura Absorption Ratio
-  +20%"; Blessing Rewards +3.
-- Secondary-path stage requirements are REACH, not complete (owner-confirmed
-  2026-07-16): "secondary at Nascent Soul (L) Late" is satisfied on entering
-  the half-step; same for the Incarnation (L) Middle requirement above it.
-- Tier **Perfect ...** (gold; reqs: secondary at Incarnation (L) Middle;
-  clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
-  Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
-  +20%"; Blessing Rewards +5; "Second Esotability".
-- STACKING — CORRECTED, the +40/+60 additive-tier model is RETRACTED (owner,
-  2026-07-20, from his OWN account): the tiers do NOT stack. In Incarnation
-  the Virya absorption bonus is **+20% FLAT** — at Perfect the absorption read
-  the exact same "40 + 20" as at Perfection (C). Unlocking the higher tier
-  added nothing to absorption in Incarnation.
-  - Arithmetic rules out the alternatives: the live screen reads Abode 270.20
-    × Absorption 0.60 = Speed 162.12, i.e. base 0.40 + 0.20. A stacked +40
-    would be 0.80 → 216.16; +60 would be 1.00 → 270.20. Only the flat +20
-    matches, so the "Before Voidbreak (L) Middle +20%" line is **dormant in
-    Incarnation** (were it live the speed would imply 0.80).
-  - Still verified: the pp are ADDITIVE (40+20=60, not 48) — only ONE +20 is
-    live at a time in Incarnation. The base 0.40 = Incarnation Late `low` with
-    Strive 0 (parked).
-  - Now UNVERIFIED (do NOT assert): whether +20% persists past Incarnation
-    into Voidbreak; whether/how much the "Before Voidbreak Middle" line
-    activates in Voidbreak Early; the whole Voidbreak parking premise. Owner
-    is timegated out of Voidbreak ~2 weeks (≈ 2026-08-03). The earlier
-    "two players confirming +60%→+40%" is community report his own account now
-    contradicts — demoted below the direct observation. (Lesson: three
-    concurring players were wrong here; direct observation wins.)
-  - The dump template "Absorption Ratio Before %s: + %s%%" is still literal
-    (the windowed line ends at VB Middle start); we simply no longer know its
-    floor is Incarnation — observation says it is NOT live there, so the window
-    is at most Voidbreak-Early-only, value TBD.
-- The "Double" label between the tier circles is NOT a tier (unclickable,
-  per Seralth). PLAUSIBLE INFERENCE: it is the active-Virya status badge
-  (dump: 'Double' = 双; template ">Within {1} hours, receive {3}x {2}
-  Cosmoapsis gains.") — i.e. the Ascension Virya session grants ×2
-  cultivation gains per Cosmoapsis while its countdown (02:26:31 in the
-  screenshot) runs. Verify by comparing the /Cosmoapsis speed readout
-  during vs after the timer.
-- Blessing tiers/bonuses are per-path — the screen and status bar use path
-  suffix (L) (player's primary), confirming path letters beyond M/C/P
-  (cf. elixir notes' L/G/M/C/S).
-- Cross-check: the screen's Late G12 XP denominator 5,623,090 exactly
-  matches data/breakthrough.json Incarnation Late G12 grade_xp — independent
-  confirmation of our XP table.
-- Dump also has a rank→reward table (Blessing Ranking 1→6, 2→5, 3→4,
-  4–10→3, 11+→2 — matches No.1 ⇒ 6 vases on screen) and post-ascension
-  privileges granting Absorption Ratio +200% plus high-stage pill access.
-- Official absorption formula (dump): Cultivation Speed = Abode Aura ×
-  Absorption Ratio (× Heavenly Power Bonus); Absorption Ratio = Base Stage
-  Absorption Ratio × (1 + Strive Bonus) + Virya Absorption Ratio.
+**CURRENT MODEL (what to trust):**
+- In Incarnation the Virya absorption bonus is **+20% FLAT — the tiers do
+  NOT stack** (owner, 2026-07-20, own account: at Perfect the absorption read
+  the same "40 + 20" as at Perfection (C)). Arithmetic confirms and rules out
+  the alternatives: Abode 270.20 × 0.60 = Speed 162.12 = base 0.40 + Virya
+  0.20; a stacked +40 would give 216.16, +60 would give 270.20 — only flat
+  +20 matches. The tier's "Before Voidbreak (L) Middle +20%" line is
+  therefore **dormant in Incarnation** (were it live, speed would imply 0.80).
+- The pp are **ADDITIVE** (40 + 20 = 60, not 40 × 1.2 = 48). The base 0.40 =
+  Incarnation Late `low` band at Strive 0 (parked).
+- **Official formula** (client rules text + dump): Cultivation Speed = Abode
+  Aura × Absorption Ratio (× Heavenly Power Bonus); Absorption Ratio =
+  (Base Stage Absorption + Virya pp) × (1 + Strive Bonus) — i.e. the pp join
+  the STAGE BASE *inside* the Strive multiplier, not the displayed total. The
+  Virya bonus is scoped to the current Stage (dump: "Aura Absorption Rate
+  +%d%% in Current Stage"; %d is server-side). Composition ORDER vs Strive is
+  client-string-sourced only — the live check ran at Strive 0, where both
+  orders coincide.
+- **Engine model**: two pp inputs — `bless_pp` (persistent) and
+  `bless_window_pp` (conditional, rows before Voidbreak MIDDLE) — applied
+  per-row as speed(row) = abode × (low_row + bless(row)) × (1 + strive). The
+  entered absorption is the on-screen TOTAL; the engine recovers true Strive
+  as absorption / (low_cur + bless_cur) − 1, so implied-Strive is not
+  contaminated for blessed accounts (a base-40% account with +20pp at Strive
+  s displays (0.40 + 0.20) × (1 + s)). As of v3.11 the shelf derives
+  `bless_pp` = 0.20 (flat, one tier) and no window — the Voidbreak windowing
+  is left unmodeled pending a reading.
 
-**Calculator impact — REVISED: this CAN affect the time math.** The engine's
-projection cancels the entered absorption ratio (speed(row) = culti_speed ×
-low_row / low_cur, engine.py) — valid only when bonuses scale all rows
-uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
-(Late)") breaks the cancellation: windowed rows are faster than the pure
-base-band progression predicts. Same class of issue for the +200%
-post-ascension privilege and Virya (both additive terms, per the formula).
-Per the CORRECTED model above, the verified effective bonus is +20% in
-Incarnation, FLAT (tiers do not stack; the "Before Voidbreak Middle" line is
-dormant there). Any larger persistent/windowed figure is UNVERIFIED until the
-owner reaches Voidbreak (≈ 2026-08-03) — the +40/+60 is retracted. Separately,
-the pills-on-secondary-path use means a secondary-path projection would see
-BOTH a bigger flat daily-XP term (better pills) and, once in Voidbreak,
-whatever the windowed bonus turns out to be. ADDITIVE (owner-observed
-2026-07-20): the blessing "+20%" adds percentage points to the absorption
-ratio (like Virya in the official formula), not ×1.2.
-RESOLVED (2026-07-18, see the 2026-07-17 batch section above): the
-absorption panel reads 40.00% +20.00% with speed = abode × 0.60 exactly —
-the pending tooltip-grade check is done (60%, not 48%). Composition order
-vs Strive remains client-string-sourced (the check ran at Strive 0, where
-both orders coincide). SUPERSEDED on composition (2026-07-15, i18n corpus sweep):
-the client's own rules text gives the official formula —
-"Absorption ratio = (base absorption ratio + Virya absorption ratio) x
-(1 + Strive Bonus)" — i.e. blessing/Virya pp join the STAGE BASE inside
-the Strive multiplier, not the displayed total. A companion string scopes
-the Virya bonus to the current Stage ("Aura Absorption Rate +%d%% in
-Current Stage"); values are %d templates (server-side), so the +20pp tier
-values remain community-sourced.
-MODELED (2026-07-15, updated same day to the official composition): both
-engines take two inputs — a persistent pp bonus (`bless_pp`) and the
-conditional before-Voidbreak-MIDDLE pp bonus (`bless_window_pp`) — applied
-per-row as speed(row) = abode × (low_row + bless(row)) × (1+strive). The
-entered absorption ratio is the on-screen TOTAL; the engine recovers true
-Strive as absorption / (low_cur + bless_cur) − 1, so the implied-Strive
-readout is not contaminated for blessed accounts. The tooltip-grade check
-updates accordingly: a base-40% player with +20pp blessing at Strive s
-should display (0.40 + 0.20) × (1 + s).
+**Tier ladder (observed 2026-07-15).** Effects below are each tier's *listed*
+grants; what actually goes live in Incarnation is the flat +20 above.
+- **Completion** (Reach Incarnation (L) Late 100% and break through):
+  "Remove Realm Restrictions for Taking Cultivation Pills"; "Cultivation Pill
+  Auto-Transmogrification Privilege"; Blessing Rewards +1; "First Esotability".
+  Restriction-removal lets higher-stage pills feed the LOWER secondary path.
+  Auto-transmog is SEPARATE (owner-adjudicated 2026-07-17): it lets
+  BREAKTHROUGH pills of one path be used on the other (physical ↔ magical) —
+  not about lower-path feeding (rank-appropriate pills already work on a
+  lower path with no privilege).
+- **Perfection (C)** (primary Incarnation (L) Completion; secondary Nascent
+  Soul (L) Late; clear Amethyst Fiend in Myrimon Wonder): "Incarnation (L)
+  Aura Absorption Ratio +20%"; Blessing Rewards +3.
+- **Perfect** (gold; secondary Incarnation (L) Middle; clear Jade-Eyed Lion):
+  lists BOTH "Incarnation (L) Aura Absorption Ratio +20%" AND "Absorption
+  Ratio Before Voidbreak (L) Middle: +20%"; Blessing Rewards +5; "Second
+  Esotability".
+- Secondary-path stage reqs are **REACH, not complete** (owner-confirmed
+  2026-07-16): satisfied on entering the named half-step.
+
+**Calculator impact.** The engine's projection cancels the entered absorption
+ratio (speed(row) = culti_speed × low_row / low_cur) — valid only when
+bonuses scale all rows uniformly. A realm-WINDOWED bonus breaks that
+cancellation (windowed rows run faster than the base-band progression
+predicts); same class of issue for the +200% post-ascension privilege. Both
+are additive pp per the formula, so they're modeled as pp inputs, not
+multipliers. A secondary-path projection would also see a bigger flat
+daily-XP term (better pills fed to it) on top of the absorption bonus.
+
+**Other observed facts.**
+- The "Double" badge between tier circles is NOT a tier (unclickable, per
+  Seralth). Plausible: the active-Virya status badge (dump: 'Double' = 双;
+  ">Within {1} hours, receive {3}x {2} Cosmoapsis gains") — i.e. a
+  ×2-Cosmoapsis session while its countdown runs. Verify by comparing the
+  /Cosmoapsis readout during vs after the timer.
+- Blessings are **per cultivation path** (screen/status bar use the (L)
+  primary suffix; confirms path letters beyond M/C/P, cf. elixir L/G/M/C/S).
+- XP cross-check: the screen's Late G12 denominator 5,623,090 matches
+  data/breakthrough.json Incarnation Late G12 grade_xp exactly.
+- Dump rank→reward table: Blessing Ranking 1→6, 2→5, 3→4, 4–10→3, 11+→2
+  (matches No.1 ⇒ 6 vases). Post-ascension privileges (dump): Absorption
+  Ratio +200% plus high-stage pill access.
+
+**Open / unverified (do NOT assert).** Whether the +20% persists past
+Incarnation into Voidbreak; whether/how much the "Before Voidbreak Middle"
+line activates in Voidbreak Early (its ceiling is VB Middle start — the dump
+template is literal — but its floor is NOT Incarnation, so it's at most
+Voidbreak-Early-only, value TBD); the Half Step tier; tiers beyond the three
+observed; the post-ascension privilege structure. Owner is timegated out of
+Voidbreak until ≈ 2026-08-03.
+
+**Correction history (compact).**
+- 2026-07-15: initial screenshots; community model had the tiers STACKING to
+  +40 persistent / +60 before VB Middle (two players, one ~90% self-rated).
+- 2026-07-17/18: additive-pp screenshot-confirmed (40% + 20% → effective
+  60%, not 48%). Composition SUPERSEDED to the official (base+Virya)×(1+Strive)
+  from the i18n corpus sweep.
+- 2026-07-20: owner's OWN account overturned the stacking — flat +20 in
+  Incarnation, tiers do not stack; +40/+60 RETRACTED. **Lesson: three
+  concurring players were wrong here; direct observation supersedes community
+  consensus.**
 ## Respira base XP is FIXED per major Stage (verified 2026-07-15)
 
 Community "Respira has a fixed value" claims are correct, with a precise
