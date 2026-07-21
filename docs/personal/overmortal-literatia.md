@@ -342,11 +342,13 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
 - Painted Cranes Summit = +3% max MP = **+9.3M**.
 
 ### Mechanics corrections (verified)
-- **Blind priority-fire.** Equipped skills fire in slot-priority order as they come off
-  CD; a higher-priority skill cuts in line. NOT optional, NOT schedulable. "Shield First"
-  ON makes shield-type skills lead. You control only *which 6 skills* + their *priority
-  order* + the toggle. → the §10 "dump the 3 curios into the first Scorch window" plan
-  was never actually controllable.
+- **Blind priority-fire — everything, period.** Skills, curios, AND equipment relics all
+  auto-fire in slot-priority order as they come off CD; a higher-priority skill cuts in
+  line. NOTHING is manually activated. "Shield First" ON makes shield-type skills lead.
+  You control only *which 6 skills* + their *priority order* + the toggle (+ targeting
+  mode, §7). → the §10 "dump the 3 curios into the first Scorch window" plan was
+  structurally impossible; the burst-the-ghost pattern below *emerges* from the
+  auto-caster, it is not piloted.
 - **Esotabilities are automatic passives (no skill slot).** Literatia eso: regain 10%
   max MP when MP drops low (sustains the MP→Erudition engine). Magicka eso: large shield
   scaled off max MP when HP <50% (auto emergency shield). Both active via the "Second
@@ -371,7 +373,7 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
 | Unleashed Ink | Virtuoso (L) | 438.3% | 1 | **13s** | [Boundfree] 2% MP → +50 |
 | Painted Cranes | Incarnation (L) | **534%** | 1 | 17s | [Summit] @150 → +3% max MP (~9.3M); skill Lv40 lowers req 150→100 |
 | Discordant Verse | Nascent Soul (L) | 318% | **3** | 16s | [Crescendo] +140% M.DMG **ignoring Shields/Barriers**; [Buff] Focus M.ATK +15% / 4s; [Boundfree] 1% MP → +25 |
-| Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] disperse 1 debuff (incl. taunt, §8) |
+| Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] clears the **most-recent** debuff — **strips taunt** when taunt is newest (RNG vs other debuffs), §8 |
 | Word of Kindness | Speech | shield | — | 25s | 25% M.DEF / 8s; [Boundfree] 2% MP → +50 |
 
 ### Advancement (+5) — verified curves
@@ -403,8 +405,11 @@ curios; the 1300%/+62M LR one-shots it) → §8's **4s taunt-free heal window** 
 casts land on the player. **Harder nuke = more downtime = more player damage.** Meanwhile
 Verse (3-tgt) + Lotus (2-tgt) splash the player *through* taunt continuously, and Verse's
 Crescendo ignores the ghost-driven shields (§8). Two ST nukes is a feature (faster ghost
-kills), not redundancy. Defense = evasion + M.DEF + Purify + both esos + dead ghosts deal
-no damage (offense-as-defense).
+kills), not redundancy. **Two independent downtime sources:** the ghost-kill (4s heal
+window) and Lotus's Purify (blind ~15s, strips the newest debuff — usually a taunt),
+each opening brief player-targeting windows. Defense = evasion + M.DEF + Purify + both
+esos + dead ghosts deal no damage (offense-as-defense). Consider raising Lotus's priority
+if you want its Purify firing sooner off CD (order is the only lever under blindfire).
 
 ### Priorities
 - **Advance Unleashed Ink +5 first** (+109%, 1/node, already eligible). Then Verse (+52%,
