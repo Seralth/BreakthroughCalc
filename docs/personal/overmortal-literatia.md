@@ -69,8 +69,11 @@ Boundfree riders spend a % of max MP to grant Erudition. Equipped-kit values:
   "sit pinned at cap." Design goals: (a) LR detonates *inside* a Scorch window,
   (b) Summit skills cast on the way *up*, and (c) the post-LR hole (0 Erudition for
   a few seconds) is refilled by recycling generators.
-- On InkedSeralth's stats (M.ATK 3.11M, max MP ~210M) LR ~= ~71M per cast and is the
-  single biggest damage source. ~2 casts in a 40–55s fight (~3 if generation is high).
+- On InkedSeralth's **current** stats (max MP **310M**; M.ATK ~4.13M observed on the
+  Harmony screen — up from the 3.11M baseline this section was first written at) LR =
+  1300% M.DMG + 20% max MP = a **+62M flat** chunk on top of the coefficient. Single
+  biggest hit, and enough to one-shot a ghost thrall (thrall HP ~10–20% of caster HP,
+  §8) for a guaranteed taunt-free window. ~2–3 casts/fight.
 
 ## 5. Equipped Summit / relic skills (verified from `cfg_us_skill`)
 
@@ -176,7 +179,12 @@ Fire Lotus in for Soul-destroyer, Spiritual Wall added as 3rd shield (dragged th
 to 1:17 in the first place). The loss was decided by damage *placement* (60% of our
 damage went into ghosts) and one missing LR — NOT raw DPS (we out-damaged them both times).
 
-## 10. Current loadout & casting order (PvP, vs Swordia/Ghostia)
+## 10. Current loadout & casting order (PvP, vs Swordia/Ghostia) — SUPERSEDED by §15
+
+> **SUPERSEDED (2026-07-21).** The Scorch-window plan below relied on timing curios into
+> a 5s window, but skills fire blindly in priority order on cooldown (§15) — that timing
+> was never fully controllable. Replaced by the shield-pierce / burst-ghost build in §15.
+> Kept here for the fight-data context (§9, §12) it feeds.
 
 Abilities: Speech - Word of Kindness, Windwalker (borrowed Magicka shield),
 Spiritual Wall (borrowed shield, 38.4% MP / 9s — swapped in for Threefold Reflection),
@@ -218,7 +226,9 @@ window; LR recurs 2–3x/fight so it catches later windows.
   (verified section 8), BUT 0.9s on an uncontrollably queue-timed cast blocks at most ~1
   of the ~15–25 taunt rolls per fight, can't be aligned to protect Literal Reality, and
   the shield bonus (+0.6% -> ~+1.3M absorb) is noise. It's a strictly worse stand-in for
-  Lotus Dreamscape's purify — do NOT delay Lotus for it.
+  Lotus Dreamscape's purify — do NOT delay Lotus for it. **(This dismisses the lvl-35
+  *advancement* only — Windwalker's base 25% magic evasion is a core keep vs magic
+  classes; see §15.)**
 
 ## 12. Cast-slot economics & Magicka-stun evaluation (2026-07-14 fight report)
 
@@ -317,3 +327,98 @@ Unity IL2CPP + tolua (game logic/data = Lua). See `RE_FINDINGS.md`.
 | Taunt | 嘲讽 | status id 1165, type TAUNT |
 | Immunity | 免疫 | status id 1152 (immune to negative status) |
 | Literatia / Ghostia / Swordia / Magicka / Corporia | 儒/鬼/剑/法/体 | `ru`/`gui`/`jian`/`fa`/`ti` |
+
+## 15. PvP respec — shield-pierce / burst-ghost build (2026-07-21)
+
+Supersedes the §10 Scorch-window rotation. All inputs below are owner-verified in-game
+(2026-07-21 screenshot/tooltip pass). Two independent findings drove the change: (a) the
+Scorch plan relied on timing curios into a 5s window, but skills auto-fire blindly in
+priority order on cooldown; (b) the amp-window loses to shield-pierce + splash vs Ghostia
+(model at the bottom).
+
+### Updated stats
+- Max MP **310M** (was ~210M when §4 was first written).
+- Literal Reality = 1300% M.DMG + 20% max MP = **+62M flat** on top of the coefficient.
+- Painted Cranes Summit = +3% max MP = **+9.3M**.
+
+### Mechanics corrections (verified)
+- **Blind priority-fire.** Equipped skills fire in slot-priority order as they come off
+  CD; a higher-priority skill cuts in line. NOT optional, NOT schedulable. "Shield First"
+  ON makes shield-type skills lead. You control only *which 6 skills* + their *priority
+  order* + the toggle. → the §10 "dump the 3 curios into the first Scorch window" plan
+  was never actually controllable.
+- **Esotabilities are automatic passives (no skill slot).** Literatia eso: regain 10%
+  max MP when MP drops low (sustains the MP→Erudition engine). Magicka eso: large shield
+  scaled off max MP when HP <50% (auto emergency shield). Both active via the "Second
+  Esotability" privilege (Ascension Virya, Perfection tier). → borrowed shields
+  (Windwalker / Spiritual Wall) are NOT esotabilities; they occupy normal skill slots,
+  and the skill cap is **6 total** (borrowed count toward it).
+- **Capstone Mortal World passive: 20% flat chance to avoid all Mortal World CC.**
+  Players are unlocking it now (top Ghostia first) → our silence whiffs ~20% vs them.
+- **Word of Kindness** also grants **25% M.DEF for 8s** — magic mitigation that stacks
+  with Windwalker's evasion (independent anti-magic layers).
+- **Windwalker** base = 31.6% MP shield (11s) **+ 25% magic evasion** — the evasion is
+  the keep-reason vs a magic class (distinct from the lvl-35 advancement, §11).
+- **Master's Hand is a SILENCE, not a stun** — stops enemy skills, not autos. Near-dead
+  vs Ghostia: taunt hijacks the cast onto a ghost thrall (§8), so it silences the actual
+  caster only ~1 duel in 5; capstone eats another 20%. Dropped.
+- **Skill unlocks are level-gated, not equip-gated** — a prereq only needs to be *leveled*
+  to keep the next skill unlocked; it need not stay equipped.
+
+### Verified skill tooltips (base, current level)
+| Skill | Path | Base M.DMG | Tgts | CD | Riders |
+|---|---|---|---|---|---|
+| Unleashed Ink | Virtuoso (L) | 438.3% | 1 | **13s** | [Boundfree] 2% MP → +50 |
+| Painted Cranes | Incarnation (L) | **534%** | 1 | 17s | [Summit] @150 → +3% max MP (~9.3M); skill Lv40 lowers req 150→100 |
+| Discordant Verse | Nascent Soul (L) | 318% | **3** | 16s | [Crescendo] +140% M.DMG **ignoring Shields/Barriers**; [Buff] Focus M.ATK +15% / 4s; [Boundfree] 1% MP → +25 |
+| Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] disperse 1 debuff (incl. taunt, §8) |
+| Word of Kindness | Speech | shield | — | 25s | 25% M.DEF / 8s; [Boundfree] 2% MP → +50 |
+
+### Advancement (+5) — verified curves
+| Skill | Total DMG @+5 | per-node M.DMG | cost/node | Lv req |
+|---|---|---|---|---|
+| **Unleashed Ink** | **+109%** | +9.7% | **1** | 20 ✓ |
+| Painted Cranes | +67% | +6.0% | 3 | 30 (at 29) |
+| Discordant Verse | +52% | +4.6% | 2 | 35 ✓ |
+| Lotus Dreamscape | +46% | +4.1% | 3 | 30 (at 29) |
+
+Left-side (non-build) skills gain only ~20–30% at +5. Unleashed Ink is the standout
+scaler **and** the cheapest to advance — advance it first.
+
+### The six (priority order; Shield First ON)
+1. **Windwalker** — 25% magic evasion + MP shield
+2. **Word of Kindness** — 25% M.DEF 8s + shield + 50 gen
+3. **Discordant Verse** — 3-tgt splash + Crescendo shield-pierce + Focus + 25 gen
+4. **Unleashed Ink** — ST ghost-killer, top throughput (438→~916% @+5, 13s CD) + 50 gen
+5. **Painted Cranes** — ST ghost-killer #2, 534% + Summit max-MP chunk
+6. **Lotus Dreamscape** — 2-tgt splash + Purify + 50 gen
+
+Cut vs §10: Hidden Hook (Scorch premise dead under blind-fire), Master's Hand (silence
+hijacked onto ghosts), Spiritual Wall (Magicka eso auto-covers emergency shields),
+Threefold Reflection (benched), monsterforms (§12).
+
+### Strategy — burst-the-ghost (exploits §8's 4s heal window)
+Taunt forces single-target casts onto the ghost thrall → burst it down (Ink + Cranes +
+curios; the 1300%/+62M LR one-shots it) → §8's **4s taunt-free heal window** opens → all
+casts land on the player. **Harder nuke = more downtime = more player damage.** Meanwhile
+Verse (3-tgt) + Lotus (2-tgt) splash the player *through* taunt continuously, and Verse's
+Crescendo ignores the ghost-driven shields (§8). Two ST nukes is a feature (faster ghost
+kills), not redundancy. Defense = evasion + M.DEF + Purify + both esos + dead ghosts deal
+no damage (offense-as-defense).
+
+### Priorities
+- **Advance Unleashed Ink +5 first** (+109%, 1/node, already eligible). Then Verse (+52%,
+  2/node). Cranes/Lotus need Lv 30 to advance, cost 3/node for less — do last.
+- **Level Painted Cranes to 40** (Summit req 150→100 — real rotation gain). This is the
+  leveling-mat sink that competes with Ink; advancement is a *separate* (knowledge)
+  resource, so advance Ink regardless of the Cranes leveling decision.
+- **Max MP is the keystone stat** — triple-duty: Boundfree fuel + Cranes-Summit / LR-20%
+  max-MP damage + Magicka eso shield size. Favor it on inkstone/brush affixes.
+
+### Model: Scorch-window (old) vs shield-pierce (new)
+Raw-damage compare (mitigation cancels relatively; Crescendo still goes through M.DEF,
+just not shields). Losing Scorch = +12% amp on ~120M/fight amped throughput =
+14.4M×(1−f); gaining Crescendo pierce ≈ 12.5M + 4.8M×f, where **f = fraction of your
+damage the target's shields absorb**. **Crossover f ≈ 10%.** Ghostia's whole sustain is
+ghost-driven shields (§8), so f ≫ 10% → respec wins; blind-fire independently sinks the
+old plan. Current would only stay ahead vs a genuinely shieldless target.
