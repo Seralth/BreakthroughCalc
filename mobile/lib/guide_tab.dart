@@ -404,8 +404,10 @@ Widget _timegatePage(BuildContext context) {
         'click through each grade, so a large pool clears whole half-steps '
         'in one go.\n'
         '• The gauge percentage past 100% reads as EXP gained since the '
-        'start of your current half-step ÷ that half-step\'s total — so an '
-        'overcap percentage translates directly into future progress.'),
+        'start of your current half-step ÷ that half-step\'s total — read it '
+        'off the half-step completion gauge that fills to 100% and keeps '
+        'climbing, not the per-grade step bar. An overcap percentage '
+        'translates directly into future progress.'),
     docTable(context, 'What a given stock buys you',
         ['Half-step', 'Total EXP'],
         [
