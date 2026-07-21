@@ -457,9 +457,17 @@ strings extraction; values in %d templates are server-side):
 - **Creation artifact upgrade semantics**: "increases to / reduces to"
   wording — Vase refined-pill EXP tiers +10% → +20% → +30% → +40% and
   Mirror Duplication cost −5% → −10% REPLACE the prior tier, not stack.
-  The +30/+40 Vase tiers were previously unknown (star mapping unstated).
   Artifact energy at 0★: 1 per Taoist Year, cap 200; charge = 30 Fateum
   for +100. Mirror copy range: Incarnation+ pills of any quality.
+  Starsea Vase star scaling (owner-read 2026-07-21): energy regen is
+  progressive 0★ 1 → 2★ 1.6 → 3★ 2 per Taoist Year; cap 0★ 200 → 1★ 300
+  → 2★ 400 → 3★ 500 (= 200 + 100/star; 4★/5★ predicted 600/700, unread).
+  SPECIAL effects appear ONLY at stars 1, 2, 5 (before the
+  awakening effect) — 3★/4★ improve only base regen/cap. So the EXP-bonus
+  mapping is 1★ +10%, 2★ +20% (NOT 3★ — earlier note corrected), 5★ 15%
+  no-cost refine; the dump's +30%/+40% EXP tiers are then most likely the
+  AWAKENING progression, not star tiers (unconfirmed). Open: exact 1★/2★
+  EXP values from tooltip, the awakening effect, 1★/4★ regen, 4★/5★ cap.
 - **Star Marks**: granted by the Constellation Altar (Samsara/
   reincarnation system), five quality ranks; pill-color marks by Mansion:
   Ghost = Rare (blue), Turtle Beak = Epic (purple), Chariot = Legendary
