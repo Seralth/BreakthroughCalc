@@ -176,8 +176,8 @@ class Inputs:
     # docs/knowledge/game-mechanics-verified.md). Fractions of 1 (0.20 = +20pp).
     # The entered absorption_ratio is the on-screen TOTAL, which already
     # includes them; the engine strips them to recover the true Strive.
-    bless_pp: float = 0.0           # persistent tiers (e.g. Perfection (C) + Perfect = 0.40)
-    bless_window_pp: float = 0.0    # conditional tier: only before Voidbreak MIDDLE
+    bless_pp: float = 0.0           # Virya absorption pp; flat +0.20 in Incarnation (tiers don't stack)
+    bless_window_pp: float = 0.0    # windowed tier; dormant in Incarnation, Voidbreak value unverified — enter manually once read
 
     # XP elixirs: a flat daily XP stream analogous to Respira (no crit roll).
     elixir_per_day: float = 0.0     # elixirs consumed per day

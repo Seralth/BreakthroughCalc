@@ -172,8 +172,14 @@ pills to finish Incarnation Late"; Princess Koi via 1 Sacred Jade.
 - Grade tables triple-verified (APK dump ladder, wiki spot-checks, live
   screens: Nascent (M) Middle G5 = 632,859 exact). Dao-seed display shows
   grades−1 seeds — never "fix" tables from seed counts.
-- Virya +20/+40+20pp stacking is the two-player community model — tooltip
-  verify on the Virya screen after Completion unlocks.
+- Virya stacking — CORRECTED 2026-07-20 (owner's own account): the tiers do
+  NOT stack. In Incarnation the blessing is a FLAT +20pp (Perfect read the
+  same 40+20 as Perfection). Additive-pp holds (40+20=60 via Abode 270.20 x
+  0.60 = Speed 162.12), but only one +20 is live; the "Before Voidbreak
+  Middle" line is dormant in Incarnation. The +40/+60 figures below are
+  RETRACTED and UNVERIFIED until Voidbreak (~2026-08-03) — **this plan's
+  parking math assumes +40/+60 and must be redone once the Voidbreak blessing
+  value is read.**
 - Assumed: pills feed the secondary at face XP; secondary breakthroughs
   are not a bottleneck; fortune pills hold ~80% effectiveness (6/day ×48k,
   requires staying highest cultivation level — ascending on time protects

@@ -40,8 +40,8 @@ def test_shelf_auto_fields_and_pe_auto_rows(window):
     w.virya.setCurrentIndex(3)
     for key in ("bless_pp", "bless_window", "pill_limit"):
         w._set_shelf_auto(key, True)
-    assert w.bless_pp.value() == 40           # 0.20 + 0.20, percent widget
-    assert w.bless_window.value() == 20
+    assert w.bless_pp.value() == 20           # flat +0.20 in Incarnation; tiers don't stack
+    assert w.bless_window.value() == 0        # windowed line dormant in Incarnation; VB value unverified
     assert w.pill_limit.value() == 1          # base 0 + Chroma Tier 12
     assert w.pe_rows.total() == 4             # Chroma +1 and +3 auto rows
     # Respira self-fill: attempts = base 10 + Purify T6 + Chroma T3, and

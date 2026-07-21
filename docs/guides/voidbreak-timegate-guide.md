@@ -71,18 +71,18 @@ one. Tiers unlock from your primary and secondary paths together:
   these make the secondary rush below possible.
 - **Perfection** — primary at Incarnation Completion, secondary at
   Nascent Soul Late, clear Amethyst Fiend in Myrimon Wonder:
-  **+20 points** absorption.
+  **+20 points** absorption in your current Stage.
 - **Perfect** — secondary at Incarnation Middle, clear Jade-Eyed Lion:
-  a further **+20 points** permanent, plus **+20 points active only
-  before Voidbreak Middle**.
+  a second absorption tier, plus an "Absorption Ratio Before Voidbreak
+  Middle" line that comes into play once you are in Voidbreak.
 
 Secondary-path requirements are satisfied on **reaching** the named
-half-step, not completing it. Fully built: +40 points permanent, +60
-total until you enter Voidbreak Middle. On a 0.40 base band that is
-more than double the parked passive rate.
-
-The windowed +20 ends the instant you enter Voidbreak Middle — this
-single fact drives the gate-day routing below.
+half-step, not completing it. On the Incarnation base band a live +20
+points already lifts your parked rate well above the raw passive rate,
+which is why the rush below is worth prioritising. How the tiers carry
+into Voidbreak depends on your build — read your in-game absorption
+there and plug it into the calculator rather than assuming a fixed
+total.
 
 ## Preparing while gated
 
@@ -94,8 +94,8 @@ single fact drives the gate-day routing below.
 2. **Rush the Virya tiers immediately after the Completion
    breakthrough.** Divert your daily pills to the secondary path
    (passive stays on the primary): Nascent Soul Late unlocks the first
-   +20, Incarnation Middle the rest. The earlier the tiers land, the
-   longer they multiply your parked accrual. Clear the two Myrimon
+   absorption tier, Incarnation Middle the next. The earlier the tiers
+   land, the longer they lift your parked accrual. Clear the two Myrimon
    Wonder bosses ahead of time so they never hold a tier hostage.
 3. **Fill every flat stream, every day.** Every pill, Respira attempt,
    and elixir lands in the pool at face value. Never leave pill
@@ -131,27 +131,30 @@ single fact drives the gate-day routing below.
 2. **Click through Voidbreak Early.** Your excess charges its grades
    instantly.
 3. **Route by where the server's leaders are — not by your current
-   Strive number.** Parked at the Early cap you accrue at (0.50 + 0.60
-   blessing) with no Strive; live in Middle you accrue at
-   (0.65 + 0.40) × (1 + Strive). Strive is measured against the
-   server's top cultivator, so what matters is the Strive you would
-   have **while in Middle**, not the one you see today:
+   Strive number.** Two rates compete once you are inside. Parked at the
+   Early cap you accrue at your base band **plus your blessing**, with no
+   Strive. Pushing live through Middle you accrue at Middle's higher base
+   band **× (1 + Strive)** — but Strive is measured against the server's
+   top cultivator, so what matters is the Strive you would have **while in
+   Middle**, not the one you see today:
    - **Never be the first into Middle.** While the leaders hold the
      Early cap, pushing past them makes you the front — your Strive
-     drops away and you grind Middle at a flat 1.05, worse than
-     parking at 1.10. Trailing players wait at the cap like everyone
-     else.
+     drops away and you grind Middle at its flat base band, which the
+     parked rate can beat. Trailing players wait at the cap like
+     everyone else.
    - **Front-runners:** stay parked until the pool covers all 142.1M
      of Middle, then clear it in one push and arrive at Voidbreak
      Late. A one-push spends no live time in Middle, so lost Strive
      never enters into it.
    - **After the leaders push to Late:** trailing players keep their
-     Strive while climbing Middle live. Above ~5% Strive, pushing now
-     beats staying parked (1.05 × (1 + Strive) > 1.10); below it, keep
-     parking until your own pool covers the rest.
+     Strive while climbing Middle live. Once your live Strive is high
+     enough that the live rate beats the parked rate, pushing wins;
+     below that, keep parking until your own pool covers the rest.
 
-   Net effect: the server bunches at the Early cap, then peels off
-   front to back.
+   The crossover depends on how much blessing you have live in Voidbreak,
+   so let the calculator compare the two for your own absorption and
+   Strive. Net effect: the server bunches at the Early cap, then peels
+   off front to back.
 4. **Move your streams up a tier.** Switch to the newly unlocked pill
    rank as soon as it's sustainable, start leveling the Spiritual
    World's fresh extractor with the new fruit income, open the saved
@@ -165,8 +168,7 @@ single fact drives the gate-day routing below.
 **Without the Vase (no Creation Artifacts).** Your pill stream is
 exactly the daily limit, so quality per attempt is everything you
 control there — and your prestock leans hardest on passive accrual,
-which makes the Virya rush proportionally your biggest lever: +60
-points on a 0.40–0.50 base band more than doubles the parked rate.
+which makes the Virya rush proportionally your biggest lever.
 Fruits are your swing resource; bank them well.
 
 **With the Vase (and Mirror).** Refined red pills bypass the daily

@@ -3202,27 +3202,13 @@
      "target": "bless_pp",
      "value": 0.2,
      "min_level": 2,
-     "data_status": "community",
-     "note": "Absorption Ratio +20 percentage points. Persists past Incarnation."
+     "data_status": "exact",
+     "note": "Aura Absorption Ratio +20 percentage points while in Incarnation. Higher tiers do not increase this while in Incarnation."
     },
     {
-     "target": "bless_pp",
-     "value": 0.2,
+     "target": "info",
      "min_level": 3,
-     "data_status": "community",
-     "note": "A second +20 percentage points. Persists past Incarnation."
-    },
-    {
-     "target": "bless_window_pp",
-     "value": 0.2,
-     "min_level": 3,
-     "data_status": "community",
-     "condition": {
-      "kind": "before_row",
-      "stage": "Voidbreak",
-      "phase": "MIDDLE"
-     },
-     "note": "Additional +20 percentage points until you pass Voidbreak Middle."
+     "note": "Perfection also grants an 'Absorption Ratio Before Voidbreak Middle +20%' line, which does not apply while in Incarnation."
     },
     {
      "target": "info",

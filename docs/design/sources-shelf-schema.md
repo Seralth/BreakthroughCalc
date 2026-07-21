@@ -88,7 +88,7 @@ Every effect points at a target; every target declares its **mode**. This is whe
 
 **`base` semantics** for raw targets: `"none"` = the field is fully shelf-derived (pill_effect — exactly today's mobile `pe_sources → pill_effect` behavior); `"user"` = a residual base input remains (respira attempts have a level-based in-game base ~10; pill limit likewise) and the shelf *adds* to it. The residual base is the existing input field re-labeled ("base attempts, before sources").
 
-**Stacking**: `combine: "sum"` covers everything currently known (books % additive, blessing pp additive per three independent player confirmations, attempts additive). `combine: "product_1p"` is reserved (total = Π(1+vᵢ)−1) for a future multiplicative case (e.g. elixir_effect-style multipliers); no current source uses it. Aura Gem stays an enum input, not a shelf source.
+**Stacking**: `combine: "sum"` covers everything currently known (books % additive, blessing pp additive — 40+20=60, owner-observed 2026-07-20 — attempts additive). NOTE: blessing *tiers* do NOT stack across each other; in Incarnation the blessing is a flat +20 (Perfect == Perfection), so `ascension_virya` derives a single bless_pp 0.20, not a sum of tier pp. `combine: "product_1p"` is reserved (total = Π(1+vᵢ)−1) for a future multiplicative case (e.g. elixir_effect-style multipliers); no current source uses it. Aura Gem stays an enum input, not a shelf source.
 
 **Blessing note**: absorption_ratio is entered as the on-screen TOTAL (already includes blessing) and the engine strips the current row's blessing to recover Strive — so blessing effects target `bless_pp`/`bless_window_pp` (raw engine inputs), never `absorption_ratio`. The taxonomy encodes this: `absorption_ratio.effects_allowed = false`.
 

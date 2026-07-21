@@ -289,24 +289,30 @@ Ratio + %s%%', 'Absorption Ratio Before %s: + %s%%'):
   clear Jade-Eyed Lion in Myrimon Wonder): lists BOTH "Incarnation (L) Aura
   Absorption Ratio +20%" AND "Absorption Ratio Before Voidbreak (L) Middle:
   +20%"; Blessing Rewards +5; "Second Esotability".
-- COMMUNITY MODEL of the stacking (TWO independent player confirmations via
-  Seralth 2026-07-15 — an older player self-rated ~90% sure, plus a second
-  player confirming +60% total while in Incarnation, dropping to +40% in
-  Voidbreak Middle): Perfection (C)'s +20% and Perfect's +20% "Incarnation Aura
-  Absorption Ratio" add flat to +40%, and that +40% PERSISTS past
-  Incarnation (it is named for the tier, not windowed to the stage). The
-  "Before Voidbreak (L) Middle +20%" is the conditional one on top: +60%
-  total until REACHING Voidbreak (L) Middle, then back to +40% permanently.
-  BOUNDARY OWNER-CONFIRMED (Seralth 2026-07-16): the conditional +20pp ends
-  at the START of VB Middle — the dump template "Absorption Ratio Before
-  %s: + %s%%" is literal. The "until passing Middle" reading recorded here
-  on 2026-07-15 was wrong; engine `blessing_applies` (rows strictly before
-  the VB Middle start row) was already correct. The parking meta below only
-  works under this reading: Early cap 0.50 base + 0.60 blessing = 1.10
-  beats live Middle 0.65 + 0.40 = 1.05.
-  Meta consequence: players park in Voidbreak (Early) — +60% plus VB's
-  higher base band (0.50 vs Incarnation Late 0.40) — and prestock until
-  they can clear Middle into Late in one push.
+- STACKING — CORRECTED, the +40/+60 additive-tier model is RETRACTED (owner,
+  2026-07-20, from his OWN account): the tiers do NOT stack. In Incarnation
+  the Virya absorption bonus is **+20% FLAT** — at Perfect the absorption read
+  the exact same "40 + 20" as at Perfection (C). Unlocking the higher tier
+  added nothing to absorption in Incarnation.
+  - Arithmetic rules out the alternatives: the live screen reads Abode 270.20
+    × Absorption 0.60 = Speed 162.12, i.e. base 0.40 + 0.20. A stacked +40
+    would be 0.80 → 216.16; +60 would be 1.00 → 270.20. Only the flat +20
+    matches, so the "Before Voidbreak (L) Middle +20%" line is **dormant in
+    Incarnation** (were it live the speed would imply 0.80).
+  - Still verified: the pp are ADDITIVE (40+20=60, not 48) — only ONE +20 is
+    live at a time in Incarnation. The base 0.40 = Incarnation Late `low` with
+    Strive 0 (parked).
+  - Now UNVERIFIED (do NOT assert): whether +20% persists past Incarnation
+    into Voidbreak; whether/how much the "Before Voidbreak Middle" line
+    activates in Voidbreak Early; the whole Voidbreak parking premise. Owner
+    is timegated out of Voidbreak ~2 weeks (≈ 2026-08-03). The earlier
+    "two players confirming +60%→+40%" is community report his own account now
+    contradicts — demoted below the direct observation. (Lesson: three
+    concurring players were wrong here; direct observation wins.)
+  - The dump template "Absorption Ratio Before %s: + %s%%" is still literal
+    (the windowed line ends at VB Middle start); we simply no longer know its
+    floor is Incarnation — observation says it is NOT live there, so the window
+    is at most Voidbreak-Early-only, value TBD.
 - The "Double" label between the tier circles is NOT a tier (unclickable,
   per Seralth). PLAUSIBLE INFERENCE: it is the active-Virya status badge
   (dump: 'Double' = 双; template ">Within {1} hours, receive {3}x {2}
@@ -334,13 +340,15 @@ uniformly. A blessing bonus restricted to a realm window ("before Voidbreak
 (Late)") breaks the cancellation: windowed rows are faster than the pure
 base-band progression predicts. Same class of issue for the +200%
 post-ascension privilege and Virya (both additive terms, per the formula).
-Per the community model above, the effective bonus is +40% persistent
-(+60% before Voidbreak Middle) — and since it persists past Incarnation,
-it is a permanent absorption modifier, not just a window. Separately, the pills-on-secondary-path use means a
-secondary-path projection would see BOTH a bigger flat daily-XP term (better
-pills) and the windowed absorption bonus. ADDITIVE per community consensus (third independent player confirmation
-via Seralth 2026-07-15): the blessing "+20%" adds percentage points to the
-absorption ratio (like Virya in the official formula), not ×1.2.
+Per the CORRECTED model above, the verified effective bonus is +20% in
+Incarnation, FLAT (tiers do not stack; the "Before Voidbreak Middle" line is
+dormant there). Any larger persistent/windowed figure is UNVERIFIED until the
+owner reaches Voidbreak (≈ 2026-08-03) — the +40/+60 is retracted. Separately,
+the pills-on-secondary-path use means a secondary-path projection would see
+BOTH a bigger flat daily-XP term (better pills) and, once in Voidbreak,
+whatever the windowed bonus turns out to be. ADDITIVE (owner-observed
+2026-07-20): the blessing "+20%" adds percentage points to the absorption
+ratio (like Virya in the official formula), not ×1.2.
 RESOLVED (2026-07-18, see the 2026-07-17 batch section above): the
 absorption panel reads 40.00% +20.00% with speed = abode × 0.60 exactly —
 the pending tooltip-grade check is done (60%, not 48%). Composition order
