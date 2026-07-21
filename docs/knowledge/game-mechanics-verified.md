@@ -300,11 +300,15 @@ grants; what actually goes live in Incarnation is the flat +20 above.
 - **Completion** (Reach Incarnation (L) Late 100% and break through):
   "Remove Realm Restrictions for Taking Cultivation Pills"; "Cultivation Pill
   Auto-Transmogrification Privilege"; Blessing Rewards +1; "First Esotability".
-  Restriction-removal lets higher-stage pills feed the LOWER secondary path.
-  Auto-transmog is SEPARATE (owner-adjudicated 2026-07-17): it lets
-  BREAKTHROUGH pills of one path be used on the other (physical ↔ magical) —
-  not about lower-path feeding (rank-appropriate pills already work on a
-  lower path with no privilege).
+  Both privileges concern **BREAKTHROUGH pills, NOT XP/cultivation-XP pills**
+  (owner-corrected 2026-07-21 — the earlier "removes realm restrictions so
+  higher-stage XP pills feed the lower path" reading was WRONG). The
+  auto-transmog converts breakthrough pills two ways: (a) **DOWN-RANK** — turn
+  a higher-rank breakthrough pill into a lower-rank one, so you never farm
+  lower areas to make low-rank breakthrough pills; (b) **CROSS-PATH** —
+  convert magic ↔ physical breakthrough pills of the SAME tier. Net: your
+  breakthrough-pill stock becomes fungible across rank and path, which is what
+  actually funds a secondary-path rush — there is no XP-pill sharing here.
 - **Perfection (C)** (primary Incarnation (L) Completion; secondary Nascent
   Soul (L) Late; clear Amethyst Fiend in Myrimon Wonder): "Incarnation (L)
   Aura Absorption Ratio +20%"; Blessing Rewards +3.
@@ -356,6 +360,25 @@ Voidbreak until ≈ 2026-08-03.
   Incarnation, tiers do not stack; +40/+60 RETRACTED. **Lesson: three
   concurring players were wrong here; direct observation supersedes community
   consensus.**
+### Cultivation-XP pill economy (owner-confirmed 2026-07-21)
+
+- **XP / cultivation-XP pills are fungible across BOTH paths and ALL tiers.**
+  Any such pill feeds any cultivation path regardless of rank; a higher-tier
+  pill simply grants more XP per use (a Voidbreak pill on an Incarnation path
+  just gives more than an Incarnation pill would). This is a base mechanic, NOT
+  the Completion blessing — that privilege is breakthrough pills only (see the
+  Virya Completion tier above). Throughput is throttled by the per-day pill
+  attempt cap (scales with realm; see elixir-sense-mechanics.md).
+- **Fate Pavilion cultivation bags**: a daily reward giving one bag set per
+  cultivation path (main + off), each tier-aligned to that path's current
+  realm — so once the main ascends, its bags mint the higher-tier pill while an
+  un-ascended off path's bags stay a tier behind (this is the whole lever
+  behind "level the off path to Voidbreak to upgrade its bags"). Bags roll
+  purple/gold cultivation pills; the exact purple:gold split is UNCONFIRMED
+  (owner's read is anecdotal and he was told his luck runs high — do NOT treat
+  any ratio as a drop rate). Daily bag count is per-account (scales), not a
+  constant.
+
 ## Respira base XP is FIXED per major Stage (verified 2026-07-15)
 
 Community "Respira has a fixed value" claims are correct, with a precise

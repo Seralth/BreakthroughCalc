@@ -20,8 +20,10 @@ same pattern returns at every later realm gate.
   click through each grade — with a large pool you can clear entire
   half-steps in one go the moment you break through.
 - The gauge percentage past 100% reads as: EXP gained since the start
-  of your current half-step ÷ that half-step's total EXP. Overcap
-  percentages therefore translate directly into future progress.
+  of your current half-step ÷ that half-step's total EXP — read it off the
+  **half-step completion gauge** (the one that fills to 100% and keeps
+  climbing), not the per-grade step bar. Overcap percentages therefore
+  translate directly into future progress.
 
 ### What a given stock buys you (ascending from Incarnation Late)
 
