@@ -57,7 +57,7 @@ Boundfree riders spend a % of max MP to grant Erudition. Equipped-kit values:
 | Primeval Inkstone (each) | +25 | 1% MP, 24s cd |
 | Speech - Hidden Hook | +75 | 3% MP, **but capped: will not raise you past 200** |
 | Speech - Threefold Reflection | **0** | generates nothing — pure Summit payoff |
-| Windwalker (borrowed Magicka shield) | **0** | no Erudition; 31.6% MP shield, 11s |
+| Windwalker (borrowed Magicka shield) | **0** | no Erudition; 31.6% MP shield (11s duration), **38s CD**, +25% magic evasion |
 
 ## 4. Literal Reality (知行合一) — the payoff (verified tooltip)
 
@@ -360,8 +360,12 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
 - **Word of Kindness** = **39.6% MP shield** + [Boundfree] 2% max MP → +50 + **25% M.DEF
   / 8s** + **25% P.DEF / 5s**. The M.DEF stacks with Windwalker's evasion vs magic
   (Ghostia); the P.DEF covers physical matchups (Swordia) — a dual-defense keep.
-- **Windwalker** base = 31.6% MP shield (11s) **+ 25% magic evasion** — the evasion is
-  the keep-reason vs a magic class (distinct from the lvl-35 advancement, §11).
+- **Windwalker** base = 31.6% MP shield (11s duration), **38s CD**, **+25% magic evasion**
+  — the evasion is the keep-reason vs a magic class (distinct from the lvl-35 advancement,
+  §11). At 38s CD its evasion uptime is ~29% (11s/38s), CD-limited.
+- **Shields queue** (§6): a shield won't proc until the previous one expires, so shield
+  *casts* self-rate-limit (~3/min for the 2-shield kit) regardless of priority. → "Shield
+  First" ON is nearly free; it does NOT eat a large share of the cast budget.
 - **Master's Hand is a SILENCE, not a stun** — stops enemy skills, not autos. Near-dead
   vs Ghostia: taunt hijacks the cast onto a ghost thrall (§8), so it silences the actual
   caster only ~1 duel in 5; capstone eats another 20%. Dropped.
@@ -376,6 +380,17 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
 | Discordant Verse | Nascent Soul (L) | 318% | **3** | 16s | [Crescendo] +140% M.DMG **ignoring Shields/Barriers**; [Buff] Focus M.ATK +15% / 4s; [Boundfree] 1% MP → +25 |
 | Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] clears the **most-recent** debuff — **strips taunt** when taunt is newest (RNG), §8; [Summit] apply_status. **No silence** (flavor only) |
 | Word of Kindness | Speech | 39.6% MP shield | — | 25s | 25% M.DEF / 8s; 25% P.DEF / 5s; [Boundfree] 2% MP → +50 |
+
+### Universal cast priority (cooldown-optimized, Shield First ON)
+Slot budget ≈ 24 casts/min (2.5s/cast, §12); the kit wants ~37/min → oversubscribed, so
+priority = what actually fires. Shields queue + Windwalker's 38s CD mean shields cost only
+~3/min — the real competition is generators vs inkstones (both fuel Literal Reality, the
+top hit). Order high→low: **Word of Kindness · Windwalker** (shields, auto) → **Unleashed
+Ink** (13s, +50) → **Lotus** (15s, +50, Purify) → **Discordant Verse** (16s, +25, pierce)
+→ **3 curios** (60s, must-fire, cheap) → **5 Primeval Inkstones** (24s, +25 + splash —
+above the no-gen nukes) → **Painted Cranes** (17s, no gen — *raise toward the curios vs
+Swordia*) → **Primeval Brush** (21s, no gen) → **monsterforms** (bottom). Two knobs: Cranes
+height (Swordia ↔ Ghostia/gen); Shield First (keep ON — shields self-limit via the queue).
 
 ### Advancement (+5) — verified curves
 | Skill | Total DMG @+5 | per-node M.DMG | cost/node | Lv req |
