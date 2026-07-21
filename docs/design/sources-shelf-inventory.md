@@ -147,7 +147,7 @@
     {"item": "Vase red-pill tier-unlock structure", "need": "which refined reds exist per Vase tier (gates Mirror copies)"},
     {"item": "Aura Gem below Rare", "need": "do Common/Uncommon gems exist, and per-rarity claim-cap hours"},
     {"item": "Star Mark sources and per-level pp values; Daozu treasure list/values; Lotus Throne values", "need": "currently user-read only"},
-    {"item": "Ascension Virya: tiers beyond the three observed; post-ascension privilege structure; tooltip-grade verification that blessing pp are additive (40%-band + 20 should read 60%)", "need": "screenshots"},
+    {"item": "Ascension Virya: Voidbreak carry-over of the +20 (does it persist? does the windowed line activate, at what value?); Half Step tier; tiers beyond the three observed; post-ascension privilege structure", "need": "screenshots (owner timegated out of Voidbreak ~2 weeks). Additive-pp + flat-+20-in-Incarnation are settled."},
     {"item": "Respira per-Stage bases beyond Nascent (3,157) and Incarnation (6,385)", "need": "one display reading per Stage (Voidbreak predicted ~12.8-12.9k)"},
     {"item": "Base Respira attempts per character level (yunqi_limit full table)", "need": "client has 2@lv1 -> 10 default; full ladder unextracted"},
     {"item": "Base daily pill attempt count before bonuses", "need": "what pill_limit is with zero sources owned"},
