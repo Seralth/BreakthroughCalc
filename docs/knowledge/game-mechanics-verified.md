@@ -412,9 +412,10 @@ entire major Stage — it does not scale with phase or grade.
   same session. The earlier "low 18000s"/"22.2k sounds more correct" recall
   was wrong — a caution against recall-based confirmation. The ~×2 procs are
   consistent with the client crit table's ×1.8 *expected* value being the
-  mean of a distribution that includes ×2 rolls. OPEN: whether the on-screen
-  base already includes the +28% technique books (if so, unbuffed base is
-  ~6,385) — needs a reading with a book newly toggled to compare.
+  mean of a distribution that includes ×2 rolls. RESOLVED (see the
+  +28%-exact anchoring below): the on-screen value DOES include the +28%
+  technique books; the unbuffed Incarnation base is **6,385** (× 1.28 =
+  8,172.8 → 8,173).
 - Cross-account data point (2026-07-15, friend-of-Seralth screenshots,
   Ghostia char at Incarnation (G) Late G9): normal proc 9,515, "Grasped"
   proc 19,030 — exactly ×2.0, confirming the yunqi_crit ×2 tier and its
