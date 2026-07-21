@@ -84,7 +84,7 @@ Skill IDs for future lookup:
 | Speech - Threefold Reflection | 5907 | 15s | **200** -> +1 hit (2->3 hits). Base `hit_time=2`. |
 | Speech - Hidden Hook | 5909 | 16s | **250** -> +15% dmg + Scorch (id 1168, M.DMG taken +12%, 5s) |
 | Speech - Word of Kindness | 5905 | 25s | shield |
-| Lotus Dreamscape (清荷画境) | 5911 | 15s | **100** -> apply_status; 2-target 213.2%; +50 Erudition when <100; **purify at skill lvl 20** (NOT YET UNLOCKED, far away) |
+| Lotus Dreamscape (清荷画境) | 5911 | 15s | **100** -> apply_status; 2-target 213.2% (config; current tooltip 300%); +50 Erudition when <100; **purify NOW ACTIVE** (clears newest debuff incl. taunt — see §15) |
 | Speech - Heaven's Way (天行健) | 5923 | 25s | +100 Erudition Boundfree + purify rider at lvl 20 (NOT unlocked) |
 
 Curio relics (3 slots, do not interchange with equipment relics):
@@ -357,8 +357,9 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
   and the skill cap is **6 total** (borrowed count toward it).
 - **Capstone Mortal World passive: 20% flat chance to avoid all Mortal World CC.**
   Players are unlocking it now (top Ghostia first) → our silence whiffs ~20% vs them.
-- **Word of Kindness** also grants **25% M.DEF for 8s** — magic mitigation that stacks
-  with Windwalker's evasion (independent anti-magic layers).
+- **Word of Kindness** = **39.6% MP shield** + [Boundfree] 2% max MP → +50 + **25% M.DEF
+  / 8s** + **25% P.DEF / 5s**. The M.DEF stacks with Windwalker's evasion vs magic
+  (Ghostia); the P.DEF covers physical matchups (Swordia) — a dual-defense keep.
 - **Windwalker** base = 31.6% MP shield (11s) **+ 25% magic evasion** — the evasion is
   the keep-reason vs a magic class (distinct from the lvl-35 advancement, §11).
 - **Master's Hand is a SILENCE, not a stun** — stops enemy skills, not autos. Near-dead
@@ -373,8 +374,8 @@ priority order on cooldown; (b) the amp-window loses to shield-pierce + splash v
 | Unleashed Ink | Virtuoso (L) | 438.3% | 1 | **13s** | [Boundfree] 2% MP → +50 |
 | Painted Cranes | Incarnation (L) | **534%** | 1 | 17s | [Summit] @150 → +3% max MP (~9.3M); skill Lv40 lowers req 150→100 |
 | Discordant Verse | Nascent Soul (L) | 318% | **3** | 16s | [Crescendo] +140% M.DMG **ignoring Shields/Barriers**; [Buff] Focus M.ATK +15% / 4s; [Boundfree] 1% MP → +25 |
-| Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] clears the **most-recent** debuff — **strips taunt** when taunt is newest (RNG vs other debuffs), §8 |
-| Word of Kindness | Speech | shield | — | 25s | 25% M.DEF / 8s; [Boundfree] 2% MP → +50 |
+| Lotus Dreamscape | Incarnation (L) | 300% | **2** | 15s | [Boundfree] <100 Eru: 2% MP → +50; [Purify] clears the **most-recent** debuff — **strips taunt** when taunt is newest (RNG), §8; [Summit] apply_status. **No silence** (flavor only) |
+| Word of Kindness | Speech | 39.6% MP shield | — | 25s | 25% M.DEF / 8s; 25% P.DEF / 5s; [Boundfree] 2% MP → +50 |
 
 ### Advancement (+5) — verified curves
 | Skill | Total DMG @+5 | per-node M.DMG | cost/node | Lv req |
@@ -389,7 +390,7 @@ scaler **and** the cheapest to advance — advance it first.
 
 ### The six (priority order; Shield First ON)
 1. **Windwalker** — 25% magic evasion + MP shield
-2. **Word of Kindness** — 25% M.DEF 8s + shield + 50 gen
+2. **Word of Kindness** — 39.6% MP shield + 25% M.DEF 8s + 25% P.DEF 5s + 50 gen
 3. **Discordant Verse** — 3-tgt splash + Crescendo shield-pierce + Focus + 25 gen
 4. **Unleashed Ink** — ST ghost-killer, top throughput (438→~916% @+5, 13s CD) + 50 gen
 5. **Lotus Dreamscape** — 2-tgt splash + Purify (taunt-strip) + 50 gen
