@@ -84,6 +84,10 @@ The two apps are deliberately parallel; module layouts mirror each other.
   system: two mirrored physical/magical paths, linear Soulfice scaling, Hexes,
   socketing, mold/forge, non-destructive path-swap reforge. Distinct from the
   Zodiac Pot curio. Noted for future integration; not yet in the calc
+- `docs/knowledge/equipment-relics.md` — equipment relics (法宝): the 6 class/
+  generic combat-skill items, on the SAME gear system as weapons/armor (rank,
+  level curve, quality tiers, blacksmith-gated forging, marks, dual set
+  bonuses). Distinct from curios and the Zodiac Relic. Not yet in the calc
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
