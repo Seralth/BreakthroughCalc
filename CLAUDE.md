@@ -80,6 +80,10 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/curio-effects.md` — curio (gubao) tooltips + star/upgrade
   effect ladders ARE client-side (unlike balance tables); extraction pipeline
   (apk_analysis/curio/), verified effect model, Vault catalog gap list
+- `docs/knowledge/zodiac-relic.md` — Zodiac Relic (本命法宝, internal `talisman_*`)
+  system: two mirrored physical/magical paths, linear Soulfice scaling, Hexes,
+  socketing, mold/forge, non-destructive path-swap reforge. Distinct from the
+  Zodiac Pot curio. Noted for future integration; not yet in the calc
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
