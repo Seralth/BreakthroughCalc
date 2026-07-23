@@ -9,7 +9,13 @@ Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle 
   settings, and the claim lands on whichever path is set as "cultivating" —
   swap-to-aux → claim → swap-back transfers the full amount at zero loss.
   SECOND PIN (2026-07-18, from the 2026-07-17 batch): at speed 159.78/8s the
-  Legendary cap reads 552.21K = 0.24 × (159.78/8) × 32h to the digit.
+  Legendary cap reads 552.21K. **Correction:** the formula as literally
+  written above (0.24 × (159.78/8) × 32) omits the hours→seconds/day
+  conversion and actually evaluates to 153.39, not 552.21K — it needs the
+  same per-day conversion as the first pin: 0.24 × (159.78/8×86400) ×
+  (32/24) = 552,199.68 (552.20K), ~10 XP (0.0019%) short of the displayed
+  552,210, fully explained by the 2-decimal rounding of the displayed
+  speed input rather than a formula error.
 - **Passive aura generation follows the "cultivating" toggle** (Seralth
   2026-07-15): whichever path is set as cultivating receives the passive
   aura income. Absorption ratio keys off the HIGHEST stage (dump: "Higher
@@ -26,7 +32,15 @@ Verified from Seralth's in-game screenshots (2026-07-07, Incarnation (L) Middle 
 - **culti_xp is 4%/level** (80% at Lv20, "+4%" per level shown in-game). The data table originally had 2%/level — fixed ×2.
 - Extractor at highest server Stage: base fruit EXP +50% (= `fruit_highest_rank`). Extractor quality/bonus reset to Common/0 on REALM ascension only — owner-corrected 2026-07-17: e.g. mortal → Spiritual; stage breakthroughs within a realm (Nascent Soul → Incarnation) do NOT reset it. Leftover fruits of the previous realm auto-consume at pre-upgrade rates. (Earlier "main-Stage breakthrough" wording here and in the app docs was wrong; app fixed same day.)
 
-Tests in tests/test_engine.py class ScreenshotGroundTruth2026_07_07 pin all of this. Related: [[fruit-ranks-no-r4-r5]].
+Tests in tests/test_engine.py pin all of this, though not all within one
+class as previously implied — only 3 of the 6 mechanics above (gem
+multiplies speed only, orb quality residual-fill, culti_xp 4%/level) are
+fully pinned inside `ScreenshotGroundTruth2026_07_07` itself. Pill-vs-Respira
+flatness and the gush mean-vs-variance pair are split across that class and
+`RespiraAndBands`; the extractor +50% highest-rank multiplier is pinned
+solely in `GapCoverage` (`test_fruit_highest_rank_is_1_5x`) — none of these
+mechanics are untested, just not all under the one named class. Related:
+[[fruit-ranks-no-r4-r5]].
 
 ## 2026-07-17 screenshot batch (~/Pictures/virya-extractor-techniques-2026-07-17/)
 
@@ -104,10 +118,14 @@ applied after the (still manual) breakthrough.
   that half-step's total XP`. 100% = half-step complete (gauge full at cap).
   - "440% at Incarnation Late → arrive Voidbreak Late G1" (2026 new-player
     guide / community): (Inc LATE total + XP through VB Mid) / Inc LATE total
-    = **440%** exactly per our table.
+    = **440.02%**, matching to the displayed integer (recomputed directly
+    from data/breakthrough.json's grade_xp rows: 440.0246%, not a bit-exact
+    440.000% — "exactly" overstated the precision, but it's the same number
+    an in-game truncated/rounded display would show).
   - "Aux path Wholeness Early G20 overcapped to 404% = Wholeness completion"
     (same guide, Strive-sniffing section): (WN EARLY total + rest of WN) /
-    WN EARLY total = **404%** exactly.
+    WN EARLY total = **404.26%**, same caveat (404.2615% recomputed, not a
+    bit-exact 404.000%).
   - The double match also independently validates the Incarnation–Wholeness
     grade_xp table.
 - Accrual rate while overcapped: PLAYER-CONFIRMED (Seralth 2026-07-15) —
@@ -162,8 +180,13 @@ Astral Arcanum (+2% at Tier 3), Chroma (+1% on learning, +3% at Tier 6,
 plus +1 Respira attempt at Tier 3 and +1 daily pill attempt at Tier 12).
 Per Seralth (2026-07-15): the other six R8 books (Tao of Taiqing, Origin
 Scripture, No-Thought Sutra, Moon Meru, Dracophant, Cauldron Refinement)
-have NO pill-effect lines — their absence from data/pill_effect_sources.json
-is complete coverage, not missing data. Books' Base Abode Aura bonuses are
+have NO pill-effect lines — their absence of a `pill_effect` target in
+data/sources.json's technique_book entries is complete coverage, not missing
+data. (**Correction:** the citation used to point at
+data/pill_effect_sources.json, but that's a legacy GUI-picker catalog that
+was emptied of all technique-book entries by the 2026-07-16 Vault migration
+— it now holds only 2 curios + 2 immortal friends, so presence/absence
+there proves nothing either way. The real source is data/sources.json.) Books' Base Abode Aura bonuses are
 deliberately NOT cataloged (they're already inside the player's entered
 Abode Aura reading; adding them would double-count).
 
@@ -284,16 +307,29 @@ blessing rank No.1 → 6 reward vases); dump strings corroborate
   Virya bonus is scoped to the current Stage (dump: "Aura Absorption Rate
   +%d%% in Current Stage"; %d is server-side). Composition ORDER vs Strive is
   client-string-sourced only — the live check ran at Strive 0, where both
-  orders coincide.
+  orders coincide. **Correction:** the client dump actually carries TWO
+  contradictory formula strings, cross-language-consistent in EN/DE/ES —
+  the one quoted above (pp inside the Strive multiplier) AND a second one,
+  "Absorption Ratio = Base Stage Absorption Ratio × (1 + Strive Bonus) +
+  Virya Absorption Ratio" (pp added *after* Strive is applied to the base
+  alone). Calling the first one "the official formula" overstates
+  certainty — both exist in the client text, and the true order is
+  genuinely unresolved pending a non-zero-Strive reading, not merely
+  "client-string-sourced" as a settled fact.
 - **Engine model**: two pp inputs — `bless_pp` (persistent) and
   `bless_window_pp` (conditional, rows before Voidbreak MIDDLE) — applied
   per-row as speed(row) = abode × (low_row + bless(row)) × (1 + strive). The
   entered absorption is the on-screen TOTAL; the engine recovers true Strive
   as absorption / (low_cur + bless_cur) − 1, so implied-Strive is not
   contaminated for blessed accounts (a base-40% account with +20pp at Strive
-  s displays (0.40 + 0.20) × (1 + s)). As of v3.11 the shelf derives
-  `bless_pp` = 0.20 (flat, one tier) and no window — the Voidbreak windowing
-  is left unmodeled pending a reading.
+  s displays (0.40 + 0.20) × (1 + s)). As of **v3.12** (was v3.11 when this
+  was written; the substance is unchanged) the shelf derives `bless_pp` =
+  0.20 (flat, one tier) and no window — the Voidbreak windowing is left
+  unmodeled pending a reading. **Bug found during verification (2026-07-22),
+  now fixed:** `breakthrough_calc/fields.py`'s `bless_pp` input tooltip had
+  been missed by the 2026-07-20 stacking retraction and still told users to
+  sum both tiers and enter 40 — actively wrong guidance on a live input
+  field. Corrected to say flat +20, no stacking.
 
 **Tier ladder (observed 2026-07-15).** Effects below are each tier's *listed*
 grants; what actually goes live in Incarnation is the flat +20 above.
@@ -409,11 +445,15 @@ entire major Stage — it does not scale with phase or grade.
   16,3xx would support it). Formula unknown; treat the constants as a
   lookup of measured values.
 - Technique-book Respira lines (screenshot-verified 2026-07-15, Incarnation
-  char; cataloged in data/respira_sources.json): activated total **+28%
-  Respira Effect** (Energy Unification 1, Cosmic Power 3, Golden Core 1,
-  Astrology 3, Taiyin Meridian 3, Yin's Grasp 5, Floral Essence 3,
-  Purify & Cleanse 4, Great Yang Manual 5) and **+2 attempts** (Cosmic Power,
-  Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
+  char; **correction:** cataloged in data/sources.json, not
+  data/respira_sources.json — the 9-book catalog lived in the latter for
+  one day before the 2026-07-16 Vault migration moved all technique-book
+  data into data/sources.json and stripped these rows out of the legacy
+  file, which the citation here was never updated to follow):
+  activated total **+28% Respira Effect** (Energy Unification 1, Cosmic
+  Power 3, Golden Core 1, Astrology 3, Taiyin Meridian 3, Yin's Grasp 5,
+  Floral Essence 3, Purify & Cleanse 4, Great Yang Manual 5) and
+  **+2 attempts** (Cosmic Power, Purify & Cleanse). Not yet active: P&C Tier 9 +7%, Lion's Roar +1%,
   Cauldron Refinement T3 +3%, Moon Meru T12 +10%, Chroma T3 +1 attempt.
   "Respira Effect" = `extra_exp_yunqi`.
 - Incarnation reading (2026-07-15, exact, resolves the pending cross-check):
@@ -486,7 +526,10 @@ strings extraction; values in %d templates are server-side):
   server-side.
 - **Technique tier structure**: special effects activate at Tier 3/6/9
   (higher books also have 12/15); low-rank books cap at Tier 6 per the
-  achievement census. ~45 technique books exist in total; roughly half
-  are uncataloged for calculator effects (values server-side).
+  achievement census. **Correction:** "~45 technique books exist in total"
+  was a stale pre-extraction estimate — technique-books.md's later
+  screenshot/sheet passes now document 63 fully-cataloged books (51
+  Universal R1–R9 + 12 Exclusive) plus 26 more post-R9 manuals named from
+  the community sheet, ~89 total. Remove/ignore the ~45 figure.
 - **Respira attempts reset** on main-Stage breakthrough (client rule
   string), consistent with per-Stage Respira planning.

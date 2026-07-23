@@ -14,10 +14,10 @@ shipped client-side, in `gubao_*` Lua config tables ("gubao" 古宝 = Curio).
 
 | Table (allbc/*.luajit or umbrella bundle) | Contents |
 |---|---|
-| `cfg_us_gubao` | 819 curios: zh name, zh lore `desc`, quality, rank, suit_id, tags |
+| `cfg_us_gubao` | 819 curios: zh `name` (818/819), `desc` lore (625/819), `quality` (411/819), `rank` (402/819), `suit_id` (383/819), `gubao_tags` (434/819, not "tags") — only name/desc are near-universal, the rest are present on well under half the entries |
 | `cfg_us_gubao_levels` part1/2 | per star level 0–6: `attribs` [[affix_id, value]] + `affix` scalar (adds to the upgrade affix) |
 | `cfg_us_gubao_upgrade` part1–3 | per upgrade index 0–8: `affix` [[affix_id, value]], `require_level` gate |
-| `cfg_us_gubao_suit` | 127 set bonuses (level 0 / 3-star / awakened tiers) |
+| `cfg_us_gubao_suit` | 127 curio sets, each holding 1–3 bonus tiers (level 0 / 3-star / awakened) — 306 individual bonus-tier entries total (88 sets ×3 tiers, 36 ×1, 3 ×2) |
 | `benyuan_gubao` (+`cfg_us_benyuan_gubao_levels`) | 157 Origin curios (separate id space 212001+, the map-location-named ones: "Land of X", "Mount X", spiritlands) |
 | `gubao_evol` | 2 evolved curios |
 | `cfg_us_affix` | affix_id → zh name, engine attrib key, unit (2008 affixes; curios use 472) |
@@ -37,8 +37,8 @@ A curio's active effect =
 `upgrade[idx].affix value` (base, grows per upgrade) **+**
 `star_levels[star].affix` scalar (grows per star; same affix).
 `star_levels[].attribs` are separate flat combat stats (spell pen/block etc.).
-`require_level` on upgrades is a player realm-level gate (positional
-inference, not verified).
+`require_level` on upgrades is a player realm-level gate (confirmed — see
+"Related client-exact recoveries" below).
 
 Cross-check vs `data/sources.json` (in-game verified 2026-07-07):
 
@@ -63,9 +63,13 @@ Cross-check vs `data/sources.json` (in-game verified 2026-07-07):
   N = client star level N (4★ = level 4 scalar 1.6, basic stats M.PEN 15 /
   M.Block 60 = the level-4 attribs row). The old sources.json star-4 value
   (+2.2) was wrong; the corrected model is 6 stars, star_add
-  [0, 0.8, 1.2, 1.6, 2.0, 3.2] (client ladder anchored in-game at stars
-  1/2/3/4 and the 5.8 max). Displayed stars = client star levels − 1 for
-  the generic roster too (7 levels = 6 stars).
+  [0, 0.4, 0.8, 1.2, 1.6, 2.0, 3.2] (7 values for levels 0–6; client ladder
+  anchored in-game at stars 1/2/3/4 and the 5.8 max — an earlier restatement
+  of this array here dropped the level-1 entry (0.4) and only listed 6
+  values under a "7 values"/"6 stars" label; `data/sources.json`'s own
+  star_add array was already correct and is the source of truth).
+  Displayed stars = client star levels − 1 for the generic roster too
+  (7 levels = 6 stars).
 
 ## Cultivation-relevant curios (max values from client ladders)
 
@@ -115,10 +119,13 @@ upgrades; stars are linear until awakening.**
   1.0 → 2.6 in +0.2s), 25 mildly progressive (≤3× step drift, e.g. Casual
   Whip 0.6 → 1.8). Zero exponential % ladders exist.
 - Star scalar, dominant pattern (546 of 687 curios that have one): five
-  equal steps then a **3× awakening step** — awakening holds a median 38%
-  of the max star scalar (YSJ [0, .4, .8, 1.2, 1.6, 2, 3.2]). 126 curios
-  are pure-linear instead (89% have EN names, so not just unreleased CN
-  rows).
+  equal steps then an awakening step — awakening holds a median 38%
+  of the max star scalar (YSJ [0, .4, .8, 1.2, 1.6, 2, 3.2]). Only 514 of
+  those 546 hit a literal 3× step (37.5%-of-max, YSJ's pattern); the other
+  32 (e.g. Casual Whip, Violet Whip, Venom Cauldron, Frostnight Scepter —
+  all five equal 0.3 steps then a 1.0 jump) are ~3.33× (40%-of-max) instead
+  — a distinct sub-pattern, not "3×". 126 curios are pure-linear instead
+  (89% have EN names, so not just unreleased CN rows).
 - Star flat combat attribs: 1356/1400 series are linear with a 2×
   awakening step.
 
@@ -137,18 +144,25 @@ scalar at all — single upgrade, effect is binary on ownership; stars only
 add combat attribs.
 
 **Flat-unit combat stats (HP/ATK) are strongly super-linear in upgrades:**
-467/475 ladders; the last two upgrades — realm-gated at levels 27/29
-(Wholeness Early/Late) — hold a **median 74% of the max value**
-(Orientation Sword 20…140, 212, 273, 710, 1065). Cultivation % curios
+the overwhelming majority of 475 real ladders (the exact numerator depends
+on the superlinearity threshold used — recomputing with a >3× max/min-step
+ratio gives 469/475, a stricter no-plateau-steps definition gives 457/475;
+the algorithm behind the original "467" figure isn't reproducible from the
+raw tables alone, but every definition lands in the 457–469 range); the
+last two upgrades — realm-gated at levels 27/29 (Wholeness Early/Late) —
+hold a **median 74% of the max value** (confirmed exactly: 74.37%, e.g.
+Orientation Sword 20…140, 212, 273, 710, 1065). Cultivation % curios
 top out at gate 26; the 27/29 gates exist only on the 500 curios with
 11-step flat ladders.
 
-**Upgrade costs (cfg_us_gubao_upgrade `material`):** currency 65002 median
-per index 5k / 10k / 30k / 80k / 200k / 600k / 800k / 1M (combat ladders
-continue 1.5M / 2M), plus tiered mats (30 then 100 of each tier, e.g. YSJ
-73007 → 73008 → 73009 → 100× 73016 cap mat). For a constant-step % ladder
-that's a ~200× cost spread for identical +0.2% bumps — %-per-currency is
-entirely front-loaded, mirroring stars.
+**Upgrade costs (cfg_us_gubao_upgrade `material`):** currency 65002 cost
+per index is exactly invariant (not just "median") across every curio that
+has it: 5k / 10k / 30k / 80k / 200k / 600k / 800k / 1M for indices 1–8
+(667 curios each), then 1.5M / 2M for indices 9–10 (500 curios, the
+combat-ladder continuation), plus tiered mats (30 then 100 of each tier,
+e.g. YSJ 73007 → 73008 → 73009 → 100× 73016 cap mat). For a constant-step
+% ladder that's a ~200× cost spread for identical +0.2% bumps —
+%-per-currency is entirely front-loaded, mirroring stars.
 
 **Costs break upward faster than power.** Own-shard star-up cost roughly
 doubles per star with a 3× spike at awakening (purple medians
@@ -173,13 +187,22 @@ final realm-gated upgrades.
   Sub-level 1/2/3 = Early/Middle/Late. This makes the curio
   `upgrade_requires_level` ladders (gubao_upgrade `require_level`)
   realm-gateable: e.g. YSJ upgrade 8 needs level 26 = Voidbreak Late.
-- **Technique-book activation requirements are server-side**: the full
-  1363-asset client config bundle contains no book config at all (names
-  are i18n-only). The client ships only the "Activation Requirements and
-  Costs" tooltip title, the `'%s Techniques reach %s: %s'` fill-in
-  template, and one baked string ("Longevity reaches Tier 2"). The R9
-  gate (2× R8 books at Tier 13) is screenshot-verified; R2–R8
-  requirements need an in-game activation-tooltip pass.
+- **Technique-book activation requirements are ACTUALLY client-side**
+  (correcting an earlier "server-side, i18n-only" conclusion drawn from an
+  incomplete search): `om/allbc/cfg_us_inner_skill_new.luajit` decodes to a
+  181-row table keyed by `skill_id`, carrying `rank` (Tier), `level` (Grade
+  cap), `pre_skill` (prerequisite chain), and `learn_cost` referencing item
+  class_id 62400 — which `cfg_us_item.luajit` classifies as 功法瓶颈书籍
+  ("Technique Bottleneck Book"). Entry 1001 (长生诀/Longevity) has rank:1,
+  level:9, matching the i18n string "Improve the Tier 1 Technique 'Longevity'
+  to Grade 9 to meet the requirement." exactly — the "one baked string" seen
+  earlier was this table's data filled into the `'%s Techniques reach %s: %s'`
+  template, not a standalone hardcoded line. The "Activation Requirements and
+  Costs" tooltip title and that fill-in template are real, but they render
+  `cfg_us_inner_skill_new`'s data rather than substitute for missing config.
+  The R9 gate (2× R8 books at Tier 13) is screenshot-verified and consistent
+  with this table; R2–R8 requirements can now be cross-checked directly
+  against `cfg_us_inner_skill_new` instead of needing an in-game pass.
 
 ## Notes
 

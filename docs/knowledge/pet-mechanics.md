@@ -20,9 +20,9 @@ internally consistent across the four sources except where noted.
 | Blazelion | Highest single-target dmg; Corporia debuffs (P.Atk dmg taken +20%, own P.Atk +10%) | 5 Metal + 5 Wood |
 | Babewyrm | Best AoE; Magicka debuffs (M.dmg taken +20%, M.Def down) | 5 Water + 5 Fire |
 | Babetoise | Tank; taunt; P.Evasion/P.Def buffs | 5 Metal + 5 Earth |
-| Babeox | Average dmg; stun (75%/2 s); removes enemy buffs | 5 Wood + 5 Water |
+| Babeox | Average dmg; stun (75%/2 s); removes enemy buffs; **boosts P.Evasion** (S1, missing from an earlier pass of this table) | 5 Wood + 5 Water |
 | Babedeer | PvP support (debuffs PvP dmg resistance); double cost — whale trap | 10 Fire + 10 Earth |
-| Berpent | Tanky; 2nd-highest ST dmg; buff-removal; crit-res down | NOT exchangeable (event-only: "Special pet eggs" in weekly event exchanges — as of 2026-07-17 the Adventure exchange carries them, Beast Wave does not; rarely other events. The carrying event varies, so UI text says only "comes from events".) |
+| Berpent | Tanky; 2nd-highest ST dmg; buff-removal; crit-res down | NOT exchangeable (event-only). **Correction:** S1 names a specific, different route — Round-completion Rewards of the weekly **Thunderwave Event** — not "Special pet eggs"/Adventure exchange/Beast Wave as previously written here; that framing doesn't appear in S1, S3, or S4 at all. If the Adventure-exchange reading came from a more recent direct observation it supersedes S1, but as sourced it should say Thunderwave Event. |
 
 Skill % figures in the table are from S4 (spoken, auto-captions) — treat as
 approximate until seen in a tooltip.
@@ -84,8 +84,10 @@ Pet XP per pill by pill rank and rarity (Common/Uncommon/Rare/Epic/Legendary):
 - R3 (Crimson Powder/Ice Heart Pill): 1900 / 3800 / 6080 / ? / ?
 - R4 (Purity Powder/Dracospirit Pill): 5000 / 10000 / 16000 / ? / ?
 - R5 (Chalcedonius Powder/Reinvigoration Pill): 8000 / 16000 / 25600 / ? / ?
-R6+ pills: no data. Ratios within a rank: ×1 / ×2 / ×3.2 / ×7.5→? (R1–R2),
-R3–R5 Rare is ×3.2.
+R6+ pills: no data. Ratios within a rank: ×1 / ×2 / ×3.2 / **×6** (R1–R2 —
+correction: recomputed directly from the feed-data values, 750/125=6.0 and
+3750/625=6.0, not the previously-stated ×7.5), R3–R5 Rare is ×3.2 (confirmed
+exact).
 
 Food: Platycodon 3,500 · Siler 11,000 · Redarrow Flower 33,500 · Dragongall
 Flower 54,000 · Curculigo 79,000.

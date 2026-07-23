@@ -1,6 +1,6 @@
 # Universal technique books — full catalog (screenshot pass 2026-07-15)
 
-Source of truth: 82 phone screenshots taken 2026-07-15/16 (owner's account,
+Source of truth: 91 phone screenshots taken 2026-07-15/16 (owner's account,
 Incarnation (L) Late), archived at `~/Pictures/technique-books-2026-07-15/`.
 Every Universal book visible in-game up to R9, with the complete chapter
 (tier) bonus list per book. This supersedes the partial technique-book data
