@@ -90,3 +90,57 @@ Extraction: `apk_analysis/curio/` (dump_table.lua executes bytecode under
 system luajit with a stubbed CONFIG, no decompile needed; extract_curios.py
 joins + localizes → curio_tooltips.json). Full writeup:
 docs/knowledge/curio-effects.md.
+
+## UPDATE 2026-07-23: version 1.4.26062402 pulled & diffed (was 1.4.26052702)
+
+Re-ran the full pipeline against the newer client (`versionCode 26062402`,
+device `lastUpdateTime` 2026-07-10, pulled 2026-07-23) into
+`apk_analysis/om_26062402/`, old baseline in `apk_analysis/om/` untouched
+for comparison.
+
+- **Crypto CONFIRMED unchanged**: new `dump.cs` still has
+  `LuaEncryption` with `KEY = "m71"`, same class/method shape. XOR decrypt
+  verified working on this version (LuaJIT magic `\x1bLJ\x02` on sampled
+  output files).
+- **Individual per-file Lua bundle catalog is nearly identical** (818→820
+  entries; only +5/-3 changed, all cosmetic or new minor features — gang
+  boss manager, bug-report-v2, a new `gubao_troop` UI controls script, one
+  reward-table shard added, one dialogue shard renamed). The earlier scare
+  of "everything got renamed" was a red herring from decrypting the
+  `lua64_config_lua_us.unity3d` umbrella bundle specifically: its internal
+  TextAsset names dropped the `cfg_us_`/`managers_`/`window_` prefixes in
+  this build (a packaging change, not a content reorg) — the individual
+  per-file bundles (`lua64_managers_calc_mgr.lua.bytes.unity3d` etc.) still
+  resolve fine by the old names and were used to backfill the diff.
+- **Combat BR formula (`managers_calc_mgr.lua`) is UNCHANGED** except one
+  new trivial helper (`is_positive_num`) — the standard-monster BR formula
+  and `combat_capacity_power = 0.98` from the 2026-07-09 update still hold.
+- **New curio attribute type**: `cfg_us_attrib` gained
+  `gubao_troop_all_attribs` (`scale = 0.1`, `capacity_calc =
+  "special_percent"`, `effect_affix_name = "all_attribs"`) — an all-stats
+  %-boost curio-troop attribute that didn't exist in 26052702. Not yet
+  cross-checked against in-game data; flag if a curio troop tooltip shows
+  an all-stat % this doesn't explain.
+- **Ten-lv equipment affix ladder extended**: `cfg_us_equip_ten_lv_affix`
+  gained new affix-id entries (5514–5517) at ranks 20/30/40, purely
+  additive (existing entries unchanged).
+- `cfg_us_equipment` grew ~700 lines (new gear item IDs, e.g. 7082–7084)
+  — routine catalog growth, not a mechanics change.
+- Curio (gubao) bundle set is unchanged (same `cfg_us_gubao*`/
+  `benyuan_gubao*`/`gubao_evol`/`gubao_upgrade` bundles present; only
+  `gubao_upgrade_part4` dropped, likely consolidated into part3 — not
+  content-diffed this pass) — the existing `apk_analysis/curio/` JSON
+  pipeline should still work unmodified if re-run against this version.
+  Not regenerated this pass (out of scope — decompiled/diffed the
+  previously-tracked `om/decompiled/` file set only, not the curio JSON
+  extraction).
+- No changes found in `cfg_us_affix`/`_rank`/`_mark_rank`,
+  `cfg_us_helper_text`/`_tip`, `cfg_us_status`, `managers_desc_mgr`,
+  `managers_equip_mgr`/`_item_mgr`/`_skill_mgr`/`_equip_affix_mgr`, or
+  `window_character`/`_equip_affix_mark` beyond additive new entries
+  (new items/affixes/strings) — no formula or weight changes detected.
+
+**Net effect for the calculator: no math changes required.** The one
+open item worth watching is the new `gubao_troop_all_attribs` curio
+attribute — worth a quick in-game screenshot check if a troop curio
+tooltip shows an unexplained all-stat percentage.
