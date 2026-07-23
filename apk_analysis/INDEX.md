@@ -11,15 +11,12 @@ scratch/tool state, kept on disk for speed (~3.4G total) but not committed.
 | `RE_FINDINGS.md` | Dated findings log for the OverMortal RE (crypto, mechanics, version diffs). Tracked in git. Read this first for "what do we actually know." |
 | `i18n_all.json` (52M) | OverMortal EN→{ru,de,es,zh} string map, 130,039 entries. Produced by the i18n pipeline (`docs/knowledge/i18n-pipeline.md`). Used by `curio/extract_curios.py` for zh→en lookups. |
 | `i18n_en_ru.json` (19M) | Earlier/narrower EN→RU-only extraction pass, superseded by `i18n_all.json` for most purposes — kept around, not actively used by current scripts. |
-| `extract_tables.py` | **Not OverMortal.** Table-extraction script for the *other* game in `apk/` (see below) — reads `ex/assets/assets/resources/import/**/*.json` in a completely different table format. Unrelated to the Lua/UnityPy pipeline used everywhere else in this directory. |
 
-## `apk/` — unrelated game, not OverMortal
-
-Raw split APKs for **WuXia World** (`com.dustglobal.googleplay.jianghu` v14.2.4,
-app label "這就是江湖" — confirmed via manifest + resources, not a guess).
-This is leftover from separate RE work on a different game that happens to
-share this scratch directory. `extract_tables.py` at the root targets this
-game's asset format. Safe to ignore for anything OverMortal-related.
+**Removed 2026-07-23**: `apk/` (raw split APKs) and `extract_tables.py` — these
+belonged to a different game entirely, **WuXia World** (`com.dustglobal.googleplay.jianghu`
+v14.2.4, app label "這就是江湖" — confirmed via manifest + resources, not a
+guess), leftover from separate RE work that happened to share this scratch
+directory. Deleted once identified as unrelated to OverMortal.
 
 ## `om/` — OverMortal pipeline, version 1.4.26052702 (pulled 2026-07-05)
 
