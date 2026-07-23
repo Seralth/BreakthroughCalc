@@ -29,20 +29,14 @@ Exactly two relics exist (`talisman.lua`):
 
 | id | `talisman_type` | path | notes |
 |---|---|---|---|
-| 78300 | `hp` (inferred — see below) | **Corporia / Physical** (color #973434) | 纯钧之器; 5 sword forms 纯钧剑→金霞剑→鸿光剑→神光剑→太一剑 (the "Enlarge" model progression) |
-| 78301 | `mp` | **Magicka / Magical** (color unsubstantiated — see below) | hexes `skill_list [8510,8511,8512]` |
+| 78300 | `hp` (inferred from desc text + naming, not a literal field) | **Corporia / Physical** (color #973434, embedded in desc string) | 纯钧之器; 5 sword forms 纯钧剑→金霞剑→鸿光剑→神光剑→太一剑 (the "Enlarge" model progression) |
+| 78301 | `mp` (literal field value) | **Magicka / Magical** | hexes `skill_list [8510,8511,8512]` |
 
-Caveats on the table itself: 78300 has **no `talisman_type` field at all** in
-`talisman.json` — `hp` is a reasonable inference from its desc text
-("适合物理系修士", "suited to physical cultivators") and the `hp_node_*`
-naming convention in `talisman_levels.json`, but it isn't a literal field
-value the way 78301's `"talisman_type":"mp"` is. The color #973434 for 78300
-is real but only appears embedded inside 78300's desc string
-(`<color=#973434>`), not as a standalone field. The color **#345597 for
-78301 has no source anywhere** in the extracted data — 78301 has no `desc`
-field to embed a color in, and grepping the whole `relic-data` directory for
-that hex string returns nothing; treat it as unsubstantiated until sourced
-elsewhere (e.g. a screenshot).
+Caveat: 78300 has no `talisman_type` field at all in `talisman.json` — `hp`
+is a reasonable inference from its desc text ("适合物理系修士", "suited to
+physical cultivators") and the `hp_node_*` naming convention in
+`talisman_levels.json`. 78301 has no `desc` field, so it carries no
+comparable color field.
 
 **The two paths are the SAME progression, mirrored** — physical vs magical only
 changes which stat type the identical structure outputs:
@@ -76,30 +70,23 @@ progression re-expressed as physical or magical — but several of the
 specific "mirrored" details above have small asymmetries or gaps once
 checked against the raw tables rather than assumed by symmetry.
 
-## Reforge = path swap (owner-confirmed mechanic; config terminology corrected)
+## Reforge = path swap (owner-confirmed mechanic)
 
 - The "Reforge Zodiac Relic" action swaps physical↔magical (owner-confirmed
-  in-game behavior). **Correction:** the doc previously labeled this
-  "重选道路" ("reselect path") as if that were the config's own term — that
-  string does not exist anywhere in `talisman_config.json` or any sibling
-  file. The actual config field uses **重铸** ("recast") for the cost field
-  (`"reforge_cost":{"desc":"重铸需要消耗的机缘","value":500}`) and **铸造**
-  ("forging/casting") for the cooldown field (`"forge_cd":{"desc":"铸造CD",
-  "value":172800}`) — 重选道路 appears to be a paraphrase, not sourced text.
-  Cost `reforge_cost = 500` Fateum (机缘) or a Reforge Card/Stone
-  (本命重铸石/重铸卡, not itself in this config). Gated by
-  `forge_cd = 172800` (seconds → 48h; the desc doesn't state the unit, the
-  seconds/hours reading is inferred from the value, not stated in-field). The
-  UI CD text quoted here previously ("重选道路cd，单位为小时") also has no
-  match anywhere in the extracted data — drop it as unsourced.
+  in-game behavior). The config's own terms are **重铸** ("recast", the cost
+  field: `"reforge_cost":{"desc":"重铸需要消耗的机缘","value":500}`) and
+  **铸造** ("forging/casting", the cooldown field: `"forge_cd":{"desc":
+  "铸造CD","value":172800}`). Cost `reforge_cost = 500` Fateum (机缘) or a
+  Reforge Card/Stone (本命重铸石/重铸卡, not itself in this config). Gated by
+  `forge_cd = 172800` (seconds → 48h inferred from the value; the desc
+  doesn't state the unit).
 - **Only one type is active at a time** (owner-confirmed) — the swap changes which
   is live; both cannot run together.
 - **Swapping is non-destructive** (owner-adjudicated 2026-07: the client shows no
   lost-progress/lost-item warning, and a cheap repeatable reforge with *sold*
   reforge cards would not be designed to wipe investment; consistent with every
-  comparable system). The inactive type's progress is preserved but dormant. This
-  remains a design inference, not something provable from static config JSON —
-  no dialog/warning string table exists in this file set either way.
+  comparable system). The inactive type's progress is preserved but dormant. No
+  dialog/warning string table exists in this file set to prove it directly.
 - Practical read: the physical/magical choice is a **single active stance**, not a
   permanent commitment and not a run-both setup. You build the type you run; you
   *can* swap on the CD when path/content genuinely calls for it, without regrind.
@@ -131,46 +118,34 @@ checked against the raw tables rather than assumed by symmetry.
 - Auto/Quick Soulfice unlocks at Rank `rank_for_fast_levelup_unlock = 9`
   (base Soulfice itself unlocks at Rank 1, per `levelup_preview_config`).
 
-## Hexes (法技) — the cast spells (structure partly verified, details unsourced)
+## Hexes (法技) — the cast spells (IDs confirmed, CD/quality/rank/effects unsourced)
 
-Each relic has 3 exclusive Hexes — the ID grouping below is structurally
-corroborated (see caveat), but **none of the CD/quality/rank/
-`skill_classify_type` values in this table are confirmed by any file in the
-current extraction.** Grepped every file in `relic-data/` for the Chinese
-Hex names, for `skill_classify_type`, and for any per-skill cooldown/quality/
-rank field on ids 8500–8502/8510–8512: zero hits. These numbers should be
-treated as unverified until an actual skill-effect config or an in-game
-tooltip is available:
-
-| slot | Physical (type hp) | Magical (type mp) | CD (unconfirmed) |
-|---|---|---|---|
-| 1 | 8500 纯钧斩 | 8510 玄渊诀 | 15s |
-| 2 | 8501 逐日神剑 | 8511 须弥仙雷 | 20s |
-| 3 | 8502 离火剑阵 | 8512 玄水神光 | 25s |
-
-What *is* confirmed: `talisman.json`'s only populated skill_list is on 78301
-(`mp`/magical) = `[8510,8511,8512]`, matching this table's magical column
-exactly. `talisman_addition_skill_pool.json` references skill_id 8501 and
-8502 directly (plus 8510/8511/8512), and repeats the same 3-entry
-level:30/60/(100) pattern for each — structurally consistent with 8500 also
-existing as a sibling id, though 8500 itself is never referenced directly.
-78300 (physical) has no `skill_list` field at all in `talisman.json` — the
-8500–8502 physical assignment is inferred purely from the `type:hp` +
-naming-symmetry pattern, not from any direct link.
+Each relic has 3 exclusive Hexes. Confirmed: `talisman.json`'s only
+populated `skill_list` is on 78301 (`mp`/magical) = `[8510 玄渊诀, 8511
+须弥仙雷, 8512 玄水神光]`. `talisman_addition_skill_pool.json` references
+skill_id 8501 (逐日神剑) and 8502 (离火剑阵) directly alongside 8510–8512,
+repeating the same 3-entry level:30/60/(100) pattern for each — structurally
+consistent with a sibling id 8500 (纯钧斩) also existing, though 8500 itself
+is never referenced directly. 78300 (physical) has no `skill_list` field at
+all in `talisman.json` — the 8500–8502 physical assignment is inferred
+purely from the `type:hp` + naming-symmetry pattern, not from any direct
+link. No cooldown, quality, rank, or `skill_classify_type` value for any of
+these 6 skill ids exists in any file in the current extraction (checked
+every file in `relic-data/` for the Chinese Hex names and for a per-skill
+CD/quality/rank field) — that data needs a skill-effect config that isn't
+present here, or an in-game tooltip read.
 
 Hex slots unlock at Ranks `rank_for_skill_slot_unlock = [2,5,7]` (confirmed
-exactly). **Correction:** the "stronger purple rank-11 assist Hexes" (8521
-业火双刃, 8526 两仪阵盘, 120s CD) previously listed as part of the
-level-gated `talisman_addition_skill_pool` are actually wrong — that file
-never references 8521 or 8526 at all. Both ids instead appear only in
-`talisman_mold.json` as `bind_skill` values (mold ids 1005 and 1003
-respectively) — i.e. they belong to the Mold system (unlocked at Rank 8, see
-below), not the addition pool. Neither mold entry has a `quality` field
+exactly). Two further skills, 8521 业火双刃 and 8526 两仪阵盘, exist as
+`bind_skill` values on `talisman_mold.json` mold ids 1005 and 1003
+respectively — i.e. they belong to the Mold system (unlocked at Rank 8, see
+below), not the Hex addition pool. Neither mold entry has a `quality` field
 ("purple" doesn't appear anywhere in `talisman_mold.json` — only "blue" and
 "orange" do), and no `rank` or cooldown field exists for either skill in any
-file checked. The level-gated addition pool itself (L30/60/100, via
-`skill_level_for_addtion_unlock = [30,60,100]`) is real and confirmed — it
-just only augments the base 3+3 hexes (8500–8502, 8510–8512), not 8521/8526.
+file checked. The level-gated addition pool (L30/60/100, via
+`skill_level_for_addtion_unlock = [30,60,100]`) is real and confirmed, and
+only augments the base 3+3 hexes (8500–8502, 8510–8512) — 8521/8526 are not
+part of it.
 
 ## Socketing — two sub-systems (counts verified, per-item details corrected)
 
@@ -230,11 +205,10 @@ mold 1004's own cost id, not a general one.
   previously omitted a real pair, `talisman_criti_attack`/
   `talisman_criti_defense` (distinct from `crit_chance`/`crit_resistance`).
 - Model/form changes at ranks `model_rank = [1,3,8,13,17]` (confirmed
-  exactly). **Correction:** the "Rank 阶 × Grade 重" progression-formula
-  framing is not supported by any field in `talisman_config.json` or
-  `talisman_levels.json` — no Grade/重 axis for the relic exists in either
-  file (the only "重" hit is 重铸/"recast" in `reforge_cost`'s desc,
-  unrelated to a tier concept); drop this framing until a source turns up.
+  exactly). No Rank×Grade (阶×重) progression axis exists in
+  `talisman_config.json` or `talisman_levels.json` — the only "重" hit in
+  either file is 重铸/"recast" in `reforge_cost`'s desc, unrelated to a tier
+  concept.
 - Rank unlock ladder, cross-checked against `levelup_preview_config`'s own
   per-rank text plus the standalone gate fields it doesn't cover:
   - R1: gain innate stats + unlock Soulfice (matches the preview text exactly).
@@ -251,12 +225,6 @@ mold 1004's own cost id, not a general one.
   - R9: preview text says only "new inlay slot" — it says nothing about
     Soulfice. Auto-Soulfice unlocking at R9 comes from the separate
     `rank_for_fast_levelup_unlock = 9` field, not R9's preview text.
-- **Monetization ("Zodiac Relic Packs I–VI, Fateum packs, ¥30–648 bundles")
-  is unverifiable from this config** — `talisman_config.json` contains no
-  pack/IAP/store field of any kind (its only currency reference is the 500
-  Fateum `reforge_cost`, a gameplay cost, not a store price). This claim
-  would need an actual shop/store config, which isn't part of this data set;
-  it may still be true from direct in-game observation, just not sourced here.
 
 ## Open questions (need in-game observation or a fuller extraction)
 
@@ -265,12 +233,10 @@ mold 1004's own cost id, not a general one.
   needs either a different config file or in-game tooltip reads.
 - Exact Hex damage scales/effects beyond base `attack_scale` coefficients.
 - Per-node Soulfice stat values, and a full accurate mapping of the node
-  grid's round/rank/level-gate structure (see Soulfice section — the
-  previous simplified "rounds 5–30, ranks 2–6" model is confirmed wrong;
-  the real structure is a 19-value cycling round sequence across ranks 1–40
-  with only partial level-gating).
-- Whether the relic really uses a Rank × Grade (阶×重) progression axis at
-  all — no Grade/重 field was found anywhere in `talisman_config.json` or
+  grid's round/rank/level-gate structure (19-value cycling round sequence
+  across ranks 1–40, only partially level-gated — see Soulfice section).
+- Whether the relic uses a Rank × Grade (阶×重) progression axis at all — no
+  Grade/重 field was found anywhere in `talisman_config.json` or
   `talisman_levels.json`; this may be a UI-only concept not present in these
   tables, or may not exist as described.
 - The relic's true rank ceiling and any advancement-cost table beyond what's

@@ -88,6 +88,10 @@ The two apps are deliberately parallel; module layouts mirror each other.
   generic combat-skill items, on the SAME gear system as weapons/armor (rank,
   level curve, quality tiers, blacksmith-gated forging, marks, dual set
   bonuses). Distinct from curios and the Zodiac Relic. Not yet in the calc
+- `docs/knowledge/relic-systems-next-update.md` — integration-readiness
+  digest of the two not-yet-in-the-calc relic systems above: what's exact
+  enough to build a first Vault/combat-power pass on today vs the remaining
+  blockers (Zodiac Relic Hex data chief among them)
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 

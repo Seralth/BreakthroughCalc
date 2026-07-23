@@ -37,8 +37,8 @@ A curio's active effect =
 `upgrade[idx].affix value` (base, grows per upgrade) **+**
 `star_levels[star].affix` scalar (grows per star; same affix).
 `star_levels[].attribs` are separate flat combat stats (spell pen/block etc.).
-`require_level` on upgrades is a player realm-level gate (positional
-inference, not verified).
+`require_level` on upgrades is a player realm-level gate (confirmed — see
+"Related client-exact recoveries" below).
 
 Cross-check vs `data/sources.json` (in-game verified 2026-07-07):
 

@@ -38,12 +38,9 @@ Advanced tabs (`breakthrough_calc/gui.py`); this doc records the raw sources.
   (helper_tip L7, attrib L61–64).
 - Physique 1 pt = +4 P.ATK +2 P.DEF; Psyche 1 pt = +4 M.ATK +2 M.DEF.
 - Crit family stats: `crit_chance`, `crit_damage`, `crit_damage_ex` (flat dmg
-  bonus, base 0 — client text doesn't state before/after-multiplier ordering;
-  "added after the multiplier" is a plausible inference, not literal text),
-  `crit_defense` (−1% attacker crit multiplier per 1%; doesn't itself reduce
-  crit *chance* — that's `crit_resistance`'s job — though the client text
-  never states this non-interaction explicitly either), `crit_resistance`
-  (reduces chance of being crit) — attrib L1054–1121, helper_tip L138–154.
+  bonus, base 0), `crit_defense` (−1% attacker crit multiplier per 1%),
+  `crit_resistance` (reduces chance of being crit) — attrib L1054–1121,
+  helper_tip L138–154.
 - Stun contested dials (in-game tooltip / Advanced tab, client-stated; the
   Chinese term is 定身/"immobilize", not 眩晕/true "stun" — a separate,
   apparently-unused 眩晕系数/眩晕抵抗 field pair exists in attrib.lua with
@@ -89,10 +86,6 @@ mobile reference.dart) has been corrected to the verified numbers.
   realm-normalization curve — server-side. Client proof: `managers_calc_mgr.lua`
   L274 stubs `calc_base_defense()` to an unconditional `return 0` (unlike
   neighboring `calc_base_attack`/`calc_base_es_attack`, which pull real values
-  from `CONFIG.std_base_level_attribs`). A prior pass also cited
-  `combat_arpg.dec.lua` `receive_damage()` (L853) as proof that damage/crit/
-  dodge arrive pre-computed; that file no longer exists anywhere in the
-  current `apk_analysis/` extraction, so treat the pre-computed-damage claim
-  as plausible but currently re-unverified pending a fresh decompile pass.
+  from `CONFIG.std_base_level_attribs`).
 - Per-item 10-level affix / resonance / carving *values* — server balance
   data (same rule as cultivation balance tables; see RE_FINDINGS.md).
