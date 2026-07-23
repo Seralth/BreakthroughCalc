@@ -2,7 +2,7 @@
 
 What's in this directory and where. `apk_analysis/` is entirely gitignored
 except this file and `RE_FINDINGS.md` — everything else is regenerable
-scratch/tool state, kept on disk for speed (~3.4G total) but not committed.
+scratch/tool state, kept on disk for speed (~1.7G total) but not committed.
 
 ## Root
 
@@ -18,31 +18,25 @@ v14.2.4, app label "這就是江湖" — confirmed via manifest + resources, not
 guess), leftover from separate RE work that happened to share this scratch
 directory. Deleted once identified as unrelated to OverMortal.
 
-## `om/` — OverMortal pipeline, version 1.4.26052702 (pulled 2026-07-05)
-
-The original full pipeline run. Layout (same shape reused for every version):
-
-| Path | What it is |
-|---|---|
-| `apk/` (639M) | Raw pulled split APKs: `base.apk`, `split_config.arm64_v8a.apk`, `split_init_aab.apk`, `split_lua_aab_64.apk`. |
-| `ex/` (558M) | All 4 splits unzipped into one merged tree (dex, `resources.arsc`, `res/`, `assets/`, `lib/arm64-v8a/libil2cpp.so`, `assets/bin/Data/Managed/Metadata/global-metadata.dat`) — Android splits share one virtual filesystem, so merging like this is correct. |
-| `dump/` | **Empty** — the Il2CppDumper `dump.cs` for this version wasn't retained after the initial crypto analysis. (Contrast with `om_26062402/dump/`, which has it.) |
-| `decrypt_lua.py` | The portable decrypt script (XOR key `"m71"` + UnityPy Unity-bundle extraction). Resolves its `ex/assets/...` inputs relative to its own file location, so it's copied alongside each version's `ex/` rather than shared. Usage: `python3 decrypt_lua.py <bundle-name> <outdir>`. |
-| `allbc/` (200M, 661 files) | Bulk decrypt of the `lua64_config_lua_us.unity3d` "umbrella" bundle — every client config Lua table for this version, as raw LuaJIT bytecode (`.luajit`/`.lua`, XOR-decrypted but not decompiled). |
-| `decrypted/` (65M, 8 files) | One-off targeted decrypts, not the bulk dump: `drug_speed.lua` + `i18n_0..6.lua` (the i18n language tables — see `docs/knowledge/i18n-pipeline.md`). |
-| `decompiled/` (5.1M, 41 files) | Human-readable Lua for specific tables of interest (combat/equipment/cultivation — `cfg_us_calc`, `cfg_us_attrib`, `std_level_calc`, `managers_calc_mgr`, etc.), produced by running the matching `allbc/` bytecode through `ljd` (`/home/seralth/Projects/BreakthroughCalc/ljd/main.py`). Does **not** include the curio/gubao tables — those go through `curio/dump_table.lua` instead (see below), not ljd. |
+**Removed 2026-07-23**: `om/` (the original pipeline run for version 1.4.26052702,
+pulled 2026-07-05, ~1.5G) — kept only long enough to diff against the newer
+pull; see `RE_FINDINGS.md`'s 2026-07-23 update for what that diff found.
+Deleted once the findings were written up. `om_26062402/` (below) is now the
+only version on disk.
 
 ## `om_26062402/` — OverMortal pipeline, version 1.4.26062402 (pulled 2026-07-23)
 
-Same layout as `om/`, for the newer client (device `lastUpdateTime` 2026-07-10).
-Old baseline in `om/` was left untouched for diffing.
+The current (and currently only) full pipeline run. Layout (same shape gets
+reused for any future version pull):
 
 | Path | What it is |
 |---|---|
-| `apk/` (642M), `ex/` (708M), `decrypt_lua.py` | Same roles as in `om/`. |
-| `dump/` (276M) | Full Il2CppDumper output for this version: `dump.cs`, `script.json`, `stringliteral.json`, `il2cpp.h`, `DummyDll/`. Confirmed `LuaEncryption`/`"m71"` unchanged from the old version. |
-| `allbc/` (13M, 1396 files) | Bulk decrypt of the umbrella bundle. **Naming caveat**: in this build the umbrella bundle's internal names dropped the `cfg_us_`/`managers_`/`window_` prefixes (packaging change, not a content reorg), so filenames here don't line up 1:1 with `om/allbc/` — cross-reference by content/size, or pull the specific per-file bundle by its old name from `ex/assets/zip_lua_infos_64.json` when an exact match is needed (this is what was done for the curio tables and the tracked `decompiled/` set). |
-| `decompiled/` (4.7M, ~34 files) | Same known-table set as `om/decompiled/`, ljd-decompiled from this version for diffing. See `RE_FINDINGS.md`'s 2026-07-23 update for the content diff results. |
+| `apk/` (642M) | Raw pulled split APKs: `base.apk`, `split_config.arm64_v8a.apk`, `split_init_aab.apk`, `split_lua_aab_64.apk`. |
+| `ex/` (708M) | All 4 splits unzipped into one merged tree (dex, `resources.arsc`, `res/`, `assets/`, `lib/arm64-v8a/libil2cpp.so`, `assets/bin/Data/Managed/Metadata/global-metadata.dat`) — Android splits share one virtual filesystem, so merging like this is correct. |
+| `dump/` (276M) | Full Il2CppDumper output: `dump.cs`, `script.json`, `stringliteral.json`, `il2cpp.h`, `DummyDll/`. Confirmed `LuaEncryption` class with XOR key `"m71"`. |
+| `decrypt_lua.py` | The portable decrypt script (XOR key `"m71"` + UnityPy Unity-bundle extraction). Resolves its `ex/assets/...` inputs relative to its own file location, so it's copied alongside each version's `ex/` rather than shared. Usage: `python3 decrypt_lua.py <bundle-name> <outdir>`. |
+| `allbc/` (13M, 1396 files) | Bulk decrypt of the `lua64_config_lua_us.unity3d` "umbrella" bundle — every client config Lua table for this version, as raw LuaJIT bytecode (XOR-decrypted but not decompiled). **Naming caveat**: this build's umbrella bundle dropped the `cfg_us_`/`managers_`/`window_` prefixes from its internal TextAsset names (a packaging change, not a content reorg) — when an exact old-style name is needed, pull the specific per-file bundle by name from `ex/assets/zip_lua_infos_64.json` instead (this is what was done for the curio tables and the tracked `decompiled/` set below). |
+| `decompiled/` (4.7M, ~34 files) | Human-readable Lua for specific tables of interest (combat/equipment/cultivation — `cfg_us_calc`, `cfg_us_attrib`, `std_level_calc`, `managers_calc_mgr`, etc.), produced by running the matching bytecode through `ljd` (`/home/seralth/Projects/BreakthroughCalc/ljd/main.py`). Does **not** include the curio/gubao tables — those go through `curio/dump_table.lua` instead (see below), not ljd. |
 
 ## `curio/` — Curio (gubao) tooltip extraction
 
