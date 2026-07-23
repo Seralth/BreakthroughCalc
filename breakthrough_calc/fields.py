@@ -64,7 +64,8 @@ FIELDS: tuple = (
               shelf_target="bless_pp",
               scale=100.0,
               tooltip="Ascension Virya blessing: persistent absorption-ratio bonus in percentage "
-                      "points (Perfection (C) +20 and Perfect +20 — with both, enter 40). Enter the "
+                      "points. In Incarnation this is a flat +20 regardless of tier (Perfection (C) "
+                      "and Perfect both grant +20 — they do not stack; enter 20, not 40). Enter the "
                       "Absorption Ratio above as displayed in-game: it already includes this."),
     FieldSpec("bless_window", "bless_window", "dspin", inputs_attr="bless_window_pp",
               shelf_target="bless_window_pp",
