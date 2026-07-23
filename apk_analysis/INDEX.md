@@ -1,8 +1,13 @@
 # apk_analysis/ file index
 
 What's in this directory and where. `apk_analysis/` is entirely gitignored
-except this file and `RE_FINDINGS.md` — everything else is regenerable
-scratch/tool state, kept on disk for speed (~1.7G total) but not committed.
+except this file, `RE_FINDINGS.md`, and `TABLE_INDEX.md` — everything else is
+regenerable scratch/tool state, kept on disk for speed (~1.7G total) but not
+committed.
+
+This file maps directories/tools. For what's actually *inside* each
+decompiled data table (field names, formulas) so you don't have to open and
+scan them, see **`TABLE_INDEX.md`**.
 
 ## Root
 
@@ -36,7 +41,7 @@ reused for any future version pull):
 | `dump/` (276M) | Full Il2CppDumper output: `dump.cs`, `script.json`, `stringliteral.json`, `il2cpp.h`, `DummyDll/`. Confirmed `LuaEncryption` class with XOR key `"m71"`. |
 | `decrypt_lua.py` | The portable decrypt script (XOR key `"m71"` + UnityPy Unity-bundle extraction). Resolves its `ex/assets/...` inputs relative to its own file location, so it's copied alongside each version's `ex/` rather than shared. Usage: `python3 decrypt_lua.py <bundle-name> <outdir>`. |
 | `allbc/` (13M, 1396 files) | Bulk decrypt of the `lua64_config_lua_us.unity3d` "umbrella" bundle — every client config Lua table for this version, as raw LuaJIT bytecode (XOR-decrypted but not decompiled). **Naming caveat**: this build's umbrella bundle dropped the `cfg_us_`/`managers_`/`window_` prefixes from its internal TextAsset names (a packaging change, not a content reorg) — when an exact old-style name is needed, pull the specific per-file bundle by name from `ex/assets/zip_lua_infos_64.json` instead (this is what was done for the curio tables and the tracked `decompiled/` set below). |
-| `decompiled/` (4.7M, ~34 files) | Human-readable Lua for specific tables of interest (combat/equipment/cultivation — `cfg_us_calc`, `cfg_us_attrib`, `std_level_calc`, `managers_calc_mgr`, etc.), produced by running the matching bytecode through `ljd` (`/home/seralth/Projects/BreakthroughCalc/ljd/main.py`). Does **not** include the curio/gubao tables — those go through `curio/dump_table.lua` instead (see below), not ljd. |
+| `decompiled/` (4.7M, ~34 files) | Human-readable Lua for specific tables of interest (combat/equipment/cultivation — `cfg_us_calc`, `cfg_us_attrib`, `std_level_calc`, `managers_calc_mgr`, etc.), produced by running the matching bytecode through `ljd` (`/home/seralth/Projects/BreakthroughCalc/ljd/main.py`). Does **not** include the curio/gubao tables — those go through `curio/dump_table.lua` instead (see below), not ljd. Per-file schema: `TABLE_INDEX.md`. |
 
 ## `curio/` — Curio (gubao) tooltip extraction
 
@@ -49,8 +54,8 @@ overwrites in place, see `curio/README.md`).
 | `README.md` | Regeneration steps. |
 | `dump_table.lua` | Runs under system `luajit`; executes a LuaJIT bytecode chunk with a stubbed `CONFIG` global and serializes whatever table it returns straight to JSON — no ljd decompile needed for these data-only tables. |
 | `extract_curios.py` | Joins `tables/*.json` (gubao base/levels/upgrade/suit, benyuan origin, evolved, affix names) + `../i18n_all.json` → `curio_tooltips.json`. Has a hardcoded `APK` path to this repo checkout. |
-| `tables/` (12 files) | Intermediate per-table JSON, produced by `dump_table.lua` from the relevant `allbc/`-or-individual-bundle bytecode of whichever version was last regenerated from. |
-| `curio_tooltips.json` (5.1M) | Final joined output: 819 curios, 157 origin curios, 2 evolved, 127 suits, 472 distinct affixes. As of 2026-07-23 this is byte-identical between 26052702 and 26062402 — the curio system didn't change in this update. |
+| `tables/` (12 files) | Intermediate per-table JSON, produced by `dump_table.lua` from the relevant `allbc/`-or-individual-bundle bytecode of whichever version was last regenerated from. Per-file schema: `TABLE_INDEX.md`. |
+| `curio_tooltips.json` (5.1M) | Final joined output: 819 curios, 157 origin curios, 2 evolved, 127 suits, 472 distinct affixes. As of 2026-07-23 this is byte-identical between 26052702 and 26062402 — the curio system didn't change in this update. Schema: `TABLE_INDEX.md`. |
 | `cultivation_slice.py` | **Stale** — hardcodes a path into a since-deleted session's job tmp dir (`/home/seralth/.claude/jobs/5cf8b056/tmp/curio_tooltips.json`). One-off analysis script (filters `curio_tooltips.json` for cultivation-adjacent affixes); would need its `open(...)` path repointed at `curio/curio_tooltips.json` to rerun. |
 
 ## Related tracked docs (outside `apk_analysis/`)
