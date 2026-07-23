@@ -56,6 +56,12 @@ constants — silently remaps every previously shared code. The order pins in
 Note: `pill_effect` itself is NOT encoded — the mobile app derives it from
 `pe_sources`. A desktop port must do the same or codes will disagree.
 
+Boolean (`0/1`) fields have one legacy-decode nuance the table above doesn't
+show: a present-but-**null** wire value decodes to `false`, not to the
+field's default (`share_codec.dart`'s `case 'b'` checks `m.containsKey(...)`
+then does `m[f.short] == 1`, so `null == 1` is `false` even where the true
+default would be `true`).
+
 ## `S`: the Vault travels with the code (since 3.4)
 
 `'S'` carries `VaultState.owned` as `[id, level]` pairs sorted by id. Ids
@@ -92,8 +98,16 @@ Compatibility rules:
 - **Version skew**: unknown ids in `'S'` are kept in `owned` as passengers
   (`derive()` skips them; they contribute nothing) and re-emit on the next
   export, so a code is lossless through any app version. Levels above the
-  local catalog's max clamp for display/derivation but keep their original
-  value in `owned`.
+  local catalog's max always keep their original value in `owned` —
+  **correction:** "clamp for display/derivation" was an overgeneralization.
+  Display clamping is real only for `ladder`-kind entries (`catalog.dart`'s
+  `levelLabel()` / `main.dart`'s `_viryaCurrent()`); `tier`/`level`-kind
+  Vault rows (e.g. technique books, `vault_tab.dart`'s `_bookRow`) render
+  the raw unclamped value (`owned` above a book's max tier shows as
+  `T20/15`, not `T15/15`). Derivation for plain numeric levels uses `owned
+  >= threshold` comparisons (behaviorally capped, but not a literal
+  `.clamp()`); an explicit `.clamp()` exists only for parametric/`custom`
+  sources (`catalog.dart`'s `modelValue()`).
 
 ## Test vectors
 

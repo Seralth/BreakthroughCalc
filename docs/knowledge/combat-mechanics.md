@@ -38,14 +38,19 @@ Advanced tabs (`breakthrough_calc/gui.py`); this doc records the raw sources.
   (helper_tip L7, attrib L61–64).
 - Physique 1 pt = +4 P.ATK +2 P.DEF; Psyche 1 pt = +4 M.ATK +2 M.DEF.
 - Crit family stats: `crit_chance`, `crit_damage`, `crit_damage_ex` (flat dmg
-  added after the multiplier), `crit_defense` (−1% attacker crit multiplier
-  per 1%, never prevents the crit), `crit_resistance` (reduces chance of being
-  crit) — attrib L1054–1121, helper_tip L138–154.
-- Stun contested dials (in-game tooltip / Advanced tab, client-stated):
-  chance enhance +0.2%/pt (cap +100%) vs resist −0.2%/pt (cap −50%);
-  duration enhance +0.5%/pt (**cap +25%**) vs resist −0.5%/pt (cap −50%).
+  bonus, base 0), `crit_defense` (−1% attacker crit multiplier per 1%),
+  `crit_resistance` (reduces chance of being crit) — attrib L1054–1121,
+  helper_tip L138–154.
+- Stun contested dials (in-game tooltip / Advanced tab, client-stated; the
+  Chinese term is 定身/"immobilize", not 眩晕/true "stun" — a separate,
+  apparently-unused 眩晕系数/眩晕抵抗 field pair exists in attrib.lua with
+  `capacity_coef` = 0 and no matching tooltip): chance enhance +0.2%/pt
+  (cap +100%) vs resist −0.2%/pt (cap −50%); duration enhance +0.5%/pt
+  (**cap +25%**) vs resist −0.5%/pt (cap −50%).
 - Toughness (韧性): each control hit grants 韧性×0.1 as %-based control-time
-  resistance, stacking to 100 = full control immunity (helper_tip L179).
+  resistance **for 5 seconds** — a further control hit during that window
+  refreshes the duration and stacks the value — stacking to 100 = full
+  control immunity (helper_tip L179).
 - Crit/hit/dodge/crit-resist are **flat values normalized against a
   realm-dependent standard** (`capacity_coef` ladder — see
   apk_analysis/RE_FINDINGS.md L62–64); the in-game tooltip's "rate at current
@@ -78,8 +83,9 @@ mobile reference.dart) has been corrected to the verified numbers.
 ## Not knowable from the client
 
 - The equations combining hit vs eva, crit vs crit resist, and the
-  realm-normalization curve — server-side. Client proof: damage/crit/dodge
-  arrive pre-computed in `combat_arpg.dec.lua` `receive_damage()` (L853), and
-  `managers_calc_mgr.lua` L274 stubs `calc_base_defense()` to return 0.
+  realm-normalization curve — server-side. Client proof: `managers_calc_mgr.lua`
+  L274 stubs `calc_base_defense()` to an unconditional `return 0` (unlike
+  neighboring `calc_base_attack`/`calc_base_es_attack`, which pull real values
+  from `CONFIG.std_base_level_attribs`).
 - Per-item 10-level affix / resonance / carving *values* — server balance
   data (same rule as cultivation balance tables; see RE_FINDINGS.md).
