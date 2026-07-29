@@ -42,6 +42,7 @@ intentionally out of scope here (owner: don't care about those for now).
   | $2.99 | 18 | 6.021 |
   | $4.99 | 30 | 6.012 |
   | $9.99 | 68 | **6.807** (best known tier) |
+  | $14.99 | 98 | 6.538 |
   | $19.99 | 128 | 6.403 (worst known tier) |
   | $29.99 | 198 | 6.602 |
   | $49.99 | 328 | 6.561 |
@@ -52,7 +53,7 @@ intentionally out of scope here (owner: don't care about those for now).
   rather than one larger bundle. The curve is **not monotonic**: $9.99 beats
   every other tier, and $19.99 — despite sitting right next to it — is
   actually the single worst-value tier of the set. Owner believes this is
-  the complete common-tier ladder (8 tiers: $0.99–$99.99).
+  the complete common-tier ladder (9 tiers: $0.99–$99.99).
 
 - **Voucher-funded purchase**: the same IAP tiers above can alternatively be
   paid for with SEAGM top-up vouchers instead of cash, and doing so applies
@@ -65,14 +66,15 @@ intentionally out of scope here (owner: don't care about those for now).
   | $2.99 | 1,800 | 19.8 |
   | $4.99 | 3,000 | 33 |
   | $9.99 | 6,800 | 74.8 |
+  | $14.99 | 9,800 | 107.8 |
   | $19.99 | 12,800 | 140.8 |
   | $29.99 | 19,800 | 217.8 |
   | $49.99 | 32,800 | 360.8 |
   | $99.99 | 64,800 | 712.8 |
 
-  Every one of these eight tiers reduces to the exact same ratio:
+  Every one of these nine tiers reduces to the exact same ratio:
   **1,000 vouchers = 11 points** (1 voucher = 0.011 points, ≈90.909
-  vouchers/point). Confirmed exact across all eight data points — treat as
+  vouchers/point). Confirmed exact across all nine data points — treat as
   a fixed conversion constant, not an approximation.
 
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
@@ -102,20 +104,35 @@ Note the rate isn't strictly monotonic (6,900 beats the pricier 10,000
 tier; 20,500 beats the pricier 33,800 tier) — worth checking the table
 before assuming "bigger is always better" on any specific bundle choice.
 
-## Cost to fully clear the track (Pearl, 158,888 points)
+## Cost per relic breakpoint (at-a-glance)
 
-Vouchers needed: 158,888 × 1000/11 ≈ 14,444,364.
+Since points are cumulative and never spent, each row's cost is the total
+spend to go from zero all the way to that relic — not an incremental
+per-relic price. Buying up to Pearl automatically nets every relic above
+it too. "Vouchers needed" = points × 1000/11, rounded up.
 
-| Route | Effective rate | Cost |
-|---|---|---|
-| Direct IAP, best known tier ($9.99 × 2,337) | 6.807 pts/$ | $23,346.63 |
-| SEAGM vouchers, best bulk bundles | ~7.69 pts/$ | ~$20,650 |
+Direct-IAP cost assumes repeating the best known tier ($9.99 → 68 pts).
+SEAGM-voucher cost uses the best bulk rate (~699.51 vouchers/$, from the
+$599.99+ tiers) as a continuous approximation — real purchases are
+bundle-quantized, so true cost could run a little higher for thresholds
+well below a bundle's own size, and a dollar or two lower with careful
+bundle-mixing at the margin. Treat these as accurate to within ~1%.
 
-SEAGM's voucher route is the cheaper path, but only by ~13% over the best
-direct-IAP tier — a much smaller gap than a naive per-voucher reading of
-the 1.1× bonus would suggest (an earlier pass on this math mistakenly
-treated it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio
-above).
+| Relic | Points | Vouchers needed | Direct IAP cost | SEAGM voucher cost | Savings |
+|---|---|---|---|---|---|
+| Vase | 5,000 | 454,546 | $739.26 | ~$649.80 | ~12.1% |
+| Pot | 10,000 | 909,091 | $1,478.52 | ~$1,299.61 | ~12.1% |
+| Mirror | 20,000 | 1,818,182 | $2,947.05 | ~$2,599.22 | ~11.8% |
+| Token | 40,000 | 3,636,364 | $5,884.11 | ~$5,198.43 | ~11.7% |
+| Sheers | 70,000 | 6,363,637 | $10,289.70 | ~$9,097.26 | ~11.6% |
+| Cauldron | 88,888 | 8,080,728 | $13,066.92 | ~$11,551.96 | ~11.6% |
+| Basin | 128,888 | 11,717,091 | $18,941.04 | ~$16,750.39 | ~11.6% |
+| Pearl | 158,888 | 14,444,364 | $23,346.63 | ~$20,649.21 | ~11.6% |
+
+SEAGM's voucher route is consistently cheaper by ~11.6–12.1% across every
+breakpoint — a much smaller gap than a naive per-voucher reading of the
+1.1× bonus would suggest (an earlier pass on this math mistakenly treated
+it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio above).
 
 ## Open questions
 
