@@ -434,6 +434,15 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
     Text('Uses and stacking', style: h3),
     para('During the first week uses don\'t stack; after that they do — save them '
         'for Sunday or the next BR threshold.'),
+    para('Each week\'s event runs Wednesday through the following Tuesday, with '
+        'one free run each on Wednesday, Friday and Sunday (3 total), plus up to '
+        '2 purchasable Myrimon Tokens from the cash shop, each worth +1 run in '
+        'the week you redeem it (5 runs max in a week if both are bought and '
+        'used). Tokens are inventory items — buy them freely and hold them '
+        'unredeemed as long as you like. Near a realm ascension, don\'t redeem '
+        'saved tokens for a few extra of the current realm\'s fruit; hold them '
+        'and redeem right after ascending for the new realm\'s higher-tier fruit '
+        'instead.'),
     Text('Aura Extractor', style: h3),
     para('Extractor tracks: the Cultivation Bonus track is +4% per level, plus '
         'Quality and Gush tracks. Rarity bonuses: each rarity rank unlocks +20% '
