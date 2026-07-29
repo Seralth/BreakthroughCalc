@@ -21,14 +21,44 @@ Energy mechanics is a separate, still-open task.
 ## Core mechanic: breakpoints, not a per-pull gacha
 
 Points accumulate on a single running total and are **never spent or
-consumed**. Crossing each breakpoint grants that relic and progress
-continues toward the next one — this is a milestone/battle-pass shape, not
-a gacha where each pull costs points. Practical consequence: the only cost
-that matters is reaching the **highest** breakpoint you want; every relic
-below it arrives for free along the way.
+consumed** (owner-confirmed exact behavior: bank 10,000 points in week
+one, and you get Vase the moment you cross 5,000 *and* Pot is
+automatically claimable the instant it enters the pool next week — no
+redraw needed, the surplus carried over). Crossing each breakpoint grants
+that relic and progress continues toward the next one — this is a
+milestone/battle-pass shape, not a gacha where each pull costs points.
 
 Cosmetic rewards also sit on the same point track at other values —
 intentionally out of scope here (owner: don't care about those for now).
+
+### The weekly pool gate — a hard ceiling independent of money
+
+Only **one relic is "in the pool" at a time**, always the next one in the
+sequence above. Each pool slot lasts exactly 1 week (server week, rolling
+over Monday); if nobody wins it that week, the same relic just stays in
+the pool for another week rather than being replaced. Two ways to win the
+current slot's relic:
+
+1. **Points** — cross its cumulative threshold (guaranteed).
+2. **Lottery** — every draw (see Diagram economy below) also carries an
+   independent **0.25% instant-win chance** on the current pool relic,
+   regardless of accumulated points.
+
+Critically: **the pool does not advance early**. Even if you have more
+than enough points banked to clear several thresholds at once, or you win
+the current relic via lottery in the first hour of its week, the next
+relic doesn't enter the pool until the next scheduled rollover. Extra
+draws made after that week's relic is already won are guaranteed to not
+win anything (can't win a second copy of what you have, can't win a relic
+that isn't in the pool yet) — this is the "functionally a waste" warning
+the game itself shows.
+
+**This means money has a hard ceiling on how fast it can get you through
+the whole track: 1 relic per week, minimum 8 weeks for all 8, no matter
+how much is spent.** Past the point where you can already guarantee the
+current week's relic, additional spending that week buys nothing — it
+only matters for *which* weeks you can afford to guarantee versus rely on
+luck/banked draws for (see the banking strategy below).
 
 ### Relic breakpoints (owner-provided, cumulative points)
 
@@ -45,8 +75,10 @@ intentionally out of scope here (owner: don't care about those for now).
 
 ## Point sources
 
-- **Creation draw**: 10 points per draw, earned via in-game play/currency
-  (not real money).
+- **Creation draw**: spends 1 Creation Diagram, grants 10 points plus an
+  independent 0.25% instant-win roll on the current pool relic (see
+  Diagram economy below for where diagrams come from and the banking
+  strategy this enables).
 - **Direct purchase (App Store IAP)**: fixed point yield per real-money
   tier, confirmed by owner:
 
@@ -136,6 +168,61 @@ glance, rather than reading as just another data column. This is a
 sort-order affordance, not a data-status marker, so it doesn't conflict
 with the no-provenance-badges rule in the root CLAUDE.md.
 
+## Diagram economy
+
+Creation Diagrams are the item a Creation draw consumes. Owner-confirmed
+sources, all subscription passes (no known way to buy diagrams directly
+with cash or vouchers):
+
+| Pass | Diagrams | Duration | Price | Other benefit |
+|---|---|---|---|---|
+| Monthly | 1/day | 30 days | $4.99 | AFK cap +12h |
+| Season | 1/day | 90 days | $12.99 | AFK cap +24h |
+| Permanent | 2/week (Mon 8am) | forever | unrecorded | — |
+
+Owner-confirmed community wisdom: **pass cost is out of scope for relic
+optimization entirely**. If a player spends money on anything, these 3
+passes come first, above and beyond relic strategy, because their other
+benefits (chiefly the AFK gathering cap) are treated as required to play
+the game at full efficiency — without any pass, anything gathered past
+12h AFK is simply lost. Passes are assumed as sunk/baseline spend, and
+their diagram output is treated as free income for relic purposes.
+
+Combined baseline income, assuming all 3 passes active (monthly and
+season stack, both granting 1/day independently): **1 + 1 = 2/day, plus
+2/week from Permanent → 16 diagrams/week**, i.e. 160 points/week
+guaranteed if every diagram were drawn immediately (see banking strategy
+below for why that's usually not the best use of them).
+
+### The banking strategy
+
+Since the 0.25% lottery roll is identical on every draw regardless of
+accumulated points, and diagrams don't expire or need to be spent
+immediately, the strategic move is: **don't draw every week**. While a
+relic is still cheap enough to pity out with cash, pay cash and leave
+diagrams unspent. Once the point cost gets too expensive to justify
+(the later relics — Cauldron/Basin/Pearl), dump the entire banked stockpile
+at once for a concentrated batch of independent 0.25% shots, which can hit
+well before the cash-pity threshold is reached — and even if it doesn't
+hit, every draw still adds its 10 points toward the cumulative total, so a
+failed lottery dump is never wasted value, just a missed shortcut.
+
+Odds of winning via lottery alone from N banked draws (1 − 0.9975^N):
+
+| Banked draws | Win chance | Weeks to bank (@16/week, all 3 passes) |
+|---|---|---|
+| 100 | 22.1% | 6.3 |
+| 277 | 50.0% | 17.3 |
+| 500 | 71.4% | 31.3 |
+| 920 | 90.0% | 57.5 |
+| 1,197 | 95.0% | 74.8 |
+| 1,840 | 99.0% | 115.0 |
+
+This is a genuinely long-horizon game (owner's own account is ~2 years
+from Rank 6R+), so banking diagrams across dozens or low hundreds of
+weeks while cash-pitying the early relics, then unloading the stockpile
+against Pearl, is a realistic strategy — not a theoretical one.
+
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
@@ -206,7 +293,10 @@ tables above rather than treating the pop-up as a unique deal.
 Since points are cumulative and never spent, each row's cost is the total
 spend to go from zero all the way to that relic — not an incremental
 per-relic price. Buying up to Pearl automatically nets every relic above
-it too.
+it too. These tables answer "what does it cost to *guarantee* every relic
+with cash" — they don't account for the weekly pool gate (8-week minimum
+regardless of spend) or the banking strategy above, both of which can
+substantially reduce real spend for a patient player.
 
 **Route A — Direct IAP**, repeating the best known tier ($9.99 → 68 pts):
 
@@ -253,3 +343,12 @@ to within ~1%.
   bundle sizes for the remainder.
 - Cosmetic rewards on the same track: values and count not captured (owner:
   out of scope for now).
+- Permanent pass price not recorded (owner: doesn't matter for this doc
+  since pass cost is out of scope regardless — captured for completeness
+  only if it ever becomes relevant elsewhere).
+- No confirmation of whether Creation Diagrams are obtainable any other
+  way (direct cash/voucher purchase, event rewards, etc.) beyond the 3
+  passes — assumed to be pass-only until shown otherwise.
+- The banking-strategy odds table treats each draw as fully independent
+  at a flat 0.25%; not confirmed whether the rate is literally fixed
+  every week for every remaining relic or could vary by relic.
