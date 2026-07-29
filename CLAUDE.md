@@ -66,7 +66,9 @@ The two apps are deliberately parallel; module layouts mirror each other.
 ## Knowledge index
 
 - `docs/knowledge/game-mechanics-verified.md` — verified pill/gem/gush/orb/
-  extractor semantics (2026-07-07 screenshots)
+  extractor semantics (2026-07-07 screenshots); also the Taoist-year tick
+  rate (1 Taoist year = 15 real minutes), the server's underlying tick for
+  passive/periodic systems
 - `docs/knowledge/technique-books.md` — ALL Universal technique books R1–R9
   with full chapter/tier bonus tables (2026-07-15 screenshot pass); which
   thresholds are exact vs positional inference. The Vault's Library renders
@@ -92,6 +94,12 @@ The two apps are deliberately parallel; module layouts mirror each other.
   digest of the two not-yet-in-the-calc relic systems above: what's exact
   enough to build a first Vault/combat-power pass on today vs the remaining
   blockers (Zodiac Relic Hex data chief among them)
+- `docs/knowledge/elemental-laws-garden-mechanics.md` — Spiritual World
+  Elemental Laws + Law Fruit garden system (Voidbreak+): fruit tiers, the
+  Blitz mechanic + 120h/day cap, Red tier via the Shears relic, the Garden
+  Pot artifact (distinct from the Zodiac Pot / Dongxuan's Pot curios), pet
+  speed-up spawns, and a throughput analysis concluding full pre-Voidbreak
+  garden unlock outweighs fruit-tier strategy. Not yet in the calc.
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 

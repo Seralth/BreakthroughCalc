@@ -42,6 +42,18 @@ solely in `GapCoverage` (`test_fruit_highest_rank_is_1_5x`) — none of these
 mechanics are untested, just not all under the one named class. Related:
 [[fruit-ranks-no-r4-r5]].
 
+## Taoist year = 15 real minutes; the server's underlying tick rate (owner-confirmed 2026-07-29)
+
+Most passive/periodic systems run on **Taoist years** as their unit, not
+wall-clock time directly — and 1 Taoist year = 15 real minutes (96/day).
+Confirmed examples: Garden Pot artifact energy regen (see
+`elemental-laws-garden-mechanics.md`), shadow clone resource gathering.
+Active/instant systems (combat, crafting) run in genuine real-time instead
+and are NOT on this tick. When modeling any passive-accrual mechanic
+("gain X per Y"), check whether Y is a Taoist year before assuming a smooth
+real-time rate — convert via ×4/hour or ×96/day rather than treating the
+in-game unit as literal calendar years.
+
 ## 2026-07-17 screenshot batch (~/Pictures/virya-extractor-techniques-2026-07-17/)
 
 Player state: Nascent Soul (M) Late G3 (secondary), Incarnation (L) Completed
