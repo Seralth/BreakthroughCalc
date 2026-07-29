@@ -1,79 +1,75 @@
 # Relic summon system — cumulative point track
 
-Personal reference for how the 8 Creation Artifacts are **acquired** —
-not their own stat/Energy mechanics, which live in `docs.py`'s Reference →
-Artifacts & Gems section (desktop) / `reference_tab.dart` (mobile). Sourced
-from owner-provided in-game data plus SEAGM storefront screenshots
-(2026-07-29). Noted for future integration; not yet in the calc.
+How the 8 Creation Artifacts get acquired — not their own stat/Energy
+mechanics, which live in Reference → Artifacts & Gems (`docs.py` desktop /
+`reference_tab.dart` mobile). Not yet wired into the calc.
 
 Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
-(`zodiac-relic.md`) — unrelated "relic" systems that just share the word.
+(`zodiac-relic.md`) — unrelated systems that just happen to share the word
+"relic."
 
-Owner-confirmed (2026-07-29): all 8 relics below (Vase, Pot, Mirror,
-Token, Sheers, Cauldron, Basin, Pearl) are Creation Artifacts. Each
-carries a full "[descriptor] [item]" name — Vase = Starsea Vase, Mirror =
-Dual-Star Mirror, Pearl = Timereversal Pearl, and the same pattern holds
-for the other 5 — but nobody uses the full name in practice; community
-norm is the shorthand item word alone, which is what this doc (and any
-future Reference/UI copy) should use too. Only 3 have an existing
-Energy-mechanic write-up in Reference; the other 5 (Pot, Token, Sheers,
-Cauldron, Basin) are real Creation Artifacts too, just undocumented there
-so far because their point cost is high enough that most players never
-reach them. **Integration note**: this doc's content belongs as a new
-subsection *inside* the existing Artifacts & Gems section (how you obtain
-them), not a new standalone Reference topic — see the note near the
-price-point ranking table below. Documenting the other 5 artifacts' own
-Energy mechanics is a separate, still-open task.
+All 8 below — Vase, Pot, Mirror, Token, Sheers, Cauldron, Basin, Pearl —
+are Creation Artifacts. Each has a full descriptor-plus-item name (Starsea
+Vase, Dual-Star Mirror, Timereversal Pearl, same pattern for the rest),
+but nobody calls them that — everyone just says Vase, Mirror, Pearl, and
+so on, and that's what this doc uses too. Only three of them have their
+Energy mechanic written up in Reference already; the other five are just
+as real, they're simply too expensive for most players to reach, so
+nobody's gotten around to documenting their mechanics yet.
+
+**Integration note**: this belongs as a subsection inside the existing
+Artifacts & Gems section — how you obtain them — not a new standalone
+Reference topic (see the note near the price-point ranking table below).
+Documenting the other five artifacts' own Energy mechanics is separate
+work.
 
 ## Core mechanic: breakpoints, not a per-pull gacha
 
-Points accumulate on a single running total and are **never spent or
-consumed** (owner-confirmed exact behavior: bank 10,000 points in week
-one, and you get Vase the moment you cross 5,000 *and* Pot is
-automatically claimable the instant it enters the pool next week — no
-redraw needed, the surplus carried over). Crossing each breakpoint grants
-that relic and progress continues toward the next one — this is a
-milestone/battle-pass shape, not a gacha where each pull costs points.
+Points build up on one running total that never gets spent. Cross a
+breakpoint and that relic's yours — progress just keeps climbing toward
+the next one. Bank 10,000 points in week one and Vase is already yours
+the moment 5,000 gets crossed, and Pot is claimable the instant it enters
+the pool the following week — no redraw needed, the surplus just carries
+straight over. It's a milestone/battle-pass shape, not a gacha where
+every pull costs points.
 
-Cosmetic rewards also sit on the same track — interspersed between relics
-and continuing after Pearl, with the track eventually ending at a
-capstone cosmetic. Intentionally out of scope here (owner: don't care
-about those for now, and not a worthy note for this topic beyond knowing
-the track does eventually end).
+Cosmetics sit on the same track too — between relics and continuing past
+Pearl, with the whole thing eventually ending at a capstone cosmetic. Not
+worth getting into here.
 
 ### The weekly pool gate — a hard ceiling independent of money
 
-Only **one relic is "in the pool" at a time**, always the next one in the
-sequence above. Each pool slot lasts exactly 1 week (server week, rolling
-over Monday); if nobody wins it that week, the same relic just stays in
-the pool for another week rather than being replaced. Two ways to win the
-current slot's relic:
+Only one relic is in the pool at a time, always the next one in the
+sequence below. Each one sits for exactly a week, rolling over Monday —
+miss it and it just stays another week instead of getting replaced. Two
+ways to win it:
 
-1. **Points** — cross its cumulative threshold (guaranteed).
-2. **Lottery** — every draw (see Diagram economy below) also carries an
-   independent **0.25% instant-win chance** on the current pool relic,
-   regardless of accumulated points.
+1. **Points** — cross the cumulative threshold. Guaranteed.
+2. **Lottery** — every draw also carries an independent **0.25%**
+   instant-win shot at whatever's currently in the pool, on top of
+   whatever points are banked. Fixed rate, every relic, no exceptions —
+   it comes from a permanent event that's never changed and isn't going
+   to.
 
-Critically: **the pool does not advance early**. Even if you have more
-than enough points banked to clear several thresholds at once, or you win
-the current relic via lottery in the first hour of its week, the next
-relic doesn't enter the pool until the next scheduled rollover. Extra
-draws made after that week's relic is already won are guaranteed to not
-win anything (can't win a second copy of what you have, can't win a relic
-that isn't in the pool yet) — this is the "functionally a waste" warning
-the game itself shows.
+The pool never advances early. Doesn't matter if there's ten times the
+needed points banked, or a relic gets won by lottery an hour into its
+week — the next one doesn't show up until the scheduled rollover. Any
+draws spent after that week's relic is already won can't win anything: no
+second copy of what's already yours, and nothing to win on a relic that
+isn't even in the pool yet. That's the "functionally a waste" warning the
+game throws up.
 
-**This means money has a hard ceiling on how fast it can get you through
-the whole track: 1 relic per week, minimum 8 weeks for all 8, no matter
-how much is spent.** Past the point where you can already guarantee the
-current week's relic, additional spending that week buys nothing — it
-only matters for *which* weeks you can afford to guarantee versus rely on
-luck/banked draws for (see the banking strategy below).
+Which means money hits a hard ceiling on how fast this whole thing goes:
+one relic a week, eight weeks minimum for all of them, no matter how much
+gets thrown at it. Past the point where a week's relic is already
+guaranteed, spending more that week buys nothing — it only decides which
+weeks get paid for outright versus left to luck and banked draws (see the
+banking strategy below).
 
-### Relic breakpoints (owner-provided, cumulative points)
+### Relic breakpoints (cumulative points)
 
-This table is also the pool order — relics enter the weekly pool top to
-bottom, one at a time, never out of sequence (Vase first, Pearl last).
+This table is also the pool order — relics show up top to bottom, one at
+a time, Vase first and Pearl last.
 
 | Relic | Points |
 |---|---|
@@ -88,38 +84,34 @@ bottom, one at a time, never out of sequence (Vase first, Pearl last).
 
 ## Point sources
 
-- **Creation draw**: spends 1 Creation Diagram, grants 10 points plus an
-  independent 0.25% instant-win roll on the current pool relic (see
-  Diagram economy below for where diagrams come from and the banking
-  strategy this enables).
-- **Direct purchase (App Store IAP)**: fixed point yield per real-money
-  tier, confirmed by owner:
+- **Creation draw**: spends 1 Creation Diagram, grants 10 points plus the
+  0.25% lottery shot above (see Diagram economy below for where diagrams
+  come from and the banking strategy this opens up).
+- **Direct purchase (App Store)**: fixed point yield per real-money tier:
 
   | Tier | Points | Rate (pts/$) |
   |---|---|---|
   | $0.99 | 6 | 6.061 |
   | $2.99 | 18 | 6.021 |
-  | $4.99 | 30 | 6.012 (worst known tier) |
-  | $9.99 | 68 | **6.807** (best known tier) |
+  | $4.99 | 30 | 6.012 (worst tier) |
+  | $9.99 | 68 | **6.807** (best tier) |
   | $14.99 | 98 | 6.538 |
   | $19.99 | 128 | 6.403 |
   | $29.99 | 198 | 6.602 |
   | $49.99 | 328 | 6.561 |
   | $99.99 | 648 | 6.481 |
 
-  $99.99 is the largest single IAP SKU seen (owner-confirmed) — there is no
-  bigger single tier; event offers instead cap at up to 10× $99.99 packs
-  rather than one larger bundle. The curve is **not monotonic**: $9.99 beats
-  every other tier, and the three smallest tiers ($0.99/$2.99/$4.99) are
-  the worst value of the set — $4.99 is the single worst. $19.99 is a local
-  dip (worse than both its immediate neighbors $14.99 and $29.99) but isn't
-  the global worst. Owner believes this is the complete common-tier ladder
-  (9 tiers: $0.99–$99.99).
+  $99.99 is the biggest single pack there is — no bigger single tier
+  exists; events instead offer up to 10× $99.99 packs rather than one
+  larger bundle. The curve isn't clean: $9.99 beats every other tier, and
+  the three cheapest packs ($0.99/$2.99/$4.99) are the worst value of the
+  bunch — $4.99 worst of all. $19.99 looks bad sitting between two strong
+  neighbors but isn't actually the floor. This is the full common-tier
+  ladder, $0.99 to $99.99.
 
-- **Voucher-funded purchase**: the same IAP tiers above can alternatively be
-  paid for with SEAGM top-up vouchers instead of cash, and doing so applies
-  a flat **1.1× bonus** to that tier's point yield. Voucher cost per tier
-  (owner-provided):
+- **Voucher-funded purchase**: the same tiers above can be paid for with
+  SEAGM top-up vouchers instead of cash, which applies a flat **1.1×**
+  bonus to that tier's point yield:
 
   | Tier | Vouchers | Points (base × 1.1) |
   |---|---|---|
@@ -135,15 +127,14 @@ bottom, one at a time, never out of sequence (Vase first, Pearl last).
 
   Every one of these nine tiers reduces to the exact same ratio:
   **1,000 vouchers = 11 points** (1 voucher = 0.011 points, ≈90.909
-  vouchers/point). Confirmed exact across all nine data points — treat as
-  a fixed conversion constant, not an approximation.
+  vouchers/point). Treat it as a fixed conversion constant.
 
 ### Price-point value ranking
 
-The voucher ratio above is fixed regardless of tier — no price point is a
-better or worse deal for "voucher usage," they all convert at the exact
-same 0.011 pts/voucher. The only thing that actually varies by tier is
-**cash-purchase efficiency**. Ranked best to worst by cash rate:
+The voucher ratio is fixed no matter the tier — no price point is a
+better or worse deal for "voucher usage," they all convert at exactly
+0.011 pts/voucher. The only thing that actually varies by tier is
+cash-purchase efficiency. Ranked best to worst by cash rate:
 
 | Price | Points (cash) | Rate (pts/$) | Vouchers (if paid via voucher) | Points via voucher (×1.1) |
 |---|---|---|---|---|
@@ -157,12 +148,12 @@ same 0.011 pts/voucher. The only thing that actually varies by tier is
 | $2.99 | 18 | 6.020 | 1,800 | 19.8 |
 | $4.99 | 30 | 6.012 ← worst | 3,000 | 33.0 |
 
-To optimize point gain: always buy $9.99 packs, never $4.99 (the actual
-worst tier — the three smallest packs are all bad value, not $19.99 as it
-might look from its position next to two strong neighbors). To optimize
-voucher usage: it doesn't matter which tier you redeem through — spend
-down whatever vouchers you're sitting on at any tier, the yield per
-voucher is identical everywhere.
+To optimize point gain: always buy $9.99 packs, never $4.99 — the three
+smallest packs are all bad value, not $19.99 as it might look from its
+position next to two strong neighbors. To optimize voucher usage, it
+doesn't matter which tier gets redeemed through — spend down whatever
+vouchers are sitting around at any tier, the yield per voucher is
+identical everywhere.
 
 **UI note for whenever this ships**: this data has no ownership state and
 feeds no calculation, so it does NOT belong in the Vault (Library/Treasury/
@@ -181,12 +172,12 @@ glance, rather than reading as just another data column. This is a
 sort-order affordance, not a data-status marker, so it doesn't conflict
 with the no-provenance-badges rule in the root CLAUDE.md.
 
-## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
+## SEAGM voucher pricing
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
-pricing that does NOT scale linearly — bigger bundles are usually but not
-always a better rate, plateauing at ~699.5 vouchers/$ from the $199.99 tier
-up (no further bulk bonus above that).
+pricing that doesn't scale linearly — bigger bundles are usually but not
+always a better rate, plateauing at ~699.5 vouchers/$ from the $199.99
+tier up, no further bulk bonus above that.
 
 | Vouchers | Price (USD) | Rate (vouchers/$) |
 |---|---|---|
@@ -204,18 +195,16 @@ up (no further bulk bonus above that).
 | 699,500 | 999.99 | 699.51 |
 | 2,098,520 | 2,999.99 | 699.51 |
 
-Note the rate isn't strictly monotonic (6,900 beats the pricier 10,000
-tier; 20,500 beats the pricier 33,800 tier) — worth checking the table
-before assuming "bigger is always better" on any specific bundle choice.
+The rate isn't strictly monotonic — 6,900 beats the pricier 10,000 tier,
+20,500 beats the pricier 33,800 tier — worth checking the table before
+assuming bigger is always better on any specific bundle.
 
 ## LT's own voucher value vs SEAGM's real price
 
 Seven price points ($0.99, $9.99, $14.99, $19.99, $29.99, $49.99, $99.99)
-appear on **both** LT's in-game voucher-equivalent pricing (what LT itself
-says a reward is worth in vouchers) and SEAGM's real storefront (what
-SEAGM actually sells that many dollars of vouchers for). Comparing the two
-at matching prices shows whether SEAGM is a genuine discount or just
-noise:
+show up on both LT's in-game voucher-equivalent pricing (what a reward is
+worth in vouchers) and SEAGM's real storefront (what SEAGM actually sells
+that many dollars of vouchers for). Lined up at matching prices:
 
 | Price | LT vouchers | LT rate | SEAGM vouchers | SEAGM rate | Extra vouchers | Extra points |
 |---|---|---|---|---|---|---|
@@ -228,35 +217,33 @@ noise:
 | $99.99 | 64,800 | 648.06/$ | 68,000 | 680.07/$ | 3,200 | 35.2 |
 
 At every shared price point SEAGM matches or beats LT's own voucher
-valuation — never worse. "Extra points" = extra vouchers × 0.011 (the
-fixed ratio above), i.e. how many more points that same dollar amount
-nets you by routing through SEAGM instead of paying LT direct-voucher
-price. The $99.99 tier has the widest gap (~5% more vouchers, 35.2 bonus
-points) — consistent with the per-relic savings in the next section.
+valuation — never worse. "Extra points" is extra vouchers × 0.011 (the
+fixed ratio above) — how many more points that same dollar amount nets by
+routing through SEAGM instead of paying LT direct-voucher price. $99.99
+has the widest gap, ~5% more vouchers, 35.2 bonus points.
 
 ### Time-limited pop-up bundles
 
-The game also runs random time-limited pop-up offers, always presented as
-3 options (cheap/mid/high). Owner-confirmed: these are **not** a separate
-pricing tier — a pop-up priced at $14.99 always grants the exact same
-points and vouchers as the fixed $14.99 catalog tier above, no exceptions,
-same for every other price. The scarcity/urgency framing is pure dark
-pattern with zero pricing difference underneath it. Practical takeaway:
-the "cheap/mid/high" pop-up is exploitable the same way the fixed $9.99
-tier beats its neighbors — just match whichever price appears against the
-tables above rather than treating the pop-up as a unique deal.
+The game also runs random time-limited pop-up offers, always 3 options —
+cheap/mid/high. These aren't a separate pricing tier: a pop-up priced at
+$14.99 grants the exact same points and vouchers as the fixed $14.99
+catalog tier, no exceptions, same at every other price. The scarcity
+framing is pure urgency with zero pricing difference underneath it — the
+"cheap/mid/high" pop-up is worth the same exact math as the fixed $9.99
+tier beating its neighbors, just match whichever price shows up against
+the tables above instead of treating the pop-up as a unique deal.
 
 ## Cost per relic breakpoint (at-a-glance)
 
 Since points are cumulative and never spent, each row's cost is the total
 spend to go from zero all the way to that relic — not an incremental
-per-relic price. Buying up to Pearl automatically nets every relic above
-it too. These tables answer "what does it cost to *guarantee* every relic
-with cash" — they don't account for the weekly pool gate (8-week minimum
-regardless of spend) or the diagram-banking strategy below, both of which
-can substantially reduce real spend for a patient player.
+per-relic price. Buying up to Pearl nets every relic above it too. These
+tables answer "what does it cost to guarantee every relic with cash" —
+they don't account for the weekly pool gate (8-week minimum regardless of
+spend) or the diagram-banking strategy below, both of which can cut real
+spend substantially for a patient player.
 
-**Route A — Direct IAP**, repeating the best known tier ($9.99 → 68 pts):
+**Route A — Direct purchase**, repeating the best tier ($9.99 → 68 pts):
 
 | Relic | Points needed | Cost |
 |---|---|---|
@@ -270,11 +257,9 @@ can substantially reduce real spend for a patient player.
 | Pearl | 158,888 | $23,346.63 |
 
 **Route B — SEAGM vouchers**. Points come from vouchers at the fixed
-1,000-vouchers-per-11-points ratio. These are the **exact optimal cost**
-for each threshold — solved via dynamic programming over all 13 SEAGM
-bundle sizes (every bundle's voucher count shares a common factor of 20,
-which keeps the search space small enough to solve exactly rather than
-approximate), not the flat top-tier rate:
+1,000-vouchers-per-11-points ratio. These are the exact optimal cost for
+each threshold, solved across all 13 SEAGM bundle sizes rather than
+approximated off the flat top-tier rate:
 
 | Relic | Vouchers needed | Cost |
 |---|---|---|
@@ -289,58 +274,58 @@ approximate), not the flat top-tier rate:
 
 Route B is consistently the cheaper option, by ~11.6–12.1% at every
 breakpoint — a much smaller gap than a naive per-voucher reading of the
-1.1× bonus would suggest (an earlier pass on this math mistakenly treated
-it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio above).
-Route A's figures are exact too (whole $9.99 packs).
+1.1× bonus would suggest (that reading — treating it as ~1 voucher ≈ 1.1
+points — is wrong; see the ratio above for the actual conversion). Both
+routes' figures are exact.
 
 ## Diagram economy
 
-Creation Diagrams are the item a Creation draw consumes. Reliable sources
-are the 3 subscription passes below. Time-limited events occasionally
-grant extra diagrams too, but those are infrequent and irregular — plan
-around the 3 passes only, treat event diagrams as pure bonus on top:
+Creation Diagrams are what a Creation draw consumes. Reliable sources are
+the 3 subscription passes below. Time-limited events occasionally throw
+in extra diagrams too, but those are infrequent and irregular enough to
+plan around the passes only and treat event diagrams as pure bonus on
+top:
 
 | Pass | Diagrams | Duration | Price | Other benefit |
 |---|---|---|---|---|
 | Monthly | 1/day | 30 days | $4.99 | AFK cap +12h |
 | Season | 1/day | 90 days | $12.99 | AFK cap +24h |
-| Permanent | 2/week (Mon 8am) | forever | — (out of scope) | — |
+| Permanent | 2/week (Mon 8am) | forever | — | — |
 
-Owner-confirmed community wisdom: **pass cost is out of scope for relic
-optimization entirely**. If a player spends money on anything, these 3
-passes come first, above and beyond relic strategy, because their other
-benefits (chiefly the AFK gathering cap) are treated as required to play
-the game at full efficiency — without any pass, anything gathered past
-12h AFK is simply lost. Passes are treated as sunk/baseline spend, and
-their diagram output is treated as free income for relic purposes.
+Pass cost is out of scope for relic optimization entirely. If money's
+going anywhere, these 3 passes come first, above and beyond relic
+strategy — the AFK gathering cap alone makes them required to play at
+full efficiency, since anything gathered past 12h AFK with no pass active
+is simply lost. Passes are sunk/baseline spend; their diagram output is
+free income for relic purposes.
 
-Combined baseline income, assuming all 3 passes active (monthly and
-season stack, both granting 1/day independently): **1 + 1 = 2/day, plus
-2/week from Permanent → 16 diagrams/week**, i.e. 160 points/week
-guaranteed if every diagram were drawn immediately (see banking strategy
-below for why that's usually not the best use of them).
+Combined baseline income with all 3 passes active (monthly and season
+stack, each granting 1/day independently): 1 + 1 = 2/day, plus 2/week from
+Permanent → **16 diagrams/week**, i.e. 160 points/week guaranteed if
+every diagram gets drawn immediately (see the banking strategy below for
+why that's usually not the best use of them).
 
-**Weekly draw cap: 999 attempts.** This is a cap on how many draws can be
+**Weekly draw cap: 999 attempts.** That's a cap on how many draws can get
 *spent* in a given week, not on how many diagrams can be *held* — banking
-a stockpile well past 999 is fine, it just means a big dump has to be
-spread across multiple weeks (e.g. 1,840 banked draws takes 999 + 841,
-i.e. 2 weeks to fully deploy). Since the target relic stays in the pool
-until someone wins it, splitting a dump across weeks doesn't change the
-odds math below at all — the same total draws still add up to the same
-win chance, just not all in a single week.
+a stockpile well past 999 is fine, a big dump just has to spread across
+multiple weeks (1,840 banked draws takes 999 + 841, i.e. 2 weeks to fully
+deploy). Since the target relic stays in the pool until someone wins it,
+splitting a dump across weeks doesn't change the odds math below at all —
+the same total draws still add up to the same win chance, just not all in
+one week.
 
 ### The banking strategy
 
 Since the 0.25% lottery roll is identical on every draw regardless of
-accumulated points, and diagrams don't expire or need to be spent
-immediately, the strategic move is: **don't draw every week**. While a
-relic is still cheap enough to pity out with cash, pay cash and leave
-diagrams unspent. Once the point cost gets too expensive to justify
-(the later relics — Cauldron/Basin/Pearl), dump the entire banked stockpile
-at once for a concentrated batch of independent 0.25% shots, which can hit
-well before the cash-pity threshold is reached — and even if it doesn't
-hit, every draw still adds its 10 points toward the cumulative total, so a
-failed lottery dump is never wasted value, just a missed shortcut.
+banked points, and diagrams don't expire or need spending immediately,
+the move is: don't draw every week. While a relic's still cheap enough to
+pity out with cash, pay cash and leave diagrams unspent. Once the point
+cost gets too steep to justify — the later relics, Cauldron/Basin/Pearl —
+dump the whole banked stockpile at once for a concentrated batch of
+independent 0.25% shots, which can hit well before the cash-pity
+threshold is reached. Even a miss isn't wasted — every draw still adds
+its 10 points to the cumulative total, so a failed dump is never wasted
+value, just a missed shortcut.
 
 Odds of winning via lottery alone from N banked draws (1 − 0.9975^N).
 Rows past 999 need 2 weeks to actually spend, per the draw cap above:
@@ -354,22 +339,21 @@ Rows past 999 need 2 weeks to actually spend, per the draw cap above:
 | 1,197 | 95.0% | 74.8 | 2 |
 | 1,840 | 99.0% | 115.0 | 2 |
 
-This is a genuinely long-horizon game (owner's own account is ~2 years
-from Rank 6R+), so banking diagrams across dozens or low hundreds of
-weeks while cash-pitying the early relics, then unloading the stockpile
-against Pearl, is a realistic strategy — not a theoretical one.
+This is a long-horizon game — banking diagrams across dozens or low
+hundreds of weeks while cash-pitying the early relics, then unloading the
+stockpile against Pearl, is a realistic strategy, not a theoretical one.
 
 ### Most efficient dump target: Basin, not Pearl
 
-The lottery odds for a given stockpile size are identical no matter which
-relic is currently in the pool — the "cost" side of a dump never changes
-by target. What *does* change is the payoff if it hits: the **marginal**
-point gap for that specific relic (its own threshold minus the previous
-relic's, since everything below is already banked). Since dump cost is
-constant, the best target is whichever relic has the largest marginal gap
-— that's where a win saves the most cash for the same stockpile. Marginal
-costs below are exact diffs of the Route A/B tables above (not a separate
-continuous estimate), so they're consistent with the cumulative figures:
+The lottery odds for a given stockpile are identical no matter which
+relic's currently in the pool — the cost side of a dump never changes by
+target. What changes is the payoff if it hits: the marginal point gap for
+that specific relic, its own threshold minus the previous relic's, since
+everything below is already banked. Dump cost being constant, the best
+target is whichever relic has the largest marginal gap — that's where a
+win saves the most cash for the same stockpile. Marginal costs below are
+exact diffs of the Route A/B tables above, so they're consistent with the
+cumulative figures:
 
 | Relic | Cumulative points | Marginal points | Cash saved if won (SEAGM) | Cash saved if won (best IAP) |
 |---|---|---|---|---|
@@ -382,15 +366,15 @@ continuous estimate), so they're consistent with the cumulative figures:
 | **Basin** | 128,888 | **40,000** | **$5,198.14** | **$5,874.12** |
 | Pearl | 158,888 | 30,000 | $3,897.86 | $4,405.59 |
 
-**Basin has the single biggest marginal jump of the whole track (40,000
-points) — bigger even than Pearl's (30,000)**, despite Pearl being the
-final and most expensive relic overall. That's not obvious from the
-cumulative totals alone: Basin costs less than Pearl in total, but the
-*specific step* from Cauldron to Basin is the priciest single jump to
-clear. A banked stockpile is best spent trying to snipe Basin, not saved
-all the way for Pearl — and if the dump on Basin misses, the same
-diagrams' points still count toward Pearl's total anyway, so there's no
-downside to trying at Basin first.
+Basin has the single biggest marginal jump of the whole track — 40,000
+points, bigger even than Pearl's 30,000 — despite Pearl being the final
+and most expensive relic overall. Not obvious from the cumulative totals
+alone: Basin costs less than Pearl in total, but the specific step from
+Cauldron to Basin is the priciest single jump to clear. A banked
+stockpile is best spent trying to snipe Basin, not saved all the way for
+Pearl — and if the dump on Basin misses, the same diagrams' points still
+count toward Pearl's total anyway, so there's no downside to trying at
+Basin first.
 
 ### Strategies for lower spenders
 
@@ -399,27 +383,27 @@ realistic plan for most players. Two strategies work well without
 committing to that:
 
 **1. Spend to a ceiling, then bank-and-ride past it.** Pick the relic
-where cash stops feeling worth it (owner: everything through Mirror is
-reasonable, Token is next), pay cash up to that ceiling at the best rate
-($9.99 tier or SEAGM vouchers), then stop spending entirely. Past the
-ceiling, don't draw diagrams weekly — bank them. Passive income alone
-(16/week from the 3 passes, already-sunk cost) keeps the cumulative total
-climbing for free, and periodic stockpile dumps at whatever relic is
+where cash stops feeling worth it — everything through Mirror is
+reasonable, Token's the next stretch — pay cash up to that ceiling at the
+best rate ($9.99 tier or SEAGM vouchers), then stop spending entirely.
+Past the ceiling, don't draw diagrams weekly — bank them. Passive income
+alone (16/week from the 3 passes, already-sunk cost) keeps the cumulative
+total climbing for free, and periodic stockpile dumps at whatever relic's
 currently in the pool give real shots at winning it outright with no
 cash. A miss never costs anything extra — the points still bank toward
 the next relic regardless.
 
 **2. Snipe the biggest marginal jump inside your own near-term goal, not
-the global one.** Basin is the best target for a whale aiming at
-everything, but a lower spender should compare marginal jumps only among
-the relics they actually care about next. For someone stopping around
-Token, the relevant jumps are Vase/Pot (5,000 each), Mirror (10,000), and
-Token (20,000) — **Token is the biggest of that set**, meaning it's the
-single relic in that range where a lottery win saves the most cash
-relative to just paying for it ($2,600 via SEAGM / $2,937 via best IAP).
-Concretely: banking ~150–300 diagrams (9–19 weeks of passive income
-alone) gives a 31–53% chance of winning Token via lottery before ever
-paying full price for its marginal 20,000 points:
+the global one.** Basin's the best target for a whale going all the way,
+but a lower spender should compare marginal jumps only among the relics
+they actually care about next. Stopping around Token, the relevant jumps
+are Vase/Pot (5,000 each), Mirror (10,000), and Token (20,000) — Token's
+the biggest of that set, meaning it's the single relic in that range
+where a lottery win saves the most cash relative to just paying for it
+($2,600 via SEAGM / $2,937 via best IAP). Banking ~150–300 diagrams
+(9–19 weeks of passive income alone) gives a 31–53% chance of winning
+Token via lottery before ever paying full price for its marginal 20,000
+points:
 
 | Banked draws | Win chance | Weeks to bank (@16/week) |
 |---|---|---|
@@ -430,8 +414,8 @@ paying full price for its marginal 20,000 points:
 | 277 | 50.0% | 17.3 |
 | 300 | 52.8% | 18.8 |
 
-Combining both: pay cash through Mirror (cheap enough that cash is the
-faster path anyway), then bank diagrams for several months and dump the
+Combining both: pay cash through Mirror since cash is the faster path
+there anyway, then bank diagrams for several months and dump the
 stockpile at Token before defaulting to a straight cash top-up for
 whatever points the dump didn't cover.
 
@@ -441,17 +425,16 @@ Points are one cumulative total that's never spent — reaching a
 breakpoint just unlocks that relic and progress keeps climbing toward the
 next. The pool only ever advances one relic per week regardless of
 spending, so 8 weeks is the hard floor no matter how much cash goes in.
-$9.99 is always the best cash rate (direct or via SEAGM voucher), $4.99 is
+$9.99 is always the best cash rate, direct or via SEAGM voucher; $4.99 is
 always the worst. SEAGM vouchers beat paying LT direct at every shared
-price point, but only by ~12%, not by the huge margin a naive reading of
-the voucher bonus would suggest. Guaranteeing every relic with cash tops
-out around $20,650 (SEAGM) to $23,347 (direct) — a whale number, not a
+price point, but only by ~12%, not the huge margin a naive reading of the
+voucher bonus would suggest. Guaranteeing every relic with cash tops out
+around $20,650 (SEAGM) to $23,347 (direct) — a whale number, not a
 realistic plan for most players. For everyone else: pay cash up to
-whichever relic still feels reasonable (Mirror, Token — wherever that line
-falls), then stop and bank Creation Diagrams instead of drawing them
-weekly. Passive income from the 3 passes (already a sunk cost for their
+whichever relic still feels reasonable — Mirror, Token, wherever that
+line falls — then stop and bank Creation Diagrams instead of drawing them
+weekly. Passive income from the 3 passes (already sunk cost for the
 AFK-cap benefits alone) keeps banking real lottery shots for free, and the
-best place to spend a stockpile is whichever relic has the *biggest single
-step* from the one before it — Basin for a whale going all the way, or
-whatever's biggest within your own stopping point otherwise.
-
+best place to spend a stockpile is whichever relic has the biggest single
+step from the one before it — Basin for a whale going all the way, or
+whatever's biggest within a smaller stopping point otherwise.
