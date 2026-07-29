@@ -124,6 +124,11 @@ class VaseModel(unittest.TestCase):
                 self.pills_per_day(pill_rank=rank, vase_star="3*"), 292 / cost,
                 msg=rank)
 
+    def test_5r_cost_is_explicit(self):
+        # Issue #71: owner confirmed 5R costs 100 in-game; pin it as an
+        # explicit table entry rather than leaning on the >4R fallback.
+        self.assertEqual(self.e.data["vase_energy_cost"]["5R"], 100)
+
     def test_quality_discounts(self):
         # Epic -5%, Legendary -20% are baseline Vase behavior.
         blue = self.pills_per_day(pill_rank="5R", vase_star="3*", vase_input="Blue")
