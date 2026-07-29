@@ -77,12 +77,20 @@ Red isn't grown — it's produced by the **Shears** relic, which spends energy
 to advance an existing fruit up to Red. Red fruit's 14h Blitz value is
 **exempt from the 120h/day cap** (same exemption pattern as Pills).
 
+**This Shears is the Creation Artifact** documented in
+`relic-summon-costs.md` (the relic summon point-track/monetization doc) —
+same item, confirmed. That doc covers how you acquire it (cumulative
+point breakpoints, cash/voucher cost); this doc covers what it does once
+owned.
+
 ## Garden Pot artifact (Seralth, 2026-07-29)
 
-**Disambiguation:** this is a third, unrelated system that happens to share
-the English word "pot" with two existing curios already in this repo —
+**This Pot is also a Creation Artifact** — same acquisition doc as Shears
+above, `relic-summon-costs.md`. Not to be confused with the two unrelated
+curios below that also happen to be called "Pot":
 **Zodiac Pot** (三相之壶, curio 91359, see `zodiac-relic.md`) and
-**Dongxuan's Pot** (curio 91115, see `curio-effects.md`). Do not conflate.
+**Dongxuan's Pot** (curio 91115, see `curio-effects.md`). Three separate
+"Pot" items in this game; do not conflate any of them.
 
 The Garden Pot is a growth-speed-up artifact, not Law-Fruit-specific
 (applies to garden plants generally):
