@@ -552,6 +552,41 @@ Widget _artifactsPage(BuildContext context, Engine engine, Map<String, dynamic> 
       'Epic input −5%, Legendary −20%. Star: +10% EXP (1★), +20% (3★), 15% no-cost (5★). '
       'Skin +8% EXP.',
     ),
+    Text('Acquiring the Creation Artifacts',
+        key: anchorKey('ref:artifacts:summon'), style: h3),
+    para('All 8 Creation Artifacts — Vase, Pot, Mirror, Token, Shears, '
+        'Cauldron, Basin, Pearl — come from the same point track, not a '
+        'per-pull gacha. Points build up on one running total that never '
+        'gets spent: crossing a relic\'s threshold unlocks it and '
+        'progress keeps climbing toward the next one.'),
+    table(
+      'Creation Artifact point breakpoints (cumulative)',
+      ['Relic', 'Points'],
+      [
+        ['Vase', '5,000'],
+        ['Pot', '10,000'],
+        ['Mirror', '20,000'],
+        ['Token', '40,000'],
+        ['Shears', '70,000'],
+        ['Cauldron', '88,888'],
+        ['Basin', '128,888'],
+        ['Pearl', '158,888'],
+      ],
+      'Also the pool order: only one relic is available at a time, top '
+      'to bottom, one per week — a hard ceiling of 8 weeks minimum for '
+      'all 8 no matter how much gets spent. A relic can also be won '
+      'early via an independent 0.25% instant-win roll on every draw, '
+      'on top of the points.',
+    ),
+    para('Points come from spending real money directly, or from SEAGM '
+        'top-up vouchers (a 1.1× bonus applies when paid via voucher '
+        'instead of cash). \$9.99 is consistently the best-value '
+        'purchase tier and \$4.99 the worst, whichever route is used. '
+        'Guaranteeing every relic with cash tops out around \$20,650 '
+        '(SEAGM vouchers) to \$23,350 (direct) — most players are better '
+        'served picking a personal spending ceiling and relying on free '
+        'daily draws past it ([[guide:spending|Guide → Spending]] covers '
+        'the tradeoffs).'),
     table(
       'Aura Gem speed bonus',
       ['Rarity', 'Bonus'],
@@ -622,6 +657,52 @@ Widget _combatPage(BuildContext context, Engine engine, Map<String, dynamic> cat
         'yellow. When an item is forged its stats roll within a range — so two '
         'copies of the same item can differ, and a well-rolled piece is worth '
         'keeping.'),
+    Text('Equipment relics — a gear category, not a side system',
+        key: anchorKey('ref:combat:relics'), style: h3),
+    para('327 relics fill 6 of your equipment slots, and each one grants '
+        'exactly one combat skill on top of stats — your active-skill '
+        'loadout is which relics you have equipped. They go through the '
+        'exact same rank/level/quality/forging/marks/sets layers as '
+        'weapon/armor/accessory, with one relic-specific wrinkle: rank '
+        'determines which skill you have; quality only scales the '
+        'surrounding stats, never the skill itself — a high-quality relic '
+        'hits the same skill numbers as a low-quality one at the same '
+        'rank, just with better stats around it.'),
+    para('Some relics are class-locked (a level/stage-gated set unique to '
+        'one path), others are generic and open to any class — generic '
+        'and class relics are peers, not a floor/ceiling: identical '
+        'slots, identical forge cost, identical tier ceiling. The only '
+        'real difference is access and which skill each grants, so pick '
+        'by skill fit for your build rather than assuming generic is the '
+        'weaker option.'),
+    para('Distinct from the Creation Artifacts (Vase, Pot, Mirror, Token, '
+        'Shears, Cauldron, Basin, Pearl — see [[ref:artifacts#summon|'
+        'Reference → Artifacts & Gems]]) and the Zodiac Relic below — '
+        'different systems that happen to share the word "relic".'),
+    Text('Zodiac Relic — a single signature artifact',
+        key: anchorKey('ref:combat:zodiac'), style: h3),
+    para('One relic per account, forged into either a physical or '
+        'magical stance, that deploys into battle from Rank 2 as a '
+        'semi-autonomous unit — it casts its own Hexes and carries its '
+        'own full stat block that adds directly to your combat power, '
+        'on top of everything from your equipped gear. The two stances '
+        'are mirrored: same progression, same numbers, only the stat '
+        'type differs (physical vs magical). Reforge swaps between them '
+        'non-destructively — only one is active at a time, but the '
+        'inactive one\'s progress is preserved, not lost, so switching '
+        'later never means regrinding from scratch (500 Fateum, 48h '
+        'cooldown).'),
+    para('Its stat backbone (Soulfice) scales purely linearly with '
+        'level — every level adds the same fixed HP/MP, ATK, and DEF, no '
+        'breakpoints to plan around. It also carries its own socketing '
+        '(mark stones, socket treasures) and a star-upgrade mold system '
+        'unlocking at Rank 8, layered enhancement systems similar in '
+        'shape to weapon/armor carvings and sets, just on this one relic '
+        'instead of a full loadout.'),
+    para('Its Hexes (the spells it casts in battle) aren\'t quantified '
+        'here — no cooldown, quality, or damage numbers are available '
+        'yet, so treat their combat contribution as real but unmeasured '
+        'for now.'),
     Text('Leveling gear (Augmentation)', style: h3),
     para('Pouring materials into a piece does three things:\n'
         '• Every level: its base stats grow a little. Steady, nothing to time.\n'
@@ -831,34 +912,53 @@ Widget _systemsPage(BuildContext context, Engine engine, Map<String, dynamic> ca
         'Construct (first free, second 50) are both efficient. Refreshing '
         'unclaimed Bounty Quests below Rare and Sect Tasks below C-rating '
         'once a day upgrades them guaranteed.'),
-    Text('Garden & Elemental Laws', style: h3),
+    Text('Garden & Elemental Laws',
+        key: anchorKey('ref:systems:garden'), style: h3),
     para('The garden grows seeds into rewards: each seed takes plot slots '
         'and matures over time; you get limited daily watering attempts to '
         'speed growth (the first is free each day — don\'t miss it), and '
         'growth can be rushed with energy + Spiritium. Seeds yield alchemy '
         'materials, technique seeds, and — the headline crop — Law '
         'Fruits.'),
-    para('Elemental Laws (unlock at Voidbreak) are a long-term damage '
-        'system: Law Points accrue naturally over time (faster as your '
-        'laws level) and are spent to upgrade laws once you meet the Stage '
-        'requirement. Higher total law level deals bonus damage to '
-        'lower-level enemies — the bigger the gap, the more damage. Every '
-        '100M Law Points auto-converts to a Tao Motto. Eating Law Fruits '
-        '"greatly benefits the study of laws", and Blitz spends Law Fruits '
-        'for Law Points directly; advancing a Law Fruit has a 15% chance '
-        'to yield an extra fruit. This is why the guide says to bank pet '
-        'speed-ups and Fateum for the garden before Voidbreak: law levels '
-        'are a time-integral, so starting earlier compounds.'),
-    para('Common practice: have 24 garden slots by Voidbreak; on '
-        'ascension day unlock laws '
-        'immediately and get fruits planted. Blitz has a daily budget '
-        '(~120 hours\' worth) — ideally spend all of it every day. Law '
-        'fruits range Uncommon → Legendary; early on harvest low rarities '
-        'for cheap fast levels, shift higher as seeds accumulate. '
-        'Leveling order: all laws to 50 one at a time, then to 150, and '
-        'so on in +100 steps. The payoff: roughly +50% damage per 1,000 '
-        'total law levels above your opponent — law suppression only '
-        'applies while you\'re ahead.'),
+    para('Elemental Laws (unlock at Voidbreak; five elements — Metal, '
+        'Wood, Water, Fire, Earth) are a long-term damage system. Law '
+        'Points accrue naturally over time, faster as a law levels, and '
+        'each element\'s own generation rate doubles at milestone levels '
+        '— 50, 150, 250, 350… every 100 levels, always ending in 50. Law '
+        'Points are spent to upgrade laws once the Stage requirement is '
+        'met, and also feed a separate Cosmic Laws system from the same '
+        'shared pool — leveling Elemental Laws first raises income for '
+        'both. Every 100M Law Points auto-converts to a Tao Motto.'),
+    para('Law Fruit is what actually feeds Elemental Laws, grown in the '
+        'garden: four natural tiers — Green (4h grow), Blue (16h), Purple '
+        '(40h), Yellow (88h) — plus a non-grown Red tier produced by the '
+        'Shears artifact. Blitz converts a fruit into hours of '
+        'law-learning progress at whichever element\'s current rate it\'s '
+        'applied to — Green 1h, Blue 3h, Purple 6h, Yellow 12h, Red 14h — '
+        'capped at 120 Blitz-hours/day (Red is exempt from the cap). '
+        'Which tier is actually best depends on the bottleneck: Green '
+        'wins per grow-hour (best when garden space is the limit), '
+        'Yellow wins per seed (best when seed supply is the limit) — the '
+        'opposite ranking, so it\'s worth knowing which one actually '
+        'binds before following either rule blindly.'),
+    para('Garden capacity: fully unlocked is a 6×6 grid (36 cells); Law '
+        'Fruit and Ploughwood seeds both take a 3-cell footprint, so a '
+        'full grid holds 12 Law Fruit slots — a natural ceiling of 72 '
+        'Blitz-hours/day at all-Green. The Pot artifact (a Creation '
+        'Artifact — see Artifacts & Gems) speeds growth (1 energy = 1 '
+        'hour saved) and typically pushes that ceiling to roughly '
+        '108/day. Garden slots not bought before reaching Voidbreak are '
+        'permanently lost throughput once Law Fruit becomes usable — '
+        'there\'s no way to retroactively recover missed law levels — so '
+        'fully unlocking the garden pre-Voidbreak is worth doing even '
+        'though the same cells also serve Ploughwood and gear-crafting '
+        'plants; the standard practice is to dedicate the whole thing to '
+        'Law Fruit for roughly the first year.'),
+    para('Law Suppression: compare your total Elemental Law level '
+        '(summed across all 5 elements) against an opponent\'s. Each '
+        'level of advantage deals +0.05% additional damage, capping at '
+        '+30% at 600 levels ahead — the bonus only applies while you\'re '
+        'ahead, and going further past 600 doesn\'t add more.'),
     Text('Breakthrough failure', style: h3),
     para('Stage breakthroughs can fail. A failure injures your Primordial '
         'Soul, which must be restored before the next attempt — but '

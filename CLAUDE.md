@@ -85,11 +85,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/zodiac-relic.md` — Zodiac Relic (本命法宝, internal `talisman_*`)
   system: two mirrored physical/magical paths, linear Soulfice scaling, Hexes,
   socketing, mold/forge, non-destructive path-swap reforge. Distinct from the
-  Zodiac Pot curio. Noted for future integration; not yet in the calc
+  Zodiac Pot curio. Core facts now integrated into Reference → Combat Stats
+  & Gear; full RE detail stays in this doc. Not yet in the calc's math
 - `docs/knowledge/equipment-relics.md` — equipment relics (法宝): the 6 class/
   generic combat-skill items, on the SAME gear system as weapons/armor (rank,
   level curve, quality tiers, blacksmith-gated forging, marks, dual set
-  bonuses). Distinct from curios and the Zodiac Relic. Not yet in the calc
+  bonuses). Distinct from curios and the Zodiac Relic. Core facts now
+  integrated into Reference → Combat Stats & Gear; full RE detail stays in
+  this doc. Not yet in the calc's math
 - `docs/knowledge/relic-systems-next-update.md` — integration-readiness
   digest of the two not-yet-in-the-calc relic systems above: what's exact
   enough to build a first Vault/combat-power pass on today vs the remaining
@@ -98,21 +101,26 @@ The two apps are deliberately parallel; module layouts mirror each other.
   that acquires the 8 Creation Artifacts (Vase/Mirror/Pearl have an
   Energy-mechanic write-up in the Reference tab's Artifacts & Gems
   section; Pot/Shears' own mechanics are in
-  `elemental-laws-garden-mechanics.md` instead, confirmed the same items;
-  this doc belongs alongside those as an "acquiring them" subsection, not
-  a new Reference topic): cumulative point breakpoints (never spent),
-  direct-IAP vs SEAGM-voucher point rates, the confirmed exact
-  1000-vouchers-per-11-points conversion, and real SEAGM bundle pricing.
-  Not yet in the calc
+  `elemental-laws-garden-mechanics.md` instead, confirmed the same items):
+  cumulative point breakpoints (never spent), direct-IAP vs SEAGM-voucher
+  point rates, the confirmed exact 1000-vouchers-per-11-points
+  conversion, and real SEAGM bundle pricing. Core facts (breakpoints,
+  weekly gate, rates, whale-cost ceiling) now integrated into Reference →
+  Artifacts & Gems ("Acquiring the Creation Artifacts") and Guide →
+  Spending; deeper backing tables (bundle-by-bundle pricing, banking
+  odds) stay in this doc. Not yet in the calc's actual math
 - `docs/knowledge/elemental-laws-garden-mechanics.md` — Spiritual World
-  Elemental Laws + Law Fruit garden system (Voidbreak+), owner's top
-  integration priority ahead of hitting the Voidbreak timegate: fruit
-  tiers, the Blitz mechanic + 120h/day cap, Red tier via the Shears
-  Creation Artifact, the Garden Pot Creation Artifact (both confirmed the
-  same items as `relic-summon-costs.md`'s Shears/Pot — distinct from the
-  unrelated Zodiac Pot / Dongxuan's Pot curios), pet speed-up spawns, and
-  a throughput analysis concluding full pre-Voidbreak garden unlock
-  outweighs fruit-tier strategy. Not yet in the calc.
+  Elemental Laws + Law Fruit garden system (Voidbreak+): fruit tiers, the
+  Blitz mechanic + 120h/day cap, Red tier via the Shears Creation
+  Artifact, the Garden Pot Creation Artifact (both confirmed the same
+  items as `relic-summon-costs.md`'s Shears/Pot — distinct from the
+  unrelated Zodiac Pot / Dongxuan's Pot curios), pet speed-up spawns, the
+  quantified Law Suppression formula, and a throughput analysis
+  concluding full pre-Voidbreak garden unlock outweighs fruit-tier
+  strategy. Core facts now integrated into Reference → World Systems
+  (Garden & Elemental Laws) and Guide → Timegate; the actual combat-power
+  math (Law Suppression, stat boosts) is still not wired into the calc
+  engine.
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 

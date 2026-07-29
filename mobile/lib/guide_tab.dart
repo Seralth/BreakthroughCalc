@@ -490,6 +490,15 @@ Widget _timegatePage(BuildContext context) {
         'arrival they pay out at the new realm\'s tier. Don\'t run this '
         'hoard between gates: realm gates are months apart, and resources '
         'sat on for months are power you didn\'t use.\n'
+        '• Fully unlock the garden before Voidbreak, even though Law '
+        'Fruit isn\'t usable until you\'re there. A garden slot not '
+        'bought before the ascension is permanently lost Elemental Law '
+        'throughput for however long it stays unbought — there\'s no way '
+        'to recover missed law levels retroactively. This is separate '
+        'from harvesting it empty below: buy every cell now, then '
+        'replant Law Fruit the moment Voidbreak opens '
+        '([[ref:systems#garden|Reference → World Systems]] covers the '
+        'throughput math).\n'
         '• Spend what dies with the realm: beyond the pre-breakthrough '
         'rules on the Incarnation page, spend Ability Knowledge and '
         'harvest the garden empty before ascending.\n'
@@ -952,6 +961,24 @@ Widget _spendingPage(BuildContext context) {
         '• Incarnation: 800m – 2b+\n'
         '• Voidbreak: 9b – 25b+\n'
         '• Wholeness: 45b – 100b+'),
+    Text('Creation Artifacts (relic summon)', style: h3),
+    para('Guaranteeing all 8 with cash runs \$20k+ '
+        '([[ref:artifacts#summon|Reference → Artifacts & Gems]]) — a '
+        'whale number, not a realistic plan for most players. Pick '
+        'whichever relic still feels like a reasonable spend for your '
+        'own means, pay cash up to that point, then stop and switch to '
+        'free daily draws instead of buying further.\n\n'
+        'Past that point, don\'t spend draws as they come in — bank '
+        'them. Every draw carries the same 0.25% instant-win shot '
+        'regardless of points banked, so a large stockpile dumped at '
+        'once has real odds of winning a relic for free (roughly 50% at '
+        '~280 banked draws, 90% at ~920). A miss costs nothing extra — '
+        'the points still count toward the next relic either way.\n\n'
+        'When picking which relic to aim a stockpile at, target '
+        'whichever one has the biggest jump from the relic before it, '
+        'not necessarily the last one on your list — the size of that '
+        'specific step is what a win actually saves, and it isn\'t '
+        'always the priciest relic overall.'),
   ], footerText: _guideFooterText,
       padding: const EdgeInsets.all(16));
 }
