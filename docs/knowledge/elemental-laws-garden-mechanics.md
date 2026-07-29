@@ -1,6 +1,9 @@
 # Elemental Laws & Law Fruit garden mechanics (Spiritual World / Voidbreak)
 
-Not yet in the calc. Spiritual World content gated behind Voidbreak; Elemental
+Integrated into Reference → World Systems (Garden & Elemental Laws) and
+Guide → Timegate (garden-unlock prep bullet) — not yet in the calc's actual
+math (no engine.py/engine.dart modeling, no input fields). Spiritual World
+content gated behind Voidbreak; Elemental
 Laws (five elements: Metal/Wood/Water/Fire/Earth) level up on Law Points,
 which come from consuming ("Blitzing") garden-grown Law Fruit. Elemental
 Laws feed passive stat boosts (still unquantified — not needed for garden

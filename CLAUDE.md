@@ -105,14 +105,17 @@ The two apps are deliberately parallel; module layouts mirror each other.
   1000-vouchers-per-11-points conversion, and real SEAGM bundle pricing.
   Not yet in the calc
 - `docs/knowledge/elemental-laws-garden-mechanics.md` — Spiritual World
-  Elemental Laws + Law Fruit garden system (Voidbreak+), owner's top
-  integration priority ahead of hitting the Voidbreak timegate: fruit
-  tiers, the Blitz mechanic + 120h/day cap, Red tier via the Shears
-  Creation Artifact, the Garden Pot Creation Artifact (both confirmed the
-  same items as `relic-summon-costs.md`'s Shears/Pot — distinct from the
-  unrelated Zodiac Pot / Dongxuan's Pot curios), pet speed-up spawns, and
-  a throughput analysis concluding full pre-Voidbreak garden unlock
-  outweighs fruit-tier strategy. Not yet in the calc.
+  Elemental Laws + Law Fruit garden system (Voidbreak+): fruit tiers, the
+  Blitz mechanic + 120h/day cap, Red tier via the Shears Creation
+  Artifact, the Garden Pot Creation Artifact (both confirmed the same
+  items as `relic-summon-costs.md`'s Shears/Pot — distinct from the
+  unrelated Zodiac Pot / Dongxuan's Pot curios), pet speed-up spawns, the
+  quantified Law Suppression formula, and a throughput analysis
+  concluding full pre-Voidbreak garden unlock outweighs fruit-tier
+  strategy. Core facts now integrated into Reference → World Systems
+  (Garden & Elemental Laws) and Guide → Timegate; the actual combat-power
+  math (Law Suppression, stat boosts) is still not wired into the calc
+  engine.
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
