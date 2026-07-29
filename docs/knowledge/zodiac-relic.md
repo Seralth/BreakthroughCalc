@@ -1,9 +1,14 @@
 # Zodiac Relic (本命法宝) mechanics — client-side extraction
 
-Personal reference for the **Zodiac Relic** system. **Not** part of the calc yet —
-noted for future integration (Vault / combat-power). Sourced from the client APK
+Personal reference for the **Zodiac Relic** system. Sourced from the client APK
 decompile (`apk_analysis/`) plus in-game confirmation by the owner. Verified-from-
 config vs inference is flagged throughout; confident-wrong is the worst failure mode.
+Core facts (mirrored paths, non-destructive reforge, linear Soulfice scaling,
+socketing/mold layers, Hexes unquantified) are now integrated into
+Reference → Combat Stats & Gear; the full RE detail below (exact node-grid
+mapping, per-item socket costs, mold star-upgrade tables) stays here as
+backing detail. Still not wired into the calc's actual math (Vault /
+combat-power).
 
 ## Identity — do not confuse with the Zodiac Pot curio
 
