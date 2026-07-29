@@ -10,8 +10,12 @@ Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
 (`zodiac-relic.md`) — unrelated "relic" systems that just share the word.
 
 Owner-confirmed (2026-07-29): all 8 relics below (Vase, Pot, Mirror,
-Token, Sheers, Cauldron, Basin, Pearl) are Creation Artifacts. Only 3 —
-Starsea Vase, Dual-Star Mirror, Timereversal Pearl — have an existing
+Token, Sheers, Cauldron, Basin, Pearl) are Creation Artifacts. Each
+carries a full "[descriptor] [item]" name — Vase = Starsea Vase, Mirror =
+Dual-Star Mirror, Pearl = Timereversal Pearl, and the same pattern holds
+for the other 5 — but nobody uses the full name in practice; community
+norm is the shorthand item word alone, which is what this doc (and any
+future Reference/UI copy) should use too. Only 3 have an existing
 Energy-mechanic write-up in Reference; the other 5 (Pot, Token, Sheers,
 Cauldron, Basin) are real Creation Artifacts too, just undocumented there
 so far because their point cost is high enough that most players never
@@ -31,8 +35,11 @@ redraw needed, the surplus carried over). Crossing each breakpoint grants
 that relic and progress continues toward the next one — this is a
 milestone/battle-pass shape, not a gacha where each pull costs points.
 
-Cosmetic rewards also sit on the same point track at other values —
-intentionally out of scope here (owner: don't care about those for now).
+Cosmetic rewards also sit on the same track — interspersed between relics
+and continuing after Pearl, with the track eventually ending at a
+capstone cosmetic. Intentionally out of scope here (owner: don't care
+about those for now, and not a worthy note for this topic beyond knowing
+the track does eventually end).
 
 ### The weekly pool gate — a hard ceiling independent of money
 
@@ -313,6 +320,15 @@ season stack, both granting 1/day independently): **1 + 1 = 2/day, plus
 guaranteed if every diagram were drawn immediately (see banking strategy
 below for why that's usually not the best use of them).
 
+**Weekly draw cap: 999 attempts.** This is a cap on how many draws can be
+*spent* in a given week, not on how many diagrams can be *held* — banking
+a stockpile well past 999 is fine, it just means a big dump has to be
+spread across multiple weeks (e.g. 1,840 banked draws takes 999 + 841,
+i.e. 2 weeks to fully deploy). Since the target relic stays in the pool
+until someone wins it, splitting a dump across weeks doesn't change the
+odds math below at all — the same total draws still add up to the same
+win chance, just not all in a single week.
+
 ### The banking strategy
 
 Since the 0.25% lottery roll is identical on every draw regardless of
@@ -326,16 +342,17 @@ well before the cash-pity threshold is reached — and even if it doesn't
 hit, every draw still adds its 10 points toward the cumulative total, so a
 failed lottery dump is never wasted value, just a missed shortcut.
 
-Odds of winning via lottery alone from N banked draws (1 − 0.9975^N):
+Odds of winning via lottery alone from N banked draws (1 − 0.9975^N).
+Rows past 999 need 2 weeks to actually spend, per the draw cap above:
 
-| Banked draws | Win chance | Weeks to bank (@16/week, all 3 passes) |
-|---|---|---|
-| 100 | 22.1% | 6.3 |
-| 277 | 50.0% | 17.3 |
-| 500 | 71.4% | 31.3 |
-| 920 | 90.0% | 57.5 |
-| 1,197 | 95.0% | 74.8 |
-| 1,840 | 99.0% | 115.0 |
+| Banked draws | Win chance | Weeks to bank (@16/week, all 3 passes) | Weeks to deploy (999/week cap) |
+|---|---|---|---|
+| 100 | 22.1% | 6.3 | 1 |
+| 277 | 50.0% | 17.3 | 1 |
+| 500 | 71.4% | 31.3 | 1 |
+| 920 | 90.0% | 57.5 | 1 |
+| 1,197 | 95.0% | 74.8 | 2 |
+| 1,840 | 99.0% | 115.0 | 2 |
 
 This is a genuinely long-horizon game (owner's own account is ~2 years
 from Rank 6R+), so banking diagrams across dozens or low hundreds of
@@ -440,21 +457,6 @@ whatever's biggest within your own stopping point otherwise.
 
 ## Open questions (need in-game observation or store data)
 
-- **Official names for the other 5 Creation Artifacts.** Only Vase, Mirror,
-  and Pearl have confirmed full names (Starsea Vase, Dual-Star Mirror,
-  Timereversal Pearl, per the existing Artifacts & Gems write-up). Pot,
-  Token, Sheers, Cauldron, and Basin are shorthand used in this doc, not
-  necessarily their actual in-game display names — needs a screenshot of
-  each once a player reaches them.
-- **Diagram inventory cap.** The banking strategy assumes diagrams can be
-  hoarded indefinitely (the math above goes as high as ~1,840 banked for
-  99% lottery odds). Not confirmed whether Creation Diagrams have a
-  stack/inventory limit — if they do, it could cap how large a dump is
-  actually possible and change the banking strategy's ceiling.
-- **What happens after Pearl.** Unclear whether the pool loops, stops, or
-  switches to cosmetics-only once all 8 Creation Artifacts are claimed —
-  cosmetics are confirmed to share the track (see above) but not whether
-  they're before, after, or interspersed with the 8 relics.
 - No exhaustive bin-packing proof that $20,650 is the true minimum-cost
   SEAGM bundle combination — that number uses the flat top-tier rate as an
   approximation; real minimum could be a few dollars lower by mixing
