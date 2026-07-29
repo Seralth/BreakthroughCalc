@@ -130,16 +130,17 @@ nets you by routing through SEAGM instead of paying LT direct-voucher
 price. The $99.99 tier has the widest gap (~5% more vouchers, 35.2 bonus
 points) — consistent with the per-relic savings in the next section.
 
-### Time-limited pop-up bundles (open item)
+### Time-limited pop-up bundles
 
 The game also runs random time-limited pop-up offers, always presented as
-3 options (cheap/mid/high) — a scarcity/urgency dark pattern, but the
-3-tier structure is exploitable the same way the fixed $9.99 tier beats
-its neighbors above: compare each pop-up's $/point against this doc's
-tables before buying on impulse, and don't assume the "best" of the 3
-options is actually competitive with the fixed catalog. No price/point
-values captured yet for these — add a row here if/when specific pop-up
-numbers get recorded.
+3 options (cheap/mid/high). Owner-confirmed: these are **not** a separate
+pricing tier — a pop-up priced at $14.99 always grants the exact same
+points and vouchers as the fixed $14.99 catalog tier above, no exceptions,
+same for every other price. The scarcity/urgency framing is pure dark
+pattern with zero pricing difference underneath it. Practical takeaway:
+the "cheap/mid/high" pop-up is exploitable the same way the fixed $9.99
+tier beats its neighbors — just match whichever price appears against the
+tables above rather than treating the pop-up as a unique deal.
 
 ## Cost per relic breakpoint (at-a-glance)
 
