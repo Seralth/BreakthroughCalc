@@ -124,10 +124,12 @@ class VaseModel(unittest.TestCase):
                 self.pills_per_day(pill_rank=rank, vase_star="3*"), 292 / cost,
                 msg=rank)
 
-    def test_5r_cost_is_explicit(self):
-        # Issue #71: owner confirmed 5R costs 100 in-game; pin it as an
-        # explicit table entry rather than leaning on the >4R fallback.
-        self.assertEqual(self.e.data["vase_energy_cost"]["5R"], 100)
+    def test_5r_and_up_cost_is_explicit(self):
+        # Issue #71: owner confirmed 5R-12R (Incarnation through Supreme)
+        # all cost 100 in-game (full-rank table screenshot); pin them as
+        # explicit table entries rather than leaning on the >4R fallback.
+        for rank in ("5R", "6R", "7R", "8R", "9R", "10R", "11R", "12R"):
+            self.assertEqual(self.e.data["vase_energy_cost"][rank], 100, msg=rank)
 
     def test_quality_discounts(self):
         # Epic -5%, Legendary -20% are baseline Vase behavior.
