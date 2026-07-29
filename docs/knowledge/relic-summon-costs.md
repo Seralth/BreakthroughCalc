@@ -40,10 +40,10 @@ intentionally out of scope here (owner: don't care about those for now).
   |---|---|---|
   | $0.99 | 6 | 6.061 |
   | $2.99 | 18 | 6.021 |
-  | $4.99 | 30 | 6.012 |
+  | $4.99 | 30 | 6.012 (worst known tier) |
   | $9.99 | 68 | **6.807** (best known tier) |
   | $14.99 | 98 | 6.538 |
-  | $19.99 | 128 | 6.403 (worst known tier) |
+  | $19.99 | 128 | 6.403 |
   | $29.99 | 198 | 6.602 |
   | $49.99 | 328 | 6.561 |
   | $99.99 | 648 | 6.481 |
@@ -51,9 +51,11 @@ intentionally out of scope here (owner: don't care about those for now).
   $99.99 is the largest single IAP SKU seen (owner-confirmed) — there is no
   bigger single tier; event offers instead cap at up to 10× $99.99 packs
   rather than one larger bundle. The curve is **not monotonic**: $9.99 beats
-  every other tier, and $19.99 — despite sitting right next to it — is
-  actually the single worst-value tier of the set. Owner believes this is
-  the complete common-tier ladder (9 tiers: $0.99–$99.99).
+  every other tier, and the three smallest tiers ($0.99/$2.99/$4.99) are
+  the worst value of the set — $4.99 is the single worst. $19.99 is a local
+  dip (worse than both its immediate neighbors $14.99 and $29.99) but isn't
+  the global worst. Owner believes this is the complete common-tier ladder
+  (9 tiers: $0.99–$99.99).
 
 - **Voucher-funded purchase**: the same IAP tiers above can alternatively be
   paid for with SEAGM top-up vouchers instead of cash, and doing so applies
@@ -91,16 +93,17 @@ same 0.011 pts/voucher. The only thing that actually varies by tier is
 | $49.99 | 328 | 6.561 | 32,800 | 360.8 |
 | $14.99 | 98 | 6.538 | 9,800 | 107.8 |
 | $99.99 | 648 | 6.481 | 64,800 | 712.8 |
-| $19.99 | 128 | 6.403 ← worst | 12,800 | 140.8 |
+| $19.99 | 128 | 6.403 | 12,800 | 140.8 |
 | $0.99 | 6 | 6.061 | 600 | 6.6 |
 | $2.99 | 18 | 6.020 | 1,800 | 19.8 |
-| $4.99 | 30 | 6.012 | 3,000 | 33.0 |
+| $4.99 | 30 | 6.012 ← worst | 3,000 | 33.0 |
 
-To optimize point gain: always buy $9.99 packs, never $19.99 (its
-immediate neighbor is worse value on both sides). To optimize voucher
-usage: it doesn't matter which tier you redeem through — spend down
-whatever vouchers you're sitting on at any tier, the yield per voucher is
-identical everywhere.
+To optimize point gain: always buy $9.99 packs, never $4.99 (the actual
+worst tier — the three smallest packs are all bad value, not $19.99 as it
+might look from its position next to two strong neighbors). To optimize
+voucher usage: it doesn't matter which tier you redeem through — spend
+down whatever vouchers you're sitting on at any tier, the yield per
+voucher is identical everywhere.
 
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
