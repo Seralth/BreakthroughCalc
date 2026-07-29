@@ -1,8 +1,22 @@
 # Relic summon system — cumulative point track
 
 Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
-(`zodiac-relic.md`) — this is the monetization/point-track system that grants
-those 8 relic items, not the relics' own stat mechanics.
+(`zodiac-relic.md`). This is the monetization/point-track system that
+**acquires** the 8 Creation Artifacts — not their own stat/Energy
+mechanics, which live in `docs.py`'s Reference → Artifacts & Gems section
+(desktop) / `reference_tab.dart` (mobile).
+
+Owner-confirmed (2026-07-29): all 8 relics below (Vase, Pot, Mirror,
+Token, Sheers, Cauldron, Basin, Pearl) are Creation Artifacts. Only 3 —
+Starsea Vase, Dual-Star Mirror, Timereversal Pearl — have an existing
+Energy-mechanic write-up in Reference; the other 5 (Pot, Token, Sheers,
+Cauldron, Basin) are real Creation Artifacts too, just undocumented there
+so far because their point cost is high enough that most players never
+reach them. **Integration note**: this doc's content belongs as a new
+subsection *inside* the existing Artifacts & Gems section (how you obtain
+them), not a new standalone Reference topic — see the note near the
+price-point ranking table below. Documenting the other 5 artifacts' own
+Energy mechanics is a separate, still-open task.
 
 ## Core mechanic: breakpoints, not a per-pull gacha
 
@@ -108,10 +122,13 @@ voucher is identical everywhere.
 **UI note for whenever this ships**: this data has no ownership state and
 feeds no calculation, so it does NOT belong in the Vault (Library/Treasury/
 Companions all track owned items that feed engine.py/engine.dart math —
-this doesn't). It's static informational content, same shape as the
-existing combat-mechanics/sources tables — it belongs in the Reference/
-Guide tab (`docs.py` desktop, `reference_tab.dart`/`guide_tab.dart`
-mobile) as a new section, not a new Vault shelf.
+this doesn't). It's static informational content — specifically it
+belongs *inside* Reference's existing **Artifacts & Gems** section
+(`docs.py` desktop / `reference_tab.dart` mobile), as an "acquiring the
+Creation Artifacts" subsection alongside the current Starsea Vase/
+Dual-Star Mirror/Timereversal Pearl write-up (see the note at the top of
+this doc) — not a new standalone Reference topic and not the Guide tab
+(Guide is narrative/subjective strategy prose; this is hard numbers).
 
 If it ships there: the Rate column is the sort key the whole table is
 ordered by — give it a distinct color/weight so that's obvious at a
