@@ -104,6 +104,43 @@ Note the rate isn't strictly monotonic (6,900 beats the pricier 10,000
 tier; 20,500 beats the pricier 33,800 tier) — worth checking the table
 before assuming "bigger is always better" on any specific bundle choice.
 
+## LT's own voucher value vs SEAGM's real price
+
+Seven price points ($0.99, $9.99, $14.99, $19.99, $29.99, $49.99, $99.99)
+appear on **both** LT's in-game voucher-equivalent pricing (what LT itself
+says a reward is worth in vouchers) and SEAGM's real storefront (what
+SEAGM actually sells that many dollars of vouchers for). Comparing the two
+at matching prices shows whether SEAGM is a genuine discount or just
+noise:
+
+| Price | LT vouchers | LT rate | SEAGM vouchers | SEAGM rate | Extra vouchers | Extra points |
+|---|---|---|---|---|---|---|
+| $0.99 | 600 | 606.06/$ | 600 | 606.06/$ | 0 | 0.0 |
+| $9.99 | 6,800 | 680.68/$ | 6,900 | 690.69/$ | 100 | 1.1 |
+| $14.99 | 9,800 | 653.77/$ | 10,000 | 667.11/$ | 200 | 2.2 |
+| $19.99 | 12,800 | 640.32/$ | 13,500 | 675.34/$ | 700 | 7.7 |
+| $29.99 | 19,800 | 660.22/$ | 20,500 | 683.56/$ | 700 | 7.7 |
+| $49.99 | 32,800 | 656.13/$ | 33,800 | 676.14/$ | 1,000 | 11.0 |
+| $99.99 | 64,800 | 648.06/$ | 68,000 | 680.07/$ | 3,200 | 35.2 |
+
+At every shared price point SEAGM matches or beats LT's own voucher
+valuation — never worse. "Extra points" = extra vouchers × 0.011 (the
+fixed ratio above), i.e. how many more points that same dollar amount
+nets you by routing through SEAGM instead of paying LT direct-voucher
+price. The $99.99 tier has the widest gap (~5% more vouchers, 35.2 bonus
+points) — consistent with the per-relic savings in the next section.
+
+### Time-limited pop-up bundles (open item)
+
+The game also runs random time-limited pop-up offers, always presented as
+3 options (cheap/mid/high) — a scarcity/urgency dark pattern, but the
+3-tier structure is exploitable the same way the fixed $9.99 tier beats
+its neighbors above: compare each pop-up's $/point against this doc's
+tables before buying on impulse, and don't assume the "best" of the 3
+options is actually competitive with the fixed catalog. No price/point
+values captured yet for these — add a row here if/when specific pop-up
+numbers get recorded.
+
 ## Cost per relic breakpoint (at-a-glance)
 
 Since points are cumulative and never spent, each row's cost is the total
