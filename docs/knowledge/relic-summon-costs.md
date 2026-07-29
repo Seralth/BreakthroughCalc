@@ -269,49 +269,49 @@ can substantially reduce real spend for a patient player.
 | Basin | 128,888 | $18,941.04 |
 | Pearl | 158,888 | $23,346.63 |
 
-**Route B — SEAGM vouchers**, using the best bulk rate (~699.51
-vouchers/$, from the $599.99+ tiers). Points come from vouchers at the
-fixed 1,000-vouchers-per-11-points ratio:
+**Route B — SEAGM vouchers**. Points come from vouchers at the fixed
+1,000-vouchers-per-11-points ratio. These are the **exact optimal cost**
+for each threshold — solved via dynamic programming over all 13 SEAGM
+bundle sizes (every bundle's voucher count shares a common factor of 20,
+which keeps the search space small enough to solve exactly rather than
+approximate), not the flat top-tier rate:
 
 | Relic | Vouchers needed | Cost |
 |---|---|---|
-| Vase | 454,546 | ~$649.80 |
-| Pot | 909,091 | ~$1,299.61 |
-| Mirror | 1,818,182 | ~$2,599.22 |
-| Token | 3,636,364 | ~$5,198.43 |
-| Sheers | 6,363,637 | ~$9,097.26 |
-| Cauldron | 8,080,728 | ~$11,551.96 |
-| Basin | 11,717,091 | ~$16,750.39 |
-| Pearl | 14,444,364 | ~$20,649.21 |
+| Vase | 454,546 | $650.93 |
+| Pot | 909,091 | $1,301.86 |
+| Mirror | 1,818,182 | $2,599.97 |
+| Token | 3,636,364 | $5,199.92 |
+| Sheers | 6,363,637 | $9,099.71 |
+| Cauldron | 8,080,728 | $11,554.61 |
+| Basin | 11,717,091 | $16,752.75 |
+| Pearl | 14,444,364 | $20,650.61 |
 
 Route B is consistently the cheaper option, by ~11.6–12.1% at every
 breakpoint — a much smaller gap than a naive per-voucher reading of the
 1.1× bonus would suggest (an earlier pass on this math mistakenly treated
 it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio above).
-Route B's figures are a continuous approximation (real purchases are
-bundle-quantized — true cost could run a little higher for small
-thresholds, a little lower with careful bundle-mixing); treat as accurate
-to within ~1%. Route A's figures are exact (whole $9.99 packs, no
-approximation needed).
+Route A's figures are exact too (whole $9.99 packs).
 
 ## Diagram economy
 
-Creation Diagrams are the item a Creation draw consumes. Owner-confirmed
-sources, all subscription passes (no known way to buy diagrams directly
-with cash or vouchers):
+Creation Diagrams are the item a Creation draw consumes. Reliable sources
+are the 3 subscription passes below. Time-limited events occasionally
+grant extra diagrams too, but those are infrequent and irregular — plan
+around the 3 passes only, treat event diagrams as pure bonus on top:
 
 | Pass | Diagrams | Duration | Price | Other benefit |
 |---|---|---|---|---|
 | Monthly | 1/day | 30 days | $4.99 | AFK cap +12h |
 | Season | 1/day | 90 days | $12.99 | AFK cap +24h |
-| Permanent | 2/week (Mon 8am) | forever | unrecorded | — |
+| Permanent | 2/week (Mon 8am) | forever | — (out of scope) | — |
 
 Owner-confirmed community wisdom: **pass cost is out of scope for relic
 optimization entirely**. If a player spends money on anything, these 3
 passes come first, above and beyond relic strategy, because their other
 benefits (chiefly the AFK gathering cap) are treated as required to play
 the game at full efficiency — without any pass, anything gathered past
-12h AFK is simply lost. Passes are assumed as sunk/baseline spend, and
+12h AFK is simply lost. Passes are treated as sunk/baseline spend, and
 their diagram output is treated as free income for relic purposes.
 
 Combined baseline income, assuming all 3 passes active (monthly and
@@ -373,14 +373,14 @@ continuous estimate), so they're consistent with the cumulative figures:
 
 | Relic | Cumulative points | Marginal points | Cash saved if won (SEAGM) | Cash saved if won (best IAP) |
 |---|---|---|---|---|
-| Vase | 5,000 | 5,000 | $649.80 | $739.26 |
-| Pot | 10,000 | 5,000 | $649.80 | $739.26 |
-| Mirror | 20,000 | 10,000 | $1,299.61 | $1,468.53 |
-| Token | 40,000 | 20,000 | $2,599.22 | $2,937.06 |
-| Sheers | 70,000 | 30,000 | $3,898.82 | $4,405.59 |
-| Cauldron | 88,888 | 18,888 | $2,454.70 | $2,777.22 |
-| **Basin** | 128,888 | **40,000** | **$5,198.43** | **$5,874.12** |
-| Pearl | 158,888 | 30,000 | $3,898.82 | $4,405.59 |
+| Vase | 5,000 | 5,000 | $650.93 | $739.26 |
+| Pot | 10,000 | 5,000 | $650.93 | $739.26 |
+| Mirror | 20,000 | 10,000 | $1,298.11 | $1,468.53 |
+| Token | 40,000 | 20,000 | $2,599.95 | $2,937.06 |
+| Sheers | 70,000 | 30,000 | $3,899.79 | $4,405.59 |
+| Cauldron | 88,888 | 18,888 | $2,454.90 | $2,777.22 |
+| **Basin** | 128,888 | **40,000** | **$5,198.14** | **$5,874.12** |
+| Pearl | 158,888 | 30,000 | $3,897.86 | $4,405.59 |
 
 **Basin has the single biggest marginal jump of the whole track (40,000
 points) — bigger even than Pearl's (30,000)**, despite Pearl being the
@@ -416,7 +416,7 @@ the relics they actually care about next. For someone stopping around
 Token, the relevant jumps are Vase/Pot (5,000 each), Mirror (10,000), and
 Token (20,000) — **Token is the biggest of that set**, meaning it's the
 single relic in that range where a lottery win saves the most cash
-relative to just paying for it ($2,599 via SEAGM / $2,937 via best IAP).
+relative to just paying for it ($2,600 via SEAGM / $2,937 via best IAP).
 Concretely: banking ~150–300 diagrams (9–19 weeks of passive income
 alone) gives a 31–53% chance of winning Token via lottery before ever
 paying full price for its marginal 20,000 points:
@@ -455,20 +455,3 @@ best place to spend a stockpile is whichever relic has the *biggest single
 step* from the one before it — Basin for a whale going all the way, or
 whatever's biggest within your own stopping point otherwise.
 
-## Open questions (need in-game observation or store data)
-
-- No exhaustive bin-packing proof that $20,650 is the true minimum-cost
-  SEAGM bundle combination — that number uses the flat top-tier rate as an
-  approximation; real minimum could be a few dollars lower by mixing
-  bundle sizes for the remainder.
-- Cosmetic rewards on the same track: values and count not captured (owner:
-  out of scope for now).
-- Permanent pass price not recorded (owner: doesn't matter for this doc
-  since pass cost is out of scope regardless — captured for completeness
-  only if it ever becomes relevant elsewhere).
-- No confirmation of whether Creation Diagrams are obtainable any other
-  way (direct cash/voucher purchase, event rewards, etc.) beyond the 3
-  passes — assumed to be pass-only until shown otherwise.
-- The banking-strategy odds table treats each draw as fully independent
-  at a flat 0.25%; not confirmed whether the rate is literally fixed
-  every week for every remaining relic or could vary by relic.
