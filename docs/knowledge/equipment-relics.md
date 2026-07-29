@@ -3,8 +3,11 @@
 Personal reference for **equipment relics**: the 6 class-specific/generic combat
 items that occupy equipment slots and grant a skill (Literatia's inkstones/brush,
 Ghostia's mask/chains/armguards, etc.). Sourced from the client APK decompile
-(`apk_analysis/`); owner-confirmed corrections folded in. Noted for future
-integration; not yet in the calc.
+(`apk_analysis/`); owner-confirmed corrections folded in. Core facts (rank
+determines skill, quality only scales stats, generic/class are peers) are
+now integrated into Reference → Combat Stats & Gear; the full RE detail
+below (per-layer tables, forge costs, set-bonus mechanics) stays here as
+backing detail. Not yet wired into the calc's actual math.
 
 ## Identity — a third distinct "relic" system
 

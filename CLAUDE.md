@@ -85,11 +85,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
 - `docs/knowledge/zodiac-relic.md` — Zodiac Relic (本命法宝, internal `talisman_*`)
   system: two mirrored physical/magical paths, linear Soulfice scaling, Hexes,
   socketing, mold/forge, non-destructive path-swap reforge. Distinct from the
-  Zodiac Pot curio. Noted for future integration; not yet in the calc
+  Zodiac Pot curio. Core facts now integrated into Reference → Combat Stats
+  & Gear; full RE detail stays in this doc. Not yet in the calc's math
 - `docs/knowledge/equipment-relics.md` — equipment relics (法宝): the 6 class/
   generic combat-skill items, on the SAME gear system as weapons/armor (rank,
   level curve, quality tiers, blacksmith-gated forging, marks, dual set
-  bonuses). Distinct from curios and the Zodiac Relic. Not yet in the calc
+  bonuses). Distinct from curios and the Zodiac Relic. Core facts now
+  integrated into Reference → Combat Stats & Gear; full RE detail stays in
+  this doc. Not yet in the calc's math
 - `docs/knowledge/relic-systems-next-update.md` — integration-readiness
   digest of the two not-yet-in-the-calc relic systems above: what's exact
   enough to build a first Vault/combat-power pass on today vs the remaining

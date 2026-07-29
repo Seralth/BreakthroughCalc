@@ -657,6 +657,52 @@ Widget _combatPage(BuildContext context, Engine engine, Map<String, dynamic> cat
         'yellow. When an item is forged its stats roll within a range — so two '
         'copies of the same item can differ, and a well-rolled piece is worth '
         'keeping.'),
+    Text('Equipment relics — a gear category, not a side system',
+        key: anchorKey('ref:combat:relics'), style: h3),
+    para('327 relics fill 6 of your equipment slots, and each one grants '
+        'exactly one combat skill on top of stats — your active-skill '
+        'loadout is which relics you have equipped. They go through the '
+        'exact same rank/level/quality/forging/marks/sets layers as '
+        'weapon/armor/accessory, with one relic-specific wrinkle: rank '
+        'determines which skill you have; quality only scales the '
+        'surrounding stats, never the skill itself — a high-quality relic '
+        'hits the same skill numbers as a low-quality one at the same '
+        'rank, just with better stats around it.'),
+    para('Some relics are class-locked (a level/stage-gated set unique to '
+        'one path), others are generic and open to any class — generic '
+        'and class relics are peers, not a floor/ceiling: identical '
+        'slots, identical forge cost, identical tier ceiling. The only '
+        'real difference is access and which skill each grants, so pick '
+        'by skill fit for your build rather than assuming generic is the '
+        'weaker option.'),
+    para('Distinct from the Creation Artifacts (Vase, Pot, Mirror, Token, '
+        'Shears, Cauldron, Basin, Pearl — see [[ref:artifacts#summon|'
+        'Reference → Artifacts & Gems]]) and the Zodiac Relic below — '
+        'different systems that happen to share the word "relic".'),
+    Text('Zodiac Relic — a single signature artifact',
+        key: anchorKey('ref:combat:zodiac'), style: h3),
+    para('One relic per account, forged into either a physical or '
+        'magical stance, that deploys into battle from Rank 2 as a '
+        'semi-autonomous unit — it casts its own Hexes and carries its '
+        'own full stat block that adds directly to your combat power, '
+        'on top of everything from your equipped gear. The two stances '
+        'are mirrored: same progression, same numbers, only the stat '
+        'type differs (physical vs magical). Reforge swaps between them '
+        'non-destructively — only one is active at a time, but the '
+        'inactive one\'s progress is preserved, not lost, so switching '
+        'later never means regrinding from scratch (500 Fateum, 48h '
+        'cooldown).'),
+    para('Its stat backbone (Soulfice) scales purely linearly with '
+        'level — every level adds the same fixed HP/MP, ATK, and DEF, no '
+        'breakpoints to plan around. It also carries its own socketing '
+        '(mark stones, socket treasures) and a star-upgrade mold system '
+        'unlocking at Rank 8, layered enhancement systems similar in '
+        'shape to weapon/armor carvings and sets, just on this one relic '
+        'instead of a full loadout.'),
+    para('Its Hexes (the spells it casts in battle) aren\'t quantified '
+        'here — no cooldown, quality, or damage numbers are available '
+        'yet, so treat their combat contribution as real but unmeasured '
+        'for now.'),
     Text('Leveling gear (Augmentation)', style: h3),
     para('Pouring materials into a piece does three things:\n'
         '• Every level: its base stats grow a little. Steady, nothing to time.\n'
