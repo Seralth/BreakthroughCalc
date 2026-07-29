@@ -109,30 +109,44 @@ before assuming "bigger is always better" on any specific bundle choice.
 Since points are cumulative and never spent, each row's cost is the total
 spend to go from zero all the way to that relic — not an incremental
 per-relic price. Buying up to Pearl automatically nets every relic above
-it too. "Vouchers needed" = points × 1000/11, rounded up.
+it too.
 
-Direct-IAP cost assumes repeating the best known tier ($9.99 → 68 pts).
-SEAGM-voucher cost uses the best bulk rate (~699.51 vouchers/$, from the
-$599.99+ tiers) as a continuous approximation — real purchases are
-bundle-quantized, so true cost could run a little higher for thresholds
-well below a bundle's own size, and a dollar or two lower with careful
-bundle-mixing at the margin. Treat these as accurate to within ~1%.
+**Route A — Direct IAP**, repeating the best known tier ($9.99 → 68 pts):
 
-| Relic | Points | Vouchers needed | Direct IAP cost | SEAGM voucher cost | Savings |
-|---|---|---|---|---|---|
-| Vase | 5,000 | 454,546 | $739.26 | ~$649.80 | ~12.1% |
-| Pot | 10,000 | 909,091 | $1,478.52 | ~$1,299.61 | ~12.1% |
-| Mirror | 20,000 | 1,818,182 | $2,947.05 | ~$2,599.22 | ~11.8% |
-| Token | 40,000 | 3,636,364 | $5,884.11 | ~$5,198.43 | ~11.7% |
-| Sheers | 70,000 | 6,363,637 | $10,289.70 | ~$9,097.26 | ~11.6% |
-| Cauldron | 88,888 | 8,080,728 | $13,066.92 | ~$11,551.96 | ~11.6% |
-| Basin | 128,888 | 11,717,091 | $18,941.04 | ~$16,750.39 | ~11.6% |
-| Pearl | 158,888 | 14,444,364 | $23,346.63 | ~$20,649.21 | ~11.6% |
+| Relic | Points needed | Cost |
+|---|---|---|
+| Vase | 5,000 | $739.26 |
+| Pot | 10,000 | $1,478.52 |
+| Mirror | 20,000 | $2,947.05 |
+| Token | 40,000 | $5,884.11 |
+| Sheers | 70,000 | $10,289.70 |
+| Cauldron | 88,888 | $13,066.92 |
+| Basin | 128,888 | $18,941.04 |
+| Pearl | 158,888 | $23,346.63 |
 
-SEAGM's voucher route is consistently cheaper by ~11.6–12.1% across every
+**Route B — SEAGM vouchers**, using the best bulk rate (~699.51
+vouchers/$, from the $599.99+ tiers). Points come from vouchers at the
+fixed 1,000-vouchers-per-11-points ratio:
+
+| Relic | Vouchers needed | Cost |
+|---|---|---|
+| Vase | 454,546 | ~$649.80 |
+| Pot | 909,091 | ~$1,299.61 |
+| Mirror | 1,818,182 | ~$2,599.22 |
+| Token | 3,636,364 | ~$5,198.43 |
+| Sheers | 6,363,637 | ~$9,097.26 |
+| Cauldron | 8,080,728 | ~$11,551.96 |
+| Basin | 11,717,091 | ~$16,750.39 |
+| Pearl | 14,444,364 | ~$20,649.21 |
+
+Route B is consistently the cheaper option, by ~11.6–12.1% at every
 breakpoint — a much smaller gap than a naive per-voucher reading of the
 1.1× bonus would suggest (an earlier pass on this math mistakenly treated
 it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio above).
+Route B's figures are a continuous approximation (real purchases are
+bundle-quantized — true cost could run a little higher for small
+thresholds, a little lower with careful bundle-mixing); treat as accurate
+to within ~1%.
 
 ## Open questions
 
