@@ -926,7 +926,8 @@ Widget _systemsPage(BuildContext context, Engine engine, Map<String, dynamic> ca
         '• R7: Floral Essence and Purify & Cleanse.\n'
         '• R8: Chroma and Astral Arcanum, plus your path\'s PvP pick.\n'
         '• R9: Harvest God Secret; Honored Origin for its aura nodes.\n'
-        '• R10: everything — Immortal Ascension to Tier 13.\n'
+        '• R10: everything — Immortal Ascension to Tier 12 for its +1 '
+        'daily pill attempt (Tier 15 beyond that is stats-only).\n'
         '• R11+: each rank\'s law-speed manual first.'),
     para('For Technique Points, the recommended Spirit World strategy '
         'is three passes: clear what you can, come back stronger, '
