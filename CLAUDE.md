@@ -92,6 +92,11 @@ The two apps are deliberately parallel; module layouts mirror each other.
   digest of the two not-yet-in-the-calc relic systems above: what's exact
   enough to build a first Vault/combat-power pass on today vs the remaining
   blockers (Zodiac Relic Hex data chief among them)
+- `docs/knowledge/relic-summon-costs.md` — the relic SUMMON/point-track
+  system (separate from the relics' own stat mechanics above): cumulative
+  point breakpoints (never spent), direct-IAP vs SEAGM-voucher point rates,
+  the confirmed exact 1000-vouchers-per-11-points conversion, and real
+  SEAGM bundle pricing. Not yet in the calc
 - `docs/knowledge/i18n-pipeline.md` — extracting official en/ru/de/es/zh
   strings from the APK dump; curated glossary at `data/i18n_glossary.json`
 
