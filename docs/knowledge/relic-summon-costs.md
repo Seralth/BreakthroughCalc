@@ -223,6 +223,37 @@ from Rank 6R+), so banking diagrams across dozens or low hundreds of
 weeks while cash-pitying the early relics, then unloading the stockpile
 against Pearl, is a realistic strategy — not a theoretical one.
 
+### Most efficient dump target: Basin, not Pearl
+
+The lottery odds for a given stockpile size are identical no matter which
+relic is currently in the pool — the "cost" side of a dump never changes
+by target. What *does* change is the payoff if it hits: the **marginal**
+point gap for that specific relic (its own threshold minus the previous
+relic's, since everything below is already banked). Since dump cost is
+constant, the best target is whichever relic has the largest marginal gap
+— that's where a win saves the most cash for the same stockpile.
+
+| Relic | Cumulative points | Marginal points | Cash saved if won (SEAGM rate) | Cash saved if won (best IAP) |
+|---|---|---|---|---|
+| Vase | 5,000 | 5,000 | $649.80 | $734.56 |
+| Pot | 10,000 | 5,000 | $649.80 | $734.56 |
+| Mirror | 20,000 | 10,000 | $1,299.61 | $1,469.12 |
+| Token | 40,000 | 20,000 | $2,599.22 | $2,938.24 |
+| Sheers | 70,000 | 30,000 | $3,898.82 | $4,407.35 |
+| Cauldron | 88,888 | 18,888 | $2,454.70 | $2,774.87 |
+| **Basin** | 128,888 | **40,000** | **$5,198.43** | **$5,876.47** |
+| Pearl | 158,888 | 30,000 | $3,898.82 | $4,407.35 |
+
+**Basin has the single biggest marginal jump of the whole track (40,000
+points) — bigger even than Pearl's (30,000)**, despite Pearl being the
+final and most expensive relic overall. That's not obvious from the
+cumulative totals alone: Basin costs less than Pearl in total, but the
+*specific step* from Cauldron to Basin is the priciest single jump to
+clear. A banked stockpile is best spent trying to snipe Basin, not saved
+all the way for Pearl — and if the dump on Basin misses, the same
+diagrams' points still count toward Pearl's total anyway, so there's no
+downside to trying at Basin first.
+
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
