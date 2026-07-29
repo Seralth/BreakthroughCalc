@@ -1,10 +1,13 @@
 # Relic summon system — cumulative point track
 
+Personal reference for how the 8 Creation Artifacts are **acquired** —
+not their own stat/Energy mechanics, which live in `docs.py`'s Reference →
+Artifacts & Gems section (desktop) / `reference_tab.dart` (mobile). Sourced
+from owner-provided in-game data plus SEAGM storefront screenshots
+(2026-07-29). Noted for future integration; not yet in the calc.
+
 Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
-(`zodiac-relic.md`). This is the monetization/point-track system that
-**acquires** the 8 Creation Artifacts — not their own stat/Energy
-mechanics, which live in `docs.py`'s Reference → Artifacts & Gems section
-(desktop) / `reference_tab.dart` (mobile).
+(`zodiac-relic.md`) — unrelated "relic" systems that just share the word.
 
 Owner-confirmed (2026-07-29): all 8 relics below (Vase, Pot, Mirror,
 Token, Sheers, Cauldron, Basin, Pearl) are Creation Artifacts. Only 3 —
@@ -61,6 +64,9 @@ only matters for *which* weeks you can afford to guarantee versus rely on
 luck/banked draws for (see the banking strategy below).
 
 ### Relic breakpoints (owner-provided, cumulative points)
+
+This table is also the pool order — relics enter the weekly pool top to
+bottom, one at a time, never out of sequence (Vase first, Pearl last).
 
 | Relic | Points |
 |---|---|
@@ -412,8 +418,43 @@ faster path anyway), then bank diagrams for several months and dump the
 stockpile at Token before defaulting to a straight cash top-up for
 whatever points the dump didn't cover.
 
-## Open questions
+## Practical read
 
+Points are one cumulative total that's never spent — reaching a
+breakpoint just unlocks that relic and progress keeps climbing toward the
+next. The pool only ever advances one relic per week regardless of
+spending, so 8 weeks is the hard floor no matter how much cash goes in.
+$9.99 is always the best cash rate (direct or via SEAGM voucher), $4.99 is
+always the worst. SEAGM vouchers beat paying LT direct at every shared
+price point, but only by ~12%, not by the huge margin a naive reading of
+the voucher bonus would suggest. Guaranteeing every relic with cash tops
+out around $20,650 (SEAGM) to $23,347 (direct) — a whale number, not a
+realistic plan for most players. For everyone else: pay cash up to
+whichever relic still feels reasonable (Mirror, Token — wherever that line
+falls), then stop and bank Creation Diagrams instead of drawing them
+weekly. Passive income from the 3 passes (already a sunk cost for their
+AFK-cap benefits alone) keeps banking real lottery shots for free, and the
+best place to spend a stockpile is whichever relic has the *biggest single
+step* from the one before it — Basin for a whale going all the way, or
+whatever's biggest within your own stopping point otherwise.
+
+## Open questions (need in-game observation or store data)
+
+- **Official names for the other 5 Creation Artifacts.** Only Vase, Mirror,
+  and Pearl have confirmed full names (Starsea Vase, Dual-Star Mirror,
+  Timereversal Pearl, per the existing Artifacts & Gems write-up). Pot,
+  Token, Sheers, Cauldron, and Basin are shorthand used in this doc, not
+  necessarily their actual in-game display names — needs a screenshot of
+  each once a player reaches them.
+- **Diagram inventory cap.** The banking strategy assumes diagrams can be
+  hoarded indefinitely (the math above goes as high as ~1,840 banked for
+  99% lottery odds). Not confirmed whether Creation Diagrams have a
+  stack/inventory limit — if they do, it could cap how large a dump is
+  actually possible and change the banking strategy's ceiling.
+- **What happens after Pearl.** Unclear whether the pool loops, stops, or
+  switches to cosmetics-only once all 8 Creation Artifacts are claimed —
+  cosmetics are confirmed to share the track (see above) but not whether
+  they're before, after, or interspersed with the 8 relics.
 - No exhaustive bin-packing proof that $20,650 is the true minimum-cost
   SEAGM bundle combination — that number uses the flat top-tier rate as an
   approximation; real minimum could be a few dollars lower by mixing
