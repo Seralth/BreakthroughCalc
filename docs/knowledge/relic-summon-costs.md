@@ -168,135 +168,6 @@ glance, rather than reading as just another data column. This is a
 sort-order affordance, not a data-status marker, so it doesn't conflict
 with the no-provenance-badges rule in the root CLAUDE.md.
 
-## Diagram economy
-
-Creation Diagrams are the item a Creation draw consumes. Owner-confirmed
-sources, all subscription passes (no known way to buy diagrams directly
-with cash or vouchers):
-
-| Pass | Diagrams | Duration | Price | Other benefit |
-|---|---|---|---|---|
-| Monthly | 1/day | 30 days | $4.99 | AFK cap +12h |
-| Season | 1/day | 90 days | $12.99 | AFK cap +24h |
-| Permanent | 2/week (Mon 8am) | forever | unrecorded | — |
-
-Owner-confirmed community wisdom: **pass cost is out of scope for relic
-optimization entirely**. If a player spends money on anything, these 3
-passes come first, above and beyond relic strategy, because their other
-benefits (chiefly the AFK gathering cap) are treated as required to play
-the game at full efficiency — without any pass, anything gathered past
-12h AFK is simply lost. Passes are assumed as sunk/baseline spend, and
-their diagram output is treated as free income for relic purposes.
-
-Combined baseline income, assuming all 3 passes active (monthly and
-season stack, both granting 1/day independently): **1 + 1 = 2/day, plus
-2/week from Permanent → 16 diagrams/week**, i.e. 160 points/week
-guaranteed if every diagram were drawn immediately (see banking strategy
-below for why that's usually not the best use of them).
-
-### The banking strategy
-
-Since the 0.25% lottery roll is identical on every draw regardless of
-accumulated points, and diagrams don't expire or need to be spent
-immediately, the strategic move is: **don't draw every week**. While a
-relic is still cheap enough to pity out with cash, pay cash and leave
-diagrams unspent. Once the point cost gets too expensive to justify
-(the later relics — Cauldron/Basin/Pearl), dump the entire banked stockpile
-at once for a concentrated batch of independent 0.25% shots, which can hit
-well before the cash-pity threshold is reached — and even if it doesn't
-hit, every draw still adds its 10 points toward the cumulative total, so a
-failed lottery dump is never wasted value, just a missed shortcut.
-
-Odds of winning via lottery alone from N banked draws (1 − 0.9975^N):
-
-| Banked draws | Win chance | Weeks to bank (@16/week, all 3 passes) |
-|---|---|---|
-| 100 | 22.1% | 6.3 |
-| 277 | 50.0% | 17.3 |
-| 500 | 71.4% | 31.3 |
-| 920 | 90.0% | 57.5 |
-| 1,197 | 95.0% | 74.8 |
-| 1,840 | 99.0% | 115.0 |
-
-This is a genuinely long-horizon game (owner's own account is ~2 years
-from Rank 6R+), so banking diagrams across dozens or low hundreds of
-weeks while cash-pitying the early relics, then unloading the stockpile
-against Pearl, is a realistic strategy — not a theoretical one.
-
-### Most efficient dump target: Basin, not Pearl
-
-The lottery odds for a given stockpile size are identical no matter which
-relic is currently in the pool — the "cost" side of a dump never changes
-by target. What *does* change is the payoff if it hits: the **marginal**
-point gap for that specific relic (its own threshold minus the previous
-relic's, since everything below is already banked). Since dump cost is
-constant, the best target is whichever relic has the largest marginal gap
-— that's where a win saves the most cash for the same stockpile.
-
-| Relic | Cumulative points | Marginal points | Cash saved if won (SEAGM rate) | Cash saved if won (best IAP) |
-|---|---|---|---|---|
-| Vase | 5,000 | 5,000 | $649.80 | $734.56 |
-| Pot | 10,000 | 5,000 | $649.80 | $734.56 |
-| Mirror | 20,000 | 10,000 | $1,299.61 | $1,469.12 |
-| Token | 40,000 | 20,000 | $2,599.22 | $2,938.24 |
-| Sheers | 70,000 | 30,000 | $3,898.82 | $4,407.35 |
-| Cauldron | 88,888 | 18,888 | $2,454.70 | $2,774.87 |
-| **Basin** | 128,888 | **40,000** | **$5,198.43** | **$5,876.47** |
-| Pearl | 158,888 | 30,000 | $3,898.82 | $4,407.35 |
-
-**Basin has the single biggest marginal jump of the whole track (40,000
-points) — bigger even than Pearl's (30,000)**, despite Pearl being the
-final and most expensive relic overall. That's not obvious from the
-cumulative totals alone: Basin costs less than Pearl in total, but the
-*specific step* from Cauldron to Basin is the priciest single jump to
-clear. A banked stockpile is best spent trying to snipe Basin, not saved
-all the way for Pearl — and if the dump on Basin misses, the same
-diagrams' points still count toward Pearl's total anyway, so there's no
-downside to trying at Basin first.
-
-### Strategies for lower spenders
-
-The whale-tier tables above ($20k+ to guarantee everything) aren't the
-realistic plan for most players. Two strategies work well without
-committing to that:
-
-**1. Spend to a ceiling, then bank-and-ride past it.** Pick the relic
-where cash stops feeling worth it (owner: everything through Mirror is
-reasonable, Token is next), pay cash up to that ceiling at the best rate
-($9.99 tier or SEAGM vouchers), then stop spending entirely. Past the
-ceiling, don't draw diagrams weekly — bank them. Passive income alone
-(16/week from the 3 passes, already-sunk cost) keeps the cumulative total
-climbing for free, and periodic stockpile dumps at whatever relic is
-currently in the pool give real shots at winning it outright with no
-cash. A miss never costs anything extra — the points still bank toward
-the next relic regardless.
-
-**2. Snipe the biggest marginal jump inside your own near-term goal, not
-the global one.** Basin is the best target for a whale aiming at
-everything, but a lower spender should compare marginal jumps only among
-the relics they actually care about next. For someone stopping around
-Token, the relevant jumps are Vase/Pot (5,000 each), Mirror (10,000), and
-Token (20,000) — **Token is the biggest of that set**, meaning it's the
-single relic in that range where a lottery win saves the most cash
-relative to just paying for it ($2,599–$2,938 depending on route).
-Concretely: banking ~150–300 diagrams (9–19 weeks of passive income
-alone) gives a 31–53% chance of winning Token via lottery before ever
-paying full price for its marginal 20,000 points:
-
-| Banked draws | Win chance | Weeks to bank (@16/week) |
-|---|---|---|
-| 50 | 11.8% | 3.1 |
-| 100 | 22.1% | 6.2 |
-| 150 | 31.3% | 9.4 |
-| 200 | 39.4% | 12.5 |
-| 277 | 50.0% | 17.3 |
-| 300 | 52.8% | 18.8 |
-
-Combining both: pay cash through Mirror (cheap enough that cash is the
-faster path anyway), then bank diagrams for several months and dump the
-stockpile at Token before defaulting to a straight cash top-up for
-whatever points the dump didn't cover.
-
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
@@ -369,8 +240,8 @@ spend to go from zero all the way to that relic — not an incremental
 per-relic price. Buying up to Pearl automatically nets every relic above
 it too. These tables answer "what does it cost to *guarantee* every relic
 with cash" — they don't account for the weekly pool gate (8-week minimum
-regardless of spend) or the banking strategy above, both of which can
-substantially reduce real spend for a patient player.
+regardless of spend) or the diagram-banking strategy below, both of which
+can substantially reduce real spend for a patient player.
 
 **Route A — Direct IAP**, repeating the best known tier ($9.99 → 68 pts):
 
@@ -407,7 +278,139 @@ it as ~1 voucher ≈ 1.1 points, which is wrong — see the ratio above).
 Route B's figures are a continuous approximation (real purchases are
 bundle-quantized — true cost could run a little higher for small
 thresholds, a little lower with careful bundle-mixing); treat as accurate
-to within ~1%.
+to within ~1%. Route A's figures are exact (whole $9.99 packs, no
+approximation needed).
+
+## Diagram economy
+
+Creation Diagrams are the item a Creation draw consumes. Owner-confirmed
+sources, all subscription passes (no known way to buy diagrams directly
+with cash or vouchers):
+
+| Pass | Diagrams | Duration | Price | Other benefit |
+|---|---|---|---|---|
+| Monthly | 1/day | 30 days | $4.99 | AFK cap +12h |
+| Season | 1/day | 90 days | $12.99 | AFK cap +24h |
+| Permanent | 2/week (Mon 8am) | forever | unrecorded | — |
+
+Owner-confirmed community wisdom: **pass cost is out of scope for relic
+optimization entirely**. If a player spends money on anything, these 3
+passes come first, above and beyond relic strategy, because their other
+benefits (chiefly the AFK gathering cap) are treated as required to play
+the game at full efficiency — without any pass, anything gathered past
+12h AFK is simply lost. Passes are assumed as sunk/baseline spend, and
+their diagram output is treated as free income for relic purposes.
+
+Combined baseline income, assuming all 3 passes active (monthly and
+season stack, both granting 1/day independently): **1 + 1 = 2/day, plus
+2/week from Permanent → 16 diagrams/week**, i.e. 160 points/week
+guaranteed if every diagram were drawn immediately (see banking strategy
+below for why that's usually not the best use of them).
+
+### The banking strategy
+
+Since the 0.25% lottery roll is identical on every draw regardless of
+accumulated points, and diagrams don't expire or need to be spent
+immediately, the strategic move is: **don't draw every week**. While a
+relic is still cheap enough to pity out with cash, pay cash and leave
+diagrams unspent. Once the point cost gets too expensive to justify
+(the later relics — Cauldron/Basin/Pearl), dump the entire banked stockpile
+at once for a concentrated batch of independent 0.25% shots, which can hit
+well before the cash-pity threshold is reached — and even if it doesn't
+hit, every draw still adds its 10 points toward the cumulative total, so a
+failed lottery dump is never wasted value, just a missed shortcut.
+
+Odds of winning via lottery alone from N banked draws (1 − 0.9975^N):
+
+| Banked draws | Win chance | Weeks to bank (@16/week, all 3 passes) |
+|---|---|---|
+| 100 | 22.1% | 6.3 |
+| 277 | 50.0% | 17.3 |
+| 500 | 71.4% | 31.3 |
+| 920 | 90.0% | 57.5 |
+| 1,197 | 95.0% | 74.8 |
+| 1,840 | 99.0% | 115.0 |
+
+This is a genuinely long-horizon game (owner's own account is ~2 years
+from Rank 6R+), so banking diagrams across dozens or low hundreds of
+weeks while cash-pitying the early relics, then unloading the stockpile
+against Pearl, is a realistic strategy — not a theoretical one.
+
+### Most efficient dump target: Basin, not Pearl
+
+The lottery odds for a given stockpile size are identical no matter which
+relic is currently in the pool — the "cost" side of a dump never changes
+by target. What *does* change is the payoff if it hits: the **marginal**
+point gap for that specific relic (its own threshold minus the previous
+relic's, since everything below is already banked). Since dump cost is
+constant, the best target is whichever relic has the largest marginal gap
+— that's where a win saves the most cash for the same stockpile. Marginal
+costs below are exact diffs of the Route A/B tables above (not a separate
+continuous estimate), so they're consistent with the cumulative figures:
+
+| Relic | Cumulative points | Marginal points | Cash saved if won (SEAGM) | Cash saved if won (best IAP) |
+|---|---|---|---|---|
+| Vase | 5,000 | 5,000 | $649.80 | $739.26 |
+| Pot | 10,000 | 5,000 | $649.80 | $739.26 |
+| Mirror | 20,000 | 10,000 | $1,299.61 | $1,468.53 |
+| Token | 40,000 | 20,000 | $2,599.22 | $2,937.06 |
+| Sheers | 70,000 | 30,000 | $3,898.82 | $4,405.59 |
+| Cauldron | 88,888 | 18,888 | $2,454.70 | $2,777.22 |
+| **Basin** | 128,888 | **40,000** | **$5,198.43** | **$5,874.12** |
+| Pearl | 158,888 | 30,000 | $3,898.82 | $4,405.59 |
+
+**Basin has the single biggest marginal jump of the whole track (40,000
+points) — bigger even than Pearl's (30,000)**, despite Pearl being the
+final and most expensive relic overall. That's not obvious from the
+cumulative totals alone: Basin costs less than Pearl in total, but the
+*specific step* from Cauldron to Basin is the priciest single jump to
+clear. A banked stockpile is best spent trying to snipe Basin, not saved
+all the way for Pearl — and if the dump on Basin misses, the same
+diagrams' points still count toward Pearl's total anyway, so there's no
+downside to trying at Basin first.
+
+### Strategies for lower spenders
+
+The whale-tier tables above ($20k+ to guarantee everything) aren't the
+realistic plan for most players. Two strategies work well without
+committing to that:
+
+**1. Spend to a ceiling, then bank-and-ride past it.** Pick the relic
+where cash stops feeling worth it (owner: everything through Mirror is
+reasonable, Token is next), pay cash up to that ceiling at the best rate
+($9.99 tier or SEAGM vouchers), then stop spending entirely. Past the
+ceiling, don't draw diagrams weekly — bank them. Passive income alone
+(16/week from the 3 passes, already-sunk cost) keeps the cumulative total
+climbing for free, and periodic stockpile dumps at whatever relic is
+currently in the pool give real shots at winning it outright with no
+cash. A miss never costs anything extra — the points still bank toward
+the next relic regardless.
+
+**2. Snipe the biggest marginal jump inside your own near-term goal, not
+the global one.** Basin is the best target for a whale aiming at
+everything, but a lower spender should compare marginal jumps only among
+the relics they actually care about next. For someone stopping around
+Token, the relevant jumps are Vase/Pot (5,000 each), Mirror (10,000), and
+Token (20,000) — **Token is the biggest of that set**, meaning it's the
+single relic in that range where a lottery win saves the most cash
+relative to just paying for it ($2,599 via SEAGM / $2,937 via best IAP).
+Concretely: banking ~150–300 diagrams (9–19 weeks of passive income
+alone) gives a 31–53% chance of winning Token via lottery before ever
+paying full price for its marginal 20,000 points:
+
+| Banked draws | Win chance | Weeks to bank (@16/week) |
+|---|---|---|
+| 50 | 11.8% | 3.1 |
+| 100 | 22.1% | 6.2 |
+| 150 | 31.3% | 9.4 |
+| 200 | 39.4% | 12.5 |
+| 277 | 50.0% | 17.3 |
+| 300 | 52.8% | 18.8 |
+
+Combining both: pay cash through Mirror (cheap enough that cash is the
+faster path anyway), then bank diagrams for several months and dump the
+stockpile at Token before defaulting to a straight cash top-up for
+whatever points the dump didn't cover.
 
 ## Open questions
 
