@@ -41,6 +41,7 @@ intentionally out of scope here (owner: don't care about those for now).
   | $0.99 | 6 | 6.061 |
   | $4.99 | 30 | 6.012 |
   | $9.99 | 68 | **6.807** (best known tier) |
+  | $19.99 | 128 | 6.403 (worst known tier) |
   | $29.99 | 198 | 6.602 |
   | $49.99 | 328 | 6.561 |
   | $99.99 | 648 | 6.481 |
@@ -48,7 +49,8 @@ intentionally out of scope here (owner: don't care about those for now).
   $99.99 is the largest single IAP SKU seen (owner-confirmed) — there is no
   bigger single tier; event offers instead cap at up to 10× $99.99 packs
   rather than one larger bundle. The curve is **not monotonic**: $9.99 beats
-  every tier on both sides of it, including the $99.99 tier.
+  every other tier, and $19.99 — despite sitting right next to it — is
+  actually the single worst-value tier of the seven.
 
 - **Voucher-funded purchase**: the same IAP tiers above can alternatively be
   paid for with SEAGM top-up vouchers instead of cash, and doing so applies
@@ -60,13 +62,14 @@ intentionally out of scope here (owner: don't care about those for now).
   | $0.99 | 600 | 6.6 |
   | $4.99 | 3,000 | 33 |
   | $9.99 | 6,800 | 74.8 |
+  | $19.99 | 12,800 | 140.8 |
   | $29.99 | 19,800 | 217.8 |
   | $49.99 | 32,800 | 360.8 |
   | $99.99 | 64,800 | 712.8 |
 
-  Every one of these six tiers reduces to the exact same ratio:
+  Every one of these seven tiers reduces to the exact same ratio:
   **1,000 vouchers = 11 points** (1 voucher = 0.011 points, ≈90.909
-  vouchers/point). Confirmed exact across all six data points — treat as a
+  vouchers/point). Confirmed exact across all seven data points — treat as a
   fixed conversion constant, not an approximation.
 
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
@@ -119,5 +122,3 @@ above).
   bundle sizes for the remainder.
 - Cosmetic rewards on the same track: values and count not captured (owner:
   out of scope for now).
-- Whether any IAP tier between $9.99 and $29.99 exists (e.g. $19.99) that
-  might beat the $9.99 rate — not seen yet.
