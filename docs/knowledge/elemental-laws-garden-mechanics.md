@@ -3,9 +3,10 @@
 Not yet in the calc. Spiritual World content gated behind Voidbreak; Elemental
 Laws (five elements: Metal/Wood/Water/Fire/Earth) level up on Law Points,
 which come from consuming ("Blitzing") garden-grown Law Fruit. Elemental
-Laws feed passive stat boosts (still unquantified — see Open questions) and
-**Law Suppression**, which now has a quantified formula — see its own
-section below. Law Points also feed a separate **Cosmic Laws** system — G1
+Laws feed passive stat boosts (still unquantified — not needed for garden
+prep, low priority) and **Law Suppression**, which now has a quantified
+formula — see its own section below. Law Points also feed a separate
+**Cosmic Laws** system — G1
 confirms directly that both draw from **one shared Law Point pool**, not
 separate ones ("Law points are used to upgrade the level of the elements in
 Elemental Laws and Cosmic Laws"), and recommends prioritizing Elemental Laws
@@ -84,8 +85,8 @@ actual point payout of a fixed Blitz-hour value grows over time — see the
 
 UI shows **"Remaining Time: 120h"** — confirms G1's claimed 120h Blitz
 budget as a real displayed number. The **daily reset cadence** is G1's
-framing, not something the screenshot itself proves — flagged separately
-under Open questions. Popup also has an "Auto Blitz" toggle.
+framing, not something the screenshot itself proves. Popup also has an
+"Auto Blitz" toggle.
 
 ## Law Point generation milestones (G1, community-tier)
 
@@ -109,7 +110,8 @@ Not confirmed: whether this applies in PvE (vs. NPC/boss "law levels")
 as well as PvP, or PvP only — none of the three sources checked specify.
 Also separate from and doesn't quantify the plain passive stat boosts
 (flat ATK/DEF/etc.) that leveling a Law grants directly, independent of
-any opponent comparison — those remain unquantified (see Open questions).
+any opponent comparison. Neither gap matters for garden/throughput prep;
+only relevant once this system is actually modeled in the calc.
 
 ## Red tier — not a natural growth tier (Seralth, 2026-07-29)
 
@@ -251,28 +253,3 @@ Cross-checking G1's strategic prose against the confirmed numbers above:
   unlocking the garden pre-Voidbreak, and running it 100% Law Fruit for
   roughly the first year of Voidbreak access, is higher-leverage than any
   fruit-tier strategy or competing use of the same cells.
-
-## Open questions
-
-- What exactly closes the remaining ~12h/day gap between the Pot-boosted
-  ~108/day ceiling and the 120h/day cap — pet speed-ups, Shears/Red
-  conversion, both, or an uncatalogued additional fruit source (Sect
-  Library rewards, shop, events)?
-- Does energy actually spend continuously/fractionally in-game, or in
-  discrete chunks with a grow-time floor? Affects how close to the 107.88
-  theoretical ceiling is reachable in practice.
-- Pot artifact "charge" energy source — mechanism not detailed this
-  session.
-- Does leveling an Elemental Law raise its Learning Speed (K/h)
-  immediately, or only on some delay/refresh? Determines whether the
-  revised "eat one-by-one" reasoning above actually holds.
-- What is "Inter-promoting" (seen in the Elemental Laws screenshot as
-  "Elemental Law reaches Lv.200 (1/5)")? The six total-level thresholds
-  (200/1000/4000/6000/8000/10000) found alongside the Cosmic Laws
-  requirements above are a plausible match — Cosmic Laws' own stage gates
-  — but not confirmed as the same thing.
-- The plain passive stat boosts Elemental Laws grant directly (separate
-  from the now-quantified Law Suppression formula) — flat ATK/DEF/etc.
-  per level, magnitude unknown.
-- Whether Law Suppression applies in PvE (vs. NPC/boss law levels) or
-  PvP only.
