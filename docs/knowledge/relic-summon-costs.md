@@ -379,31 +379,45 @@ Basin first.
 ### Strategies for lower spenders
 
 The whale-tier tables above ($20k+ to guarantee everything) aren't the
-realistic plan for most players. Two strategies work well without
-committing to that:
+realistic plan for most players. Everyone's ceiling is different —
+figure out where cash stops feeling worth it for your own means, then
+apply these two strategies from that line rather than any specific relic
+named as an example below:
 
-**1. Spend to a ceiling, then bank-and-ride past it.** Pick the relic
-where cash stops feeling worth it — everything through Mirror is
-reasonable, Token's the next stretch — pay cash up to that ceiling at the
-best rate ($9.99 tier or SEAGM vouchers), then stop spending entirely.
-Past the ceiling, don't draw diagrams weekly — bank them. Passive income
-alone (16/week from the 3 passes, already-sunk cost) keeps the cumulative
-total climbing for free, and periodic stockpile dumps at whatever relic's
-currently in the pool give real shots at winning it outright with no
-cash. A miss never costs anything extra — the points still bank toward
-the next relic regardless.
+**1. Spend to a ceiling, then bank-and-ride past it.** Pay cash up to
+whatever relic still feels reasonable at the best rate ($9.99 tier or
+SEAGM vouchers), then stop spending entirely. Past that ceiling, don't
+draw diagrams weekly — bank them. Passive income alone (16/week from the
+3 passes, already-sunk cost) keeps the cumulative total climbing for
+free, and periodic stockpile dumps at whatever relic's currently in the
+pool give real shots at winning it outright with no cash. A miss never
+costs anything extra — the points still bank toward the next relic
+regardless. This scales down to a $0 ceiling just as well: bank from day
+one, never buy a single point, and let passive income plus lottery odds
+do all the work — slower, but the 8-week floor applies either way, so
+patience alone eventually gets there. It also scales up: someone with
+more room to spend just pushes the ceiling further down the list before
+switching to banking.
+
+For a worked example: everything through Mirror is a comfortable cash
+spend for one player, Token the next stretch past it — someone else's
+line will fall somewhere else entirely, and that's fine, the method's the
+same regardless of where it lands.
 
 **2. Snipe the biggest marginal jump inside your own near-term goal, not
 the global one.** Basin's the best target for a whale going all the way,
-but a lower spender should compare marginal jumps only among the relics
-they actually care about next. Stopping around Token, the relevant jumps
-are Vase/Pot (5,000 each), Mirror (10,000), and Token (20,000) — Token's
-the biggest of that set, meaning it's the single relic in that range
-where a lottery win saves the most cash relative to just paying for it
-($2,600 via SEAGM / $2,937 via best IAP). Banking ~150–300 diagrams
-(9–19 weeks of passive income alone) gives a 31–53% chance of winning
-Token via lottery before ever paying full price for its marginal 20,000
-points:
+but anyone stopping earlier should compare marginal jumps only among the
+relics they actually care about next — list the jump size for each relic
+up to your own stopping point and target whichever's biggest, the same
+logic as Basin just applied to a smaller range.
+
+Worked example, for someone stopping around Token: the relevant jumps are
+Vase/Pot (5,000 each), Mirror (10,000), and Token (20,000) — Token's the
+biggest of that set, meaning it's the single relic in that range where a
+lottery win saves the most cash relative to just paying for it ($2,600
+via SEAGM / $2,937 via best IAP). Banking ~150–300 diagrams (9–19 weeks
+of passive income alone) gives a 31–53% chance of winning it via lottery
+before ever paying full price for its marginal 20,000 points:
 
 | Banked draws | Win chance | Weeks to bank (@16/week) |
 |---|---|---|
@@ -414,10 +428,12 @@ points:
 | 277 | 50.0% | 17.3 |
 | 300 | 52.8% | 18.8 |
 
-Combining both: pay cash through Mirror since cash is the faster path
-there anyway, then bank diagrams for several months and dump the
-stockpile at Token before defaulting to a straight cash top-up for
-whatever points the dump didn't cover.
+Combining both, for that same example: pay cash through Mirror since cash
+is the faster path there anyway, then bank diagrams for several months
+and dump the stockpile at Token before defaulting to a straight cash
+top-up for whatever points the dump didn't cover. Redo the same
+comparison at your own stopping point instead — the method carries over
+exactly, only the specific numbers change.
 
 ## Practical read
 
@@ -431,10 +447,13 @@ price point, but only by ~12%, not the huge margin a naive reading of the
 voucher bonus would suggest. Guaranteeing every relic with cash tops out
 around $20,650 (SEAGM) to $23,347 (direct) — a whale number, not a
 realistic plan for most players. For everyone else: pay cash up to
-whichever relic still feels reasonable — Mirror, Token, wherever that
-line falls — then stop and bank Creation Diagrams instead of drawing them
-weekly. Passive income from the 3 passes (already sunk cost for the
-AFK-cap benefits alone) keeps banking real lottery shots for free, and the
-best place to spend a stockpile is whichever relic has the biggest single
-step from the one before it — Basin for a whale going all the way, or
+whichever relic still feels reasonable for your own means — that line
+could sit anywhere from zero to Sheers or beyond depending on the
+player — then stop and bank Creation Diagrams instead of drawing them
+weekly. Even a $0 ceiling works, just slower: the 8-week floor applies
+either way, so patience plus passive income from the 3 passes (already
+sunk cost for the AFK-cap benefits alone) gets there on its own, keeping
+real lottery shots banked for free. The best place to spend a stockpile
+is whichever relic has the biggest single step from the one before it —
+Basin for a whale going all the way, or
 whatever's biggest within a smaller stopping point otherwise.
