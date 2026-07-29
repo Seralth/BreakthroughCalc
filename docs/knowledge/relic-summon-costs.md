@@ -77,6 +77,31 @@ intentionally out of scope here (owner: don't care about those for now).
   vouchers/point). Confirmed exact across all nine data points — treat as
   a fixed conversion constant, not an approximation.
 
+### Price-point value ranking
+
+The voucher ratio above is fixed regardless of tier — no price point is a
+better or worse deal for "voucher usage," they all convert at the exact
+same 0.011 pts/voucher. The only thing that actually varies by tier is
+**cash-purchase efficiency**. Ranked best to worst by cash rate:
+
+| Price | Points (cash) | Rate (pts/$) | Vouchers (if paid via voucher) | Points via voucher (×1.1) |
+|---|---|---|---|---|
+| $9.99 | 68 | **6.807** ← best | 6,800 | 74.8 |
+| $29.99 | 198 | 6.602 | 19,800 | 217.8 |
+| $49.99 | 328 | 6.561 | 32,800 | 360.8 |
+| $14.99 | 98 | 6.538 | 9,800 | 107.8 |
+| $99.99 | 648 | 6.481 | 64,800 | 712.8 |
+| $19.99 | 128 | 6.403 ← worst | 12,800 | 140.8 |
+| $0.99 | 6 | 6.061 | 600 | 6.6 |
+| $2.99 | 18 | 6.020 | 1,800 | 19.8 |
+| $4.99 | 30 | 6.012 | 3,000 | 33.0 |
+
+To optimize point gain: always buy $9.99 packs, never $19.99 (its
+immediate neighbor is worse value on both sides). To optimize voucher
+usage: it doesn't matter which tier you redeem through — spend down
+whatever vouchers you're sitting on at any tier, the yield per voucher is
+identical everywhere.
+
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
