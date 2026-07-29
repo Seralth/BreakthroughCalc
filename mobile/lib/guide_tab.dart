@@ -798,8 +798,10 @@ Widget _techniquesPage(BuildContext context) {
         '+10% Respira) are the PvP picks. Laws of Nature: the +1% pill '
         'effect unlock early; Tier 12 adds +10% Respira effect.'),
     Text('R10 and beyond', style: h3),
-    para('Everything at R10 is worth taking — Immortal Ascension to '
-        'Tier 13 in particular. From R11 the ranks settle into a '
+    para('Everything at R10 is worth taking — Immortal Ascension '
+        '(the rank\'s only Universal book) to Tier 12 for its +1 daily '
+        'pill attempt; Tier 15 beyond that is stats-only. From R11 the '
+        'ranks settle into a '
         'pattern: each has a law-speed manual (rated S across the '
         'board), usually an abode-aura or Respira manual, and a PvP '
         'manual. New node families appear here: elemental-law learning '
@@ -867,7 +869,7 @@ Widget _techniquesPage(BuildContext context) {
           ['R9', 'Way of Creation', 'C', 'Relic and ability hybrid PvP'],
           ['R9', 'Wordless Scripture', 'C', 'Control-stacking utility pick'],
           ['R9', 'Zhurong Mantra', 'C', 'Magic ability-PvP pick'],
-          ['R10', 'Immortal Ascension', 'S+', 'Must-take — worth tiering to 13'],
+          ['R10', 'Immortal Ascension', 'S+', 'Must-take — worth tiering to 12 for +1 daily pill attempt'],
           ['R11', 'Thunder Lord Incantation', 'S', 'Every node is law speed'],
           ['R11', 'Heavenly Rhythm', 'S',
            'All Respira: attempt mid-tree, effect around it'],
