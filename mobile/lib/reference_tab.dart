@@ -434,6 +434,10 @@ Widget _myrimonPage(BuildContext context, Engine engine, Map<String, dynamic> ca
     Text('Uses and stacking', style: h3),
     para('During the first week uses don\'t stack; after that they do — save them '
         'for Sunday or the next BR threshold.'),
+    para('Uses themselves carry across a realm ascension undiminished — near an '
+        'ascension, hold unspent uses rather than spending them on a few extra of '
+        'the current realm\'s fruit, and redeem them right after for the new '
+        'realm\'s higher-tier fruit instead.'),
     Text('Aura Extractor', style: h3),
     para('Extractor tracks: the Cultivation Bonus track is +4% per level, plus '
         'Quality and Gush tracks. Rarity bonuses: each rarity rank unlocks +20% '

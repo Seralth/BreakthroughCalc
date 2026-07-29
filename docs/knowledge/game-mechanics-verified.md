@@ -154,6 +154,13 @@ applied after the (still manual) breakthrough.
   gate passing unlocks the next realm, so your fruits stop being highest-rank
   and lose the +50% (≈ "lose a third", community rounds to 50%). Not a
   separate penalty.
+- Myrimon runs/tokens carry across a realm ascension undiminished (owner tip,
+  2026-07-28) — unlike the banked FRUIT stockpile, which is what decays
+  (50% past timegate) and gets auto-consumed on the extractor's realm reset.
+  Near an ascension (Voidbreak first, but the same logic applies at every
+  later World boundary), don't burn unspent runs on a few extra of the
+  current realm's fruit — hold them and spend right after ascending, since
+  the same run then buys the new realm's higher-tier fruit instead.
 - Web cross-check (2026-07-15): the Overmortal Global Wiki's Cultivation Room
   per-grade EXP tables match data/breakthrough.json exactly at spot-checked
   rows (Inc Late G15 = 6,549,973; VB Late G20 = 25,232,632). Manual,
