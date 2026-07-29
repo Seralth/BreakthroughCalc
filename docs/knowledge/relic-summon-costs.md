@@ -105,6 +105,13 @@ voucher usage: it doesn't matter which tier you redeem through — spend
 down whatever vouchers you're sitting on at any tier, the yield per
 voucher is identical everywhere.
 
+**UI note for whenever this becomes a Vault feature**: if this table ships
+in the app, the Rate column is the sort key the whole table is ordered
+by — give it a distinct color/weight so that's obvious at a glance,
+rather than reading as just another data column. This is a sort-order
+affordance, not a data-status marker, so it doesn't conflict with the
+no-provenance-badges rule in the root CLAUDE.md.
+
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
