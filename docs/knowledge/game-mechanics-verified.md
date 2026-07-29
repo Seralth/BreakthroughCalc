@@ -509,15 +509,23 @@ strings extraction; values in %d templates are server-side):
   Mirror Duplication cost −5% → −10% REPLACE the prior tier, not stack.
   Artifact energy at 0★: 1 per Taoist Year, cap 200; charge = 30 Fateum
   for +100. Mirror copy range: Incarnation+ pills of any quality.
-  Starsea Vase star scaling (owner-read 2026-07-21): energy regen is
-  progressive 0★ 1 → 2★ 1.6 → 3★ 2 per Taoist Year; cap 0★ 200 → 1★ 300
-  → 2★ 400 → 3★ 500 (= 200 + 100/star; 4★/5★ predicted 600/700, unread).
-  SPECIAL effects appear ONLY at stars 1, 2, 5 (before the
-  awakening effect) — 3★/4★ improve only base regen/cap. So the EXP-bonus
-  mapping is 1★ +10%, 2★ +20% (NOT 3★ — earlier note corrected), 5★ 15%
-  no-cost refine; the dump's +30%/+40% EXP tiers are then most likely the
-  AWAKENING progression, not star tiers (unconfirmed). Open: exact 1★/2★
-  EXP values from tooltip, the awakening effect, 1★/4★ regen, 4★/5★ cap.
+  Starsea Vase star scaling (owner-confirmed 2026-07-28, supersedes the
+  2026-07-21 dump-inferred reading below): every star increases energy
+  regen/cap, but the EXP bonus only steps up on ODD stars — 1★ +10%,
+  2★ +10% (unchanged, energy-only), 3★ +20%, 4★ +20% (unchanged,
+  energy-only); flat +8% skin adder stacks on top (28% at 3★/4★ = the
+  #71 cross-check). Matches `data/breakthrough.json`'s `star` table
+  third column exactly (`0*..5*` → `[0, 0.1, 0.1, 0.2, 0.2, 0.2]`) — no
+  code change needed. The earlier "SPECIAL effects ONLY at stars 1, 2, 5"
+  dump inference had the parity backwards; treat it as superseded.
+  Energy regen/cap themselves are still progressive every star: 0★ 1/TY
+  → 2★ 1.6 → 3★ 2 per Taoist Year; cap 0★ 200 → 1★ 300 → 2★ 400 → 3★ 500
+  (= 200 + 100/star; 4★/5★ predicted 600/700, unread). 5★ additionally
+  grants a 15% no-cost-refine chance (separate mechanic, not a further
+  EXP tier — already modeled in `engine.py`/`engine.dart`'s 0.85 cost
+  multiplier). Open: the dump's +30%/+40% EXP tiers and Mirror's
+  −5%/−10% (still unconfirmed whether stacking or replace-tier), the
+  awakening effect, 1★/4★ regen, 4★/5★ cap.
 - **Star Marks**: granted by the Constellation Altar (Samsara/
   reincarnation system), five quality ranks; pill-color marks by Mansion:
   Ghost = Rare (blue), Turtle Beak = Epic (purple), Chariot = Legendary
