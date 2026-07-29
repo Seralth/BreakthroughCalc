@@ -8,20 +8,28 @@ Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
 (`zodiac-relic.md`) — unrelated systems that just happen to share the word
 "relic."
 
-All 8 below — Vase, Pot, Mirror, Token, Sheers, Cauldron, Basin, Pearl —
+All 8 below — Vase, Pot, Mirror, Token, Shears, Cauldron, Basin, Pearl —
 are Creation Artifacts. Each has a full descriptor-plus-item name (Starsea
 Vase, Dual-Star Mirror, Timereversal Pearl, same pattern for the rest),
 but nobody calls them that — everyone just says Vase, Mirror, Pearl, and
-so on, and that's what this doc uses too. Only three of them have their
-Energy mechanic written up in Reference already; the other five are just
-as real, they're simply too expensive for most players to reach, so
-nobody's gotten around to documenting their mechanics yet.
+so on, and that's what this doc uses too. Vase, Mirror, and Pearl have
+their Energy mechanic written up in Reference already. Pot and Shears
+also have their own mechanics written up now too, just not in Reference —
+Pot is the garden growth-speed-up artifact and Shears is the Red-tier
+Law Fruit converter, both covered in
+`docs/knowledge/elemental-laws-garden-mechanics.md`. Only Token, Cauldron,
+and Basin remain fully undocumented — real Creation Artifacts, just too
+expensive for most players to reach, so nobody's gotten around to them
+yet.
 
 **Integration note**: this belongs as a subsection inside the existing
 Artifacts & Gems section — how you obtain them — not a new standalone
 Reference topic (see the note near the price-point ranking table below).
-Documenting the other five artifacts' own Energy mechanics is separate
-work.
+Pot and Shears' own mechanics live in `elemental-laws-garden-mechanics.md`
+rather than Reference for now since they surfaced while researching that
+system, not this one — worth folding into Artifacts & Gems alongside
+Vase/Mirror/Pearl whenever that section gets built out. Documenting
+Token/Cauldron/Basin's own Energy mechanics is separate, still-open work.
 
 ## Core mechanic: breakpoints, not a per-pull gacha
 
@@ -77,7 +85,7 @@ a time, Vase first and Pearl last.
 | Pot | 10,000 |
 | Mirror | 20,000 |
 | Token | 40,000 |
-| Sheers | 70,000 |
+| Shears | 70,000 |
 | Cauldron | 88,888 |
 | Basin | 128,888 |
 | Pearl | 158,888 |
@@ -251,7 +259,7 @@ spend substantially for a patient player.
 | Pot | 10,000 | $1,478.52 |
 | Mirror | 20,000 | $2,947.05 |
 | Token | 40,000 | $5,884.11 |
-| Sheers | 70,000 | $10,289.70 |
+| Shears | 70,000 | $10,289.70 |
 | Cauldron | 88,888 | $13,066.92 |
 | Basin | 128,888 | $18,941.04 |
 | Pearl | 158,888 | $23,346.63 |
@@ -267,7 +275,7 @@ approximated off the flat top-tier rate:
 | Pot | 909,091 | $1,301.86 |
 | Mirror | 1,818,182 | $2,599.97 |
 | Token | 3,636,364 | $5,199.92 |
-| Sheers | 6,363,637 | $9,099.71 |
+| Shears | 6,363,637 | $9,099.71 |
 | Cauldron | 8,080,728 | $11,554.61 |
 | Basin | 11,717,091 | $16,752.75 |
 | Pearl | 14,444,364 | $20,650.61 |
@@ -361,7 +369,7 @@ cumulative figures:
 | Pot | 10,000 | 5,000 | $650.93 | $739.26 |
 | Mirror | 20,000 | 10,000 | $1,298.11 | $1,468.53 |
 | Token | 40,000 | 20,000 | $2,599.95 | $2,937.06 |
-| Sheers | 70,000 | 30,000 | $3,899.79 | $4,405.59 |
+| Shears | 70,000 | 30,000 | $3,899.79 | $4,405.59 |
 | Cauldron | 88,888 | 18,888 | $2,454.90 | $2,777.22 |
 | **Basin** | 128,888 | **40,000** | **$5,198.14** | **$5,874.12** |
 | Pearl | 158,888 | 30,000 | $3,897.86 | $4,405.59 |
@@ -448,7 +456,7 @@ voucher bonus would suggest. Guaranteeing every relic with cash tops out
 around $20,650 (SEAGM) to $23,347 (direct) — a whale number, not a
 realistic plan for most players. For everyone else: pay cash up to
 whichever relic still feels reasonable for your own means — that line
-could sit anywhere from zero to Sheers or beyond depending on the
+could sit anywhere from zero to Shears or beyond depending on the
 player — then stop and bank Creation Diagrams instead of drawing them
 weekly. Even a $0 ceiling works, just slower: the 8-week floor applies
 either way, so patience plus passive income from the 3 passes (already

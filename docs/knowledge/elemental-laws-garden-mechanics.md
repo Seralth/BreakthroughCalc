@@ -2,12 +2,19 @@
 
 Not yet in the calc. Spiritual World content gated behind Voidbreak; Elemental
 Laws (five elements: Metal/Wood/Water/Fire/Earth) level up on Law Points,
-which come from consuming ("Blitzing") garden-grown Law Fruit. G1 describes
-Elemental Laws as feeding passive stat boosts and "Law Suppression" (payoff
-mechanism not detailed further — community-tier claim, unconfirmed). Law
-Points also feed a separate **Cosmic Laws** system that this doc does not
-cover — whether the two draw from a shared pool or separate ones is an open
-question below.
+which come from consuming ("Blitzing") garden-grown Law Fruit. Elemental
+Laws feed passive stat boosts (still unquantified — not needed for garden
+prep, low priority) and **Law Suppression**, which now has a quantified
+formula — see its own section below. Law Points also feed a separate
+**Cosmic Laws** system — G1
+confirms directly that both draw from **one shared Law Point pool**, not
+separate ones ("Law points are used to upgrade the level of the elements in
+Elemental Laws and Cosmic Laws"), and recommends prioritizing Elemental Laws
+first specifically because leveling them raises the shared pool's income
+rate. Cosmic Laws additionally cost **Nature Mantra** (Seeker Shop, bought
+with Revealstone) on top of Law Points — the existing "buy nothing at the
+Seeker Shop before Voidbreak, you'll want 3,300+ Nature Mantras" guidance
+in Reference → World Systems is this same requirement.
 
 ## Sources
 
@@ -15,6 +22,17 @@ question below.
   section (grindnstrat.com/overmortal-spiritual-world-guide/#Law_Fruits).
   Community guide; prose claims are community-tier, not screenshot-verified,
   except where noted below.
+- **G2/G3** — Chinese-language community guides. OverMortal is the global
+  release of **一念逍遥** (Yi Nian Xiao Yao), same publisher (LTGAMES
+  GLOBAL) — the Chinese-language community around the original release has
+  substantially more detailed guides/wikis than the English-language scene,
+  worth checking first (not just as a fallback) for any mechanic English
+  guides describe vaguely. Sources for Law Suppression below: a Zhihu guide
+  (zhuanlan.zhihu.com/p/579762919, "一念逍遥法则系统") and a TapTap CN forum
+  post (taptap.cn/moment/364413714448778861), cross-checked against each
+  other and a third aggregated search — three independent community
+  sources agreeing exactly on the same numbers. Community-tier (not a
+  screenshot), but strongly triangulated.
 - Three images embedded in G1 are direct screenshots of actual game UI
   (Law Fruit Seed tooltip, Elemental Laws main screen, Blitz Laws popup).
   Treat the *numbers* in these as confirmed even though the guide's
@@ -67,8 +85,33 @@ actual point payout of a fixed Blitz-hour value grows over time — see the
 
 UI shows **"Remaining Time: 120h"** — confirms G1's claimed 120h Blitz
 budget as a real displayed number. The **daily reset cadence** is G1's
-framing, not something the screenshot itself proves — flagged separately
-under Open questions. Popup also has an "Auto Blitz" toggle.
+framing, not something the screenshot itself proves. Popup also has an
+"Auto Blitz" toggle.
+
+## Law Point generation milestones (G1, community-tier)
+
+Each element's own Law Point generation rate **doubles (×2) every time that
+element reaches a milestone level**: 50, 150, 250, 350, 450, 550, and so on
+(every 100 levels, always ending in 50). No exact K/h numbers given, just
+the doubling pattern and the milestone spacing — worth confirming with an
+in-game screenshot at the next milestone crossed, since this compounds the
+value of pushing a single element's level rather than spreading Blitz
+evenly across all five.
+
+## Law Suppression — quantified (G2/G3, community-tier, triangulated)
+
+Compare your **total** Elemental Law level — summed across all 5 elements,
+not compared per-element — against a target's total. For every level your
+total exceeds theirs by, deal **+0.05% additional final damage**, capping
+at **+30% at 600 levels of advantage** (no further benefit past 600). E.g.
+100 levels ahead of an opponent = +5% final damage against them.
+
+Not confirmed: whether this applies in PvE (vs. NPC/boss "law levels")
+as well as PvP, or PvP only — none of the three sources checked specify.
+Also separate from and doesn't quantify the plain passive stat boosts
+(flat ATK/DEF/etc.) that leveling a Law grants directly, independent of
+any opponent comparison. Neither gap matters for garden/throughput prep;
+only relevant once this system is actually modeled in the calc.
 
 ## Red tier — not a natural growth tier (Seralth, 2026-07-29)
 
@@ -77,18 +120,36 @@ Red isn't grown — it's produced by the **Shears** relic, which spends energy
 to advance an existing fruit up to Red. Red fruit's 14h Blitz value is
 **exempt from the 120h/day cap** (same exemption pattern as Pills).
 
+**This Shears is the Creation Artifact** documented in
+`relic-summon-costs.md` (the relic summon point-track/monetization doc) —
+same item, confirmed. That doc covers how you acquire it (cumulative
+point breakpoints, cash/voucher cost); this doc covers what it does once
+owned.
+
 ## Garden Pot artifact (Seralth, 2026-07-29)
 
-**Disambiguation:** this is a third, unrelated system that happens to share
-the English word "pot" with two existing curios already in this repo —
+**This Pot is also a Creation Artifact** — same acquisition doc as Shears
+above, `relic-summon-costs.md`. Not to be confused with the two unrelated
+curios below that also happen to be called "Pot":
 **Zodiac Pot** (三相之壶, curio 91359, see `zodiac-relic.md`) and
-**Dongxuan's Pot** (curio 91115, see `curio-effects.md`). Do not conflate.
+**Dongxuan's Pot** (curio 91115, see `curio-effects.md`). Three separate
+"Pot" items in this game; do not conflate any of them.
 
 The Garden Pot is a growth-speed-up artifact, not Law-Fruit-specific
-(applies to garden plants generally):
+(applies to garden plants generally). It has two effects, and **for Law
+Fruit only the first applies**:
 
-- 1 energy spent = 1 hour of growth speed-up; also raises a plant's
-  "quality limit" (the max tier it can reach).
+- **Main effect, applies to everything**: 1 energy spent = 1 hour of
+  growth speed-up. This is the Pot's whole relevance to Law Fruit — a
+  reliable, large source of grow-time reduction, nothing more.
+- **Secondary effect, gear-crafting plants only**: energy also raises
+  those plants' "quality limit" from capping at Purple up to Yellow.
+  **Does not apply to Law Fruit** — Law Fruit's tier ceiling is fixed
+  regardless of Pot energy spent on it, so there's no way to grow past
+  Green using the Pot alone (Red still requires the separate Shears
+  relic). This resolves the earlier open question: the "concentrate
+  everything in Green" conclusion under Analysis holds regardless of how
+  much Pot energy gets thrown at Law Fruit.
 - Energy regen is denominated in Taoist years — 1 Taoist year = 15 real
   minutes (see `game-mechanics-verified.md`'s core-mechanics note). 0-star
   grants +1 energy/year (= 4/hour = 96/day), capped at 200. Owner's Pot is
@@ -96,9 +157,9 @@ The Garden Pot is a growth-speed-up artifact, not Law-Fruit-specific
   **300**, plus a flat **+15%** speed-up bonus on top.
 - Energy can also be gained via "charge" — mechanism not detailed this
   session (open question).
-- A 100-energy lump spend forces Red-tier evolution, but only for
-  **gear-crafting plants**, NOT Law Fruit. Law Fruit's Red-tier path is the
-  separate Shears relic above.
+- A 100-energy lump spend forces Red-tier evolution for gear-crafting
+  plants (the mechanism behind the Purple→Yellow quality-limit boost
+  above). Law Fruit's own Red-tier path is the separate Shears relic.
 
 ## Pet system daily speed-up spawns (Seralth, 2026-07-29)
 
@@ -172,6 +233,16 @@ Cross-checking G1's strategic prose against the confirmed numbers above:
   The remaining ~12h/day is plausibly covered by banked pet-spawned
   speed-up items and/or occasional Shears/Red conversion (cap-exempt) —
   not concluded which dominates, or whether either fully closes it.
+- **The garden genuinely competes for cells** (owner-confirmed): Ploughwood
+  Seeds (for the Zodiac Relic) and gear-crafting plants use the same 36
+  cells as Law Fruit — the 12-slot all-Green scenario above assumes zero
+  competition, which isn't the real constraint. **Community wisdom
+  resolves this anyway: dedicate the entire garden to Law Fruit, full
+  stop, for about a real-life year** — Elemental Laws are considered
+  important enough to be worth the opportunity cost of Ploughwood/gear
+  plants losing garden access for that long. So the throughput numbers
+  above are the right target to plan around even though the garden isn't
+  Law-Fruit-exclusive by mechanic — it's Law-Fruit-exclusive by strategy.
 - **Strategic conclusion:** garden-slot unlock is a flat, area-scaling
   throughput multiplier that dwarfs any fruit-tier optimization G1
   discusses. Since Law Fruit only becomes usable at Voidbreak, and
@@ -179,33 +250,6 @@ Cross-checking G1's strategic prose against the confirmed numbers above:
   Voidbreak," any garden slot not purchased before reaching Voidbreak is
   permanently lost throughput for however long it stays unbought — there's
   no way to retroactively recover missed Elemental Law levels. Fully
-  unlocking the garden pre-Voidbreak is higher-leverage than any
-  fruit-tier strategy.
-
-## Open questions
-
-- Is the garden single-purpose per plot, or do other crop types compete for
-  the same 36 cells concurrently (reducing effective Law-Fruit capacity
-  below the theoretical 12-slot max)?
-- What exactly closes the remaining ~12h/day gap between the Pot-boosted
-  ~108/day ceiling and the 120h/day cap — pet speed-ups, Shears/Red
-  conversion, both, or an uncatalogued additional fruit source (Sect
-  Library rewards, shop, events)?
-- Does energy actually spend continuously/fractionally in-game, or in
-  discrete chunks with a grow-time floor? Affects how close to the 107.88
-  theoretical ceiling is reachable in practice.
-- Pot artifact "charge" energy source — mechanism not detailed this
-  session.
-- Does leveling an Elemental Law raise its Learning Speed (K/h)
-  immediately, or only on some delay/refresh? Determines whether the
-  revised "eat one-by-one" reasoning above actually holds.
-- Do Elemental Laws and Cosmic Laws draw Law Points from one shared pool
-  or two separate ones? Not covered by G1's Law Fruit section.
-- What is "Inter-promoting" (seen in the Elemental Laws screenshot as
-  "Elemental Law reaches Lv.200 (1/5)")? Looks like a milestone/gate tied
-  to element level; payoff and the full 1/5 progression are unknown.
-- Pot's "quality limit" boost (see Garden Pot artifact) — does it let a
-  plant exceed a tier ceiling it would otherwise be stuck at, or something
-  else? Exact mechanism wasn't specified this session.
-- What are the concrete stat boosts / "Law Suppression" effects Elemental
-  Laws actually grant? G1 names them but doesn't quantify either.
+  unlocking the garden pre-Voidbreak, and running it 100% Law Fruit for
+  roughly the first year of Voidbreak access, is higher-leverage than any
+  fruit-tier strategy or competing use of the same cells.
