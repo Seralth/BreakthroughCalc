@@ -254,6 +254,49 @@ all the way for Pearl — and if the dump on Basin misses, the same
 diagrams' points still count toward Pearl's total anyway, so there's no
 downside to trying at Basin first.
 
+### Strategies for lower spenders
+
+The whale-tier tables above ($20k+ to guarantee everything) aren't the
+realistic plan for most players. Two strategies work well without
+committing to that:
+
+**1. Spend to a ceiling, then bank-and-ride past it.** Pick the relic
+where cash stops feeling worth it (owner: everything through Mirror is
+reasonable, Token is next), pay cash up to that ceiling at the best rate
+($9.99 tier or SEAGM vouchers), then stop spending entirely. Past the
+ceiling, don't draw diagrams weekly — bank them. Passive income alone
+(16/week from the 3 passes, already-sunk cost) keeps the cumulative total
+climbing for free, and periodic stockpile dumps at whatever relic is
+currently in the pool give real shots at winning it outright with no
+cash. A miss never costs anything extra — the points still bank toward
+the next relic regardless.
+
+**2. Snipe the biggest marginal jump inside your own near-term goal, not
+the global one.** Basin is the best target for a whale aiming at
+everything, but a lower spender should compare marginal jumps only among
+the relics they actually care about next. For someone stopping around
+Token, the relevant jumps are Vase/Pot (5,000 each), Mirror (10,000), and
+Token (20,000) — **Token is the biggest of that set**, meaning it's the
+single relic in that range where a lottery win saves the most cash
+relative to just paying for it ($2,599–$2,938 depending on route).
+Concretely: banking ~150–300 diagrams (9–19 weeks of passive income
+alone) gives a 31–53% chance of winning Token via lottery before ever
+paying full price for its marginal 20,000 points:
+
+| Banked draws | Win chance | Weeks to bank (@16/week) |
+|---|---|---|
+| 50 | 11.8% | 3.1 |
+| 100 | 22.1% | 6.2 |
+| 150 | 31.3% | 9.4 |
+| 200 | 39.4% | 12.5 |
+| 277 | 50.0% | 17.3 |
+| 300 | 52.8% | 18.8 |
+
+Combining both: pay cash through Mirror (cheap enough that cash is the
+faster path anyway), then bank diagrams for several months and dump the
+stockpile at Token before defaulting to a straight cash top-up for
+whatever points the dump didn't cover.
+
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
 SEAGM sells the same "Vouchers" currency directly for cash, at bundle
