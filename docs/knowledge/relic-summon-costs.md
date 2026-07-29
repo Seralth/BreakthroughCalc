@@ -2,7 +2,11 @@
 
 How the 8 Creation Artifacts get acquired — not their own stat/Energy
 mechanics, which live in Reference → Artifacts & Gems (`docs.py` desktop /
-`reference_tab.dart` mobile). Not yet wired into the calc.
+`reference_tab.dart` mobile). The core facts here (breakpoints, weekly
+gate, IAP/voucher rates, the whale-cost ceiling) are now integrated into
+that same Reference section plus Guide → Spending; the deeper tables
+below (SEAGM bundle-by-bundle pricing, banking odds, per-tier ranking)
+stay here as backing detail. Not yet wired into the calc's actual math.
 
 Distinct from Equipment Relics (`equipment-relics.md`) and the Zodiac Relic
 (`zodiac-relic.md`) — unrelated systems that just happen to share the word

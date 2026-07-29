@@ -297,6 +297,34 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
         "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
     artifacts += (
+        "<a name='summon'></a><h3>Acquiring the Creation Artifacts</h3>"
+        "<p>All 8 Creation Artifacts — Vase, Pot, Mirror, Token, Shears, "
+        "Cauldron, Basin, Pearl — come from the same point track, not a "
+        "per-pull gacha. Points build up on one running total that never "
+        "gets spent: crossing a relic's threshold unlocks it and progress "
+        "keeps climbing toward the next one.</p>")
+    artifacts += table(
+        "Creation Artifact point breakpoints (cumulative)",
+        ["Relic", "Points"],
+        [["Vase", "5,000"], ["Pot", "10,000"], ["Mirror", "20,000"],
+         ["Token", "40,000"], ["Shears", "70,000"], ["Cauldron", "88,888"],
+         ["Basin", "128,888"], ["Pearl", "158,888"]],
+        "Also the pool order: only one relic is available at a time, top "
+        "to bottom, one per week — a hard ceiling of 8 weeks minimum for "
+        "all 8 no matter how much gets spent. A relic can also be won "
+        "early via an independent 0.25% instant-win roll on every draw, "
+        "on top of the points.")
+    artifacts += (
+        "<p>Points come from spending real money directly, or from "
+        "SEAGM top-up vouchers (a 1.1× bonus applies when paid via "
+        "voucher instead of cash). $9.99 is consistently the best-value "
+        "purchase tier and $4.99 the worst, whichever route is used. "
+        "Guaranteeing every relic with cash tops out around $20,650 "
+        "(SEAGM vouchers) to $23,350 (direct) — most players are better "
+        "served picking a personal spending ceiling and relying on free "
+        "daily draws past it (<a href='app://guide/spending'>Guide → "
+        "Spending</a> covers the tradeoffs).</p>")
+    artifacts += (
         "<h3>Aura Gems</h3>"
         "<p>An equipped Aura Gem stores aura while you're away and releases it, acting "
         "as a flat percentage speed-up on cultivation. The calculator (following "
@@ -2030,7 +2058,25 @@ def build_guide_pages(acc: dict) -> list:
         "These drift with every era — treat as orientation only:</p>"
         "<ul><li><b>Incarnation</b>: 800m – 2b+</li>"
         "<li><b>Voidbreak</b>: 9b – 25b+</li>"
-        "<li><b>Wholeness</b>: 45b – 100b+</li></ul>")
+        "<li><b>Wholeness</b>: 45b – 100b+</li></ul>"
+        "<h3>Creation Artifacts (relic summon)</h3>"
+        "<p>Guaranteeing all 8 with cash runs $20k+ (<a href='app://ref/"
+        "artifacts#summon'>Reference → Artifacts &amp; Gems</a>) — a "
+        "whale number, not a realistic plan for most players. Pick "
+        "whichever relic still feels like a reasonable spend for your "
+        "own means, pay cash up to that point, then stop and switch to "
+        "free daily draws instead of buying further.</p>"
+        "<p>Past that point, don't spend draws as they come in — bank "
+        "them. Every draw carries the same 0.25% instant-win shot "
+        "regardless of points banked, so a large stockpile dumped at "
+        "once has real odds of winning a relic for free (roughly 50% at "
+        "~280 banked draws, 90% at ~920). A miss costs nothing extra — "
+        "the points still count toward the next relic either way.</p>"
+        "<p>When picking which relic to aim a stockpile at, target "
+        "whichever one has the <b>biggest jump</b> from the relic before "
+        "it, not necessarily the last one on your list — the size of "
+        "that specific step is what a win actually saves, and it isn't "
+        "always the priciest relic overall.</p>")
 
     return [(slug, title, html + footer) for slug, title, html in (
         ("paths", "Choosing a Path", paths),

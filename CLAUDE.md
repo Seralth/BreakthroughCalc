@@ -98,12 +98,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
   that acquires the 8 Creation Artifacts (Vase/Mirror/Pearl have an
   Energy-mechanic write-up in the Reference tab's Artifacts & Gems
   section; Pot/Shears' own mechanics are in
-  `elemental-laws-garden-mechanics.md` instead, confirmed the same items;
-  this doc belongs alongside those as an "acquiring them" subsection, not
-  a new Reference topic): cumulative point breakpoints (never spent),
-  direct-IAP vs SEAGM-voucher point rates, the confirmed exact
-  1000-vouchers-per-11-points conversion, and real SEAGM bundle pricing.
-  Not yet in the calc
+  `elemental-laws-garden-mechanics.md` instead, confirmed the same items):
+  cumulative point breakpoints (never spent), direct-IAP vs SEAGM-voucher
+  point rates, the confirmed exact 1000-vouchers-per-11-points
+  conversion, and real SEAGM bundle pricing. Core facts (breakpoints,
+  weekly gate, rates, whale-cost ceiling) now integrated into Reference →
+  Artifacts & Gems ("Acquiring the Creation Artifacts") and Guide →
+  Spending; deeper backing tables (bundle-by-bundle pricing, banking
+  odds) stay in this doc. Not yet in the calc's actual math
 - `docs/knowledge/elemental-laws-garden-mechanics.md` — Spiritual World
   Elemental Laws + Law Fruit garden system (Voidbreak+): fruit tiers, the
   Blitz mechanic + 120h/day cap, Red tier via the Shears Creation

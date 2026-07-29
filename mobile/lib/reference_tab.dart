@@ -552,6 +552,41 @@ Widget _artifactsPage(BuildContext context, Engine engine, Map<String, dynamic> 
       'Epic input −5%, Legendary −20%. Star: +10% EXP (1★), +20% (3★), 15% no-cost (5★). '
       'Skin +8% EXP.',
     ),
+    Text('Acquiring the Creation Artifacts',
+        key: anchorKey('ref:artifacts:summon'), style: h3),
+    para('All 8 Creation Artifacts — Vase, Pot, Mirror, Token, Shears, '
+        'Cauldron, Basin, Pearl — come from the same point track, not a '
+        'per-pull gacha. Points build up on one running total that never '
+        'gets spent: crossing a relic\'s threshold unlocks it and '
+        'progress keeps climbing toward the next one.'),
+    table(
+      'Creation Artifact point breakpoints (cumulative)',
+      ['Relic', 'Points'],
+      [
+        ['Vase', '5,000'],
+        ['Pot', '10,000'],
+        ['Mirror', '20,000'],
+        ['Token', '40,000'],
+        ['Shears', '70,000'],
+        ['Cauldron', '88,888'],
+        ['Basin', '128,888'],
+        ['Pearl', '158,888'],
+      ],
+      'Also the pool order: only one relic is available at a time, top '
+      'to bottom, one per week — a hard ceiling of 8 weeks minimum for '
+      'all 8 no matter how much gets spent. A relic can also be won '
+      'early via an independent 0.25% instant-win roll on every draw, '
+      'on top of the points.',
+    ),
+    para('Points come from spending real money directly, or from SEAGM '
+        'top-up vouchers (a 1.1× bonus applies when paid via voucher '
+        'instead of cash). \$9.99 is consistently the best-value '
+        'purchase tier and \$4.99 the worst, whichever route is used. '
+        'Guaranteeing every relic with cash tops out around \$20,650 '
+        '(SEAGM vouchers) to \$23,350 (direct) — most players are better '
+        'served picking a personal spending ceiling and relying on free '
+        'daily draws past it ([[guide:spending|Guide → Spending]] covers '
+        'the tradeoffs).'),
     table(
       'Aura Gem speed bonus',
       ['Rarity', 'Bonus'],
