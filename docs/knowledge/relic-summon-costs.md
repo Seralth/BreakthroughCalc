@@ -39,6 +39,7 @@ intentionally out of scope here (owner: don't care about those for now).
   | Tier | Points | Rate (pts/$) |
   |---|---|---|
   | $0.99 | 6 | 6.061 |
+  | $2.99 | 18 | 6.021 |
   | $4.99 | 30 | 6.012 |
   | $9.99 | 68 | **6.807** (best known tier) |
   | $19.99 | 128 | 6.403 (worst known tier) |
@@ -50,7 +51,8 @@ intentionally out of scope here (owner: don't care about those for now).
   bigger single tier; event offers instead cap at up to 10× $99.99 packs
   rather than one larger bundle. The curve is **not monotonic**: $9.99 beats
   every other tier, and $19.99 — despite sitting right next to it — is
-  actually the single worst-value tier of the seven.
+  actually the single worst-value tier of the set. Owner believes this is
+  the complete common-tier ladder (8 tiers: $0.99–$99.99).
 
 - **Voucher-funded purchase**: the same IAP tiers above can alternatively be
   paid for with SEAGM top-up vouchers instead of cash, and doing so applies
@@ -60,6 +62,7 @@ intentionally out of scope here (owner: don't care about those for now).
   | Tier | Vouchers | Points (base × 1.1) |
   |---|---|---|
   | $0.99 | 600 | 6.6 |
+  | $2.99 | 1,800 | 19.8 |
   | $4.99 | 3,000 | 33 |
   | $9.99 | 6,800 | 74.8 |
   | $19.99 | 12,800 | 140.8 |
@@ -67,10 +70,10 @@ intentionally out of scope here (owner: don't care about those for now).
   | $49.99 | 32,800 | 360.8 |
   | $99.99 | 64,800 | 712.8 |
 
-  Every one of these seven tiers reduces to the exact same ratio:
+  Every one of these eight tiers reduces to the exact same ratio:
   **1,000 vouchers = 11 points** (1 voucher = 0.011 points, ≈90.909
-  vouchers/point). Confirmed exact across all seven data points — treat as a
-  fixed conversion constant, not an approximation.
+  vouchers/point). Confirmed exact across all eight data points — treat as
+  a fixed conversion constant, not an approximation.
 
 ## SEAGM voucher pricing (screenshot-verified, 2026-07-29, laptop)
 
