@@ -94,6 +94,14 @@ The two apps are deliberately parallel; module layouts mirror each other.
   digest of the two not-yet-in-the-calc relic systems above: what's exact
   enough to build a first Vault/combat-power pass on today vs the remaining
   blockers (Zodiac Relic Hex data chief among them)
+- `docs/knowledge/relic-summon-costs.md` — the SUMMON/point-track system
+  that acquires the 8 Creation Artifacts (3 of which — Vase/Mirror/Pearl —
+  already have an Energy-mechanic write-up in the Reference tab's
+  Artifacts & Gems section; this doc belongs alongside that as an
+  "acquiring them" subsection, not a new Reference topic): cumulative
+  point breakpoints (never spent), direct-IAP vs SEAGM-voucher point rates,
+  the confirmed exact 1000-vouchers-per-11-points conversion, and real
+  SEAGM bundle pricing. Not yet in the calc
 - `docs/knowledge/elemental-laws-garden-mechanics.md` — Spiritual World
   Elemental Laws + Law Fruit garden system (Voidbreak+): fruit tiers, the
   Blitz mechanic + 120h/day cap, Red tier via the Shears relic, the Garden
