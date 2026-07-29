@@ -205,10 +205,13 @@ Caveats (why the Vault shelves still stop at R9): the sheet is a priority
 list, not a catalog — per-rank lists are likely incomplete (for R4–R9 it
 covers only 3–6 of each rank's books); max tiers, threshold spacing and
 the final "Technique Stats +100%" capstone are not stated (thresholds
-below assume learn/3/6/9/12 by analogy); the R10 row says only "MUST
-TAKE" with no names (the 2026 community guide separately names Immortal
-Ascension @ R10 "to Tier 13", kept in the apps). Shelf entries need
-full-catalog quality — owner will supply complete details later.
+below assume learn/3/6/9/12 by analogy); the R10 row said only "MUST
+TAKE" with no names — **resolved below**: R10 turns out to be a single
+book, Immortal Ascension, now fully cataloged from an in-game screenshot
+(the "to Tier 13" figure the apps carried was the sheet/community guide's
+imprecise phrasing, not a real threshold — see the R10 section). Shelf
+entries beyond R10 still need full-catalog quality — owner will supply
+complete details later.
 
 New node families first seen here: elemental-law learning speed
 (Metal/Wood/Water/Fire/Earth "law spd"), Qiyun efficiency, DMG to
@@ -280,9 +283,31 @@ Astra 31 pill-EXP + Daemonfae quest, Adalinda 81 Law-Fruit growth,
 Leizhenzi 129 pill +3%, and the Iron Fan / Daji / Macaque / Jiang Ziya /
 Taotie / Shen Gongbao / Crane Boy lines already in the catalog).
 
-## Still genuinely open (R10+, needs a fresh in-game catalog, not a gap
+## R10: Immortal Ascension (confirmed, 2026-07-28 screenshot)
+
+Owner's account (Incarnation (M) Late 46.6%, Technique Rating 157.45M),
+two screenshots: the R10 shelf and the book's own detail page. The R10
+shelf holds exactly **one** Universal book, confirming the sheet's
+"MUST TAKE" single-book note — not an incomplete list.
+
+- **Immortal Ascension**, Technique Rating 14.22M, currently Tier 12/15
+  ("T12 Bottleneck"). Node order (learn/T3/T6/T9/T12/T15, same threshold
+  pattern as R8/R9 — the four shown `[Activated]` are positional, not
+  tier-labeled, per the completed-book tier-label caveat above):
+  1. Base HP +2%
+  2. Base MP +2%
+  3. Base Abode Aura +3%
+  4. Spiritium from Realms +3%
+  5. **[Tier 12]** Daily Cultivation Pill Attempts +1
+  6. **[Tier 15]** Technique Stats +100% (the universal capstone)
+- The 2026 community guide's "take Immortal Ascension to Tier 13" doesn't
+  land on a labeled threshold here (nothing changes between T12 and T15) —
+  most likely means "past the T12 pill-attempt payoff," not a distinct
+  T13 node. Node 5 (T12, +1 daily pill attempt) is the cultivation-relevant
+  payoff; node 6 (T15) is stats-only.
+
+## Still genuinely open (R11+, needs a fresh in-game catalog, not a gap
 in completed content)
 
-- Post-R9 manuals: complete per-rank catalogs, max tiers, capstone nodes
-  and confirmed in-game names — required before the Vault extends past R9.
-- R10 manual names (community guide names only Immortal Ascension).
+- Post-R10 manuals: complete per-rank catalogs, max tiers, capstone nodes
+  and confirmed in-game names — required before the Vault extends past R10.
