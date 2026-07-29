@@ -2,7 +2,12 @@
 
 Not yet in the calc. Spiritual World content gated behind Voidbreak; Elemental
 Laws (five elements: Metal/Wood/Water/Fire/Earth) level up on Law Points,
-which come from consuming ("Blitzing") garden-grown Law Fruit.
+which come from consuming ("Blitzing") garden-grown Law Fruit. G1 describes
+Elemental Laws as feeding passive stat boosts and "Law Suppression" (payoff
+mechanism not detailed further — community-tier claim, unconfirmed). Law
+Points also feed a separate **Cosmic Laws** system that this doc does not
+cover — whether the two draw from a shared pool or separate ones is an open
+question below.
 
 ## Sources
 
@@ -42,7 +47,7 @@ the tooltip UI confirms grow-time speed-up items apply here.
 ## Blitz mechanic — CONFIRMED (screenshot, G1 "Blitz Laws" popup)
 
 Consuming a fruit converts it into a fixed number of hours of Elemental Law
-learning progress ("Blitz"):
+learning progress ("Blitz"), NOT a fixed amount of Law Points:
 
 | Tier | Blitz value |
 |---|---|
@@ -52,8 +57,18 @@ learning progress ("Blitz"):
 | Yellow | 12h |
 | Red | 14h (see below — not a natural growth tier) |
 
-UI shows **"Remaining Time: 120h"** — confirms G1's claimed 120h/day Blitz
-cap as a real displayed budget — plus an "Auto Blitz" toggle.
+G1: "Law Fruits provide variable Law point rewards based on your Law points
+generation rate" — i.e. a fruit grants N hours of whichever per-element
+Learning Speed (K/h) it's applied to, converted at that element's *current*
+rate, not a flat Law-Point sum. Since Learning Speed rises with a Law's
+level (screenshot shows level and K/h moving together per element), the
+actual point payout of a fixed Blitz-hour value grows over time — see the
+"eat immediately" reassessment under Analysis.
+
+UI shows **"Remaining Time: 120h"** — confirms G1's claimed 120h Blitz
+budget as a real displayed number. The **daily reset cadence** is G1's
+framing, not something the screenshot itself proves — flagged separately
+under Open questions. Popup also has an "Auto Blitz" toggle.
 
 ## Red tier — not a natural growth tier (Seralth, 2026-07-29)
 
@@ -136,12 +151,18 @@ Cross-checking G1's strategic prose against the confirmed numbers above:
   exact opposite ranking, which wins if **seed supply** is the binding
   constraint instead. G1 never discloses which constraint it's assuming, so
   its blanket rule is incomplete, not universally correct.
-- **"Eat fruit one-by-one, upgrade immediately" (G1) — no observed
-  mechanical basis.** No Law-Point storage cap or decay has been observed
-  that would make immediate-spend beat batch-spend; if Law Points are a
-  plain currency, order of operations is mathematically irrelevant to
-  total output. Treat as unverified ritual, not a mechanic, unless a
-  storage cap turns up.
+- **"Eat fruit one-by-one, upgrade immediately" (G1) — revised: plausible
+  mechanical basis, not confirmed.** Previous pass called this a baseless
+  ritual on the assumption Law Points are a flat currency where order of
+  operations can't matter. That assumption doesn't hold given the point
+  above: Blitz value is hours-at-current-rate, not fixed points, and rate
+  rises with level. If a level-up raises Learning Speed immediately, then
+  blitzing fruit #2 *after* leveling from fruit #1 pays out more than
+  blitzing both fruits back-to-back at the pre-level-up rate — a genuine
+  reason to interleave rather than batch. Not confirmed: whether leveling
+  actually raises rate mid-session (vs. only at reset/refresh), and
+  whether a queued Blitz locks its rate at consumption-time or resolves
+  later. Directionally plausible, not a ritual — but not pinned either.
 - **Max theoretical garden throughput falls short of the daily cap.** Full
   6x6 (12 seed slots @ 3 cells/seed), all-Green, natural (non-boosted)
   grow speed: **72 Blitz-hours/day** — 40% short of the 120h/day cap even
@@ -175,3 +196,16 @@ Cross-checking G1's strategic prose against the confirmed numbers above:
   theoretical ceiling is reachable in practice.
 - Pot artifact "charge" energy source — mechanism not detailed this
   session.
+- Does leveling an Elemental Law raise its Learning Speed (K/h)
+  immediately, or only on some delay/refresh? Determines whether the
+  revised "eat one-by-one" reasoning above actually holds.
+- Do Elemental Laws and Cosmic Laws draw Law Points from one shared pool
+  or two separate ones? Not covered by G1's Law Fruit section.
+- What is "Inter-promoting" (seen in the Elemental Laws screenshot as
+  "Elemental Law reaches Lv.200 (1/5)")? Looks like a milestone/gate tied
+  to element level; payoff and the full 1/5 progression are unknown.
+- Pot's "quality limit" boost (see Garden Pot artifact) — does it let a
+  plant exceed a tier ceiling it would otherwise be stuck at, or something
+  else? Exact mechanism wasn't specified this session.
+- What are the concrete stat boosts / "Law Suppression" effects Elemental
+  Laws actually grant? G1 names them but doesn't quantify either.
