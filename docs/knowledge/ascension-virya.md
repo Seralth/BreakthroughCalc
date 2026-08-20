@@ -34,7 +34,8 @@ of stacking with the old one.
 
 Aura Absorption Ratio IS the calc's core Absorption Ratio input — that's
 the whole premise of `engine.py`: `Cultivation Speed = Abode Aura ×
-Absorption Ratio`. Virya's stage bonuses feed directly into that same
-number (same as the already-confirmed Incarnation-era Virya pp, verified
-via live arithmetic — `Abode 270.20 × 0.60 = Speed 162.12`). Not a
-separate system, not a maybe.
+Absorption Ratio`. Owner confirms Voidbreak displays it exactly like
+Incarnation did: a green +XX.XX% line right under the base absorption
+number on screen, same UI, same mechanic. Same field as the already-
+confirmed Incarnation-era Virya pp (verified via live arithmetic —
+`Abode 270.20 × 0.60 = Speed 162.12`). Not a separate system.
