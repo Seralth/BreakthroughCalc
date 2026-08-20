@@ -36,11 +36,11 @@ The whole point of leveling Laws, so it's worth defining even though
 most of this system is otherwise skipped in this doc: compare **total**
 Elemental Law level (summed across all 5 elements) against a target's
 total — every level of advantage deals **+0.05% additional final
-damage** (in-game tooltip, confirmed). **The +30%-at-600-levels cap is
-NOT confirmed in-game** — that was a community-tier claim (triangulated
-across 3 independent sources, never actually seen on screen) carried
-over from an earlier pass of this doc. Treat the cap as unverified;
-don't cite it as fact.
+damage** (in-game tooltip, confirmed). **There is no cap** — a
++30%-at-600-levels cap claim from three community sources (dating back
+to this doc's original 2026-07 version) was retracted 2026-08-20: owner
+doesn't see it anywhere in-game, and it doesn't line up with anything
+in this pass's screenshots. Don't reintroduce it.
 
 **PvP vs. PvE scope**: owner's grounded read — Suppression is PvP-only
 (no PvE content references "law levels" as an enemy stat). Practically
