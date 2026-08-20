@@ -30,13 +30,11 @@ Also: a bonus scoped to the current realm stops applying once you
 advance past that realm — the new realm's own line takes over instead
 of stacking with the old one.
 
-## Cultivation-speed relevance — not confirmed as literal
+## Cultivation-speed relevance
 
-The stage bonuses use "Aura Absorption Ratio," not "Cultivation Speed."
-Don't wire this into `engine.py`/`engine.dart` without confirming what
-Aura Absorption Ratio actually modifies.
-
-## Open questions
-
-- Whether "Aura Absorption Ratio" maps onto the calc's existing
-  cultivation-speed formula.
+Aura Absorption Ratio IS the calc's core Absorption Ratio input — that's
+the whole premise of `engine.py`: `Cultivation Speed = Abode Aura ×
+Absorption Ratio`. Virya's stage bonuses feed directly into that same
+number (same as the already-confirmed Incarnation-era Virya pp, verified
+via live arithmetic — `Abode 270.20 × 0.60 = Speed 162.12`). Not a
+separate system, not a maybe.
