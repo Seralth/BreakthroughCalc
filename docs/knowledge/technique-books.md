@@ -139,6 +139,30 @@ in-game aura reading; Sense has no engine input).
 - **Honored Origin**: Base Abode Aura +1%; T3 Paralysis Chance Boost +5; T6 Paralysis Chance Resist +10; T9 Base Abode Aura +3%; T12 Paralysis Duration Resist +30; T15 Technique Stats +100%
 - **Wordless Scripture**: DMG Bonus to Monsters +1%; T3 Paralysis Chance Resist +5; T6 Paralysis Chance Boost +10; T9 MSPD +20; T12 Paralysis Duration Boost +30; T15 Technique Stats +100%
 
+### R11 (max 15; learn/3/6/9/12/15 — screenshot pass 2026-08-20, confirmed)
+- **Moon Howl**: learn Paralysis Chance Resist +8; T3 Respira Effect +4%; T6 Earth Law Learning Speed +6%; T9 Fire Law Learning Speed +8%; T12 Relic DMG to Taoists +5%; T15 Technique Stats +100%
+- **Soul Refiner**: learn Paralysis Chance Boost +8; T3 Relic DMG Reduction +1%; T6 Relic DMG to Taoists +2%; T9 Relic DMG Reduction +3%; T12 Relic DMG to Taoists +5%; T15 Technique Stats +100%
+- **Thunder Lord Incantation**: learn Metal Law Learning Speed +2%; T3 Water Law Learning Speed +4%; T6 Water Law Learning Speed +6%; T9 Metal Law Learning Speed +8%; T12 Earth Law Learning Speed +10%; T15 Technique Stats +100%
+- **Square Inch Scripture**: learn DMG Bonus to Monsters +1%; T3 Ability DMG to Taoists +1%; T6 Ability DMG Reduction +2%; T9 Respira Effect +7%; T12 Monster DMG Reduction +3%; T15 Technique Stats +100%
+- **Pure Mysterious Agreement**: learn Base Abode Aura +1%; T3 Base Abode Aura +2%; T6 Crit Multiplier +3%; T9 Crit Block +3%; T12 Fire Law Learning Speed +10%; T15 Technique Stats +100%
+- **Heavenly Rhythm**: learn Respira Effect +1%; T3 Respira Effect +3%; T6 Respira Attempts +1; T9 Respira Effect +7%; T12 Respira Effect +9%; T15 Technique Stats +100%
+
+### R12 (max 15; learn/3/6/9/12/15 — screenshot pass 2026-08-20, confirmed)
+- **Star Blade**: learn Crit Block +1%; T3 Water Law Learning Speed +4%; T6 Crit Multiplier +3%; T9 Ability DMG Reduction +3%; T12 Fire Law Learning Speed +10%; T15 Technique Stats +100%
+- **Spring Autumn Annals**: learn Spiritium from Realms +1%; T3 Respira Effect +4%; T6 Crit Block +2%; T9 Ability DMG to Taoists +3%; T12 Spiritium from Realms +4%; T15 Technique Stats +100%
+- **Soul Devourer**: learn DMG Bonus to Monsters +1%; T3 Spiritium from Realms +2%; T6 Respira Effect +5%; T9 Metal Law Learning Speed +8%; T12 Paralysis Duration Resist +30; T15 Technique Stats +100%
+- **Dragon Heaven Art**: learn Paralysis Duration Resist +8; T3 Water Law Learning Speed +4%; T6 Paralysis Chance Boost +10; T9 Paralysis Duration Resist +20; T12 Paralysis Duration Boost +30; T15 Technique Stats +100%
+- **Solar Jade**: learn Paralysis Chance Resist +8; T3 Relic DMG to Taoists +1%; T6 Relic DMG Reduction +2%; T9 Relic DMG to Taoists +3%; T12 Relic DMG Reduction +4%; T15 Technique Stats +100%
+- **Cloud Satchel**: learn Fire Law Learning Speed +2%; T3 Earth Law Learning Speed +4%; T6 Earth Law Learning Speed +6%; T9 Fire Law Learning Speed +8%; T12 Earth Law Learning Speed +10%; T15 Technique Stats +100%
+
+### R13 (max 15; learn/3/6/9/12/15 — screenshot pass 2026-08-20, confirmed)
+- **Demon Abyss**: learn Paralysis Chance Boost +8; T3 Relic DMG Reduction +1%; T6 Water Law Learning Speed +6%; T9 Earth Law Learning Speed +8%; T12 Metal Law Learning Speed +10%; T15 Technique Stats +100%
+- **Qian Mantra**: learn Spiritium from Realms +1%; T3 Relic DMG to Taoists +1%; T6 Respira Attempts +1; T9 Respira Effect +7%; T12 Ability DMG Reduction +4%; T15 Technique Stats +100%
+- **Five-Thunder Mantra**: learn Base Abode Aura +1%; T3 Ability DMG Reduction +1%; T6 Ability DMG to Taoists +2%; T9 Ability DMG Reduction +3%; T12 Ability DMG to Taoists +4%; T15 Technique Stats +100%
+- **Yin Yang Overturn**: learn Monster DMG Reduction +1%; T3 Relic DMG to Taoists +1%; T6 Relic DMG Reduction +2%; T9 Relic DMG to Taoists +3%; T12 Relic DMG Reduction +4%; T15 Technique Stats +100%
+- **Divine Code**: learn DMG Bonus to Monsters +1%; T3 Ability DMG to Taoists +1%; T6 Ability DMG Reduction +2%; T9 Ability DMG to Taoists +3%; T12 Ability DMG Reduction +4%; T15 Technique Stats +100%
+- **Pure Starlight**: learn Spiritium from Realms +2%; T3 Respira Effect +3%; T6 Crit Multiplier +3%; T9 Wood Law Learning Speed +8%; T12 Water Law Learning Speed +10%; T15 Technique Stats +100%
+
 ## Exclusive tab (screenshot pass 2026-07-16 — 12 books, complete)
 
 Flat 4×3 grid, no rank shelves. All max Tier 6; every book's capstone is
@@ -193,6 +217,17 @@ a fixed cultivation-speed rubric (attempt nodes heaviest; aura/pill/
 Respira/law-speed/Qiyun strong; combat = C) — independent of the
 sheet's own grades, which are recorded above for reference only.
 
+R11–R13 are now screenshot-confirmed (see the R11/R12/R13 sections
+above) and their sheet rows have been removed from the table below — the
+sheet turned out to have three real errors there, all now corrected in
+the confirmed tables: Thunder Lord Incantation's node 3 was listed as
+Water Law Learning Speed +4% twice (the actual second Water line, at T6,
+is +6%); Square Inch Scripture's node stats were sheet-garbled as PvE/
+PvP damage lines when the real stats are Ability DMG Reduction/Respira
+Effect/Monster DMG Reduction; Star Blade's T9 was listed as a PvP DMG
+Reduction line when it's actually Ability DMG Reduction +3%. R14+ below
+is still sheet-only and unverified.
+
 Alias notes (sheet → canonical): "Yang Sword" = Sunset Halberd Dance
 (node-for-node match), "Harvest God" = Harvest God Secret, "Honoured
 Origin" = Honored Origin, "Control" = Paralysis. Post-R9 sheet names may
@@ -220,14 +255,6 @@ left unexpanded in the apps).
 
 ### Sheet data (rank | manual | unlock; T3; T6; T9; T12 | rating | note)
 
-- R11 | Thunder Lord Incantation | Metal law spd +2%; Water +4%; Water +4%; Metal +8%; Earth +10% | S | learning speed important
-- R11 | Heavenly Rhythm | Respira effect +1%; +3%; Respira attempt +1; +7%; +9% | A− | Respira central
-- R11 | Square Inch Script | PvE dmg +1%; PvP dmg +1%; PvP dmg reduc +2%; Respira effect +7%; PvE dmg reduc +3% | B | "weird mix of pve and pvp"
-- R11 | Pure Mysterious | Abode aura +1%; aura +2%; Crit multi +3%; Crit block +3%; Fire law spd +10% | S+ | aura, law speed, hard-to-get stats
-- R12 | Cloud Satchel | Fire +2%; Earth +4%; Earth +6%; Fire +8%; Earth +10% | S | learning speed important
-- R12 | Star Blade | Crit block +1%; Water law +4%; Crit multi +3%; PvP dmg reduc +3%; Fire law +10% | A+ | "a good mix of things you want"
-- R13 | Five Thunder Mantra | Abode aura +1%; PvP dmg reduc +1%; PvP dmg +2%; PvP reduc +3%; PvP dmg +4% | A+ | "if nothing else you unlock this"
-- R13 | Pure Starlight | Spiritum +2%; Respira effect +3%; Crit multi +3%; Wood law +8%; Water law +10% | A | —
 - R14 | Samsara Scripture | PvE dmg reduc +1%; Abode aura +2%; PvE dmg +2%; Crit block +3%; Spiritum +4% | B | take to 2nd unlock
 - R14 | Yin Yang Harmony | Water +2%; Fire +4%; Fire +6%; Water +8%; Fire +10% | S | law speed important
 - R14 | Chaos Origin | Respira effect +1%; +3%; Respira attempts +1; +7%; +9% | A | Respira central
@@ -306,8 +333,12 @@ shelf holds exactly **one** Universal book, confirming the sheet's
   T13 node. Node 5 (T12, +1 daily pill attempt) is the cultivation-relevant
   payoff; node 6 (T15) is stats-only.
 
-## Still genuinely open (R11+, needs a fresh in-game catalog, not a gap
+## Still genuinely open (R14+, needs a fresh in-game catalog, not a gap
 in completed content)
 
-- Post-R10 manuals: complete per-rank catalogs, max tiers, capstone nodes
-  and confirmed in-game names — required before the Vault extends past R10.
+- R11–R13 are now fully cataloged (screenshot pass 2026-08-20, see
+  above); Square Inch Scripture's learn/T3 lines were missed in that
+  pass and confirmed by the owner directly instead: learn DMG Bonus to
+  Monsters +1%, T3 Ability DMG to Taoists +1%.
+- Post-R13 manuals: complete per-rank catalogs, max tiers, capstone nodes
+  and confirmed in-game names — required before the Vault extends past R13.
