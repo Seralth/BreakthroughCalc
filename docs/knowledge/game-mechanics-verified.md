@@ -392,10 +392,15 @@ daily-XP term (better pills fed to it) on top of the absorption bonus.
 
 **Other observed facts.**
 - The "Double" badge between tier circles is NOT a tier (unclickable, per
-  Seralth). Plausible: the active-Virya status badge (dump: 'Double' = 双;
+  Seralth). **RESOLVED (owner, 2026-08-20, cross-checked against the
+  Voidbreak-era Virya tracker — see `ascension-virya.md`):** it's a
+  doubling of **Blessing Rewards** (daily pill count), confirmed present
+  with identical appearance in both Incarnation and Voidbreak. The
+  ×2-Cosmoapsis-session guess below is superseded/wrong — do not use it.
+  ~~Plausible: the active-Virya status badge (dump: 'Double' = 双;
   ">Within {1} hours, receive {3}x {2} Cosmoapsis gains") — i.e. a
   ×2-Cosmoapsis session while its countdown runs. Verify by comparing the
-  /Cosmoapsis readout during vs after the timer.
+  /Cosmoapsis readout during vs after the timer.~~
 - Blessings are **per cultivation path** (screen/status bar use the (L)
   primary suffix; confirms path letters beyond M/C/P, cf. elixir L/G/M/C/S).
 - XP cross-check: the screen's Late G12 denominator 5,623,090 matches
