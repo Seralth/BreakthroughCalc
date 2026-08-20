@@ -30,13 +30,17 @@ Boost/Resist at set levels, capping in a "Completely Activated" bonus
 at the top. Exact levels and values are on the in-game screen — not
 reproduced here.
 
-## Law Suppression — the one thing NOT visible in-game
+## Law Suppression
 
-Compare **total** Elemental Law level (summed across all 5) against a
-target's total; official popup confirms the trigger exists but not the
-magnitude. Magnitude (community-tier, triangulated across 3 independent
-sources, not a screenshot): **+0.05% final damage per level of
-advantage, capping at +30% at 600 levels.**
+The whole point of leveling Laws, so it's worth defining even though
+most of this system is otherwise skipped in this doc: compare **total**
+Elemental Law level (summed across all 5 elements) against a target's
+total — every level of advantage deals **+0.05% additional final
+damage** (in-game tooltip, confirmed). **The +30%-at-600-levels cap is
+NOT confirmed in-game** — that was a community-tier claim (triangulated
+across 3 independent sources, never actually seen on screen) carried
+over from an earlier pass of this doc. Treat the cap as unverified;
+don't cite it as fact.
 
 **PvP vs. PvE scope**: owner's grounded read — Suppression is PvP-only
 (no PvE content references "law levels" as an enemy stat). Practically

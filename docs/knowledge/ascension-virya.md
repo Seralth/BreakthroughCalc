@@ -32,10 +32,9 @@ of stacking with the old one.
 
 ## Cultivation-speed relevance — not confirmed as literal
 
-The stage bonuses use "Aura Absorption Ratio," not "Cultivation Speed"
-— that phrase only appears on the separate Monsterscape tracker. Don't
-wire this into `engine.py`/`engine.dart` without confirming what Aura
-Absorption Ratio actually modifies.
+The stage bonuses use "Aura Absorption Ratio," not "Cultivation Speed."
+Don't wire this into `engine.py`/`engine.dart` without confirming what
+Aura Absorption Ratio actually modifies.
 
 ## Open questions
 
