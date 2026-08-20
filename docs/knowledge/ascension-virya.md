@@ -7,15 +7,15 @@ had its own version, this is the Voidbreak-updated one (owner,
 on the in-game tracker screen — not reproduced here. This doc only
 covers the two things that AREN'T obvious from looking at the screen.
 
-## "Double" is not a ladder tier
+## "Double" — closed, ignore it
 
-It's a **Blessing Rewards ×2 badge** (daily pill count), present
-identically in both Incarnation and Voidbreak. Not a stage — an earlier
-screenshot-reading pass mistakenly attributed a real tier's panel to it;
-that tier's actual name between Completion and Perfection (C) is still
-unconfirmed. This also corrects the old Incarnation-era guess in
-`game-mechanics-verified.md` ("×2 Cosmoapsis session") — struck through
-there, superseded by this.
+Just a spacer between real tiers, does nothing on its own — "Double" is
+its own label, not a stand-in for some other tier's name. Present
+identically in both Incarnation and Voidbreak. Possibly maps to bonus
+pills, but doesn't matter either way. Corrects the old Incarnation-era
+guess in `game-mechanics-verified.md` ("×2 Cosmoapsis session") — struck
+through there, superseded by this. Not an open question — don't keep
+re-flagging it.
 
 ## Stacking rule (owner, 2026-08-20)
 
@@ -38,6 +38,5 @@ Aura Absorption Ratio actually modifies.
 
 ## Open questions
 
-- Real name of the tier mislabeled "Double" above.
 - Whether "Aura Absorption Ratio" maps onto the calc's existing
   cultivation-speed formula.

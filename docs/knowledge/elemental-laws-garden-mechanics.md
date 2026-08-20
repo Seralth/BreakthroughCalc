@@ -83,6 +83,8 @@ useful tell if reading a garden screenshot again).
 ## The other two crop types
 
 - **Ploughwood**: Zodiac Relic upgrade material (`zodiac-relic.md`).
+  Fixed, single-tier item — unlike Law Fruit/Soulrend Vine, it doesn't
+  have a growth-quality ladder.
 - **Soulrend Vine**: Voidbreak-stage gear/relic crafting material, adds
   a quality-boost chance per craft. Five tiers (Aged → Centa → Milia →
   Myrua → Decamyriad), each tier's own boost % — visible on the item
