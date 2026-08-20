@@ -30,6 +30,13 @@ Boost/Resist at set levels, capping in a "Completely Activated" bonus
 at the top. Exact levels and values are on the in-game screen — not
 reproduced here.
 
+The Suppression track runs in two grades, G1 then G2, each a full
+1000 levels per element — G2 doesn't start until G1 hits 1000 (owner,
+2026-08-20; not obvious from a partially-scrolled screenshot). So
+fully maxing it out needs each element at level 2000, or **10,000
+summed Total Elemental Laws Level** across all five to complete both
+grades everywhere.
+
 ## Law Suppression
 
 The whole point of leveling Laws, so it's worth defining even though
