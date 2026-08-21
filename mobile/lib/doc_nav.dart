@@ -111,33 +111,40 @@ Widget docBackButton() => ValueListenableBuilder<List<DocLink>>(
             ),
     );
 
-final _docLinkRe =
-    RegExp(r'\[\[(ref|guide):([a-z]+)(?:#([a-z]+))?\|([^\]]+)\]\]');
+final _docMarkupRe = RegExp(
+    r'\[\[(ref|guide):([a-z]+)(?:#([a-z]+))?\|([^\]]+)\]\]|\*\*([^*]+)\*\*');
 
 /// Paragraph text with [[...]] cross-reference markup rendered as tappable
-/// links (styled like [issuesLink]). Plain text passes through untouched.
+/// links (styled like [issuesLink]) and **bold** spans rendered bold. Plain
+/// text passes through untouched.
 Widget docText(BuildContext context, String s) {
-  if (!s.contains('[[')) return Text(s);
+  if (!s.contains('[[') && !s.contains('**')) return Text(s);
   final linkStyle = TextStyle(
       color: Theme.of(context).colorScheme.primary,
       decoration: TextDecoration.underline);
+  const boldStyle = TextStyle(fontWeight: FontWeight.bold);
   final spans = <InlineSpan>[];
   var pos = 0;
-  for (final m in _docLinkRe.allMatches(s)) {
+  for (final m in _docMarkupRe.allMatches(s)) {
     if (m.start > pos) spans.add(TextSpan(text: s.substring(pos, m.start)));
-    final tree = m.group(1)!, slug = m.group(2)!;
-    final anchor = m.group(3), label = m.group(4)!;
-    final sub = tree == 'ref' ? refSlugs[slug] : guideSlugs[slug];
-    spans.add(sub == null
-        ? TextSpan(text: label)
-        : TextSpan(
-            text: label,
-            style: linkStyle,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => DocNavigator.instance.openLink(DocLink(
-                  tree == 'ref' ? topTabReference : topTabGuide,
-                  sub,
-                  anchor == null ? null : '$tree:$slug:$anchor'))));
+    final bold = m.group(5);
+    if (bold != null) {
+      spans.add(TextSpan(text: bold, style: boldStyle));
+    } else {
+      final tree = m.group(1)!, slug = m.group(2)!;
+      final anchor = m.group(3), label = m.group(4)!;
+      final sub = tree == 'ref' ? refSlugs[slug] : guideSlugs[slug];
+      spans.add(sub == null
+          ? TextSpan(text: label)
+          : TextSpan(
+              text: label,
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => DocNavigator.instance.openLink(DocLink(
+                    tree == 'ref' ? topTabReference : topTabGuide,
+                    sub,
+                    anchor == null ? null : '$tree:$slug:$anchor'))));
+    }
     pos = m.end;
   }
   if (pos < s.length) spans.add(TextSpan(text: s.substring(pos)));

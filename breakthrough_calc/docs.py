@@ -134,16 +134,15 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<h3>The three Worlds</h3>"
         "<p>Stages group into three Worlds (the in-game realm ladder "
         "[Human – Spirit – Immortal]):</p>"
-        "<table cellpadding='4' cellspacing='0' border='1' "
-        "style='border-collapse:collapse'>"
-        "<tr><th>World</th><th>Stages</th><th>Entered by</th></tr>"
-        "<tr><td>Mortal World</td><td>Novice → Connection → Foundation → "
-        "Virtuoso → Nascent Soul → Incarnation</td><td>—</td></tr>"
-        "<tr><td>Spiritual World</td><td>Voidbreak → Wholeness → Perfection "
-        "→ Nirvana</td><td>Ascension (the first timegate)</td></tr>"
-        "<tr><td>Immortal World</td><td>Celestial → Eternal → Supreme</td>"
-        "<td>Transcendence</td></tr>"
-        "</table>"
+        "<ul>"
+        "<li><b>Mortal World</b>: Novice → Connection → Foundation → "
+        "Virtuoso → Nascent Soul → Incarnation.</li>"
+        "<li><b>Spiritual World</b>: Voidbreak → Wholeness → Perfection → "
+        "Nirvana. Entered via Ascension, the first timegate.</li>"
+        "<li><b>Immortal World</b>: Celestial → Eternal → Supreme. Entered "
+        "via Transcendence.</li>"
+        "</ul>")
+    basics += (
         "<p>World boundaries carry the big resets — a fresh Myrimon fruit "
         "tier and extractor — while pill ranks step with every major Stage "
         "(Connection 1R … Incarnation 5R, Voidbreak 6R … Supreme 12R). Each "
@@ -264,39 +263,84 @@ def build_reference_pages(acc: dict, engine_data: dict,
     artifacts = "<h2>Artifacts &amp; Gems</h2>"
     artifacts += (
         "<h3>Creation Artifacts</h3>"
-        "<p>Three artifacts convert a shared resource — <b>Artifact Energy</b> (each "
-        "artifact has its own pool) — into extra cultivation EXP:</p>"
-        "<ul><li><b>Starsea Vase</b>: refines any cultivation pill into a Mythic (red) "
-        "pill worth far more EXP. Reds don't count against the daily attempt pool, so "
-        "the Vase is effectively free extra pills every day — keep it fed.</li>"
-        "<li><b>Dual-Star Mirror</b>: duplicates owned items, including your red pills "
-        "(only reds whose EXP bonus matches your Vase's unlocked tiers). Its copies "
-        "stack on top of Vase production.</li>"
-        "<li><b>Timereversal Pearl</b>: converts energy into auxiliary-path EXP. Its "
-        "per-use EXP scales with your own cultivation speed bonuses, so re-read its "
-        "tooltip after aura upgrades.</li></ul>"
-        "<p>Energy regenerates over time and stops at the cap, so idle energy above "
-        "cap is wasted — spend before it fills. The paid daily charge (30 "
-        "Fateum/Destium for +100) is usually the cheapest EXP a payer can buy; the "
-        "calculator has a per-artifact checkbox for whether you use it.</p>")
+        "<p>Eight Creation Artifacts exist — Vase, Pot, Mirror, Token, Shears, "
+        "Cauldron, Basin, Pearl. Each has its own <b>Artifact Energy</b> pool that "
+        "regenerates and is spent on that artifact's own effect. Three of them "
+        "(Vase, Mirror, Pearl) spend Energy on cultivation EXP directly; two more "
+        "(Pot, Shears) spend it on the garden instead. What each one does is "
+        "covered below; how you <i>acquire</i> all eight — the point track, cash "
+        "and voucher costs — is in <a href='app://ref/artifacts#summon'>Acquiring "
+        "the Creation Artifacts</a> further down.</p>"
+        "<h3>Energy (Vase, Mirror, Pearl)</h3>"
+        "<p>Regenerates <b>1 point / 15 min at 0★</b> (faster per star) and stops at "
+        "a cap of <b>200 at 0★</b> (higher with stars) — idle energy above the cap "
+        "is wasted, so spend before it fills. The paid daily charge (<b>+100 energy "
+        "for 30 Fateum/Destium</b>, once per artifact) is usually the cheapest EXP a "
+        "payer can buy; the calculator has a per-artifact checkbox for whether you "
+        "use it.</p>"
+        "<h3>Starsea Vase</h3>"
+        "<p>Refines any cultivation pill into a Mythic (red) pill worth far more "
+        "EXP. Reds don't count against the daily attempt pool, so the Vase is "
+        "effectively free extra pills every day — keep it fed.</p>")
     artifacts += table(
-        "Creation Artifact energy",
-        ["Property", "Value"],
-        [["Regeneration", "1 energy / 15 min at 0★ (faster per star)"],
-         ["Cap", "200 at 0★ (rises with stars); regen stops at cap"],
-         ["Daily charge", "+100 energy for 30 Fateum/Destium, once per day per artifact"],
-         ["Mirror copy cost", "200 base; −5% (1★), −10% (3★), −10% skin — discounts add together"],
-         ["Mirror 5★", "15% chance of an extra copy per Duplication"],
-         ["Pearl use cost", "10 energy; star/skin discounts add (skin −10%)"],
-         ["Pearl EXP bonus", "+20% from 1★ (does not grow at higher stars)"]])
-    artifacts += table(
-        "Starsea Vase — refine energy cost (per pill rank)",
+        "Refine energy cost (per pill rank)",
         ["Rank", "Standard Energy"],
         [[rk, d["vase_energy_cost"].get(rk, 100)] for rk in d["pill_xp"]],
         "Refining an Epic pill costs −5% energy, a Legendary −20%. Star effects: "
         "+10% EXP on refined pills (1★), +20% (3★), 15% chance to consume no energy (5★). "
         "Skin: +8% EXP. Refined reds don't count toward daily pill attempts.")
     artifacts += (
+        "<h3>Dual-Star Mirror</h3>"
+        "<p>Duplicates owned items, including your red pills (only reds whose EXP "
+        "bonus matches your Vase's unlocked tiers) — its copies stack on top of "
+        "Vase production.</p>"
+        "<ul>"
+        "<li><b>Copy cost</b>: 200 energy base; −5% (1★), −10% (3★), −10% skin — "
+        "discounts add together.</li>"
+        "<li><b>5★ bonus</b>: 15% chance of an extra copy per Duplication.</li>"
+        "</ul>"
+        "<h3>Timereversal Pearl</h3>"
+        "<p>Converts energy into auxiliary-path EXP. Its per-use EXP scales with "
+        "your own cultivation speed bonuses, so re-read its tooltip after aura "
+        "upgrades.</p>"
+        "<ul>"
+        "<li><b>Use cost</b>: 10 energy; star/skin discounts add (skin −10%).</li>"
+        "<li><b>EXP bonus</b>: +20% from 1★ (does not grow at higher stars).</li>"
+        "</ul>"
+        "<h3>Pot</h3>"
+        "<p>Speeds up garden plant growth — not Law Fruit-specific, it applies to "
+        "garden plants generally, but Law Fruit only benefits from the main "
+        "effect:</p>"
+        "<ul>"
+        "<li><b>Main effect, all plants</b>: 1 energy spent = 1 hour of grow time "
+        "shaved off. This is the Pot's whole relevance to Law Fruit — see <a "
+        "href='app://ref/systems#garden'>Reference → World Systems</a> for the "
+        "garden throughput math this feeds into.</li>"
+        "<li><b>Secondary effect, gear-crafting plants only</b> (not Law Fruit): "
+        "energy also raises those plants' quality-limit cap from Purple up to "
+        "Yellow. A 100-energy lump spend forces Red-tier evolution for "
+        "gear-crafting plants specifically — Law Fruit's own Red tier comes from "
+        "Shears instead (below), not from Pot energy.</li>"
+        "<li><b>Energy regen</b> is denominated in Taoist years (1 Taoist year = "
+        "15 real minutes): +1 energy/year at 0★ (≈96/day), cap 200 — higher "
+        "stars raise both the regen rate and cap, plus add a flat speed-up bonus "
+        "on top.</li>"
+        "</ul>"
+        "<p>Not to be confused with two unrelated curios that also happen to be "
+        "called \"Pot\": the Zodiac Pot and Dongxuan's Pot — three separate "
+        "\"Pot\" items in this game.</p>"
+        "<h3>Shears</h3>"
+        "<p>Spends energy to advance an existing Law Fruit up to Red tier — the "
+        "only way to get Red fruit, since it isn't grown naturally the way "
+        "Green/Blue/Purple/Yellow are. Red's 14-hour Blitz value is exempt from "
+        "the 120-Blitz-hour/day cap (see <a href='app://ref/systems#garden'>"
+        "Reference → World Systems</a>), the same exemption pattern cultivation "
+        "pills get from the daily pill-attempt limit. Exact energy cost per "
+        "conversion and any star-scaling aren't pinned down yet.</p>"
+        "<p>Token, Cauldron, and Basin are also Creation Artifacts — see the "
+        "acquisition costs below — but their own effects aren't documented "
+        "here yet: they sit at $5k-$19k in the cost tables below, so few "
+        "players have reached them.</p>"
         "<a name='summon'></a><h3>Acquiring the Creation Artifacts</h3>"
         "<p>All 8 Creation Artifacts — Vase, Pot, Mirror, Token, Shears, "
         "Cauldron, Basin, Pearl — come from the same point track, not a "
@@ -315,17 +359,58 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "early via an independent 0.25% instant-win roll on every draw, "
         "on top of the points.")
     artifacts += (
-        "<p>Points come from spending real money directly, or from "
-        "SEAGM top-up vouchers (a 1.1× bonus applies when paid via "
-        "voucher instead of cash). $9.99 is consistently the best-value "
-        "purchase tier and $4.99 the worst, whichever route is used. "
-        "Guaranteeing every relic with cash tops out around $20,650 "
-        "(SEAGM vouchers) to $23,350 (direct) — most players are better "
-        "served picking a personal spending ceiling and relying on free "
-        "daily draws past it (<a href='app://guide/spending'>Guide → "
-        "Spending</a> covers the tradeoffs).</p>")
+        "<p>Points also come from spending real money, at fixed yields per "
+        "purchase tier that don't scale cleanly with price — some tiers are "
+        "flatly better value than others. The same tiers can also be paid "
+        "via SEAGM top-up vouchers instead of cash, which applies a flat "
+        "<b>1.1×</b> bonus to that tier's point yield regardless of which "
+        "tier: every tier reduces to the same 1,000 vouchers = 11 points "
+        "conversion, so voucher tier choice doesn't matter — only cash "
+        "tier choice does, ranked here by cash rate:</p>")
+    artifacts += table(
+        "Price-point value ranking",
+        ["Price", "Points (cash)", "Rate (pts/$)", "Vouchers", "Points via voucher"],
+        [["$9.99", "68", "<b>6.807 ← best</b>", "6,800", "74.8"],
+         ["$29.99", "198", "6.602", "19,800", "217.8"],
+         ["$49.99", "328", "6.561", "32,800", "360.8"],
+         ["$14.99", "98", "6.538", "9,800", "107.8"],
+         ["$99.99", "648", "6.481", "64,800", "712.8"],
+         ["$19.99", "128", "6.403", "12,800", "140.8"],
+         ["$0.99", "6", "6.061", "600", "6.6"],
+         ["$2.99", "18", "6.020", "1,800", "19.8"],
+         ["$4.99", "30", "<b>6.012 ← worst</b>", "3,000", "33.0"]],
+        "$99.99 is the biggest single pack — events offer up to 10× that "
+        "rather than a bigger tier. Always buy $9.99 packs over the three "
+        "smallest ($0.99/$2.99/$4.99), which are the worst value of the "
+        "bunch; $19.99 looks bad next to two strong neighbors but isn't "
+        "actually the floor.")
     artifacts += (
-        "<h3>Aura Gems</h3>"
+        "<p>Each row below is the <b>cumulative</b> cost to guarantee "
+        "everything through that relic — buying up to Pearl nets every "
+        "relic above it too:</p>")
+    artifacts += table(
+        "Cost to guarantee each relic — direct purchase",
+        ["Relic", "Points", "Cost"],
+        [["Vase", "5,000", "$739.26"], ["Pot", "10,000", "$1,478.52"],
+         ["Mirror", "20,000", "$2,947.05"], ["Token", "40,000", "$5,884.11"],
+         ["Shears", "70,000", "$10,289.70"], ["Cauldron", "88,888", "$13,066.92"],
+         ["Basin", "128,888", "$18,941.04"], ["Pearl", "158,888", "$23,346.63"]])
+    artifacts += table(
+        "Cost to guarantee each relic — SEAGM vouchers",
+        ["Relic", "Vouchers", "Cost"],
+        [["Vase", "454,546", "$650.93"], ["Pot", "909,091", "$1,301.86"],
+         ["Mirror", "1,818,182", "$2,599.97"], ["Token", "3,636,364", "$5,199.92"],
+         ["Shears", "6,363,637", "$9,099.71"], ["Cauldron", "8,080,728", "$11,554.61"],
+         ["Basin", "11,717,091", "$16,752.75"], ["Pearl", "14,444,364", "$20,650.61"]],
+        "Vouchers are consistently cheaper, by 11.6–12.1% at every step. "
+        "Neither table accounts for the weekly one-relic-at-a-time gate "
+        "or banked free draws, both of which cut real spend for a "
+        "patient player — most players are better served picking a "
+        "personal spending ceiling and relying on free daily draws past "
+        "it (<a href='app://guide/spending'>Guide → Spending</a> covers "
+        "the tradeoffs).")
+    artifacts += (
+        "<a name='auragem'></a><h3>Aura Gems</h3>"
         "<p>An equipped Aura Gem stores aura while you're away and releases it, acting "
         "as a flat percentage speed-up on cultivation. The calculator (following "
         "Donk's sheet) models it as a constant parallel bonus by rarity:</p>")
@@ -397,20 +482,24 @@ def build_reference_pages(acc: dict, engine_data: dict,
 
         "<h3>Stat pills (alchemy)</h3>"
         "<p>Crafted from per-rank formulas (e.g. Windride = +10 P.EVA, Agility = "
-        "+10 M.EVA). Every use grants the full listed stat — no decay — until the "
-        "pill's <b>permanent use cap</b> for that rank is exhausted: "
-        "<b>R1 20 · R2 40 · R3+ 50</b> uses. The counter is on the pill itself, "
-        "so pills from shops or rewards spend the same budget as crafted ones, "
-        "and it ticks even if you never learn the formula.</p>"
-        "<p>Each <b>major realm breakthrough unlocks the next rank's 50 uses</b> "
-        "per pill line rather than raising old caps — the Compare BR panel's "
-        "\"Stat Pill Use Limit\" reads 320 at Nascent Soul, 420 at Incarnation, "
-        "520 at Voidbreak (two evasion pill lines × the unlocked ranks).</p>"
-        "<p><b>Practical read:</b> there is no way to waste a stat pill — every "
-        "use pays the same flat amount and the budget refills only by reaching "
-        "new realms — so take them as you get them. The only real decision is "
-        "whether the crafting cost is worth it, and that gets steep at high "
-        "ranks.</p>")
+        "+10 M.EVA). Every use grants the full listed stat — no decay — until "
+        "the pill's <b>permanent use cap</b> for that rank is exhausted. The "
+        "counter is on the pill itself, so pills from shops or rewards spend "
+        "the same budget as crafted ones, and it ticks even if you never learn "
+        "the formula. Each <b>major realm breakthrough unlocks the next "
+        "rank's uses</b> per pill line rather than raising old caps.</p>")
+    elixirs += table(
+        "Stat pill permanent use cap",
+        ["Rank", "Uses", "Unlocks at"],
+        [["R1", "20", "start"], ["R2", "40", "next realm"],
+         ["R3+", "50", "each further realm"]],
+        "\"Stat Pill Use Limit\" on the Compare BR panel is this summed across "
+        "unlocked ranks × 2 evasion pill lines: 320 at Nascent Soul, 420 at "
+        "Incarnation, 520 at Voidbreak. <b>Practical read:</b> there's no way "
+        "to waste a stat pill — every use pays the same flat amount and the "
+        "budget only refills by reaching new realms — so take them as you get "
+        "them; the only real decision is whether the crafting cost is worth it, "
+        "which gets steep at high ranks.")
     elixirs += table(
         "Stat pill crafting cost (one craft)",
         ["Rank", "Herb", "Spiritium", "Formula source"],
@@ -427,14 +516,12 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "permanent combat stats — but with <b>diminishing returns</b>. Each "
         "item tracks how many you've consumed over your character's lifetime "
         "(the \"Used\" number on its panel), and the <b>effect ratio</b> steps "
-        "down through fixed tiers as that count grows: the first few pay 150% "
-        "of the listed stat, later ones less and less, until \"Pill limit "
+        "down through fixed tiers as that count grows, until \"Pill limit "
         "reached; it no longer takes effect\" ends the item for good. The "
         "<code>a/b</code> counter on the panel is your position inside the "
-        "<i>current</i> tier, not the overall cap.</p>"
-        "<p>The ladder is a property of the item, <b>not the character</b>: "
-        "a 3R elixir steps through the same tiers no matter whose realm "
-        "consumes it.</p>"
+        "<i>current</i> tier, not the overall cap. The ladder is a property of "
+        "the item, <b>not the character</b> — a 3R elixir steps through the "
+        "same tiers no matter whose realm consumes it.</p>"
         "<p><b>Practical read:</b> there is no timing play — an elixir is "
         "worth the same whenever you take it, so use them as they arrive. "
         "When buying, remember the posted stat is the <i>base</i>: your next "
@@ -453,16 +540,17 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "yet; the in-game tooltip says the ladder continues 70 → 50 → 30 → "
         "20% before the hard cap. Cultivation-EXP elixirs use different "
         "(wider) tiers — their first tier is 20 uses, not 10.")
+    elixirs += "<h3>Elixirs and paths</h3><p>Cultivation-EXP elixirs are path-specific:</p>"
+    elixirs += table(
+        "Elixir line → path",
+        ["Elixir line", "Feeds"],
+        [["Vigor", "Literatia, Fatebreaker Ghostia, Emerald Magicka, Nonagen Corporia, Cloudcut Grit Swordia"],
+         ["Spiritual Nectar", "your current path"],
+         ["Hundred Fortunes / Pyroessence", "your auxiliary path"]],
+        "A red requirement line means the realm requirement isn't met on that "
+        "item's path. On a Path Switch, each elixir's remaining quantity, use "
+        "attempts and efficiency swap along with the paths.")
     elixirs += (
-        "<h3>Elixirs and paths</h3>"
-        "<p>Cultivation-EXP elixirs are path-specific: the Vigor ladder feeds "
-        "Literatia, Fatebreaker Ghostia, Emerald Magicka, Nonagen Corporia, "
-        "Cloudcut Grit Swordia; Spiritual Nectar feeds your current path and "
-        "Hundred Fortunes / Pyroessence your auxiliary path. A red requirement "
-        "line means the realm requirement isn't met on that item's path. On a "
-        "Path Switch, each elixir's remaining quantity, use attempts and "
-        "efficiency swap along with the paths.</p>"
-
         "<a name='expelixirs'></a><h3>Getting EXP elixirs</h3>"
         "<p>In normal play, EXP elixirs only trickle in — small amounts from "
         "various sources, often priced in Fateum, which is scarce enough that "
@@ -472,15 +560,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "real-money elixir packs</b>, and for anyone optimizing money spent "
         "these packs are among the best value in the game — the elixirs' "
         "150%/120% early tiers make each realm's batch worth the most right "
-        "when you buy it.</p>"
-
-        "<h3>The Sense stat</h3>"
-        "<p>Sense (internally <code>spirit_max</code>) currently does one "
-        "thing: it gates how many treasures you can carry — Fabao slots "
-        "unlock at Sense 1/7/13/16/19/22 and Gubao slots at 15/18/21. It "
-        "grows by about 1 per realm level, and the game's own tooltip says "
-        "further uses are planned. It is not part of any damage or "
-        "cultivation formula the client exposes.</p>")
+        "when you buy it.</p>")
 
     # ---- Myrimon & Extractor ---------------------------------------------
     myrimon = "<h2>Myrimon &amp; Extractor</h2>"
@@ -499,22 +579,27 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "ascension (see Mechanics notes below), so burn the stockpile before "
         "ascending, and only after the extractor is upgraded.</p>"
         "<p>Fruits also lose 50% of their EXP once the realm's <b>timegate</b> passes — "
-        "eat the stockpile before the timegate, not merely before your own breakthrough. "
-        "Extractor leveling priority: Quality → "
-        "Cultivation → Gush → High Rank, taking High Rank only after the others are "
-        "maxed. Myrimon unlocks at Virtuoso; the Mortal World (Virtuoso through "
-        "Incarnation) shares one fruit/extractor tier, and each World afterwards gets "
-        "its own — Spiritual at Voidbreak, Immortal at Celestial. Myrimon "
-        "uses stack (after the first week's event) — save them for Sunday or until you "
-        "cross the next BR requirement. Each week's event runs Wednesday through the "
-        "following Tuesday, with one free run each on Wednesday, Friday and Sunday "
-        "(3 total), plus up to 2 purchasable <b>Myrimon Tokens</b> from the cash shop, "
-        "each worth +1 run in the week you redeem it (5 runs max in a week if both are "
-        "bought and used). Tokens themselves are inventory items — buy them freely and "
-        "hold them unredeemed as long as you like. Near a realm ascension, don't redeem "
-        "saved tokens for a few extra of the current realm's fruit; hold them and "
-        "redeem right after ascending for the new realm's higher-tier fruit "
-        "instead.</p>"
+        "eat the stockpile before the timegate, not merely before your own breakthrough.</p>"
+        "<ul>"
+        "<li><b>Extractor leveling priority</b>: Quality → Cultivation → Gush → "
+        "High Rank, taking High Rank only after the others are maxed.</li>"
+        "<li><b>Unlock and tier-sharing</b>: Myrimon unlocks at Virtuoso; the "
+        "Mortal World (Virtuoso through Incarnation) shares one fruit/extractor "
+        "tier, and each World afterwards gets its own — Spiritual at Voidbreak, "
+        "Immortal at Celestial.</li>"
+        "<li><b>Weekly schedule</b>: each week's event runs Wednesday through "
+        "the following Tuesday, with one free run each on Wednesday, Friday and "
+        "Sunday (3 total), plus up to 2 purchasable <b>Myrimon Tokens</b> from "
+        "the cash shop, each worth +1 run in the week you redeem it (5 runs max "
+        "if both are bought and used). Myrimon uses stack (after the first "
+        "week's event) — save them for Sunday or until you cross the next BR "
+        "requirement.</li>"
+        "<li><b>Tokens</b> are inventory items — buy them freely and hold them "
+        "unredeemed as long as you like. Near a realm ascension, don't redeem "
+        "saved tokens for a few extra of the current realm's fruit; hold them "
+        "and redeem right after ascending for the new realm's higher-tier fruit "
+        "instead.</li>"
+        "</ul>"
         "<a name='verified'></a><h3>Mechanics notes</h3><ul>"
         "<li><b>Fruit ranks map to realm bands</b> (R3 covers Nascent-Voidbreak; R6 "
         "starts the Spiritual world; R12 the Immortal world) — R4/R5 don't exist.</li>"
@@ -582,31 +667,36 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "in the first place.</li>"
         "</ul>"
 
-        "<h3>Gear in one paragraph</h3>"
-        "<p>You wear a weapon, armor and an accessory, plus <b>Relics</b> as "
-        "their own separate category. Rarity climbs white → green → blue → "
-        "purple → yellow. When an item is forged its stats roll within a "
-        "range — so two copies of the same item can differ, and a well-rolled "
-        "piece is worth keeping.</p>"
+        "<h3>Gear basics</h3>"
+        "<ul>"
+        "<li>You wear a weapon, armor and an accessory, plus <b>Relics</b> "
+        "as their own separate category.</li>"
+        "<li><b>Rarity</b> climbs white → green → blue → purple → "
+        "yellow.</li>"
+        "<li>When an item is forged its stats <b>roll within a range</b> — "
+        "so two copies of the same item can differ, and a well-rolled "
+        "piece is worth keeping.</li>"
+        "</ul>"
 
         "<a name='relics'></a><h3>Equipment relics — a gear category, not a "
         "side system</h3>"
-        "<p>327 relics fill 6 of your equipment slots, and each one grants "
-        "exactly one combat skill on top of stats — your active-skill "
-        "loadout is which relics you have equipped. They go through the "
-        "exact same rank/level/quality/forging/marks/sets layers as "
-        "weapon/armor/accessory, with one relic-specific wrinkle: "
-        "<b>rank determines which skill you have; quality only scales "
-        "the surrounding stats, never the skill itself</b> — a high-quality "
-        "relic hits the same skill numbers as a low-quality one at the "
-        "same rank, just with better stats around it.</p>"
-        "<p>Some relics are class-locked (a level/stage-gated set unique "
+        "<ul>"
+        "<li><b>327 relics</b> fill 6 of your equipment slots, and each one "
+        "grants exactly one combat skill on top of stats — your "
+        "active-skill loadout is which relics you have equipped. They go "
+        "through the exact same rank/level/quality/forging/marks/sets "
+        "layers as weapon/armor/accessory.</li>"
+        "<li><b>Rank determines which skill you have; quality only scales "
+        "the surrounding stats, never the skill itself</b> — a "
+        "high-quality relic hits the same skill numbers as a low-quality "
+        "one at the same rank, just with better stats around it.</li>"
+        "<li>Some relics are class-locked (a level/stage-gated set unique "
         "to one path), others are generic and open to any class — "
         "<b>generic and class relics are peers</b>, not a floor/ceiling: "
-        "identical slots, identical forge cost, identical tier ceiling. "
-        "The only real difference is access and which skill each grants, "
-        "so pick by skill fit for your build rather than assuming generic "
-        "is the weaker option.</p>"
+        "identical slots, forge cost, and tier ceiling. Pick by skill fit "
+        "for your build rather than assuming generic is the weaker "
+        "option.</li>"
+        "</ul>"
         "<p>Distinct from the Creation Artifacts (Vase, Pot, Mirror, "
         "Token, Shears, Cauldron, Basin, Pearl — see <a href='app://ref/"
         "artifacts#summon'>Reference → Artifacts &amp; Gems</a>) and the "
@@ -615,28 +705,31 @@ def build_reference_pages(acc: dict, engine_data: dict,
 
         "<a name='zodiac'></a><h3>Zodiac Relic — a single signature "
         "artifact</h3>"
-        "<p>One relic per account, forged into either a physical or "
-        "magical stance, that deploys into battle from Rank 2 as a "
+        "<ul>"
+        "<li><b>One relic per account</b>, forged into either a physical "
+        "or magical stance, that deploys into battle from Rank 2 as a "
         "semi-autonomous unit — it casts its own Hexes and carries its "
-        "own full stat block that adds directly to your combat power, "
-        "on top of everything from your equipped gear. The two stances "
-        "are mirrored: same progression, same numbers, only the stat "
-        "type differs (physical vs magical). <b>Reforge</b> swaps "
-        "between them non-destructively — only one is active at a time, "
-        "but the inactive one's progress is preserved, not lost, so "
-        "switching later never means regrinding from scratch (500 "
-        "Fateum, 48h cooldown).</p>"
-        "<p>Its stat backbone (<b>Soulfice</b>) scales purely linearly "
-        "with level — every level adds the same fixed HP/MP, ATK, and "
-        "DEF, no breakpoints to plan around. It also carries its own "
-        "socketing (mark stones, socket treasures) and a star-upgrade "
-        "mold system unlocking at Rank 8, layered enhancement systems "
-        "similar in shape to weapon/armor carvings and sets, just on "
-        "this one relic instead of a full loadout.</p>"
-        "<p>Its Hexes (the spells it casts in battle) aren't quantified "
-        "here — no cooldown, quality, or damage numbers are available "
-        "yet, so treat their combat contribution as real but unmeasured "
-        "for now.</p>"
+        "own full stat block that adds directly to your combat power, on "
+        "top of everything from your equipped gear. The two stances are "
+        "mirrored: same progression, same numbers, only the stat type "
+        "differs (physical vs magical).</li>"
+        "<li><b>Reforge</b> swaps between stances non-destructively — "
+        "only one is active at a time, but the inactive one's progress is "
+        "preserved, not lost, so switching later never means regrinding "
+        "from scratch (500 Fateum, 48h cooldown).</li>"
+        "<li>Its stat backbone (<b>Soulfice</b>) scales <b>purely "
+        "linearly</b> with level — every level adds the same fixed "
+        "HP/MP, ATK, and DEF, no breakpoints to plan around.</li>"
+        "<li>It also carries its own socketing (mark stones, socket "
+        "treasures) and a star-upgrade mold system unlocking at "
+        "<b>Rank 8</b> — layered enhancement systems similar in shape to "
+        "weapon/armor carvings and sets, just on this one relic instead "
+        "of a full loadout.</li>"
+        "<li>Its <b>Hexes</b> (the spells it casts in battle) aren't "
+        "quantified here — no cooldown, quality, or damage numbers are "
+        "available yet, so treat their combat contribution as real but "
+        "unmeasured for now.</li>"
+        "</ul>"
 
         "<h3>Leveling gear (Augmentation)</h3>"
         "<p>Pouring materials into a piece does three things:</p>"
@@ -693,7 +786,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "grants — are decided server-side and vary by item and realm, so this "
         "page doesn't guess at them. Where a number isn't listed, read it as "
         "\"unknown\", not \"zero\". For the exact per-point math the game does "
-        "expose, see the <a href='app://ref/advanced#perpoint'>Advanced tab</a>.</p>")
+        "expose, see the <a href='app://ref/combat-internals#perpoint'>Combat Internals tab</a>.</p>")
 
     # ---- Affixes ---------------------------------------------------------
     # Tier ranking is a widely circulated community list (opinion);
@@ -773,7 +866,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
     affixes += (
         "<p>Defense lines are weak because Penetration strips up to "
         "50% of defense when the attacker wins the contested check — "
-        "see the <a href='app://ref/advanced#penblock'>Advanced tab</a>.</p>"
+        "see the <a href='app://ref/combat-internals#penblock'>Combat Internals tab</a>.</p>"
         "<p><b>Paralysis math:</b> "
         "boost and resist cancel 1:1; each leftover point shifts proc "
         "chance by 0.2% (enhance capped at +100%, resist at −50%) and "
@@ -821,98 +914,118 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "daily charges.</li>"
         "<li><b>Destium</b> — purchase-only; converts to Fateum 1:1 "
         "(irreversible). Also used in the Auction House.</li>"
+        "<li><b>Revealstone</b> (Seeker Shop) and <b>Citrine</b> + "
+        "<b>Sect Contribution</b> (Sect Library) — two more shop "
+        "currencies, see the buying guide below.</li>"
         "</ul>"
-        "<p>Two more shop currencies worth knowing: <b>Revealstone</b> "
-        "(Seeker Shop) and <b>Citrine</b> + <b>Sect Contribution</b> "
-        "(Sect Library) — see the shop guide below.</p>"
-        "<p><b>Spending guidance:</b> Fateum is the scarce one for F2P — "
-        "prioritize the garden (law fruits) once laws unlock at Voidbreak, "
-        "ahead of elixirs and convenience refreshes. Payers get the most "
-        "per unit from artifact daily charges and the realm-breakthrough "
-        "elixir packs.</p>"
+        "<p>Priority order for spending Fateum, and the Creation-Artifact "
+        "cost tables, are on <a href='app://guide/spending'>Guide → "
+        "Spending</a>.</p>"
 
         "<h3>Shop-by-shop buying guide</h3>"
-        "<p>Widely recommended priorities:</p>"
-        "<ul>"
-        "<li><b>Market</b> (Spiritium): Demonroot (pet skills), Kunlun "
-        "Jade (backpack space), Monster Core, Rare+ cultivation pills, "
-        "Atlases, stat elixirs. Mechanics: it refreshes every 3 hours, "
-        "you get 10 manual refreshes/day (each costing more Spiritium), "
-        "and every 5th refresh guarantees an Epic item.</li>"
-        "<li><b>Seeker Shop</b> (Revealstone): <b>buy nothing before "
-        "Voidbreak.</b> Nature Mantras there cost ~200 each and you'll "
-        "want 3,300+ of them — hundreds of thousands of Revealstone — "
-        "and F2P sources are scarce, so every stone spent early is a "
-        "mantra missing later.</li>"
-        "<li><b>Sect Library</b> (Citrine / Sect Contribution): Ability "
-        "Manuscripts first — skipping them slows ability progression "
-        "badly — then blueprints and alchemy formulas. Citrine comes "
-        "from mining spiritual veins (capped ~2 h/day + 7 h/week — "
-        "mine daily, prioritize the highest vein tier).</li>"
-        "<li><b>Fatevillion</b> (Fateum): the <b>Cultivation Bag</b> is "
-        "the standout must-buy; cultivation elixirs are worth it for "
-        "F2P while your tolerance ratio is still above ~120%; Demonlure "
-        "for realm farming; and anything at a 70% discount deserves a "
-        "look. <b>The shop resets on every breakthrough — minor ones "
-        "included</b> (Connection 9→10 counts), so check it before "
-        "each one.</li>"
-        "</ul>"
-        "<p><b>Cheap daily Fateum habits</b>: the first daily Technique "
-        "Points purchase (100 points for 50 Fateum) and the second "
-        "daily sect Construct (the first is free, the second costs 50) "
-        "are both efficient. Refreshing unclaimed Bounty Quests below "
-        "Rare and Sect Tasks below C-rating once a day upgrades them "
-        "guaranteed.</p>"
+        "<p>Widely recommended priorities:</p>")
+    systems += table(
+        "",
+        ["Shop", "Currency", "Buy", "Notes"],
+        [["Market", "Spiritium",
+          "Demonroot (pet skills), Kunlun Jade (backpack space), Monster "
+          "Core, Rare+ cultivation pills, Atlases, stat elixirs",
+          "Refreshes every 3h; 10 manual refreshes/day (rising cost); "
+          "every 5th refresh guarantees an Epic item"],
+         ["Seeker Shop", "Revealstone", "<b>Buy nothing before Voidbreak</b>",
+          "Nature Mantras cost ~200 each and you'll want 3,300+ of "
+          "them — hundreds of thousands of Revealstone — and F2P sources "
+          "are scarce, so every stone spent early is a mantra missing "
+          "later"],
+         ["Sect Library", "Citrine / Sect Contribution",
+          "Ability Manuscripts first — skipping them slows ability "
+          "progression badly — then blueprints and alchemy formulas",
+          "Citrine comes from mining spiritual veins, capped ~2h/day + "
+          "7h/week — mine daily, prioritize the highest vein tier"],
+         ["Fatevillion", "Fateum",
+          "The <b>Cultivation Bag</b> is the standout must-buy; "
+          "cultivation elixirs while tolerance ratio is above ~120%; "
+          "Demonlure for realm farming; anything at a 70% discount",
+          "<b>Resets on every breakthrough, minor ones included</b> "
+          "(Connection 9→10 counts) — check it before each one"]])
+    systems += (
+        "<p><b>Cheap daily Fateum habits</b>:</p><ul>"
+        "<li>The first daily Technique Points purchase (100 points for "
+        "50 Fateum)</li>"
+        "<li>The second daily sect Construct (the first is free, the "
+        "second costs 50)</li>"
+        "<li>Refresh unclaimed Bounty Quests below Rare once a day — "
+        "guaranteed upgrade</li>"
+        "<li>Refresh Sect Tasks below C-rating once a day — guaranteed "
+        "upgrade</li></ul>"
 
         "<a name='garden'></a><h3>Garden &amp; Elemental Laws</h3>"
-        "<p>The <b>garden</b> grows seeds into rewards: each seed takes up "
-        "plot slots and matures over time; you get a limited number of "
-        "daily <b>watering</b> attempts to speed growth (the first is free "
-        "each day — don't miss it), and growth can also be rushed with "
-        "energy + Spiritium. Seeds yield alchemy materials, technique "
-        "seeds, and — the headline crop — <b>Law Fruits</b>.</p>"
-        "<p><b>Elemental Laws</b> (unlock at Voidbreak; five elements — "
-        "Metal, Wood, Water, Fire, Earth) are a long-term damage system. "
-        "<b>Law Points</b> accrue naturally over time, faster as a law "
-        "levels, and each element's own generation rate <b>doubles at "
-        "milestone levels</b> — 50, 150, 250, 350… every 100 levels, "
-        "always ending in 50. Law Points are spent to upgrade laws once "
-        "the Stage requirement is met, and also feed a separate "
-        "<b>Cosmic Laws</b> system from the <i>same shared pool</i> — "
-        "leveling Elemental Laws first raises income for both. Every "
-        "100M Law Points auto-converts to a <b>Tao Motto</b>.</p>"
-        "<p><b>Law Fruit</b> is what actually feeds Elemental Laws, grown "
-        "in the garden: four natural tiers — Green (4h grow), Blue (16h), "
-        "Purple (40h), Yellow (88h) — plus a non-grown <b>Red</b> tier "
-        "produced by the <b>Shears</b> artifact. <b>Blitz</b> converts a "
-        "fruit into hours of law-learning progress at whichever element's "
-        "<i>current</i> rate it's applied to — Green 1h, Blue 3h, Purple "
-        "6h, Yellow 12h, Red 14h — capped at <b>120 Blitz-hours/day</b> "
-        "(Red is exempt from the cap). Which tier is actually best "
-        "depends on the bottleneck: Green wins per grow-hour (best when "
-        "garden space is the limit), Yellow wins per seed (best when seed "
-        "supply is the limit) — the opposite ranking, so it's worth "
-        "knowing which one actually binds before following either rule "
-        "blindly.</p>"
+        "<p>The <b>garden</b> grows seeds into rewards: each seed takes "
+        "up plot space and takes time to grow. You get <b>1 free "
+        "watering a day</b> (2 a day with the Sword Trio set bonus) — "
+        "each one pushes every planted seed 3 hours closer to done, "
+        "all at once, not one plant at a time — plus whatever extra "
+        "waterings companions give you (see <a href='app://guide/"
+        "garden'>Guide → Garden &amp; Laws</a> for the full picture). "
+        "You can also speed up growth with energy, but that's not a "
+        "base garden feature — that's the <b>Pot</b> Creation Artifact "
+        "(see below). Seeds give you alchemy materials, technique "
+        "seeds, and the headline crop: <b>Law Fruit</b>.</p>"
+        "<p><b>Elemental Laws</b> (unlocks at Voidbreak; five elements "
+        "— Metal, Wood, Water, Fire, Earth) is a long-term damage "
+        "system. <b>Law Points</b> build up on their own over time, "
+        "faster the higher a law's level, and each element's rate "
+        "<b>doubles at set levels</b> — 50, 150, 250, 350, and so on "
+        "every 100 levels. You spend Law Points to level up your laws "
+        "once you meet the Stage requirement. They also feed a "
+        "separate <b>Cosmic Laws</b> system from the <i>same pool</i> "
+        "— leveling Elemental Laws first makes both earn faster.</p>"
+        "<p><b>Law Fruit</b> is what actually feeds Elemental Laws, "
+        "grown in the garden. <b>Blitz</b> turns a fruit into hours of "
+        "law-learning progress, at whichever element's <i>current</i> "
+        "rate you apply it to, up to <b>120 Blitz-hours a day</b> (Red "
+        "doesn't count against that cap):</p>")
+    systems += table(
+        "Law Fruit tiers",
+        ["Tier", "Grow time", "Blitz hours"],
+        [["Green", "4h", "1h"], ["Blue", "16h", "3h"], ["Purple", "40h", "6h"],
+         ["Yellow", "88h", "12h"], ["Red", "not grown — from the Shears artifact", "14h"]],
+        "Which tier is best depends on what's limiting you: Green wins "
+        "per hour of grow-time (best if garden space is your limit), "
+        "Yellow wins per seed (best if seeds are your limit) — the "
+        "opposite ranking, so know which one is actually holding you "
+        "back before picking either rule blindly.")
+    systems += (
         "<p><b>Garden capacity</b>: fully unlocked is a 6×6 grid (36 "
-        "cells); Law Fruit and Ploughwood seeds both take a 3-cell "
-        "footprint, so a full grid holds 12 Law Fruit slots — a natural "
-        "ceiling of 72 Blitz-hours/day at all-Green. The <b>Pot</b> "
-        "artifact (a Creation Artifact — see Artifacts &amp; Gems) speeds "
-        "growth (1 energy = 1 hour saved) and typically pushes that "
-        "ceiling to roughly 108/day. <b>Garden slots not bought before "
-        "reaching Voidbreak are permanently lost throughput</b> once Law "
-        "Fruit becomes usable — there's no way to retroactively recover "
-        "missed law levels — so fully unlocking the garden pre-Voidbreak "
-        "is worth doing even though the same cells also serve Ploughwood "
-        "and gear-crafting plants; the standard practice is to dedicate "
-        "the whole thing to Law Fruit for roughly the first year.</p>"
+        "cells). Law Fruit and Ploughwood each take up 3 cells — a "
+        "garden growing nothing but one of them holds <b>12 plants</b>, "
+        "for a top output of 72 Blitz-hours a day at all-Green. The "
+        "gear-crafting crop takes up a bigger 4-cell space (a line of "
+        "3 with one extra cell), so cells spent on it buy fewer plants "
+        "than the same cells would in Fruit or Ploughwood — there's no "
+        "single \"max plants\" number, it depends on what you grow. "
+        "The <b>Pot</b> artifact (a Creation Artifact — see Artifacts "
+        "&amp; Gems) speeds up growth (1 energy = 1 hour saved) and "
+        "usually pushes the all-Fruit output to around 108 a day.</p>"
+        "<p><b>Garden slots you haven't bought yet cost you law levels "
+        "for every day they sit unbought</b> — you can still buy them "
+        "after Voidbreak, but you can never get back the levels those "
+        "unbought days would have earned, so fully unlocking the "
+        "garden before Voidbreak is worth it no matter how you plan to "
+        "split the cells. But your weekly Law Fruit Seed income "
+        "(20/week from the Sect), not cell count, is what actually "
+        "limits how much Law Fruit you can grow — a handful of Law "
+        "Fruit slots covers your full weekly supply, so the rest of "
+        "the grid is better spent on Ploughwood and the gear-crafting "
+        "crop, which don't run into that same seed shortage (<a "
+        "href='app://guide/garden'>Guide → Garden &amp; Laws</a> covers "
+        "the split).</p>"
         "<p><b>Law Suppression</b>: compare your total Elemental Law "
         "level (summed across all 5 elements) against an opponent's. "
         "Each level of advantage deals <b>+0.05% additional damage</b>, "
-        "capping at <b>+30% at 600 levels ahead</b> — the bonus only "
-        "applies while you're ahead, and going further past 600 doesn't "
-        "add more.</p>"
+        "with <b>no cap</b> — the bonus only applies while you're ahead, "
+        "and it keeps scaling the further ahead you get. It's a PvP-only "
+        "stat; nothing in PvE content references law levels.</p>"
 
         "<h3>Breakthrough failure</h3>"
         "<p>Stage breakthroughs <b>can fail</b>. A failure injures your "
@@ -930,7 +1043,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "first-try breakthroughs, so a failure streak pushes real dates "
         "past its estimates by the recovery waits.</p>"
 
-        "<h3>Path Switch</h3>"
+        "<a name='pathswitch'></a><h3>Path Switch</h3>"
         "<p>Available from Foundation. Costs Fateum (rising 800 → 2400) "
         "with a <b>7-day cooldown</b>, and is blocked during competitive "
         "phases (ascendance events, brawl registrations, matchmaking, "
@@ -959,15 +1072,25 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "Climb it whenever your battle rating allows; it's one of the "
         "\"keep pushed at every stage\" systems.</p>"
 
-        "<h3>Curios</h3>"
+        "<h3>Sacred Altar curios</h3>"
         "<p>Collectible items placed on the <b>Sacred Altar</b> (six "
-        "slots). A slot boosts the passive stats of curios matching its "
-        "type (HP, MP, P.ATK, M.ATK, P.DEF, M.DEF); percentage-stat "
-        "curios don't benefit. Altar effects multiply with a curio's "
-        "Star-Up. Rarities run Rare → Epic → Legendary → Mythic, from a "
-        "draw system with guarantees. Several curios also carry the "
-        "cultivation bonuses (pill effect, Respira) listed elsewhere in "
-        "this reference.</p>"
+        "slots) — a combat power system, distinct from the cultivation "
+        "curios tracked in the Vault (see the <a href='app://ref/curios'>"
+        "Curios</a> tab). A slot boosts the passive stats of curios "
+        "matching its type (HP, MP, P.ATK, M.ATK, P.DEF, M.DEF); "
+        "percentage-stat curios don't benefit. Altar effects multiply "
+        "with a curio's Star-Up. Rarities run Rare → Epic → Legendary → "
+        "Mythic, from a draw system with guarantees. Several curios also "
+        "carry the cultivation bonuses (pill effect, Respira) listed on "
+        "the Vault's Curios tab.</p>"
+
+        "<h3>The Sense stat</h3>"
+        "<p>Sense (internally <code>spirit_max</code>) currently does one "
+        "thing: it gates how many treasures you can carry — Fabao slots "
+        "unlock at Sense 1/7/13/16/19/22 and Gubao slots at 15/18/21. It "
+        "grows by about 1 per realm level, and the game's own tooltip says "
+        "further uses are planned. It is not part of any damage or "
+        "cultivation formula the client exposes.</p>"
 
         "<h3>Techniques</h3>"
         "<p>Unlockable passives: meet a technique's requirements to learn "
@@ -1005,7 +1128,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "clear what you can, come back stronger, finish later — rather "
         "than grinding one full clear early.</p>"
 
-        "<h3>Curio priorities</h3>"
+        "<h3>Sacred Altar curio priorities</h3>"
         "<ul><li>Value order: <b>abode/pill-bonus curios &gt; main-path "
         "ATK &gt; HP/MP</b>.</li>"
         "<li>Star up <b>Pen &amp; Block equally</b> — a Pen roughly "
@@ -1029,19 +1152,19 @@ def build_reference_pages(acc: dict, engine_data: dict,
     # Expert-level internals recovered from the client's own stat
     # definitions and tooltip text; only mechanics the game states
     # explicitly are listed with numbers.
-    advanced = "<h2>Cultivation Internals (Advanced)</h2>"
-    advanced += (
+    cultivation_internals = "<h2>Cultivation Internals</h2>"
+    cultivation_internals += (
         "<p>The exact numbers behind the calculator's model, for readers who "
         "want to check the math.</p>"
         "<h3>Respira crit distribution</h3>")
-    advanced += table(
+    cultivation_internals += table(
         "Per-attempt crit roll",
         ["Multiplier", "Chance"],
         [("×1", "60%"), ("×2", "30%"), ("×5", "8%"), ("×10", "2%")],
         "Mean multiplier 1.8 (the calculator's expected value), variance 2.56 "
         "per attempt — the main driver of the best/worst band on short "
         "horizons.")
-    advanced += (
+    cultivation_internals += (
         "<h3>Fruit gush pity</h3>"
         "<p>The extractor's \"Gush guaranteed in Aura Orb x6\" counter is a "
         "<b>soft pity</b>: any gush — random or guaranteed — resets it. "
@@ -1057,16 +1180,20 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<h3>Strive tier tables</h3>"
         "<p>The live value is recomputed "
         "hourly on the server, so the calculator uses these only for the "
-        "<i>shape</i> of the drop-off, anchored to your real Strive.</p>"
-        "<ul>"
-        "<li><b>Young servers</b> (world level &lt; 30): by major-realm gap "
-        "to server #1 — 15% / 20% / 30% / 40% / 50% / 60% / 70% for gaps "
-        "1–7.</li>"
-        "<li><b>Mature servers</b> (world level ≥ 30): by minor-<i>level</i> "
-        "gap — 70% at ≥60 levels, 30% at ≥50, 20% at ≥40 — plus an additive "
-        "major-realm bonus of 30% (1 realm) or 50% (2+ realms). The 70% + "
-        "50% sum is the ~120% cap seen on aged servers.</li>"
-        "</ul>"
+        "<i>shape</i> of the drop-off, anchored to your real Strive.</p>")
+    cultivation_internals += table(
+        "Young servers (world level < 30)",
+        ["Realm gap to server #1", "Strive"],
+        [["1", "15%"], ["2", "20%"], ["3", "30%"], ["4", "40%"],
+         ["5", "50%"], ["6", "60%"], ["7", "70%"]])
+    cultivation_internals += table(
+        "Mature servers (world level ≥ 30)",
+        ["Minor-level gap", "Strive"],
+        [["≥40", "20%"], ["≥50", "30%"], ["≥60", "70%"]],
+        "Plus an additive major-realm bonus: +30% (1 realm ahead) or +50% "
+        "(2+ realms ahead). The 70% + 50% sum is the ~120% cap seen on "
+        "aged servers.")
+    cultivation_internals += (
         "<h3>How the best/worst band is built</h3>"
         "<p>The band is a ~90% central interval (P5–P95): the calculator "
         "sums the variance of every random roll over the horizon (Respira "
@@ -1075,9 +1202,10 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "than independent rolls would) and takes ±1.645 standard deviations "
         "around the mean. Because variance grows with the square root of "
         "the number of rolls, the band is widest in relative terms on "
-        "short projections and tightens as the horizon grows.</p>"
+        "short projections and tightens as the horizon grows.</p>")
 
-        "<h2>Combat Internals (Advanced)</h2>"
+    combat_internals = "<h2>Combat Internals</h2>"
+    combat_internals += (
         "<p>Exact combat mechanics. "
         "Damage resolution itself runs on the server, so treat this as the "
         "rulebook rather than a full damage calculator.</p>"
@@ -1093,7 +1221,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
 
         "<a name='perpoint'></a>"
         "<h3>Per-point mechanics</h3>")
-    advanced += table(
+    combat_internals += table(
         "Per-point coefficients and caps",
         ["Stat", "Effect per point", "Cap"],
         [("Penetration (phys/spell)", "−0.1% target defense per point, "
@@ -1108,7 +1236,7 @@ def build_reference_pages(acc: dict, engine_data: dict,
          ("Stun chance resist", "−0.2% stun proc chance", "−50%"),
          ("Elemental Rule level", "+0.05% damage per level of advantage "
           "over the target", "—")])
-    advanced += (
+    combat_internals += (
         "<a name='penblock'></a><h3>Penetration and Block, exactly</h3>"
         "<p>These are <b>mirror-image contested stats</b>: each is compared "
         "against the <i>opponent's</i> copy of the same stat, and only the "
@@ -1215,11 +1343,17 @@ def build_reference_pages(acc: dict, engine_data: dict,
         "<p>The total is computed server-side, but the client defines the "
         "structure: every stat carries a BR weight, and your BR is the "
         "weighted sum of everything you have, plus pre-scored blocks for "
-        "gear. The in-game BR breakdown panel groups it into: character "
-        "level &amp; realm, inner skill, gear (base + affixes + augment "
-        "levels + carvings), Relics (same sub-parts), Abilities and their "
-        "training, Curios (base + active + set), pets (level, skills, "
-        "growth), plus talismans, celebrity cards and the rest.</p>"
+        "gear. The in-game BR breakdown panel groups it into:</p>"
+        "<ul>"
+        "<li>Character level &amp; realm</li>"
+        "<li>Inner skill</li>"
+        "<li>Gear (base + affixes + augment levels + carvings)</li>"
+        "<li>Relics (same sub-parts as gear)</li>"
+        "<li>Abilities and their training</li>"
+        "<li>Curios (base + active + set)</li>"
+        "<li>Pets (level, skills, growth)</li>"
+        "<li>Talismans, celebrity cards and the rest</li>"
+        "</ul>"
         "<p>Two useful things fall out of the client weights:</p>"
         "<ul>"
         "<li><b>Defense is weighted ~2.1× attack per point</b> (and HP/MP "
@@ -1255,7 +1389,8 @@ def build_reference_pages(acc: dict, engine_data: dict,
         ("combat", "Combat & Gear", combat),
         ("affixes", "Affixes", affixes),
         ("systems", "World Systems", systems),
-        ("advanced", "Advanced", advanced),
+        ("cultivation-internals", "Cultivation Internals", cultivation_internals),
+        ("combat-internals", "Combat Internals", combat_internals),
     )]
 
 
@@ -1267,37 +1402,35 @@ def build_guide_pages(acc: dict) -> list:
         "Spotted an error or something missing? Please report "
         "corrections and new data at "))
 
+    def table(title, headers, rows, note=""):
+        h = f"<h3>{title}</h3><table cellpadding='4' cellspacing='0' border='1' style='border-collapse:collapse'>"
+        h += "<tr>" + "".join(f"<th>{c}</th>" for c in headers) + "</tr>"
+        for r in rows:
+            h += "<tr>" + "".join(f"<td>{c}</td>" for c in r) + "</tr>"
+        h += "</table>"
+        if note:
+            h += f"<p style='color:gray'>{note}</p>"
+        return h
+
     # Path meta assembled from a circulating community guide (2026) plus
     # the maintainer's read of Discord consensus — opinion, not client data.
     paths = (
         "<h2>Choosing your path</h2>"
         "<p>The first decision in the game. It's less permanent than it "
-        "looks — Path Switch exists from Foundation (7-day cooldown, "
-        "rising Fateum cost) — but your path shapes combat style, gear "
+        "looks — <a href='app://ref/systems#pathswitch'>Path Switch</a> "
+        "exists from Foundation — but your path shapes combat style, gear "
         "priorities, and which elixirs/pets/aux picks fit. This summary "
         "is <i>subjective</i>, and opinion is genuinely "
-        "mixed — treat it as orientation, not law.</p>"
-        "<h3>The five paths</h3>"
-        "<ul>"
-        "<li><b>Swordia</b> (HP / physical) — highest sustained DPS in "
-        "the game; strong in both PvP and PvE bossing. Very reliant on "
-        "its relics (flying swords). The safe strong pick.</li>"
-        "<li><b>Corporia</b> (HP / physical) — burst physical damage "
-        "with a death-immunity ultimate; not relic-reliant. Weaker "
-        "early, much stronger later; PvE is its weak side — a "
-        "PvP-leaning pick.</li>"
-        "<li><b>Magicka</b> (MP / magic) — AoE damage, lots of shields "
-        "and crowd control. Good at PvE farming (gear and pill "
-        "materials) and holds up in PvP, though it takes more piloting "
-        "than Swordia. The flexible pick.</li>"
-        "<li><b>Ghostia</b> (MP / magic) — summons a ghost companion "
-        "that taunts and deals damage; unblockable-paralyze ultimate. "
-        "Very relic-reliant. Strong PvE and dueling.</li>"
-        "<li><b>Literatia</b> (MP / magic) — the newest path: builds "
-        "<i>erudition</i> to unleash a high-burst mana dump (Literal "
-        "Reality). Weak early in the mortal world and scales up later; "
-        "good AoE farm and PvE, PvP still unproven.</li>"
-        "</ul>"
+        "mixed — treat it as orientation, not law.</p>")
+    paths += table(
+        "The five paths",
+        ["Path", "Type", "Style", "Relics", "Verdict"],
+        [["Swordia", "HP / physical", "Highest sustained DPS; strong PvP and PvE bossing", "Very reliant", "The safe strong pick"],
+         ["Corporia", "HP / physical", "Burst damage, death-immunity ultimate; weak early, much stronger later", "Not reliant", "PvP-leaning; weak PvE"],
+         ["Magicka", "MP / magic", "AoE damage, shields and crowd control; more piloting than Swordia", "Not reliant", "The flexible pick; good PvE farm, holds up in PvP"],
+         ["Ghostia", "MP / magic", "Ghost companion (taunt + damage), unblockable-paralyze ultimate", "Very reliant", "Strong PvE and dueling"],
+         ["Literatia", "MP / magic", "Builds erudition for a high-burst mana dump; weak early, scales up later", "Not reliant", "Good AoE farm and PvE; PvP still unproven"]])
+    paths += (
         "<p><b>Rules of thumb:</b> want one answer for everything — "
         "Swordia. PvE/farming focus — Ghostia or Magicka. PvP focus — "
         "Corporia or Swordia. Patient scaler who accepts a weak mortal "
@@ -1376,9 +1509,9 @@ def build_guide_pages(acc: dict) -> list:
         "Mirror duplications, Pearl uses. Energy regenerating into a full "
         "pool is wasted. If you pay, the 30 Fateum/Destium daily charge "
         "per artifact is among the cheapest EXP money buys.</li>"
-        "<li><b>Claim your Aura Gem</b> before its storage caps (18–32 "
-        "hours depending on rarity) — once it's full it stops "
-        "accruing.</li>"
+        "<li><b>Claim your Aura Gem</b> before its storage caps — once "
+        "it's full it stops accruing (<a href='app://ref/"
+        "artifacts#auragem'>Reference → Artifacts &amp; Gems</a>).</li>"
         "<li><b>Check the market</b> for Demonroot (pet skills) and "
         "similar limited stock.</li>"
         "<li><b>Take stat pills and elixirs as they arrive</b> — there's "
@@ -1500,18 +1633,21 @@ def build_guide_pages(acc: dict) -> list:
         "shops and rewards. Take them as they arrive — neither can be "
         "wasted by using them early, and stat pills' use caps grow with "
         "each realm anyway. What they are and how their limits work: "
-        "<a href='app://ref/elixirs#tolerance'>Reference → Elixirs &amp; Stat "
+        "<a href='app://ref/elixirs'>Reference → Elixirs &amp; Stat "
         "Pills</a>.</li></ul>")
 
     incarnation = (
         "<h2>Incarnation</h2>"
-        "<ul><li>This is the extractor endgame for the mortal world. Open "
+        "<h3>Extractor priorities</h3>"
+        "<p>This is the extractor endgame for the mortal world. Open "
         "the <b>Aura Extractor → Boost</b> screen and max its tracks — "
         "<b>Quality first</b>, then Cultivation, then Gush (High Rank last, "
         "only after the rest). Keep <b>stockpiling fruits</b> instead of "
         "eating them: every extractor level makes each fruit worth more, and "
         "at Mortal World rank the extractor adds <b>+50% base fruit EXP</b> "
-        "while you're at the server's highest Stage.</li>"
+        "while you're at the server's highest Stage.</p>"
+        "<h3>Pre-breakthrough checklist</h3>"
+        "<ul>"
         "<li><b>Eat the stockpile before the realm timegate</b> — fruits "
         "lose 50% of their EXP once the next realm's timegate passes — or on "
         "the last day before your own breakthrough, whichever comes first. "
@@ -1527,15 +1663,17 @@ def build_guide_pages(acc: dict) -> list:
         "value in the game (<a href='app://ref/elixirs#expelixirs'>Reference → "
         "Elixirs &amp; Stat Pills</a> explains "
         "why the early tolerance tiers make them worth the most).</li>"
-        "<li><b>Keep battle rating growing all era</b> — the Ascension "
+        "</ul>"
+        "<h3>Keep battle rating growing all era</h3>"
+        "<p>The Ascension "
         "Virya blessing tiers gate on Myrimon Wonder boss clears (Amethyst "
         "Fiend, Jade-Eyed Lion). Reaching the gate weeks with the bosses "
         "unkillable means blessings locked exactly when they matter "
-        "most.</li>"
-        "<li>The run-up to the realm timegate — prestocking past 100%, the "
+        "most.</p>"
+        "<p>The run-up to the realm timegate — prestocking past 100%, the "
         "Ascension Virya blessings, and what to do the day the gate lifts — "
         "has its own page: <a href='app://guide/timegate'>Guide → "
-        "Timegate</a>.</li></ul>")
+        "Timegate</a>.</p>")
 
     # Overcap/Virya mechanics and half-step totals:
     # docs/knowledge/game-mechanics-verified.md + data/breakthrough.json.
@@ -1561,16 +1699,13 @@ def build_guide_pages(acc: dict) -> list:
         "off the half-step completion gauge that fills to 100% and keeps "
         "climbing, not the per-grade step bar. An overcap percentage "
         "translates directly into future progress.</li>"
-        "</ul>"
-        "<h3>What a given stock buys you</h3>"
-        "<table cellpadding='4' cellspacing='0' border='1' "
-        "style='border-collapse:collapse'>"
-        "<tr><th>Half-step</th><th>Total EXP</th></tr>"
-        "<tr><td>Incarnation Late</td><td>61.8M</td></tr>"
-        "<tr><td>Voidbreak Early (20 grades)</td><td>68.0M</td></tr>"
-        "<tr><td>Voidbreak Middle (20 grades)</td><td>142.1M</td></tr>"
-        "<tr><td>Voidbreak Late (20 grades)</td><td>307.7M</td></tr>"
-        "</table>"
+        "</ul>")
+    timegate += table(
+        "What a given stock buys you",
+        ["Half-step", "Total EXP"],
+        [["Incarnation Late", "61.8M"], ["Voidbreak Early (20 grades)", "68.0M"],
+         ["Voidbreak Middle (20 grades)", "142.1M"], ["Voidbreak Late (20 grades)", "307.7M"]])
+    timegate += (
         "<ul><li><b>100%</b> — gauge full: take the Completion breakthrough "
         "(below) and keep stocking.</li>"
         "<li><b>210%</b> — the excess clears all of Voidbreak Early on "
@@ -1647,14 +1782,15 @@ def build_guide_pages(acc: dict) -> list:
         "gates: realm gates are months apart, and resources sat on for "
         "months are power you didn't use.</li>"
         "<li><b>Fully unlock the garden before Voidbreak, even though Law "
-        "Fruit isn't usable until you're there.</b> A garden slot not "
-        "bought before the ascension is permanently lost Elemental Law "
-        "throughput for however long it stays unbought — there's no way "
-        "to recover missed law levels retroactively. This is separate "
+        "Fruit isn't usable until you're there.</b> You can still buy a "
+        "garden slot later, but every day it stays unbought is Elemental "
+        "Law throughput you can't recover afterward — there's no way to "
+        "go back and claim the law levels a locked cell would have "
+        "earned you. This is separate "
         "from harvesting it empty below: buy every cell now, then "
         "replant Law Fruit the moment Voidbreak opens (<a "
-        "href='app://ref/systems#garden'>Reference → World Systems</a> "
-        "covers the throughput math).</li>"
+        "href='app://guide/garden'>Guide → Garden &amp; Laws</a> covers "
+        "the layout and throughput math).</li>"
         "<li><b>Spend what dies with the realm.</b> Beyond the "
         "pre-breakthrough rules on the Incarnation page, spend Ability "
         "Knowledge and harvest the garden empty before ascending.</li>"
@@ -1767,7 +1903,9 @@ def build_guide_pages(acc: dict) -> list:
         "Voidbreak-tier fruit instead.</li>"
         "<li><b>Immediately after</b>: unlock <b>laws</b> as soon as "
         "possible, buy <b>law fragments</b>, plant <b>law fruits</b> in "
-        "the garden, and buy <b>Nature Mantras</b>.</li>"
+        "the garden, and buy <b>Nature Mantras</b> (<a href='app://guide/"
+        "garden'>Guide → Garden &amp; Laws</a> covers layout, seed "
+        "planning, and Blitz strategy in full).</li>"
         "<li>Unlock <b>Pandemonium</b> and its three maps.</li>"
         "<li>Claim the <b>treasure trove</b> at Voidbreak, not at "
         "Incarnation — it scales with the realm you claim it in.</li>"
@@ -1789,6 +1927,235 @@ def build_guide_pages(acc: dict) -> list:
         "<p>These attempt/effect bonuses are exactly what the "
         "calculator's pill and Respira source pickers model — tick them "
         "there once you hit the breakpoints.</p>")
+
+    garden = (
+        "<h2>Garden &amp; Elemental Laws</h2>"
+        "<p>The garden grows the fruit that levels up your Elemental "
+        "Laws. Elemental Laws give you Law Suppression, an extra PvP "
+        "damage bonus with no cap (more on that at the end of this "
+        "page).</p>"
+        "<h3>Unlocking the garden is a simple yes-or-no thing</h3>"
+        "<p>Can your garden grow enough Law Fruit to hit the daily Blitz "
+        "cap? It comes down to one question: do you have enough cells "
+        "unlocked, or not. It has nothing to do with how you're "
+        "spending money elsewhere. Unlock the whole grid <b>before</b> "
+        "Voidbreak, not after — you can still buy a slot later, but "
+        "every day it sits unbought is a day of law levels you can "
+        "never get back (<a href='app://ref/systems#garden'>Reference "
+        "→ World Systems</a> covers the basics this page builds on).</p>"
+        "<p>The less money you spend, the more this matters. You can't "
+        "speed up growth for free beyond your daily waterings, and "
+        "those alone aren't enough to keep a full set of Purple fruit "
+        "growing at top speed (more below) — so if you're not paying, "
+        "having every cell unlocked matters even more for you.</p>"
+        "<h3>Layout: plants take different amounts of space</h3>"
+        "<p>Fully unlocked is a 6×6 grid — 36 cells. Law Fruit and "
+        "Ploughwood each take up a <b>3-cell L-shape</b>. The "
+        "gear-crafting crop takes a bigger <b>4-cell shape</b> (a "
+        "straight line of 3 with one extra cell stuck to the middle). "
+        "Since the gear-crafting crop eats more cells per plant, "
+        "<b>there's no single number for how many plants fit</b> — it "
+        "depends on what you grow:</p>"
+        "<ul><li><b>Law Fruit</b> — feeds Elemental Laws through Blitz "
+        "(below). This is the main focus of this page. 3 cells each: a "
+        "grid of nothing but Law Fruit holds 12.</li>"
+        "<li><b>Gear-crafting crop</b> — steady demand for crafting "
+        "gear, and you never run short on seeds for it. 4 cells each: "
+        "a grid of nothing but this crop holds only 9.</li>"
+        "<li><b>Ploughwood</b> — used to upgrade the Zodiac Relic; only "
+        "worth growing if you're investing in that relic. 3 cells "
+        "each, same as Law Fruit.</li></ul>"
+        "<p><b>Don't put the whole grid into Law Fruit</b> — your seed "
+        "supply limits how much Law Fruit you can actually use (more "
+        "below), so a handful of Law Fruit slots is enough. Here's a "
+        "layout that fills every one of the 36 cells with nothing left "
+        "over — 6 Law Fruit (3 cells each) + 3 gear-crafting (4 cells "
+        "each) + 2 Ploughwood (3 cells each) = 36:</p>")
+    _garden_grid_rows = [
+        ["F1", "F1", "F2", "V1", "V1", "V1"],
+        ["F3", "F1", "F2", "F2", "V1", "V2"],
+        ["F3", "F3", "F4", "F5", "V2", "V2"],
+        ["V3", "F4", "F4", "F5", "F5", "V2"],
+        ["V3", "V3", "F6", "P1", "P1", "P2"],
+        ["V3", "F6", "F6", "P1", "P2", "P2"],
+    ]
+    _garden_grid_colors = {
+        "F": ("#cfe9c9", "#1f5c1f"), "V": ("#f2e0b3", "#7a5a13"),
+        "P": ("#e2d5f2", "#5b3f8c"),
+    }
+    # (row, col) of the one cell per plant that carries its label —
+    # matches where the label actually sits on the source reference
+    # image, so the rest of each plant's cells render blank (colored,
+    # no text) and the shape reads from the borders instead of a
+    # same-label blob.
+    _garden_grid_roots = {
+        (0, 1), (1, 2), (2, 0), (3, 2), (3, 3), (5, 2),  # F1-F6
+        (0, 4), (2, 5), (4, 1),  # V1-V3
+        (4, 3), (5, 5),  # P1-P2
+    }
+    def _garden_grid_at(r, c):
+        if 0 <= r < len(_garden_grid_rows) and 0 <= c < len(_garden_grid_rows[0]):
+            return _garden_grid_rows[r][c]
+        return None
+    # Only draw a border edge where the neighboring cell belongs to a
+    # different plant (or is off-grid) — cells of the SAME plant get no
+    # border between them, so each plant's true L/T shape is outlined,
+    # instead of every cell getting an identical border and the whole
+    # grid reading as one undifferentiated blob of same-colored cells.
+    def _garden_grid_cell(label, r, c):
+        bg, fg = _garden_grid_colors[label[0]]
+        text = label if (r, c) in _garden_grid_roots else ""
+        edge = "2px solid #333"
+        none = "none"
+        bt = edge if _garden_grid_at(r - 1, c) != label else none
+        br = edge if _garden_grid_at(r, c + 1) != label else none
+        bb = edge if _garden_grid_at(r + 1, c) != label else none
+        bl = edge if _garden_grid_at(r, c - 1) != label else none
+        return (f"<td style='background:{bg};color:{fg};text-align:center;"
+                f"font-weight:bold;padding:8px;border-top:{bt};"
+                f"border-right:{br};border-bottom:{bb};border-left:{bl}'>"
+                f"{text}</td>")
+    _garden_grid_html = ("<table cellpadding='0' cellspacing='0' "
+                          "style='border-collapse:collapse;margin:8px 0'>")
+    for r, row in enumerate(_garden_grid_rows):
+        _garden_grid_html += "<tr>" + "".join(
+            _garden_grid_cell(c, r, ci) for ci, c in enumerate(row)) + "</tr>"
+    _garden_grid_html += "</table>"
+    _garden_grid_html += (
+        "<p style='color:gray'>The labeled cell is where each plant's "
+        "name and timer actually show up in-game — its other cells are "
+        "the same plant, just unlabeled. "
+        "<b style='color:#1f5c1f'>F</b> Law Fruit (6 plants, 3 cells "
+        "each), <b style='color:#7a5a13'>V</b> gear-crafting crop (3 "
+        "plants, 4 cells each), <b style='color:#5b3f8c'>P</b> "
+        "Ploughwood (2 plants, 3 cells each).</p>")
+    garden += _garden_grid_html
+    garden += (
+        "<p>6 Law Fruit is enough to hit the daily Blitz cap. 3 "
+        "gear-crafting plants keep you stocked on crafting material. "
+        "2 Ploughwood isn't much on its own, but it's enough once you "
+        "add the Zodiac Relic's own event rewards on top. Not going "
+        "for the Zodiac Relic? Swap those 2 Ploughwood plants for 2 "
+        "more Law Fruit instead — they're both 3 cells, so it's a "
+        "clean 1-for-1 swap.</p>"
+        "<h3>Watering: your free daily time-skip</h3>"
+        "<p>You get <b>1 free watering a day</b> from the garden "
+        "itself. The <b>Sword Trio set bonus</b> gives you a second "
+        "one, so <b>2 free waterings a day</b> once you have it. Each "
+        "watering pushes every planted seed 3 hours closer to done — "
+        "all at once, not one plant at a time. Even with the bonus "
+        "that's only 6 hours a day for free, which isn't enough to "
+        "keep a Purple-heavy garden running at full speed. A few "
+        "other things help:</p>"
+        "<ul><li>The <b>first paid watering each day is very cheap</b> "
+        "and worth buying no matter how little else you spend.</li>"
+        "<li><b>Companions</b> can add extra time to each watering, or "
+        "cut a plant's grow time directly — worth watching for as you "
+        "unlock them.</li>"
+        "<li><b>Pets give you some free time-skip every day</b> too — "
+        "only the amount changes, so don't count on a fixed number. "
+        "Other daily sources add a bit more on top, same deal.</li>"
+        "</ul>"
+        "<h3>What to plant: seeds are your real limit, not space</h3>"
+        "<p>You can count on <b>20 Law Fruit Seeds a week from the "
+        "Sect</b> — plan around that number only. Other sources exist "
+        "(some paid, some random drops) but they're too rare to rely "
+        "on. Seeds, not garden space or Pot energy, are what actually "
+        "limits how much Law Fruit you can grow.</p>")
+    garden += table(
+        "Law Fruit tiers",
+        ["Tier", "Grow time", "Blitz hours", "Blitz-hours per seed"],
+        [["Green", "4h", "1h", "1.0 (best per grow-hour)"],
+         ["Blue", "16h", "3h", "0.75"],
+         ["Purple", "40h", "6h", "6.0 (best per seed)"],
+         ["Yellow", "88h", "12h", "3.4"],
+         ["Red", "not grown — from the Shears artifact", "14h",
+          "doesn't count against the cap"]],
+        "Green wins per hour of grow-time (best if space is your "
+        "limit); Purple wins per seed. Since seeds are your real "
+        "limit, Purple is the right choice.")
+    garden += (
+        "<p><b>Grow Purple by default.</b> At 6 Blitz-hours per seed, "
+        "your 20 seeds a week cap you at roughly <b>17 Blitz-hours a "
+        "day</b> — well under the 120-hour daily cap, and way under "
+        "what a garden growing nothing but Green Law Fruit could put "
+        "out on paper (about 72–108 a day with Pot energy). Only grow "
+        "Green as a top-off, once Purple has already filled the day's "
+        "Blitz cap and the weekly seed reset is close — its short grow "
+        "time uses up spare time without wasting a scarce Purple seed. "
+        "Skip Blue and Yellow completely: they're both worse than "
+        "Purple per seed, and that's all that matters once seeds are "
+        "your real limit.</p>"
+        "<p><b>In practice:</b> about 6 Law Fruit plants growing Purple "
+        "is enough to use your whole weekly seed supply — that's why "
+        "the layout above doesn't need more than that. Extra slots do "
+        "more good on the gear-crafting crop or Ploughwood, since they "
+        "don't run into the same seed shortage.</p>"
+        "<p>Even a perfect garden usually can't fill the daily Blitz "
+        "cap by itself. The daily <b>tea party</b> event (and a few "
+        "other small daily sources) hands you Law Fruit straight up, "
+        "no garden needed — in practice, that's what actually fills "
+        "the rest of your daily cap, since the garden alone can't get "
+        "there unless you pay.</p>"
+        "<h3>Red tier and faster growth: two artifacts</h3>"
+        "<p>Two Creation Artifacts touch the garden, and it's easy to "
+        "mix them up — full detail on both is in <a href='app://ref/"
+        "artifacts'>Reference → Artifacts &amp; Gems</a>:</p>"
+        "<ul><li><b>Shears</b> pushes an already-grown fruit up to Red "
+        "tier. Red doesn't grow on its own — Shears is the only way to "
+        "get it — and its 14-hour Blitz value <b>doesn't count against "
+        "the 120-hour/day cap</b>, so it's pure bonus on top of your "
+        "Purple total.</li>"
+        "<li><b>Pot</b> spends energy to speed up growth — 1 energy = "
+        "1 hour off, on any crop including Law Fruit. It's the "
+        "<i>only</i> way to speed up growth besides watering, and it "
+        "only works if you have the artifact — the garden itself can't "
+        "do this. If you get it, it's a big help here: a well-fed Pot "
+        "skips a lot of grow time every single day, on top of your "
+        "watering. Pot energy also lets gear-crafting plants grow up "
+        "to Yellow instead of stopping at Purple — but that doesn't "
+        "work on Law Fruit. Law Fruit's top tier is fixed no matter "
+        "how much Pot energy you use; you still need Shears to get "
+        "Red.</li></ul>"
+        "<h3>Spending fruit: how to level up your Laws</h3>"
+        "<p><b>Blitz</b> turns one fruit into hours of progress at "
+        "whatever your current Learning Speed is for that element — "
+        "not a fixed number of Law Points. Use it on whichever of the "
+        "five elements (Metal, Wood, Water, Fire, Earth) you're "
+        "focusing on.</p>"
+        "<ul><li><b>Spend fruit as you get them instead of saving them "
+        "up.</b> Your Learning Speed goes up as you level, so the same "
+        "fruit is worth more Law Points later — but leveling early "
+        "gets your speed up sooner, and that pays off on every fruit "
+        "you blitz after it. Spending as you go beats saving it all "
+        "for later.</li>"
+        "<li><b>Auto Blitz</b> turns on once your total Elemental Laws "
+        "level (all 5 added up) hits 50 — after that it spends new "
+        "fruit for you automatically.</li>"
+        "<li>Each element has its own <b>Learning Speed milestones</b> "
+        "(your rate doubles at set levels) and <b>Suppression "
+        "Resonance</b> milestones (Boost and Resist bonuses that "
+        "alternate, ending in a \"Completely Activated\" bonus) — the "
+        "exact levels and numbers are on the in-game Elemental Laws "
+        "screen.</li>"
+        "<li>The Suppression Resonance track has two stages per "
+        "element, 1000 levels each — the second stage doesn't start "
+        "until the first one hits 1000. Finishing it everywhere for "
+        "every element needs level 2000 each, or <b>10,000 total "
+        "Elemental Laws levels</b> added up across all five.</li></ul>"
+        "<h3>The payoff: Law Suppression</h3>"
+        "<p>This is why all of the above is worth doing. Law "
+        "Suppression compares your <b>total</b> Elemental Law level "
+        "(all 5 elements added up) against your opponent's — every "
+        "level you're ahead adds <b>+0.05% extra damage</b>, with "
+        "<b>no cap</b>. You only get the bonus while you're ahead, and "
+        "it only matters in PvP — nothing in PvE cares about law "
+        "levels, so this is purely for dueling and rankings, not "
+        "something to chase for farming.</p>"
+        "<p>Law Points also feed a separate system called <b>Cosmic "
+        "Laws</b>, from the same pool. Leveling Elemental Laws first "
+        "makes both earn faster, so there's no real downside — just do "
+        "Elemental Laws first.</p>")
 
     pets = (
         "<h2>Pets</h2>"
@@ -1823,43 +2190,38 @@ def build_guide_pages(acc: dict) -> list:
         "the one you do. The <b>Pets tab</b> does this math for you: enter "
         "what you own and it shows the copies and rarity reachable by "
         "going all-in on each pet.</p>"
-        "<h3>Rarity ladder</h3>"
-        "<table cellpadding='4' cellspacing='0' border='1' "
-        "style='border-collapse:collapse'>"
-        "<tr><th>Rarity</th><th>Copies</th><th>Pet realm</th></tr>"
-        "<tr><td>Common</td><td>1</td><td>Primitive</td></tr>"
-        "<tr><td>Uncommon</td><td>1</td><td>Primitive</td></tr>"
-        "<tr><td>Uncommon +1</td><td>1</td><td>Virtuoso Early</td></tr>"
-        "<tr><td>Rare</td><td>2</td><td>Virtuoso Late</td></tr>"
-        "<tr><td>Rare +1</td><td>3</td><td>Nascent Soul Early</td></tr>"
-        "<tr><td>Rare +2</td><td>5</td><td>Nascent Soul Middle</td></tr>"
-        "<tr><td>Epic</td><td>8</td><td>Nascent Soul Late</td></tr>"
-        "<tr><td>Epic +1</td><td>11</td><td>Incarnation Early</td></tr>"
-        "<tr><td>Epic +2</td><td>14</td><td>Incarnation Middle</td></tr>"
-        "<tr><td>Legendary</td><td>17</td><td>Incarnation Late</td></tr>"
-        "<tr><td>Legendary +1</td><td>21</td><td>Voidbreak Early</td></tr>"
-        "<tr><td>Legendary +2</td><td>26</td><td>Voidbreak Middle</td></tr>"
-        "<tr><td>Legendary +3</td><td>32</td><td>Voidbreak Late</td></tr>"
-        "</table>"
-        "<p>Copies are cumulative — reaching Legendary consumes 17 in "
-        "total. Upgrades also take epic essences (2 by Uncommon +1, 13 in "
-        "total by Rare +2), and your pet must reach the listed pet realm "
-        "first.</p>"
-        "<h3>Feeding and skills</h3>"
-        "<table cellpadding='4' cellspacing='0' border='1' "
-        "style='border-collapse:collapse'>"
-        "<tr><th>Pill</th><th>Common</th><th>Uncommon</th><th>Rare</th></tr>"
-        "<tr><td>R1</td><td>125</td><td>250</td><td>400</td></tr>"
-        "<tr><td>R2</td><td>625</td><td>1,250</td><td>2,000</td></tr>"
-        "<tr><td>R3</td><td>1,900</td><td>3,800</td><td>6,080</td></tr>"
-        "<tr><td>R4</td><td>5,000</td><td>10,000</td><td>16,000</td></tr>"
-        "<tr><td>R5</td><td>8,000</td><td>16,000</td><td>25,600</td></tr>"
-        "</table>"
-        "<p>Pet XP per pill. R1 Cleansing/Aura · R2 Nutrition/Revitalising "
-        "· R3 Crimson/Ice Heart · R4 Purity/Dracospirit · R5 Chalcedonius/"
-        "Reinvigoration. Epic pills give roughly double Rare. Food: "
-        "Platycodon 3,500 · Siler 11,000 · Redarrow Flower 33,500 · "
-        "Dragongall Flower 54,000 · Curculigo 79,000.</p><ul>"
+        "<h3>Rarity ladder</h3>")
+    pets += table(
+        "",
+        ["Rarity", "Copies", "Pet realm"],
+        [["Common", "1", "Primitive"], ["Uncommon", "1", "Primitive"],
+         ["Uncommon +1", "1", "Virtuoso Early"], ["Rare", "2", "Virtuoso Late"],
+         ["Rare +1", "3", "Nascent Soul Early"], ["Rare +2", "5", "Nascent Soul Middle"],
+         ["Epic", "8", "Nascent Soul Late"], ["Epic +1", "11", "Incarnation Early"],
+         ["Epic +2", "14", "Incarnation Middle"], ["Legendary", "17", "Incarnation Late"],
+         ["Legendary +1", "21", "Voidbreak Early"], ["Legendary +2", "26", "Voidbreak Middle"],
+         ["Legendary +3", "32", "Voidbreak Late"]],
+        "Copies are cumulative — reaching Legendary consumes 17 in total. "
+        "Upgrades also take epic essences (2 by Uncommon +1, 13 in total "
+        "by Rare +2), and your pet must reach the listed pet realm first.")
+    pets += "<h3>Feeding and skills</h3>"
+    pets += table(
+        "Pet XP per pill",
+        ["Pill", "Common", "Uncommon", "Rare"],
+        [["R1", "125", "250", "400"], ["R2", "625", "1,250", "2,000"],
+         ["R3", "1,900", "3,800", "6,080"], ["R4", "5,000", "10,000", "16,000"],
+         ["R5", "8,000", "16,000", "25,600"]],
+        "R1 Cleansing/Aura · R2 Nutrition/Revitalising · R3 Crimson/Ice "
+        "Heart · R4 Purity/Dracospirit · R5 Chalcedonius/Reinvigoration. "
+        "Epic pills give roughly double Rare.")
+    pets += table(
+        "Pet XP per food",
+        ["Food", "XP"],
+        [["Platycodon", "3,500"], ["Siler", "11,000"],
+         ["Redarrow Flower", "33,500"], ["Dragongall Flower", "54,000"],
+         ["Curculigo", "79,000"]])
+    pets += (
+        "<ul>"
         "<li><b>Feed food and Common/Uncommon pills.</b> Rarity multiplies "
         "a pill's pet XP far less than it multiplies the pill's value "
         "everywhere else — Rare and better pills are wasted as feed.</li>"
@@ -2023,41 +2385,14 @@ def build_guide_pages(acc: dict) -> list:
         "Systems</a> covers laws).</li>"
         "</ul>"
         "<h3>R4–R9, rank by rank</h3>"
-        "<ul>"
-        "<li><b>R4</b> — all three earn their cost: Golden Core (+2%/+3% "
-        "pill effect), Astrology (+3% Respira effect, then +1 daily pill "
-        "attempt), and Focus at least for its +1% pill effect "
-        "unlock.</li>"
-        "<li><b>R5</b> — Ninefall is the pick (abode-aura nodes "
-        "bracketing +2% pill effect). Bloodization up to its +3% aura "
-        "node. Solarics: the aura node for everyone; physical paths "
-        "continue for the P.ATK.</li>"
-        "<li><b>R6</b> — Yin's Grasp is the standout, take it to Tier 9: "
-        "+5% Respira effect, then +1 daily pill attempt. Conflagration "
-        "and Unbound Blade stack PvP lines and land Base Abode Aura +3% "
-        "at Tier 9. Dragon Flight to Tier 6 (+2% pill effect, +2% "
-        "aura).</li>"
-        "<li><b>R7</b> — Floral Essence and Purify &amp; Cleanse are the "
-        "rank's best, every node good: Floral Essence stacks Respira, "
-        "pill effect and +1 pill attempt; Purify &amp; Cleanse is the "
-        "Respira manual (instant-complete on learning, +4%/+7% effect, "
-        "+1 attempt). Great Yang Manual: weak unlock, good everything "
-        "else (+2% aura, +5% Respira, +4% pill effect). Aqua Power (to "
-        "Tier 6), Ninefall Hoarfrost and Sunset Halberd Dance are the "
-        "PvP picks.</li>"
-        "<li><b>R8</b> — Chroma is the must-buy: pill effect, +1 Respira "
-        "attempt, +4% aura, +1 pill attempt. Astral Arcanum right behind "
-        "it (pill effect plus double aura nodes). Tao of Taiqing: top "
-        "pick for magic paths — PvP lines ending in +4% aura. Origin "
-        "Scripture: the physical-path all-rounder. Zixiao Sutra: first "
-        "two nodes only (+1% pill effect, +2% aura).</li>"
-        "<li><b>R9</b> — Harvest God Secret is the cultivation manual of "
-        "the rank: +3% Respira, +3%/+4% aura, +1 pill attempt. Honored "
-        "Origin: bought for its aura nodes, the control stats are a "
-        "bonus. Divine Water (magic) and Heartless (physical, ends in "
-        "+10% Respira) are the PvP picks. Laws of Nature: the +1% pill "
-        "effect unlock early; Tier 12 adds +10% Respira effect.</li>"
-        "</ul>"
+        "<p>The full manual-by-manual breakdown (every book's rating and "
+        "why) is in the table below. A few cross-rank patterns worth "
+        "knowing going in: the rank's top-rated (S/S+) manual is almost "
+        "always worth tiering all the way, mid picks (A/A−/B) are worth "
+        "stopping at whichever node the \"why\" column names, and every "
+        "rank has 1–2 pure-PvP books (C) that don't move your cultivation "
+        "speed at all — skip those unless you specifically need the "
+        "combat stat.</p>"
         "<h3>R10 and beyond</h3>"
         "<p>Everything at R10 is worth taking — Immortal Ascension "
         "(the rank's only Universal book) to Tier 12 for its +1 daily "
@@ -2066,18 +2401,14 @@ def build_guide_pages(acc: dict) -> list:
         "pattern: each has a law-speed manual (rated S across the "
         "board), usually an abode-aura or Respira manual, and a PvP "
         "manual. New node families appear here: elemental-law learning "
-        "speed, Qiyun efficiency, and divine/demonic damage.</p>"
-        "<h3>Every Universal manual, rated</h3>"
-        "<table cellpadding='4' cellspacing='0' border='1' "
-        "style='border-collapse:collapse'>"
-        "<tr><th>Rank</th><th>Manual</th><th>Rating</th><th>Why</th></tr>"
-        + "".join(
-            f"<tr><td>{r}</td><td>{n}</td><td>{g}</td><td>{w}</td></tr>"
-            for r, n, g, w in manual_rows) +
-        "</table>"
-        "<p>Manuals above R9 aren't on the Vault shelves yet — add "
-        "their pill/Respira bonuses as custom rows in the calculator's "
-        "source pickers so projections see them.</p>")
+        "speed, Qiyun efficiency, and divine/demonic damage.</p>")
+    techniques += table(
+        "Every Universal manual, rated",
+        ["Rank", "Manual", "Rating", "Why"],
+        manual_rows,
+        "Manuals above R9 aren't on the Vault shelves yet — add their "
+        "pill/Respira bonuses as custom rows in the calculator's source "
+        "pickers so projections see them.")
 
     # Spending advice is community consensus (2026 guide + Discord);
     # BR figures are era-specific estimates, not client data.
@@ -2093,7 +2424,7 @@ def build_guide_pages(acc: dict) -> list:
         "<li>The <b>three elixir packs on reaching a new realm</b> are "
         "among the best consumable value in the game (early tolerance "
         "tiers make them worth the most — see <a href='app://ref/"
-        "elixirs#tolerance'>Reference → Elixirs &amp; Stat Pills</a>).</li>"
+        "elixirs#expelixirs'>Reference → Elixirs &amp; Stat Pills</a>).</li>"
         "<li>The daily 30 Fateum/Destium <b>artifact charges</b> are "
         "among the cheapest EXP money buys.</li>"
         "<li><b>Law fruit packs are atrocious value — do not buy "
@@ -2116,11 +2447,13 @@ def build_guide_pages(acc: dict) -> list:
         "own means, pay cash up to that point, then stop and switch to "
         "free daily draws instead of buying further.</p>"
         "<p>Past that point, don't spend draws as they come in — bank "
-        "them. Every draw carries the same 0.25% instant-win shot "
-        "regardless of points banked, so a large stockpile dumped at "
-        "once has real odds of winning a relic for free (roughly 50% at "
-        "~280 banked draws, 90% at ~920). A miss costs nothing extra — "
-        "the points still count toward the next relic either way.</p>"
+        "them. Every draw carries the same independent instant-win shot "
+        "(see <a href='app://ref/artifacts#summon'>Reference → Artifacts "
+        "&amp; Gems</a>) regardless of points banked, so a large "
+        "stockpile dumped at once has real odds of winning a relic for "
+        "free — roughly 50% at ~280 banked draws, 90% at ~920. A miss "
+        "costs nothing extra — the points still count toward the next "
+        "relic either way.</p>"
         "<p>When picking which relic to aim a stockpile at, target "
         "whichever one has the <b>biggest jump</b> from the relic before "
         "it, not necessarily the last one on your list — the size of "
@@ -2137,6 +2470,7 @@ def build_guide_pages(acc: dict) -> list:
         ("incarnation", "Incarnation", incarnation),
         ("timegate", "Timegate", timegate),
         ("voidbreak", "Voidbreak+", voidbreak),
+        ("garden", "Garden & Laws", garden),
         ("pets", "Pets", pets),
         ("aux", "Aux Paths", aux),
         ("techniques", "Techniques", techniques),
