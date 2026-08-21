@@ -3,6 +3,13 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - test/parity.dart   # standalone dev harness, run via `dart run`
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:

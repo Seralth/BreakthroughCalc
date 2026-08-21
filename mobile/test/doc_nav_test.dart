@@ -23,12 +23,13 @@ void main() {
       () {
     expect(refSlugs, {
       'basics': 0, 'pills': 1, 'elixirs': 2, 'myrimon': 3, 'curios': 4,
-      'artifacts': 5, 'combat': 6, 'affixes': 7, 'systems': 8, 'advanced': 9,
+      'artifacts': 5, 'combat': 6, 'affixes': 7, 'systems': 8,
+      'cultivation-internals': 9, 'combat-internals': 10,
     });
     expect(guideSlugs, {
       'paths': 0, 'server': 1, 'routine': 2, 'novice': 3, 'virtuoso': 4,
       'nascent': 5, 'incarnation': 6, 'timegate': 7, 'voidbreak': 8,
-      'pets': 9, 'aux': 10, 'techniques': 11, 'spending': 12,
+      'garden': 9, 'pets': 10, 'aux': 11, 'techniques': 12, 'spending': 13,
     });
   });
 

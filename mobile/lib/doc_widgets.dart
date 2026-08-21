@@ -22,9 +22,13 @@ Widget docTable(BuildContext context, String title, List<String> headers,
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(title, style: h3),
       const SizedBox(height: 6),
+      // FlexColumnWidth (not IntrinsicColumnWidth) so columns always share
+      // the page's actual bounded width and long cell text wraps inside its
+      // column, instead of the column sizing to the text's unwrapped width
+      // and the table overflowing the page.
       Table(
         border: TableBorder.all(color: t.dividerColor),
-        defaultColumnWidth: const IntrinsicColumnWidth(),
+        defaultColumnWidth: const FlexColumnWidth(),
         children: [
           TableRow(
             decoration: BoxDecoration(color: t.colorScheme.surfaceContainerHighest),
@@ -40,8 +44,53 @@ Widget docTable(BuildContext context, String title, List<String> headers,
             ]),
         ],
       ),
-      if (note != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(note, style: muted)),
+      if (note != null) Padding(padding: const EdgeInsets.only(top: 4),
+          child: DefaultTextStyle.merge(style: muted, child: docText(context, note))),
     ]),
+  );
+}
+
+/// A bulleted list where wrapped lines hang-indent under the bullet glyph
+/// (unlike a plain Text with literal '• ' characters, which doesn't). Each
+/// item is run through [docText] so bold/cross-link markup works inside
+/// bullets too.
+Widget docBullets(BuildContext context, List<String> items, {String? note}) {
+  final muted = TextStyle(color: Theme.of(context).hintColor, fontSize: 12);
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      for (final item in items)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(width: 20, child: Text('•')),
+            Expanded(child: docText(context, item)),
+          ]),
+        ),
+      if (note != null) Padding(padding: const EdgeInsets.only(top: 2), child: Text(note, style: muted)),
+    ]),
+  );
+}
+
+/// A cautionary note, matching desktop's colored "Advisory" lead-in
+/// (`docs.py`'s `<b style='color:{bad}'>Advisory</b>`) — for content that's a
+/// warning/gotcha rather than routine guidance (use a plain **bold** lead-in
+/// via [docPara]/[docText] for routine "Practical read:"-style notes).
+Widget docAdvisory(BuildContext context, String text) {
+  final warn = Theme.of(context).colorScheme.error;
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: warn, width: 3)),
+        color: warn.withValues(alpha: 0.08),
+      ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Advisory  ', style: TextStyle(color: warn, fontWeight: FontWeight.bold)),
+        Expanded(child: docText(context, text)),
+      ]),
+    ),
   );
 }
 

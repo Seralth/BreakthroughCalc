@@ -73,27 +73,58 @@ throughput math below.
 
 ## Garden grid & footprint
 
-Full unlock is a 6×6 grid (36 cells). Law Fruit, Ploughwood, and
-Soulrend Vine seeds all share a **3-cell L-tromino footprint**
-(confirmed both by direct observation and, in an 2026-08-11 screenshot,
-by the visual connecting-bridge between grouped cells and duplicate
-countdown timers appearing on more than one cell of the same plant —
-useful tell if reading a garden screenshot again).
+**Full unlock is a 6×6 grid, 36 cells — confirmed by pixel-level
+inspection of the owner's own reference layout images**
+(`~/Pictures/omvault-2026-08-11-garden/layout_8fruit_3vine.png`,
+`layout_6fruit_4vine.png`, `layout_4fruit_6vine.png`; these are the
+owner's own planning mockups, not in-game screenshots, but their
+legends and grid geometry are ground truth for footprint shapes).
+
+**Law Fruit and Ploughwood are a 3-cell L-tromino** (an L made from a
+2×2 block minus one corner). **Soulrend Vine is a 4-cell shape — a
+straight line of 3 cells plus one bump off the middle cell**,
+perpendicular to the line (a T-tetromino). This is the fact that was
+wrong in every earlier pass of this doc: Vine does NOT share Law
+Fruit's 3-cell footprint. Verified by sampling cell colors from
+`layout_8fruit_3vine.png` pixel-by-pixel and confirming three
+independent 4-cell groups (V1/V2/V3) against eight independent 3-cell
+groups (F1–F8), matching the image's own legend text exactly.
+
+**Max plant count is NOT a fixed number — it depends on the crop mix**,
+because Vine costs more cells per plant than Fruit/Ploughwood:
+- All-Law-Fruit (or all-Ploughwood) grid: 36 ÷ 3 = **12 plants**.
+- All-Vine grid: 36 ÷ 4 = **9 plants**.
+- Any mix in between lands somewhere in that range — e.g. the owner's
+  live 6 Fruit / 3 Vine / 2 Ploughwood totals 6×3 + 3×4 + 2×3 = 36
+  cells exactly (11 plants, zero cells left over), which is why "11,
+  all slots filled" and "12 is the cell-math ceiling" are both true at
+  once — they're answers to different questions (this specific mix's
+  plant count vs. the grid's per-crop-type cell capacity).
 
 ## The other two crop types
 
 - **Ploughwood**: Zodiac Relic upgrade material (`zodiac-relic.md`).
-  Fixed, single-tier item — unlike Law Fruit/Soulrend Vine, it doesn't
-  have a growth-quality ladder.
-- **Soulrend Vine**: Voidbreak-stage gear/relic crafting material, adds
-  a quality-boost chance per craft. Five tiers (Aged → Centa → Milia →
-  Myrua → Decamyriad), each tier's own boost % — visible on the item
-  tooltip in-game, not reproduced here. Top tier needs an item called
-  the **Azryn Pot** to energize — likely the same artifact as the
-  "Garden Pot" above, name not yet cross-confirmed.
-
-Both share the garden's 36 cells and the same 3-cell footprint as Law
-Fruit.
+  Fixed, single-tier item — unlike Law Fruit/the gear-crafting crop
+  below, it doesn't have a growth-quality ladder. Shares Law Fruit's
+  3-cell L-tromino footprint.
+- **Gear-crafting crop** (Voidbreak-stage name: **Soulrend Vine**):
+  gear/relic crafting material, adds a quality-boost chance per craft.
+  Five tiers (Aged → Centa → Milia → Myrua → Decamyriad), each tier's
+  own boost % — visible on the item tooltip in-game, not reproduced
+  here. Top tier needs an item called the **Azryn Pot** to energize —
+  likely the same artifact as the "Garden Pot" above, name not yet
+  cross-confirmed. **Owner (2026-08-20): this crop is not unique to
+  Voidbreak — every World stage has its own equivalent gear-crafting
+  garden crop under its own name**, "Soulrend Vine" is just the
+  Voidbreak-stage instance. **4-cell footprint** (see above) — do NOT
+  describe it as sharing Law Fruit's 3-cell shape. **Owner (2026-08-21):
+  don't name "Soulrend Vine" in user-facing Reference/Guide prose at
+  all** — not even as a "Voidbreak's version is called X" aside. Calling
+  out the Voidbreak-specific name implies Voidbreak is somehow the
+  relevant stage, when the mechanic (crop, footprint, seed behavior) is
+  identical at every World stage. Just say "the gear-crafting crop" and
+  stop there; "Soulrend Vine" stays a doc-internal fact for citing
+  sources, not something the app prints.
 
 ## Seed supply — the real constraint (owner, 2026-08-20)
 
@@ -104,36 +135,88 @@ too unreliable to plan around.
 
 This is the actual bottleneck, not garden cell-time or Pot energy: at
 Purple's 6 Blitz-hours/seed, 20 seeds/week caps real throughput at ~17
-Blitz-hours/day — far under the 72-108/day the cell-time/Pot-energy
-math below would suggest is achievable. **Grow Purple by default**
-(best Blitz-hours-per-seed); Green only as a top-off once Purple has
-already filled the day's cap and the weekly seed reset is close. Blue
-and Yellow are skipped — worse than Purple per-seed for no offsetting
-benefit once seed count is the binding constraint.
+Blitz-hours/day — far under the 72–108/day the cell-time/Pot-energy
+math below would suggest is achievable for a garden dedicated entirely
+to Law Fruit. **Grow Purple by default** (best Blitz-hours-per-seed);
+Green only as a top-off once Purple has already filled the day's cap
+and the weekly seed reset is close. Blue and Yellow are skipped —
+worse than Purple per-seed for no offsetting benefit once seed count
+is the binding constraint.
 
 **Strategic conclusion:** garden-slot count stops mattering for Law
 Fruit specifically once you have enough slots to plant a week's worth
-of Purple seeds — a handful, not the full 12-slot buildout. Extra slots
-are better spent on Ploughwood or Soulrend Vine, which don't share Law
-Fruit's seed scarcity. Still fully unlock the garden pre-Voidbreak (you
-want the option to run every crop type), just don't dedicate the whole
-thing to Law Fruit once seed scarcity is accounted for.
+of Purple seeds — a handful, not the full 12-slot buildout a
+dedicated-Fruit grid could hold. Extra slots are better spent on
+Ploughwood or the gear-crafting crop, which don't share Law Fruit's
+seed scarcity — even though Vine's bigger 4-cell footprint means those
+"extra slots" buy fewer Vine plants than the equivalent cell-count in
+Fruit or Ploughwood would. Still fully unlock the garden pre-Voidbreak
+(you want the option to run every crop type), just don't dedicate the
+whole thing to Law Fruit once seed scarcity is accounted for.
 
-**Owner's live allocation, for reference:** 6 Law Fruit / 3 Soulrend
-Vine / 2 Ploughwood, on a partially-unlocked grid. 6 Law Fruit maxes
-the daily Blitz cap; 3 Soulrend Vine keeps steady gear-crafting supply;
-2 Ploughwood isn't enough alone but stretches fine alongside the Zodiac
-Relic's own event rewards (every 3 weeks). Players not investing in the
-Zodiac Relic can swap the 2 Ploughwood slots for more Law Fruit instead.
+**Owner's live allocation, for reference (a working example layout —
+fully-unlocked garden, all 36 cells filled, no cells left over):** 6
+Law Fruit / 3 gear-crafting crop / 2 Ploughwood = 11 plants total
+(6×3 + 3×4 + 2×3 = 36 cells exactly). 6 Law Fruit maxes the daily
+Blitz cap; 3 gear-crafting crop slots keep steady crafting supply; 2
+Ploughwood isn't enough alone but stretches fine alongside the Zodiac
+Relic's own event rewards (every 3 weeks). Players not investing in
+the Zodiac Relic can swap the 2 Ploughwood slots for more Law Fruit
+instead (which would buy 3 more Fruit plants per 2 Ploughwood removed,
+since both share the 3-cell footprint 1:1).
+
+## Watering (owner, 2026-08-20/21)
+
+**Baseline is 1 free watering/day from the garden itself.** The **Sword
+Trio set bonus** adds **+1 free watering/day** on top of that, for
+**2 free waterings/day** once the set bonus is active. **Each watering
+skips every planted seed forward 3 hours** — it's a flat time-skip
+applied garden-wide per use, not per-plant.
+
+Even with the Sword Trio bonus, 2 free waterings/day (6 hours skipped)
+is **not enough by itself** to keep a Purple-heavy Law Fruit lineup
+running at full seed throughput — this is why the extra sources below
+matter, and why the garden matters more the less you're willing to pay:
+growth time can't be skipped for free beyond those free waterings.
+
+- **The first paid watering is very cheap** and worth buying every day
+  regardless of spend level — good value even for an otherwise F2P
+  account.
+- **Various companions/NPCs** can add extra skip-time to each watering,
+  or reduce a plant's required grow time outright (a flat reduction,
+  not a per-watering skip) — worth watching for as you unlock
+  companions; specific names/breakpoints not catalogued yet.
+- **Pets give some free grow-time-skip every day** — only the amount
+  varies, so don't count on a specific number. Various other daily
+  sources add more on top, same caveat.
+
+## Filling the daily Blitz cap without over-relying on the garden (owner, 2026-08-20)
+
+The garden's own Purple-seed throughput (~17 Blitz-hours/day, see
+above) is well under what a fully-invested Blitz routine can use. **The
+daily "tea party" event (and other minor daily sources) grants Law
+Fruit directly**, independent of the garden — in practice these direct
+grants are *required* to fill out the daily Blitz cap, since the
+garden alone is unlikely to produce enough fruit every single day
+without paying.
+
+**The Pot Creation Artifact is very strong here if you pull it**: on
+top of its per-energy grow-time-shaving effect (above), it provides a
+reliably large amount of time-skip every day, which is one of the
+better ways to close the gap between the garden's raw seed-bound
+output and what a maxed daily Blitz routine wants.
 
 ## Cell-time/Pot-energy throughput ceiling — derived math, now secondary to seed supply above
 
 Kept for the underlying math (still correct as a *cell-time* ceiling,
-just not the actual binding constraint): fully-unlocked 6×6 garden
-(12 seed slots), all-Green, no pet items — zero-energy baseline is 72
-Blitz-hours/day; the owner's 124.8 energy/day (×1.15 bonus) pushes that
-to `(288 + 124.8×1.15) ÷ 4 ≈ 108 Blitz-hours/day`, closing ~75% of the
-gap to the 120h/day cap. Green wins this per-cell-hour comparison
+just not the actual binding constraint): fully-unlocked garden
+dedicated entirely to Law Fruit (12 slots at the 3-cell footprint —
+see the corrected footprint math above; this ceiling drops if any
+cells go to Vine instead, since Vine's 4-cell footprint buys fewer
+plants per cell), all-Green, no Pot energy — zero-energy baseline is
+72 Blitz-hours/day; the owner's 124.8 energy/day (×1.15 bonus) pushes
+that to `(288 + 124.8×1.15) ÷ 4 ≈ 108 Blitz-hours/day`, closing ~75%
+of the gap to the 120h/day cap. Green wins this per-cell-hour comparison
 (0.25 Blitz-hours/grow-hour vs. 0.1875/0.15/0.136 for Blue/Purple/
 Yellow) — the opposite ranking from the per-seed comparison that
 actually governs strategy now that seed supply binds first.
