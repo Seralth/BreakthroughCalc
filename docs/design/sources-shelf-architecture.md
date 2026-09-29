@@ -63,7 +63,7 @@ Key precedent that makes this fit cheap: the codebase already has the exact idio
 - **`breakthrough_calc/fields.py`**: ONE new declarative column — `FieldSpec.shelf_target: Optional[str] = None`. Set on: `respira_per_day` (`respira_attempts`), `pill_limit` (`pill_attempts`), `respira_books` (`respira_effect_pct`), `bless_pp`/`bless_window` (`blessing_pp`/`blessing_window_pp`), `mark_blue/purple/gold`, and flag-kind targets for `vase`/`mirror`/`pearl`/`*_skin`. This keeps "which fields are shelf-derived" inside the registry that already owns every other per-field behavior — no parallel list.
 - **`breakthrough_calc/gui.py`** grows only composition (~50 lines): a "Sources" top-level tab, a chip-install loop over `FIELDS` where `spec.shelf_target`, and `_on_shelf_changed()` (§2). Pill-effect is the registry's one existing special case and stays special: shelf contributions become read-only auto rows in `PillEffectRows` (`set_auto_rows(contributions)` — no ✕, no editable %, provenance inline), manual rows remain user-editable beneath.
 
-### Mobile (mirrored names, per the parity-module convention in CLAUDE.md)
+### Mobile (mirrored names, one Dart module per Python module)
 - **`mobile/lib/shelf.dart`** — pure Dart twin of `shelf.py` (no Flutter imports, like `engine.dart`): `targets`, `derive()`, `effective()`, `validateCatalog()`, `migrateLegacy()`, plus `ShelfState { Map<String,dynamic> owned; Map<String,double> overrides; toMap()/fromMap() }`.
 - **`mobile/lib/shelf_page.dart`** — the Sources screen (4th top tab: `TabController(length: 4)`).
 - **`mobile/lib/shelf_chips.dart`** — `provenanceChip(...)` + `derivedNumField(...)` wrapper that decorates the existing `numField`/`numCtrlField` from `form_widgets.dart`.

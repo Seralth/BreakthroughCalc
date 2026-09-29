@@ -182,7 +182,7 @@ If it ships there: the Rate column is the sort key the whole table is
 ordered by — give it a distinct color/weight so that's obvious at a
 glance, rather than reading as just another data column. This is a
 sort-order affordance, not a data-status marker, so it doesn't conflict
-with the no-provenance-badges rule in the root CLAUDE.md.
+with the no-provenance-badges rule.
 
 ## SEAGM voucher pricing
 

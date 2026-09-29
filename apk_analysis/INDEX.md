@@ -56,7 +56,7 @@ overwrites in place, see `curio/README.md`).
 | `extract_curios.py` | Joins `tables/*.json` (gubao base/levels/upgrade/suit, benyuan origin, evolved, affix names) + `../i18n_all.json` → `curio_tooltips.json`. Has a hardcoded `APK` path to this repo checkout. |
 | `tables/` (12 files) | Intermediate per-table JSON, produced by `dump_table.lua` from the relevant `allbc/`-or-individual-bundle bytecode of whichever version was last regenerated from. Per-file schema: `TABLE_INDEX.md`. |
 | `curio_tooltips.json` (5.1M) | Final joined output: 819 curios, 157 origin curios, 2 evolved, 127 suits, 472 distinct affixes. As of 2026-07-23 this is byte-identical between 26052702 and 26062402 — the curio system didn't change in this update. Schema: `TABLE_INDEX.md`. |
-| `cultivation_slice.py` | **Stale** — hardcodes a path into a since-deleted session's job tmp dir (`/home/seralth/.claude/jobs/5cf8b056/tmp/curio_tooltips.json`). One-off analysis script (filters `curio_tooltips.json` for cultivation-adjacent affixes); would need its `open(...)` path repointed at `curio/curio_tooltips.json` to rerun. |
+| `cultivation_slice.py` | **Stale** — hardcodes a path to a `curio_tooltips.json` copy that no longer exists. One-off analysis script (filters `curio_tooltips.json` for cultivation-adjacent affixes); would need its `open(...)` path repointed at `curio/curio_tooltips.json` to rerun. |
 
 ## Related tracked docs (outside `apk_analysis/`)
 
